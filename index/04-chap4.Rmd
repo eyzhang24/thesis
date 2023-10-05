@@ -1,0 +1,8 @@
+# Tables, Graphics, References, and Labels {#ref-labels}
+```{r include_packages2, include = FALSE}
+require(knitr)
+require(dplyr)
+require(ggplot2)
+```
+
+
