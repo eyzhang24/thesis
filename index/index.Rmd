@@ -58,6 +58,7 @@ You can delete the following code chunk from your final document if you wish.
 ```{r include_acthesis, include = FALSE}
 # acthesis package loads dpylr, ggplot2, knitr, bookdown, and remotes
 require(acthesis)
+require(tidyverse)
 ```
 
 

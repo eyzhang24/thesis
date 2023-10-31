@@ -1,5 +1,5 @@
 # Rename your knitted pdf file (found in _book folder after knitting)
-book_filename: "firstName-lastName_StatThesis"
+book_filename: "Elizabeth-Zhang_StatThesis"
 
 # Rename, re-order, add/delete these rmd files as appropriate
 # Do not include the abstract or acknowledgment files here;

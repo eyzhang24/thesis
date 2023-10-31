@@ -1,69 +1,249 @@
-# Mathematics and Science {#math-sci}
+```{r, include = FALSE}
+library(tidyverse)
+library(bkmr)
+library(stats)
+library(splines)
+theme_set(theme_light())
+theme_update(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+```
 
-## Math
+# Bayesian regression methods {#bayes}
 
-\TeX\ is the best way to typeset mathematics. Donald Knuth designed \TeX\ when he got frustrated at how long it was taking the typesetters to finish his book, which contained a lot of mathematics.  One nice feature of _R Markdown_ is its ability to read LaTeX code directly.
+## Motivation
 
-If you are doing a thesis that will involve lots of math, you will want to read the following section.
+-   mechanistic
+-   public health
+-   interactions are difficult to pick up
+-   consider the number of interactions that would have to be encoded explicitly in MLR
+-   different types of interactions
 
+## Bayesian kernel machine regression
 
+Defining notation:
+
+-   observations from $i = 1, \dots ,n$
+-   $\textbf{x}_m$ is a predictor variable in the predictor matrix $\textbf{X}$ with $m = 1, \dots, M$, measuring exposure variables in this case
+-   $\textbf{x}_i$ is a vector of values for a single observation in $\textbf{X}$ with $i = 1, \dots, n$, measuring the health outcome in this case
+-   $x_{im}$ is an observation of $\textbf{x}_m$
+-   $Y_i$ is an observation of $\textbf{Y}$
+-   $\rho$ is the tuning parameter inside the exponential expression of the covariance, equals $2l$
+-   $\tau$ is the tuning parameter outside the expontential expression of the covariance, equals $\sigma_f^2$
+-   $k$ is the smoothing function, the Gaussian in this case
+-   $\textbf{K}$ is the $n \times n$kernel matrix, with (i, j)th element $k(\textbf{x}_i, \textbf{x}_j)$
+-   $h(\textbf{x}_i)$ the flexible function relating X to Y
+-   $\boldsymbol\epsilon_i \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$, the residuals of the response
+
+### Kernel machine regression
+
+In this section, we introduce kernel machine regression, with attention to its specific implementation in BKMR. Kernel machine regression is a nonparametric regression technique that can be used to capture nonlinear effects and nonadditive interactions. In the typical linear regression setting,
 
 $$
-\sum_{j=1}^n (\delta\theta_j)^2 \leq 
-\frac{\beta_i^2}{\delta_i^2 + \rho_i^2}
-\left[ 2\rho_i^2 + \frac{\delta_i^2\beta_i^2}{\delta_i^2 + \rho_i^2} \right] \equiv \omega_i^2
+Y_i = \textbf{x}_i^\top\boldsymbol{\beta} + \epsilon_i
 $$
 
-From Informational Dynamics, we have the following (Dave Braden):
+\noindent where $Y_i$ measures a health outcome at a given point, $\textbf{x}_i = (x_{1},\dots,x_{M})^\top$ is a vector of M exposures, $\boldsymbol{\beta}$ is a vector of weights, and $\epsilon_i$ is a random variable from $\boldsymbol\epsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$. We can see that this function assumes that there is a linear relationship between the exposure and the response, and that the combined effects of multiple exposures are additive. 
 
-After _n_ such encounters the posterior density for $\theta$ is
-
-$$
-\pi(\theta|X_1< y_1,\dots,X_n<y_n) \varpropto \pi(\theta) \prod_{i=1}^n\int_{-\infty}^{y_i}
-   \exp\left(-\frac{(x-\theta)^2}{2\sigma^2}\right)\ dx
-$$
-
-Another equation:
+Kernel machine regression defines this relationship using a function $h: \mathbb{R}^M \rightarrow \mathbb{R}$, where
 
 $$
-\det\left|\,\begin{matrix}%
-c_0&c_1\hfill&c_2\hfill&\ldots&c_n\hfill\cr
-c_1&c_2\hfill&c_3\hfill&\ldots&c_{n+1}\hfill\cr
-c_2&c_3\hfill&c_4\hfill&\ldots&c_{n+2}\hfill\cr
-\,\vdots\hfill&\,\vdots\hfill&
-  \,\vdots\hfill&&\,\vdots\hfill\cr
-c_n&c_{n+1}\hfill&c_{n+2}\hfill&\ldots&c_{2n}\hfill\cr
-\end{matrix}\right|>0
+Y_i = h(\textbf{x}_i) + \epsilon_i
 $$
 
-## Statistics Symbols and Expressions
+\noindent Here, $h(\cdot)$ is represented by the function $k(\cdot, \cdot)$, a kernel. The kernel controls the covariance, or the similarity, between values of $h(\textbf{x})$ and as such ensures that points near each other on the prediction surface will have similar values — or, in other words, that the prediction surface will be smooth. In the case of kernel machine regression, we define a positive definite kernel where $k: \mathbb{R}^M\times \mathbb{R}^M \rightarrow \mathbb{R}$. There are many choices of functions to represent $k$. BKMR uses the Gaussian kernel, also known as the radial basis function or, sometimes, the squared exponential kernel. The Gaussian kernel is defined
 
-<!--
-The \noindent command below does what you'd expect:  it forces the current line/paragraph to not indent. This was done here to match the format of the LaTeX thesis PDF.
--->
+<!-- $$ -->
+<!-- h(\textbf{x}) = \sum_{i=1}^n\alpha_i k(\textbf{x}_i, \textbf{x}) -->
+<!-- $$ -->
 
-\noindent Exponent or Superscript: $x^2$
+<!-- for some set of constants $\{\alpha_i\}_{i=1}^n$, where $\textbf{x}$ is a vector of exposure values, and $\textbf{x}_i$ is the exposure profile of a subject in the dataset. Now, in order to obtain a value for $h$, we need to solve for $\alpha_i$ and $k$.  -->
 
-\noindent Subscript: $x_1, x_2, \dots, x_n$
+$$
+k(\textbf{x}, \textbf{x}') = \sigma_f^2\textrm{exp}\{
+-\frac{||\textbf{x}-\textbf{x}'||^2}{2l}\}
+$$
 
-\noindent Both combined: $x_1^{k+1}$.
+\noindent where $||\textbf{x}-\textbf{x}'||^2 = \sum_{m=1}^M{(x_{m}-x_{m}')^2}$ for $\textbf{x}$, a set of exposure values, and $\textbf{x}$, the exposure profile of a second subject, $\sigma_f^2$ is a tuning parameter that controls how much the function is allowed to vary, and $l$ is a tuning parameter that controls the relationship between the correlation between two points and their distance. Greater values of $l$ will enforce more dependence between points and make the resulting function smoother. Note that BKMR uses $\rho=2l$ and $\tau=\sigma_f^2$, so, henceforth, we will be referring to these parameters using BKMR's notation. 
 
+Now that we have defined $h$ and $k$, we can think about how to characterize the relationship between our response and predictors. Kernel machine regression is a nonparametric technique because it does not specify a functional form for this relationship. Hence, we will think about estimating the response at a particular query point. Operationally, kernel machine regression uses a weighted average of all the observations in the dataset to estimate the response, as follows
 
-\noindent Our favorite Greeks: $\sigma$, $\epsilon$, $\mu$
+$$
+\bar{Y} = \frac{\sum_{i=1}^nw_iY_i}{\sum_{i=1}^nw_i}
+$$
 
-\noindent Defining a normally distributed random variable: $X\sim N(\mu, \sigma)$
+\noindent with some set of weights $\{w_i\}_{i=1}^n$. Intuitively, we want to weight the observations that are closer to the query point more heavily. Using the Gaussian kernel as a weight allows us to achieve this. Replacing the weight with the Gaussian kernel, we get
 
-How do we compute sample variance again?
+$$
+\bar{Y} = \frac{\sum_{i=1}^n K(\textbf{x}, \textbf{x}_i) Y_i}
+{\sum_{i=1}^n K(\textbf{x}, \textbf{x}_i)}
+$$
 
-$$s^2 = \frac{\sum_{i=1}^n (x_i-\bar x)^2}{n-1}$$
+As we move through the predictor space, we can think of the prediction as a continuous moving average of local points in the dataset. This gives us the following relationship
 
-Sometimes  you'll need to consider asymptotics, that is, what happens as $n\rightarrow \infty$.
+$$
+\textrm{cor}(h_i, h_j) = \textrm{exp}\{-(\frac{1}{\rho}) \sum_{m=1}^M
+{(x_{im}-x_{jm})^2}\}
+$$
 
+\noindent which allows us to see that values $h$ near each other will have a higher correlation and thus similar values. This is also why the resulting function is smooth. 
 
+### Connection with mixed models
 
-## Additional information
+It is useful to make connections between this definition of kernel machine regression and mixed models. To do this, we can represent $h(\textbf{x})$ as following a Gaussian process probability distribution, defined
 
-Many of the symbols you will need can be found on Reed College's math page <http://web.reed.edu/cis/help/latex/math.html> and the Comprehensive LaTeX Symbol Guide (<http://mirror.utexas.edu/ctan/info/symbols/comprehensive/symbols-letter.pdf>).
+$$
+h(\textbf{x}) \sim \mathcal{GP}(\textbf{0}, k(\textbf{x}, \textbf{x}'))
+$$
 
+\noindent with mean function $m$ and covariance function $k$, where $\textbf{x}$ is a vector of exposure values, and $\textbf{x}'$ is the exposure profile of another subject. A Gaussian process is a collection of random variables, of which any finite number follow a multivariate normal distribution. Here, we assume that the expected value of the function with input $\textbf{x}$ is $\textbf{0}$. We use $k$ for the covariance function, whic represents the dependence between the function values with inputs $\textbf{x}$ and $\textbf{x}'$: $k(\textbf{x}, \textbf{x}') = \mathbb{E}[(h(\textbf{x})-m(\textbf{x})) (h(\textbf{x}')-m(\textbf{x}'))]$. 
 
+Now, we can represent $h$ as a collection of variables from a Gaussian process. $h$ follows a multivariate normal distribution
 
+$$
+h({\textbf{x}}) \sim N(\textbf{0}, \textbf{K})
+$$
+
+\noindent where $h({\textbf{x}}) = h(\textbf{x}_1), h(\textbf{x}_2), \dots, h(\textbf{x}_n)$, and $\textbf{K}$ is the kernel matrix. The kernel matrix is an $n \times n$ matrix with $(i, j)$th element $k(\textbf{x}_i, \textbf{x}_j)$. Now, returning back to the regression view, we can think of each $Y_i$ as following the distribution
+
+$$
+Y_i \overset{\mathrm{ind}}{\sim} N(h(\textbf{x}_i), \sigma^2) \text{ for } i = 1,\dots,n
+$$
+
+\noindent where $\sigma^2$ comes from the variance of the residuals. 
+
+### Toy example
+
+In the following section, we introduce the technique with a toy example.
+
+Consider the following case where we want to model the relationship between a single predictor and a response variable. Suppose the true relationship between x and Y is defined $Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})$
+
+```{r, echo = F, fig.width = 6, fig.height = 4}
+set.seed(0) #reproducibility
+x <- seq(0, 25, length.out = 50)
+Y <- exp(x/10) + 2*sin(x/2) + rnorm(50, mean = 0, sd = 0.5)
+df <- data.frame(x, Y)
+
+ggplot(df, aes(x, Y)) +
+  geom_point() +
+  geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), color = "darkorange") + 
+  geom_smooth(method = "lm", formula = "y~x", 
+              color = "deepskyblue3", fill = "gray70", linetype = "dashed", linewidth = 0.5)
+```
+
+Define a query point
+
+```{r, echo = F, fig.width = 5, fig.height = 3}
+df$Weight <- dnorm(df$x, mean = 12.5, sd = 1)
+p1 <- ggplot(df, aes(x, Y)) +
+  geom_point(aes(color = Weight)) +
+  geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), color = "darkorange") + 
+  geom_vline(xintercept = 12.5, linetype = "dotted") +
+  theme(legend.position = c(0.95, 0.3))#c(0.1, 0.7))
+
+normcurv <- data.frame(x = seq(0, 25, length.out = 250)) 
+normcurv$Y <- dnorm(normcurv$x, mean = 12.5, sd = 1)
+p2 <- ggplot(normcurv, aes(x, Y, color = Y)) +
+  geom_line() +
+  theme(legend.position = "none")
+  # geom_function(fun = dnorm, args = list(mean = 12.5, sd = 1), n = 250)
+
+cowplot::plot_grid(p1, p2, ncol = 1, rel_heights = c(0.7, 0.3))
+```
+
+Note to self, bandwidth represent four times the quartiles of the probability density. In the case of a Gaussian kernel, the bandwidth represents $\frac{8}{3}\sigma$, so using an sd of 1 translates to bandwidth of 8/3
+
+```{r, echo = F, fig.width = 5, fig.height = 3}
+kmr_toy <- ksmooth(df$x, df$Y, kernel = "normal", bandwidth = 8/3, x.points = df$x)
+df <- df |> 
+  left_join(as.data.frame(kmr_toy), by = "x") |> 
+  rename(Yhat = y)
+ggplot(df) +
+  geom_point(aes(x, Y)) +
+  geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), color = "darkorange") +
+  geom_line(aes(x, Yhat), color = "deepskyblue3", linetype = "dashed") 
+```
+
+We can also use this example to understand how our choice of the scaling parameter influences model fit. 
+
+### Variable selection
+
+In this section, we discuss the two methods for variable selection in BKMR: hierarchical variable selectiona and component-wise variable selection. 
+
+### Priors in a Bayesian framework
+
+### The MCMC algorithm
+
+### Visualizing interactions
+
+## Bayesian semiparametric regression
+
+differences w/ bkmr
+
+-   makes distributional assumptions about the dataset
+-   kernel regression is computationally intensive w/ large datasets 
+
+### Connections to linear mixed model
+
+### Toy example
+
+```{r, echo = F, fig.width = 5, fig.height = 3}
+kn <- c(25/3, 50/3)#c(6.25, 12.5, 18.75)
+spline_toy <- lm(Y ~ bs(x, knots = kn), data = df)
+p <- predict(spline_toy, se = T)
+df$Yhats <- p$fit
+df$Ylows <- df$Yhats - 1.96 * p$se.fit
+df$Yups <- df$Yhats + 1.96 * p$se.fit
+ggplot(df) +
+  geom_point(aes(x, Y)) +
+  geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), color = "darkorange") +
+  geom_line(aes(x, Yhats), color = "deepskyblue3", linetype = "dashed") +
+  geom_ribbon(aes(x, ymin = Ylows, ymax = Yups), fill = "gray70", alpha = 0.3) +
+  geom_vline(xintercept = kn, linetype = "dotted")
+```
+
+<!-- ## Math -->
+
+<!-- \TeX is the best way to typeset mathematics. Donald Knuth designed \TeX when he got frustrated at how long it was taking the typesetters to finish his book, which contained a lot of mathematics. One nice feature of *R Markdown* is its ability to read LaTeX code directly. -->
+
+<!-- If you are doing a thesis that will involve lots of math, you will want to read the following section. -->
+
+<!-- $$ -->
+<!-- \sum_{j=1}^n (\delta\theta_j)^2 \leq  -->
+<!-- \frac{\beta_i^2}{\delta_i^2 + \rho_i^2} -->
+<!-- \left[ 2\rho_i^2 + \frac{\delta_i^2\beta_i^2}{\delta_i^2 + \rho_i^2} \right] \equiv \omega_i^2 -->
+<!-- $$ -->
+
+<!-- From Informational Dynamics, we have the following (Dave Braden): -->
+
+<!-- After *n* such encounters the posterior density for $\theta$ is -->
+
+<!-- $$ -->
+<!-- \pi(\theta|X_1< y_1,\dots,X_n<y_n) \varpropto \pi(\theta) \prod_{i=1}^n\int_{-\infty}^{y_i} -->
+<!--    \exp\left(-\frac{(x-\theta)^2}{2\sigma^2}\right)\ dx -->
+<!-- $$ -->
+
+<!-- ## Statistics Symbols and Expressions -->
+
+<!-- ```{=html} -->
+<!-- <!-- -->
+<!-- The \noindent command below does what you'd expect:  it forces the current line/paragraph to not indent. This was done here to match the format of the LaTeX thesis PDF. -->
+<!-- --> -->
+<!-- ``` -->
+<!-- \noindent Exponent or Superscript: $x^2$ -->
+
+<!-- \noindent Subscript: $x_1, x_2, \dots, x_n$ -->
+
+<!-- \noindent Both combined: $x_1^{k+1}$. -->
+
+<!-- \noindent Our favorite Greeks: $\sigma$, $\epsilon$, $\mu$ -->
+
+<!-- \noindent Defining a normally distributed random variable: $X\sim N(\mu, \sigma)$ -->
+
+<!-- How do we compute sample variance again? -->
+
+<!-- $$s^2 = \frac{\sum_{i=1}^n (x_i-\bar x)^2}{n-1}$$ -->
+
+<!-- Sometimes you'll need to consider asymptotics, that is, what happens as $n\rightarrow \infty$. -->
+
+<!-- ## Additional information -->
+
+<!-- Many of the symbols you will need can be found on Reed College's math page <http://web.reed.edu/cis/help/latex/math.html> and the Comprehensive LaTeX Symbol Guide (<http://mirror.utexas.edu/ctan/info/symbols/comprehensive/symbols-letter.pdf>). -->
