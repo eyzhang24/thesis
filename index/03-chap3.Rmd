@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 ```{r, include = FALSE}
 library(tidyverse)
 library(bkmr)
@@ -11,11 +16,26 @@ theme_update(panel.grid.major = element_blank(), panel.grid.minor = element_blan
 
 ## Motivation
 
+We are interested in using Bayesian regression techniques to characterize the nature of complex interactions. In addition to being an interesting statistical challenge, complex interactions are also relevant from both a mechanistic and public health point of view. 
+
 -   mechanistic
 -   public health
+
+Drawing from the mechanistic and public health contexts, there are three classes of interactions that are of interest. 
+
+-   different types of interactions
+
+However, non-additive interactions are difficult to detect. 
+
+First, there are different forms that an interaction can take on. For instance, in the linear regression setting, the form of the interaction must be explicitly specified; most commonly, this is done by multiplying two variables together. However, 
+
+Moreover, the number of possible interactions to consider quickly becomes intractable in high-dimensional settings. For instance, consider modelling 10 exposures in a linear regression setting. In order to be assessed, each interaction must be explicitly specified as a new term in the model. Including all the possible two-way interactions would involve adding ${10 \choose 2} = 45$ additional terms to the model, and all possible three-way interactions would add ${10 \choose 3} = 120$ additional terms. 
+
 -   interactions are difficult to pick up
 -   consider the number of interactions that would have to be encoded explicitly in MLR
--   different types of interactions
+
+It is important also to acknowledge, here, that there is a limit to how many variables can be included in an interaction before it becomes incomprehensible to most humans. 
+
 
 ## Bayesian kernel machine regression
 
@@ -94,7 +114,7 @@ $$
 h(\textbf{x}) \sim \mathcal{GP}(\textbf{0}, k(\textbf{x}, \textbf{x}'))
 $$
 
-\noindent with mean function $m$ and covariance function $k$, where $\textbf{x}$ is a vector of exposure values, and $\textbf{x}'$ is the exposure profile of another subject. A Gaussian process is a collection of random variables, of which any finite number follow a multivariate normal distribution. Here, we assume that the expected value of the function with input $\textbf{x}$ is $\textbf{0}$. We use $k$ for the covariance function, whic represents the dependence between the function values with inputs $\textbf{x}$ and $\textbf{x}'$: $k(\textbf{x}, \textbf{x}') = \mathbb{E}[(h(\textbf{x})-m(\textbf{x})) (h(\textbf{x}')-m(\textbf{x}'))]$. 
+\noindent with mean function $m$ and covariance function $k$, where $\textbf{x}$ is a vector of exposure values, and $\textbf{x}'$ is the exposure profile of another subject. A Gaussian process is a collection of random variables, of which any finite number follow a multivariate normal distribution. Here, we assume that the expected value of the function with input $\textbf{x}$ is $\textbf{0}$. We use $k$ for the covariance function, which represents the dependence between the function values with inputs $\textbf{x}$ and $\textbf{x}'$: $k(\textbf{x}, \textbf{x}') = \mathbb{E}[(h(\textbf{x})-m(\textbf{x})) (h(\textbf{x}')-m(\textbf{x}'))]$. 
 
 Now, we can represent $h$ as a collection of variables from a Gaussian process. $h$ follows a multivariate normal distribution
 
@@ -116,7 +136,7 @@ In the following section, we introduce the technique with a toy example.
 
 Consider the following case where we want to model the relationship between a single predictor and a response variable. Suppose the true relationship between x and Y is defined $Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})$
 
-```{r, echo = F, fig.width = 6, fig.height = 4}
+```{r, echo = F, fig.width = 5, fig.height = 3}
 set.seed(0) #reproducibility
 x <- seq(0, 25, length.out = 50)
 Y <- exp(x/10) + 2*sin(x/2) + rnorm(50, mean = 0, sd = 0.5)
@@ -170,16 +190,25 @@ In this section, we discuss the two methods for variable selection in BKMR: hier
 
 ### Priors in a Bayesian framework
 
+Discuss priors, what form do they take? what are the default settings? 
+
 ### The MCMC algorithm
 
-### Visualizing interactions
+Brief intro to MCMC
+
+### Detecting interactions
+
+Discuss options for detecting interactions, i.e., can visualize relationship at various quantiles of other predictor, can conduct inference on inter-quantile difference
+
+Potentially provide toy example 
 
 ## Bayesian semiparametric regression
 
 differences w/ bkmr
 
 -   makes distributional assumptions about the dataset
--   kernel regression is computationally intensive w/ large datasets 
+-   kernel regression is computationally intensive w/ large datasets but can handle many predictors
+-   bsr highly dependent on the choice of function 
 
 ### Connections to linear mixed model
 

@@ -1,5 +1,5 @@
 ---
-title: 'My amazing  title'
+title: 'Bayesian Nonparametric Regression Models for Quantifying Complex Interactions in Exposure Mixture Studies'
 author: 'Your R. Name'
 date: 'April DD, 20YY'
 institution: 'Amherst College'

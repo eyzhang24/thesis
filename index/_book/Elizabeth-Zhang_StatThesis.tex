@@ -156,7 +156,7 @@ Use this space to thank those who have helped you in the thesis process (profess
   framerule = 1.5mm, rulecolor = \color{black!15}
   }
 
-\title{My amazing title}
+\title{Bayesian Nonparametric Regression Models for Quantifying Complex Interactions in Exposure Mixture Studies}
 \author{Your R. Name}
 \date{April DD, 20YY}
 \division{}
@@ -236,37 +236,55 @@ Use this space to thank those who have helped you in the thesis process (profess
 \hypertarget{intro}{%
 \chapter{Introduction}\label{intro}}
 
-The field of preventive epidemiology involves the identification of potentially modifiable risk factors that contribute to the burden of disease within human populations. Environmental epidemiology, in particular, considers the effect of environmental exposures --- chemical or otherwise --- which have been increasingly recognized as crucial determinants of human health (Vineis, 2018). Understanding the health effects of exposure to chemical pollutants is especially timely. It has been estimated that human activity releases chemicals at a rate of 220 billion tons per annum (Cribb, 2016). As a result, exposure to low levels of pollutants has become an inevitable peril of daily life. Scholars warn that such conditions of cumulative chronic toxicity pose an acute risk to the wellbeing of humans and our living environment (Naidu et al., 2021). To this, the quantification of such risks through environmental epidemiology studies can prompt critical regulatory action.
+Rapid industrial development has created conditions of cumulative chronic toxicity which pose an acute risk to the wellbeing of humans and our living environment. It has been estimated that human activity releases chemicals at a rate of 220 billion tons per annum (Cribb, 2016). Scholars have recently formally declared that, at this global rate of chemical release, humanity has surpassed the safe operating space of the planetary boundary for novel entities (Persson et al., 2022). As a result, exposure to low levels of pollutants has become an inevitable peril of daily life (Naidu et al., 2021; Vineis, 2018). Hence, it is especially timely that we prompt regulatory control of industrial pollution through studies which investigate the health effects of chemical exposures.
 
-Studies concerning chemical pollutants in environmental epidemiology have historically focused on elucidating the effect and mechanisms of single exposures. However, humans are invariably exposed to numerous complex chemical mixtures which together contribute to the progression of adverse health outcomes --- risk assessments of single pollutants likely fail to capture the true consequences of these complex exposures (Heys et al., 2016). Assessing mixtures of chemicals can also have more direct implications for public health interventions. The United States Environmental Protection Agency (U.S. EPA) currently passes regulations for individual pollutants. In practice, though, regulation occurs by controlling the source of pollution, which is responsible for the production of a whole mixture of chemicals with specific joint effects on human health. As a result, the National Academies of Science has advocated for a multipollutant regulatory approach, which is likely to be more protective of human health (Committee on Incorporating 21st Century Science into Risk-Based Evaluations et al., 2017).
+For this, we turn to epidemiological studies. The broad field of preventive epidemiology involves the identification of potentially modifiable risk factors that contribute to the burden of disease within human populations. Environmental epidemiology, in particular, considers the effect of environmental exposures --- chemical or otherwise. However, studies concerning chemical pollutants in environmental epidemiology have historically focused on elucidating the effect and mechanisms of exposures to a single pollutant. In reality, humans are invariably exposed to numerous complex chemical mixtures which together contribute to the progression of adverse health outcomes. Therefore, risk assessments of single pollutants likely fail to capture the true consequences of these complex exposures (Heys et al., 2016). Assessing mixtures of chemicals can also have more direct implications for public health interventions. The United States Environmental Protection Agency (U.S. EPA) currently passes regulations for individual pollutants. In practice, though, regulation occurs by controlling the source of pollution, which is responsible for the production of a whole mixture of chemicals with specific joint effects on human health. As a result, the National Academies of Science has advocated for a multipollutant regulatory approach, which is likely to be more protective of human health (Committee on Incorporating 21st Century Science into Risk-Based Evaluations et al., 2017).
 
-Hence, there are clear practical motivations for the development of studies and methodologies that examine the health effects of exposure to co-occurring chemical mixtures, hereafter referred to as exposure mixtures. However, expanding the focus of analysis from one exposure to multiple exposures introduces unique statistical challenges. In addition to the issue of small effect sizes and small sample sizes present in all exposure analyses, multiple exposure analyses must also contend with high-dimensionality, collinearity, non-linear effects, and non-additive interactions (Yu et al., 2022). The classic multiple linear regression framework fails to capture the true effects in this setting. In the past few years, a wide variety of statistical methods have been developed to overcome these challenges (Gibson et al., 2019; Yu et al., 2022), which have been accompanied by a host of comparative simulation studies for general mixture scenarios (e.g., Hoskovec et al., 2021; Lazarevic et al., 2020; Pesenti et al., 2023). However, there is not yet conclusive guidance about the ability of these methods to conduct inference on non-additive interactions between exposures.
+There are clear practical motivations for studies that examine the health effects of exposure to co-occurring chemical mixtures, hereafter referred to as exposure mixtures. However, expanding the focus of analysis from one exposure to multiple exposures introduces unique statistical challenges. In addition to a common issue of small effect sizes and small sample sizes present in most exposure analyses, multiple exposure analyses must also contend with high-dimensionality, collinearity, non-linear effects, and non-additive interactions (Yu et al., 2022). In particular, data with numerous pollutants, or predictors, require exponentially greater levels of complexity and time cost in analysis. Collinearity between exposures is common when analyzing pollutants from a single source and can lead to unstable estimates in a generalized linear model if left unaccounted for. Finally, exposures can have both non-linear single effects and non-additive interaction effects, which are difficult to capture unless explicitly specified in the model.
 
-The goal of this thesis is to explore the theory of emerging Bayesian regression techniques for quantifying complex interactions between environmental exposures. \textbf{{[}clarify goals{]}}
+The classic multiple linear regression framework often fails to capture the true effects in this setting. In the past few years, a wide variety of statistical methods have been developed to overcome these challenges (Gibson et al., 2019; Yu et al., 2022), which have been accompanied by a host of comparative simulation studies for general mixture scenarios (e.g., Hoskovec et al., 2021; Lazarevic et al., 2020; Pesenti et al., 2023). However, there is not yet conclusive guidance about the ability of these methods to conduct inference on non-additive interactions between exposures.
 
-In an age where anthropogenic actions have radically reshaped the earth, humanistic inquiry can offer critical insights into our place within a rapidly evolving environment. I begin in Chapter 2 by contextualizing this thesis with a brief overview of cultural and social understandings of the topic of environmental exposures. Chapter 3 provides background on X Bayesian methods for analyzing exposure mixtures. Chapter 4 assesses the performance of these methods for conducting inference on non-additive interactions using a simulation study based on \textbf{X}. Chapter 5 explores an application on \textbf{X} data \textbf{{[}TBD{]}}. I conclude with a discussion of the implications of this work for the future study of complex interactions in exposure mixture studies.
+The goal of this thesis is to fill this gap in the literature by exploring the theory and performance of Bayesian regression techniques for quantifying complex interactions between environmental exposures. Specifically, I will compare two recently developed models for estimating the health effects of exposure mixtures: Bayesian Kernel Machine Regression (BKMR, Bobb et al., 2015) and Bayesian Semiparametric Regression (BSR, Antonelli et al., 2020).
 
-\hypertarget{rmd-basics}{%
-\chapter{R Markdown Basics}\label{rmd-basics}}
+In an age where anthropogenic actions have radically reshaped the earth, humanistic inquiry can offer critical insights into how we navigate the hazards of our rapidly changing environment. I begin in Chapter 2 by contextualizing this thesis with a brief overview of cultural and social understandings of toxicity. Chapter 3 explains the motivation for studying interactions and provides background on the theory of Bayesian methods for analyzing exposure mixtures. Chapter 4 assesses the performance of these methods using a simulation study, based on a dataset with information on the relationship between prenatal exposure to heavy metals and gestational weight. Chapter 5 explores an application on X data {[}TBD{]}. I conclude with a discussion of the implications of this work for the future study of complex interactions in exposure mixture studies.
+
+\hypertarget{humanistic}{%
+\chapter{Humanistic perspective}\label{humanistic}}
 
 \hypertarget{bayes}{%
 \chapter{Bayesian regression methods}\label{bayes}}
 
 \hypertarget{motivation}{%
 \section{Motivation}\label{motivation}}
+
+We are interested in using Bayesian regression techniques to characterize the nature of complex interactions. In addition to being an interesting statistical challenge, complex interactions are also relevant from both a mechanistic and public health point of view.
 \begin{itemize}
 \tightlist
 \item
   mechanistic
 \item
   public health
+\end{itemize}
+Drawing from the mechanistic and public health contexts, there are three classes of interactions that are of interest.
+\begin{itemize}
+\tightlist
+\item
+  different types of interactions
+\end{itemize}
+However, non-additive interactions are difficult to detect.
+
+First, there are different forms that an interaction can take on. For instance, in the linear regression setting, the form of the interaction must be explicitly specified; most commonly, this is done by multiplying two variables together. However,
+
+Moreover, the number of possible interactions to consider quickly becomes intractable in high-dimensional settings. For instance, consider modelling 10 exposures in a linear regression setting. In order to be assessed, each interaction must be explicitly specified as a new term in the model. Including all the possible two-way interactions would involve adding \({10 \choose 2} = 45\) additional terms to the model, and all possible three-way interactions would add \({10 \choose 3} = 120\) additional terms.
+\begin{itemize}
+\tightlist
 \item
   interactions are difficult to pick up
 \item
   consider the number of interactions that would have to be encoded explicitly in MLR
-\item
-  different types of interactions
 \end{itemize}
+It is important also to acknowledge, here, that there is a limit to how many variables can be included in an interaction before it becomes incomprehensible to most humans.
+
 \hypertarget{bayesian-kernel-machine-regression}{%
 \section{Bayesian kernel machine regression}\label{bayesian-kernel-machine-regression}}
 
@@ -313,7 +331,7 @@ Kernel machine regression defines this relationship using a function \(h: \mathb
 Y_i = h(\textbf{x}_i) + \epsilon_i
 \]
 
-Here, \(h(\cdot)\) is represented by the function \(k(\cdot, \cdot)\), a kernel. The kernel controls the covariance, or the similarity, between values of \(h(\textbf{x})\) and as such ensures that points near each other on the prediction surface will have similar values --- or, in other words, that the prediction surface will be smooth. In the case of kernel machine regression, we define a positive definite kernel where \(k: \mathbb{R}^M\times \mathbb{R}^M \rightarrow \mathbb{R}\). There are many choices of functions to represent \(k\). BKMR uses the Gaussian kernel, also known as the radial basis function or, sometimes, the squared exponential kernel. The Gaussian kernel is defined
+\noindent Here, \(h(\cdot)\) is represented by the function \(k(\cdot, \cdot)\), a kernel. The kernel controls the covariance, or the similarity, between values of \(h(\textbf{x})\) and as such ensures that points near each other on the prediction surface will have similar values --- or, in other words, that the prediction surface will be smooth. In the case of kernel machine regression, we define a positive definite kernel where \(k: \mathbb{R}^M\times \mathbb{R}^M \rightarrow \mathbb{R}\). There are many choices of functions to represent \(k\). BKMR uses the Gaussian kernel, also known as the radial basis function or, sometimes, the squared exponential kernel. The Gaussian kernel is defined
 
 \[
 k(\textbf{x}, \textbf{x}') = \sigma_f^2\textrm{exp}\{
@@ -353,7 +371,7 @@ It is useful to make connections between this definition of kernel machine regre
 h(\textbf{x}) \sim \mathcal{GP}(\textbf{0}, k(\textbf{x}, \textbf{x}'))
 \]
 
-with mean function \(m\) and covariance function \(k\), where \(\textbf{x}\) is a vector of exposure values, and \(\textbf{x}'\) is the exposure profile of another subject. A Gaussian process is a collection of random variables, of which any finite number follow a multivariate normal distribution. Here, we assume that the expected value of the function with input \(\textbf{x}\) is \(\textbf{0}\). We use \(k\) for the covariance function, whic represents the dependence between the function values with inputs \(\textbf{x}\) and \(\textbf{x}'\): \(k(\textbf{x}, \textbf{x}') = \mathbb{E}[(h(\textbf{x})-m(\textbf{x})) (h(\textbf{x}')-m(\textbf{x}'))]\).
+\noindent with mean function \(m\) and covariance function \(k\), where \(\textbf{x}\) is a vector of exposure values, and \(\textbf{x}'\) is the exposure profile of another subject. A Gaussian process is a collection of random variables, of which any finite number follow a multivariate normal distribution. Here, we assume that the expected value of the function with input \(\textbf{x}\) is \(\textbf{0}\). We use \(k\) for the covariance function, which represents the dependence between the function values with inputs \(\textbf{x}\) and \(\textbf{x}'\): \(k(\textbf{x}, \textbf{x}') = \mathbb{E}[(h(\textbf{x})-m(\textbf{x})) (h(\textbf{x}')-m(\textbf{x}'))]\).
 
 Now, we can represent \(h\) as a collection of variables from a Gaussian process. \(h\) follows a multivariate normal distribution
 
@@ -393,11 +411,19 @@ In this section, we discuss the two methods for variable selection in BKMR: hier
 \hypertarget{priors-in-a-bayesian-framework}{%
 \subsection{Priors in a Bayesian framework}\label{priors-in-a-bayesian-framework}}
 
+Discuss priors, what form do they take? what are the default settings?
+
 \hypertarget{the-mcmc-algorithm}{%
 \subsection{The MCMC algorithm}\label{the-mcmc-algorithm}}
 
-\hypertarget{visualizing-interactions}{%
-\subsection{Visualizing interactions}\label{visualizing-interactions}}
+Brief intro to MCMC
+
+\hypertarget{detecting-interactions}{%
+\subsection{Detecting interactions}\label{detecting-interactions}}
+
+Discuss options for detecting interactions, i.e., can visualize relationship at various quantiles of other predictor, can conduct inference on inter-quantile difference
+
+Potentially provide toy example
 
 \hypertarget{bayesian-semiparametric-regression}{%
 \section{Bayesian semiparametric regression}\label{bayesian-semiparametric-regression}}
@@ -408,7 +434,9 @@ differences w/ bkmr
 \item
   makes distributional assumptions about the dataset
 \item
-  kernel regression is computationally intensive w/ large datasets
+  kernel regression is computationally intensive w/ large datasets but can handle many predictors
+\item
+  bsr highly dependent on the choice of function
 \end{itemize}
 \hypertarget{connections-to-linear-mixed-model}{%
 \subsection{Connections to linear mixed model}\label{connections-to-linear-mixed-model}}
@@ -419,8 +447,14 @@ differences w/ bkmr
 
 --\textgreater{}
 
-\hypertarget{ref-labels}{%
-\chapter{Tables, Graphics, References, and Labels}\label{ref-labels}}
+\hypertarget{sims}{%
+\chapter{Simulations}\label{sims}}
+
+\hypertarget{past-simulation-studies}{%
+\section{Past simulation studies}\label{past-simulation-studies}}
+
+\hypertarget{madres-data}{%
+\section{MADRES data}\label{madres-data}}
 
 \hypertarget{conclusion}{%
 \chapter*{Conclusion}\label{conclusion}}
