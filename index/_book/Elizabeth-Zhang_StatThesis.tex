@@ -244,9 +244,9 @@ There are clear practical motivations for studies that examine the health effect
 
 The classic multiple linear regression framework often fails to capture the true effects in this setting. In the past few years, a wide variety of statistical methods have been developed to overcome these challenges (Gibson et al., 2019; Yu et al., 2022), which have been accompanied by a host of comparative simulation studies for general mixture scenarios (e.g., Hoskovec et al., 2021; Lazarevic et al., 2020; Pesenti et al., 2023). However, there is not yet conclusive guidance about the ability of these methods to conduct inference on non-additive interactions between exposures.
 
-The goal of this thesis is to fill this gap in the literature by exploring the theory and performance of Bayesian regression techniques for quantifying complex interactions between environmental exposures. Specifically, I will compare two recently developed models for estimating the health effects of exposure mixtures: Bayesian Kernel Machine Regression (BKMR, Bobb et al., 2015) and Bayesian Semiparametric Regression (BSR, Antonelli et al., 2020).
+The goal of this thesis is to fill this gap in the literature by exploring the theory and performance of Bayesian regression techniques for quantifying complex interactions between environmental exposures. Specifically, we will compare two recently developed models for estimating the health effects of exposure mixtures: Bayesian Kernel Machine Regression (BKMR, Bobb et al., 2015) and Bayesian Semiparametric Regression (BSR, Antonelli et al., 2020).
 
-In an age where anthropogenic actions have radically reshaped the earth, humanistic inquiry can offer critical insights into how we navigate the hazards of our rapidly changing environment. I begin in Chapter 2 by contextualizing this thesis with a brief overview of cultural and social understandings of toxicity. Chapter 3 explains the motivation for studying interactions and provides background on the theory of Bayesian methods for analyzing exposure mixtures. Chapter 4 assesses the performance of these methods using a simulation study, based on a dataset with information on the relationship between prenatal exposure to heavy metals and gestational weight. Chapter 5 explores an application on X data {[}TBD{]}. I conclude with a discussion of the implications of this work for the future study of complex interactions in exposure mixture studies.
+In an age where anthropogenic actions have radically reshaped the earth, humanistic inquiry can offer critical insights into how we navigate the hazards of our rapidly changing environment. We begin in Chapter 2 by contextualizing this thesis with a brief overview of cultural and social understandings of toxicity. Chapter 3 explains the motivation for studying interactions and provides background on the theory of Bayesian methods for analyzing exposure mixtures. Chapter 4 assesses the performance of these methods using a simulation study, based on a dataset with information on the relationship between prenatal exposure to heavy metals and gestational weight. Chapter 5 explores an application on X data {[}TBD{]}. We conclude with a discussion of the implications of this work for the future study of complex interactions in exposure mixture studies.
 
 \hypertarget{humanistic}{%
 \chapter{Humanistic perspective}\label{humanistic}}
@@ -288,101 +288,117 @@ It is important also to acknowledge, here, that there is a limit to how many var
 \hypertarget{bayesian-kernel-machine-regression}{%
 \section{Bayesian kernel machine regression}\label{bayesian-kernel-machine-regression}}
 
-Defining notation:
+Notation for kernel machine regression:
 \begin{itemize}
 \tightlist
 \item
-  observations from \(i = 1, \dots ,n\)
+  \(\textbf{x}_m\) is a predictor variable in the predictor matrix \(\textbf{X}\) with \(m = 1, \dots, M\), measuring exposure variables or covariates in this case
 \item
-  \(\textbf{x}_m\) is a predictor variable in the predictor matrix \(\textbf{X}\) with \(m = 1, \dots, M\), measuring exposure variables in this case
-\item
-  \(\textbf{x}_i\) is a vector of values for a single observation in \(\textbf{X}\) with \(i = 1, \dots, n\), measuring the health outcome in this case
+  \(\textbf{x}_i\) is a vector of values for a single observation in \(\textbf{X}\) with \(i = 1, \dots, n\)
 \item
   \(x_{im}\) is an observation of \(\textbf{x}_m\)
 \item
-  \(Y_i\) is an observation of \(\textbf{Y}\)
+  \(Y_i\) is an observation of \(\textbf{Y}\), measuring the health outcome in this case
 \item
-  \(\rho\) is the tuning parameter inside the exponential expression of the covariance, equals \(2l\)
+  \(h(\textbf{x}_i)\) is the flexible function relating X to Y, represented by the kernel
 \item
-  \(\tau\) is the tuning parameter outside the expontential expression of the covariance, equals \(\sigma_f^2\)
+  \(k\) is the kernel function, the Gaussian in this case
 \item
-  \(k\) is the smoothing function, the Gaussian in this case
+  \(\textbf{K}\) is the \(n \times n\) kernel matrix, with \((i, j)\)th element \(k(\textbf{x}_i, \textbf{x}_j)\)
 \item
-  \(\textbf{K}\) is the \(n \times n\)kernel matrix, with (i, j)th element \(k(\textbf{x}_i, \textbf{x}_j)\)
+  \(\rho\) is the tuning parameter inside the kernel function which controls smoothness
 \item
-  \(h(\textbf{x}_i)\) the flexible function relating X to Y
+  \(\tau\) is the tuning parameter multiplied by the kernel matrix to represent covariance between \(h\) values
 \item
-  \(\boldsymbol\epsilon_i \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\), the residuals of the response
+  \(\boldsymbol\epsilon_i \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\) are the residuals of the response
+\end{itemize}
+BKMR specific notation:
+\begin{itemize}
+\tightlist
+\item
+  \(r_m=1/\rho_m\) is an augmented variable in \(\textbf{r}\) in the kernel matrix, for variable selection and controlling smoothness
+\item
+  \(\delta_m\) is an indicator variable in \(\boldsymbol\delta\) which represents inclusion in the model
+\item
+  \(\mathcal{S}_g\) is a group of partitioned predictors with \({g=1,\dots,G}\)
+\item
+  \(\{\delta_m|\textbf{x}_m \in{\mathcal{S}_g}\}\) is an indicator variable in \(\boldsymbol\delta_{\mathcal{S}_g}\) which represents inclusion of a parameter in group \(g\) in the model
+\item
+  \(\pi\) is the prior probability of inclusion in the model
+\item
+  \(\lambda = \tau\sigma^{-2}\) is a convenient way to define the prior on \(\tau\)
 \end{itemize}
 \hypertarget{kernel-machine-regression}{%
 \subsection{Kernel machine regression}\label{kernel-machine-regression}}
 
-In this section, we introduce kernel machine regression, with attention to its specific implementation in BKMR. Kernel machine regression is a nonparametric regression technique that can be used to capture nonlinear effects and nonadditive interactions. In the typical linear regression setting,
+In this section, we introduce kernel machine regression, with attention to its specific implementation in BKMR. We follow the presentation of this method provided by Bobb et al. (2015). Kernel machine regression is a nonparametric regression technique that can be used to capture nonlinear effects and nonadditive interactions. In the typical linear regression setting,
 
 \[
-Y_i = \textbf{x}_i^\top\boldsymbol{\beta} + \epsilon_i
+Y_i = \textbf{x}_i^\top\boldsymbol{\beta} + \epsilon_i,
 \]
 
-\noindent where \(Y_i\) measures a health outcome at a given point, \(\textbf{x}_i = (x_{1},\dots,x_{M})^\top\) is a vector of M exposures, \(\boldsymbol{\beta}\) is a vector of weights, and \(\epsilon_i\) is a random variable from \(\boldsymbol\epsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\). We can see that this function assumes that there is a linear relationship between the exposure and the response, and that the combined effects of multiple exposures are additive.
+\noindent where \(Y_i\) measures a health outcome at a given point, \(\textbf{x}_i = (x_{1},\dots,x_{M})^\top\) is a vector of M exposures or covariates (hereafter referred to as predictors), \(\boldsymbol{\beta}\) is a vector of weights, and \(\epsilon_i\) is a random variable from \(\boldsymbol\epsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\). We can see that this function assumes that there is a linear relationship between the exposure and the response, and that the combined effects of multiple exposures are additive.
 
 Kernel machine regression defines this relationship using a function \(h: \mathbb{R}^M \rightarrow \mathbb{R}\), where
 
 \[
-Y_i = h(\textbf{x}_i) + \epsilon_i
+Y_i = h(\textbf{x}_i) + \epsilon_i.
 \]
 
-\noindent Here, \(h(\cdot)\) is represented by the function \(k(\cdot, \cdot)\), a kernel. The kernel controls the covariance, or the similarity, between values of \(h(\textbf{x})\) and as such ensures that points near each other on the prediction surface will have similar values --- or, in other words, that the prediction surface will be smooth. In the case of kernel machine regression, we define a positive definite kernel where \(k: \mathbb{R}^M\times \mathbb{R}^M \rightarrow \mathbb{R}\). There are many choices of functions to represent \(k\). BKMR uses the Gaussian kernel, also known as the radial basis function or, sometimes, the squared exponential kernel. The Gaussian kernel is defined
+\noindent Here, \(h(\cdot)\) is represented by the function \(k(\cdot, \cdot)\), a kernel. The kernel controls the covariance, or the similarity, between values of \(h(\textbf{x})\) and as such ensures that points near each other on the prediction surface will have similar values --- or, in other words, that the prediction surface will be smooth. In the case of kernel machine regression, we define a positive definite kernel where \(k: \mathbb{R}^M\times \mathbb{R}^M \rightarrow \mathbb{R}\).
+
+There are many choices of functions to represent \(k\). BKMR uses the Gaussian kernel, also known as the radial basis function or, sometimes, the squared exponential kernel. The Gaussian kernel is defined as
 
 \[
-k(\textbf{x}, \textbf{x}') = \sigma_f^2\textrm{exp}\{
--\frac{||\textbf{x}-\textbf{x}'||^2}{2l}\}
+k(\textbf{x}, \textbf{x}') = \textrm{exp}\{
+-\frac{||\textbf{x}-\textbf{x}'||^2}{\rho}\},
 \]
 
-\noindent where \(||\textbf{x}-\textbf{x}'||^2 = \sum_{m=1}^M{(x_{m}-x_{m}')^2}\) for \(\textbf{x}\), a set of exposure values, and \(\textbf{x}\), the exposure profile of a second subject, \(\sigma_f^2\) is a tuning parameter that controls how much the function is allowed to vary, and \(l\) is a tuning parameter that controls the relationship between the correlation between two points and their distance. Greater values of \(l\) will enforce more dependence between points and make the resulting function smoother. Note that BKMR uses \(\rho=2l\) and \(\tau=\sigma_f^2\), so, henceforth, we will be referring to these parameters using BKMR's notation.
+\noindent where \(||\textbf{x}-\textbf{x}'||^2 = \sum_{m=1}^M{(x_{m}-x_{m}')^2}\) for a set of predictors values \(\textbf{x}\) and the predictor values of a second subject \(\textbf{x}'\). \(\rho\) is a tuning parameter that controls the relationship between the correlation between two points and their distance. Greater values of \(\rho\) will enforce more dependence between points and make the resulting function smoother. \(h\) is related to \(k\) by a multiplicative constant \(\tau\), a tuning parameter which controls how much the values of the \(h\) function are allowed to vary.
 
-Now that we have defined \(h\) and \(k\), we can think about how to characterize the relationship between our response and predictors. Kernel machine regression is a nonparametric technique because it does not specify a functional form for this relationship. Hence, we will think about estimating the response at a particular query point. Operationally, kernel machine regression uses a weighted average of all the observations in the dataset to estimate the response, as follows
+Now that we have defined \(h\) and \(k\), we can think about how to characterize the relationship between our response and predictors. Kernel machine regression is a nonparametric technique because it does not specify a functional form for this relationship. Hence, we will think about estimating the response at a particular query point. Operationally, {[}\emph{citation}{]} demonstrates that kernel machine regression uses a weighted average of all the observations in the dataset to estimate the response, defined as
 
 \[
-\bar{Y} = \frac{\sum_{i=1}^nw_iY_i}{\sum_{i=1}^nw_i}
+\bar{Y} = \frac{\sum_{i=1}^nw_iY_i}{\sum_{i=1}^nw_i},
 \]
 
 \noindent with some set of weights \(\{w_i\}_{i=1}^n\). Intuitively, we want to weight the observations that are closer to the query point more heavily. Using the Gaussian kernel as a weight allows us to achieve this. Replacing the weight with the Gaussian kernel, we get
 
 \[
-\bar{Y} = \frac{\sum_{i=1}^n K(\textbf{x}, \textbf{x}_i) Y_i}
-{\sum_{i=1}^n K(\textbf{x}, \textbf{x}_i)}
+\bar{Y} = \frac{\sum_{i=1}^n k(\textbf{x}, \textbf{x}_i) Y_i}
+{\sum_{i=1}^n k(\textbf{x}, \textbf{x}_i)}.
 \]
 
-As we move through the predictor space, we can think of the prediction as a continuous moving average of local points in the dataset. This gives us the following relationship
+As we move through the predictor space, we can think of the prediction as a continuous moving average of local points in the dataset. The correlation between two values of \(h\) is defined as
 
 \[
-\textrm{cor}(h_i, h_j) = \textrm{exp}\{-(\frac{1}{\rho}) \sum_{m=1}^M
-{(x_{im}-x_{jm})^2}\}
+\textrm{cor}(h_i, h_j) = \textrm{exp}\{-\frac{\sum_{m=1}^M
+{(x_{im}-x_{jm})^2}}{\rho}\},
 \]
 
-\noindent which allows us to see that values \(h\) near each other will have a higher correlation and thus similar values. This is also why the resulting function is smooth.
+\noindent which allows us to see that values of \(h\) near each other will have a higher correlation and thus similar values. This is also why the resulting function is smooth.
 
 \hypertarget{connection-with-mixed-models}{%
 \subsection{Connection with mixed models}\label{connection-with-mixed-models}}
 
-It is useful to make connections between this definition of kernel machine regression and mixed models. To do this, we can represent \(h(\textbf{x})\) as following a Gaussian process probability distribution, defined
+It is useful to make connections between this definition of kernel machine regression and mixed models. Liu et al. (2007) demonstrated this by representing \(h(\textbf{x})\) as following a Gaussian process probability distribution,
 
 \[
-h(\textbf{x}) \sim \mathcal{GP}(\textbf{0}, k(\textbf{x}, \textbf{x}'))
+h(\textbf{x}) \sim \mathcal{GP}(\textbf{0}, \tau k(\textbf{x}, \textbf{x}')),
 \]
 
-\noindent with mean function \(m\) and covariance function \(k\), where \(\textbf{x}\) is a vector of exposure values, and \(\textbf{x}'\) is the exposure profile of another subject. A Gaussian process is a collection of random variables, of which any finite number follow a multivariate normal distribution. Here, we assume that the expected value of the function with input \(\textbf{x}\) is \(\textbf{0}\). We use \(k\) for the covariance function, which represents the dependence between the function values with inputs \(\textbf{x}\) and \(\textbf{x}'\): \(k(\textbf{x}, \textbf{x}') = \mathbb{E}[(h(\textbf{x})-m(\textbf{x})) (h(\textbf{x}')-m(\textbf{x}'))]\).
+\noindent with mean function \(m\) and covariance function \(k\), where \(\textbf{x}\) is a vector of the predictor values, and \(\textbf{x}'\) contains the predictor values of another subject. A Gaussian process is a collection of random variables, of which any finite number follow a multivariate normal distribution. Here, we assume that the expected value of the \(h\) function with input \(\textbf{x}\) is \(\textbf{0}\). We use \(k\) for the covariance function, which represents the dependence between the function values with inputs \(\textbf{x}\) and \(\textbf{x}'\): \(k(\textbf{x}, \textbf{x}') = \mathbb{E}[(h(\textbf{x})- \textbf{0}) (h(\textbf{x}')- \textbf{0})]\).
 
-Now, we can represent \(h\) as a collection of variables from a Gaussian process. \(h\) follows a multivariate normal distribution
+Now, we can represent \(h\) as a collection of variables from a Gaussian process. \(h\) follows a multivariate normal distribution,
 
 \[
-h({\textbf{x}}) \sim N(\textbf{0}, \textbf{K})
+h({\textbf{x}}) \sim N(\textbf{0}, \tau\textbf{K}),
 \]
 
-\noindent where \(h({\textbf{x}}) = h(\textbf{x}_1), h(\textbf{x}_2), \dots, h(\textbf{x}_n)\), and \(\textbf{K}\) is the kernel matrix. The kernel matrix is an \(n \times n\) matrix with \((i, j)\)th element \(k(\textbf{x}_i, \textbf{x}_j)\). Now, returning back to the regression view, we can think of each \(Y_i\) as following the distribution
+\noindent where \(h({\textbf{x}}) = [h(\textbf{x}_1), h(\textbf{x}_2), \dots, h(\textbf{x}_n)]^\top\) and \(\textbf{K}\) is the kernel matrix. The kernel matrix is an \(n \times n\) matrix with \((i, j)\)th element \(k(\textbf{x}_i, \textbf{x}_j)\). Now, returning back to the regression view, we can think of each \(Y_i\) as following the distribution
 
 \[
-Y_i \overset{\mathrm{ind}}{\sim} N(h(\textbf{x}_i), \sigma^2) \text{ for } i = 1,\dots,n
+Y_i \overset{\mathrm{ind}}{\sim} N(h(\textbf{x}_i), \sigma^2) \text{ for } i = 1,\dots,n,
 \]
 
 \noindent where \(\sigma^2\) comes from the variance of the residuals.
@@ -390,7 +406,7 @@ Y_i \overset{\mathrm{ind}}{\sim} N(h(\textbf{x}_i), \sigma^2) \text{ for } i = 1
 \hypertarget{toy-example}{%
 \subsection{Toy example}\label{toy-example}}
 
-In the following section, we introduce the technique with a toy example.
+In the following section, we introduce kernel machine regression with a toy example.
 
 Consider the following case where we want to model the relationship between a single predictor and a response variable. Suppose the true relationship between x and Y is defined \(Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})\)
 \begin{center}\includegraphics{Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-2-1} \end{center}
@@ -406,17 +422,76 @@ We can also use this example to understand how our choice of the scaling paramet
 \hypertarget{variable-selection}{%
 \subsection{Variable selection}\label{variable-selection}}
 
-In this section, we discuss the two methods for variable selection in BKMR: hierarchical variable selectiona and component-wise variable selection.
+Now that we have defined kernel machine regression, we can extend it to the Bayesian paradigm. In this section, we discuss the two methods for Bayesian variable selection in BKMR: hierarchical variable selection and component-wise variable selection (Bobb et al., 2015).
 
-\hypertarget{priors-in-a-bayesian-framework}{%
-\subsection{Priors in a Bayesian framework}\label{priors-in-a-bayesian-framework}}
+Component-wise selection follows the same framework as variable selection in a typical Bayesian multiple regression except, instead of augmenting each predictor, we augment the kernel function as
 
+\[
+k(\textbf{x}, \textbf{x}'|\textbf{r}) = \text{exp}\{ -\sum_{m=1}^Mr_m(x_m-x_m')^2\},
+\]
+
+\noindent where \(\textbf{r}=[r_1,\dots,r_M]^\top\). We define \(r_m=\frac{1}{\rho_m}\), the inverse of the tuning parameter \(\rho_m\) for each \(\textbf{x}_m\), as we want to be able to shrink the influence of unimportant predictors in the model to \(r_m=0\). We now define the kernel matrix \(\textbf{K}_{\textbf{X},\textbf{r}}\) as the \(n\times n\) matrix with \((i,j)\)th element \(k(\textbf{x}, \textbf{x}'|\textbf{r})\). To allow \(r_m\) to equal 0 with non-zero probability, we first define an indicator variable determining whether or not a predictor is included in the variable, which is distributed as
+
+\[
+\delta_m \sim \text{Bernoulli}(\pi),
+\]
+
+\noindent where \(\pi\) is the prior probability of inclusion, and the posterior mean of \(\delta_0\) is the posterior probability of inclusion of \(\textbf{x}_m\). Now, we can assume a ``slab-and-spike'' prior on \(r_m\), distributed as
+
+\[
+r_m|\delta_m \sim \delta_mf(\cdot) + (1-\delta_m)P_0,
+\]
+
+\noindent where \(f(\cdot)\) is some pdf with support \(\mathbb{R}^+\) and \(P_0\) denotes the density with point mass at 0.
+
+While this process of component-wise variable selection works well in a typical multiple regression setting, it can lead to unreliable estimates in situations where the predictors are highly correlated with each other, which is common in exposure mixture studies. In this case, the correlated components contribute similar information to the model, and component-wise variable selection is not able to distinguish which predictor is important. BKMR deals with this problem by introducing hierarchical variable selection.
+
+Hierarchical variable selection involves partitioning the predictors \(\textbf{x}_1, \dots, \textbf{x}_M\) a priori into groups \(\mathcal{S}_g\) with \(g = 1,\dots,G\). These groups are selected with the aim of keeping within-group correlation high and between-group correlation low. The indicators from \(r_m|\delta_m\) are now distributed as
+
+\[
+\boldsymbol\delta_{\mathcal{S}_g} | \omega_g \sim 
+\text{Multinomial}(\omega_g, \boldsymbol\pi_{\mathcal{S}_g}), g=1,\dots,G,\\
+\omega_g \sim\text{Bernoulli}(\pi),
+\]
+
+\noindent where \(\boldsymbol\delta_{\mathcal{S}_g}=\{\delta_m|\textbf{x}_m \in{\mathcal{S}_g}\}\) and \(\boldsymbol\pi_{\mathcal{S}_g}\) are vectors of indicator variables and prior probabilities, respectively, of a predictor \(\textbf{x}_m\) in group \(\mathcal{S}_g\) entering the model. By this approach, at most one predictor in each group is allowed to enter the model.
+
+While hierarchical variable selection resolves the issue of multicollinearity, it requires specifying subgroups of predictors a priori and assumes that one predictor in each group can capture the information of the rest. Hence, care should be taken to justify the partitioning of predictors when taking this approach.
+
+\hypertarget{prior-specification}{%
+\subsection{Prior specification}\label{prior-specification}}
+
+In this section, we specify the prior distributions and parameters used in BKMR.
+\begin{itemize}
+\item
+  \(r_m|\delta_m \sim \delta_m\text{Unif}^{-1}(a_r, b_r) + (1-\delta_m)P_0\)
+\item
+  \(\rho_m=1/r_m \sim \text{Unif}(a_r,b_r)\)
+\item
+  \(\delta_m | \pi \sim \text{Bernoulli}(\pi)\)
+\item
+  \(\delta_m | \pi \sim \text{Bernoulli}(\pi)\)
+\item
+  \(\delta_m | \pi \sim \text{Bernoulli}(\pi)\)
+\item
+  \(\pi \sim \text{Beta}(a_\pi, b_\pi)\)
+\item
+  \(\sigma^{-2} \sim \text{Gamma}(a_\sigma, b_\sigma)\)
+\item
+  \(\lambda = \tau\sigma^{-2} \sim \text{Gamma}(a_\lambda, b_\lambda)\)
+\end{itemize}
 Discuss priors, what form do they take? what are the default settings?
 
 \hypertarget{the-mcmc-algorithm}{%
 \subsection{The MCMC algorithm}\label{the-mcmc-algorithm}}
 
-Brief intro to MCMC
+Briefly, we discuss the algorithm used in the BKMR package (Bobb et al., 2015; Bobb, Claus Henn, Valeri, \& Coull, 2018), with commentary on its implications for the model fitting process.
+
+BKMR uses a Markov chain Monte Carlo (MCMC) sampler with a hybrid Gibbs and Metropolis-Hastings sampler to estimate the posterior distributions. In particular, a Gibbs step is used to update the distribution of \(\sigma^2\) while a Metropolis-Hastings step is used to update the distribution of \(\lambda\). For component-wise and hierarchical variable selection, \((\textbf{r}, \boldsymbol\delta, \boldsymbol\omega)\) are sampled jointly using a Metropolis-Hastings sampling scheme.
+
+While each distribution generated by the Gibbs step is always accepted, the distributions for \(\lambda\) and \(r_m\) generated by the Metroplis-Hastings steps have a probability of acceptance that is dependent on the standard deviation of the proposal distribution (Bobb, 2017). This standard deviation is a tuning parameter; in general, increasing the standard deviation leads to lower acceptance rates. Acceptance rates that are too low lead to slower convergence, but rates that are too high can cause convergence to an non-optimal distribution.
+
+A major computational limitation of BKMR is that at each iteration of the MCMC algorithm, the \(n \times n\) augmented kernel matrix \(\textbf{K}_{\textbf{Z},\textbf{r}}\) must be inverted multiple times. BKMR employs a Gaussian predictive process which involves specifying a set \(l\) points, or ``knots,'' that is a subset of the predictor space. The vector of predictors can be approximated by projection on this lower dimensional space, which allows the algorithm to perform inversions on an \(l\times l\) matrix.
 
 \hypertarget{detecting-interactions}{%
 \subsection{Detecting interactions}\label{detecting-interactions}}
@@ -506,14 +581,17 @@ Corrections may be made to the body of the thesis, but every such correction wil
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-angel2000}{}}%
-Angel, E. (2000). \emph{Interactive computer graphics : A top-down approach with OpenGL}. Boston, MA: Addison Wesley Longman.
+\leavevmode\vadjust pre{\hypertarget{ref-bobb_example_2017}{}}%
+Bobb, J. F. (2017, December). Example using the bkmr {R} package with simulated data from the {NIEHS} mixtures workshop. Retrieved from \url{https://jenfb.github.io/bkmr/SimData1.html\#1_load_packages_and_download_data}
 
-\leavevmode\vadjust pre{\hypertarget{ref-angel2001}{}}%
-Angel, E. (2001a). \emph{Batch-file computer graphics : A bottom-up approach with QuickTime}. Boston, MA: Wesley Addison Longman.
+\leavevmode\vadjust pre{\hypertarget{ref-bobb_statistical_2018}{}}%
+Bobb, J. F., Claus Henn, B., Valeri, L., \& Coull, B. A. (2018). Statistical software for analyzing the health effects of multiple concurrent exposures via {Bayesian} kernel machine regression. \emph{Environmental Health}, \emph{17}(1), 67. http://doi.org/\href{https://doi.org/10.1186/s12940-018-0413-y}{10.1186/s12940-018-0413-y}
 
-\leavevmode\vadjust pre{\hypertarget{ref-angel2002a}{}}%
-Angel, E. (2001b). \emph{Test second book by angel}. Boston, MA: Wesley Addison Longman.
+\leavevmode\vadjust pre{\hypertarget{ref-bobb_bayesian_2015}{}}%
+Bobb, J. F., Valeri, L., Claus Henn, B., Christiani, D. C., Wright, R. O., Mazumdar, M., \ldots{} Coull, B. A. (2015). Bayesian kernel machine regression for estimating the health effects of multi-pollutant mixtures. \emph{Biostatistics}, \emph{16}(3), 493--508. http://doi.org/\href{https://doi.org/10.1093/biostatistics/kxu058}{10.1093/biostatistics/kxu058}
+
+\leavevmode\vadjust pre{\hypertarget{ref-liu_semiparametric_2007}{}}%
+Liu, D., Lin, X., \& Ghosh, D. (2007). Semiparametric {Regression} of {Multidimensional} {Genetic} {Pathway} {Data}: {Least}-{Squares} {Kernel} {Machines} and {Linear} {Mixed} {Models}. \emph{Biometrics}, \emph{63}(4), 1079--1088. http://doi.org/\href{https://doi.org/10.1111/j.1541-0420.2007.00799.x}{10.1111/j.1541-0420.2007.00799.x}
 
 \end{CSLReferences}
 % Index?
