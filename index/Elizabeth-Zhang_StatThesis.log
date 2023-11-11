@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.7)  9 NOV 2023 09:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.7)  11 NOV 2023 17:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -516,10 +516,10 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 1.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [5]
 
-LaTeX Warning: Reference `ref-labels' on page vi undefined on input line 25.
+LaTeX Warning: Reference `ref-labels' on page vi undefined on input line 28.
 
 
-LaTeX Warning: Reference `ref-labels' on page vi undefined on input line 26.
+LaTeX Warning: Reference `ref-labels' on page vi undefined on input line 29.
 
 )
 \tf@toc=\write5
@@ -537,7 +537,7 @@ LaTeX Warning: Reference `ref-labels' on page vi undefined on input line 26.
 \tf@lof=\write7
 \openout7 = `Elizabeth-Zhang_StatThesis.lof'.
 
-[9] [10
+[9{/Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}] [10
 
 ]
 Chapter 1.
@@ -581,74 +581,107 @@ LaTeX Font Info:    Font shape `U/lasy/b/n' in size <8> not available
 (Font)              Font shape `U/lasy/m/n' tried instead on input line 313.
 LaTeX Font Info:    Font shape `U/lasy/b/n' in size <6> not available
 (Font)              Font shape `U/lasy/m/n' tried instead on input line 313.
-[8{/Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}] [9]
+[8{/Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}]
+Underfull \vbox (badness 3907) has occurred while \output is active []
+
+[9]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [10] [11]
-<Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-2-1.pdf, id=268, 361.35pt x 216.81pt>
-File: Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-2-1.pdf Graphic file (type pdf)
-<use Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-2-1.pdf>
-Package pdftex.def Info: Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-2-1.pdf  used on input line 412.
-(pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
-[12 <./Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-2-1.pdf>]
-<Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-3-1.pdf, id=283, 361.35pt x 216.81pt>
-File: Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-3-1.pdf Graphic file (type pdf)
-<use Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-3-1.pdf>
-Package pdftex.def Info: Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-3-1.pdf  used on input line 415.
-(pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
-<Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-4-1.pdf, id=284, 361.35pt x 216.81pt>
-File: Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-4-1.pdf Graphic file (type pdf)
-<use Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-4-1.pdf>
-Package pdftex.def Info: Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-4-1.pdf  used on input line 418.
-(pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
-[13 <./Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-3-1.pdf> <./Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-4-1.pdf>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-[14] [15] [16]
-<Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-5-1.pdf, id=318, 361.35pt x 216.81pt>
-File: Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-5-1.pdf Graphic file (type pdf)
-<use Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-5-1.pdf>
-Package pdftex.def Info: Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-5-1.pdf  used on input line 521.
-(pdftex.def)             Requested size: 361.34912pt x 216.80946pt.
+<figures/ch3_toy1.png, id=297, 361.35pt x 216.81pt>
+File: figures/ch3_toy1.png Graphic file (type png)
+<use figures/ch3_toy1.png>
+Package pdftex.def Info: figures/ch3_toy1.png  used on input line 416.
+(pdftex.def)             Requested size: 325.215pt x 195.1305pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[17] [18 <./Elizabeth-Zhang_StatThesis_files/figure-latex/unnamed-chunk-5-1.pdf>]
-Chapter 4.
-[19
+[12]
+<figures/ch3_toy2.png, id=305, 361.35pt x 289.08pt>
+File: figures/ch3_toy2.png Graphic file (type png)
+<use figures/ch3_toy2.png>
+Package pdftex.def Info: figures/ch3_toy2.png  used on input line 427.
+(pdftex.def)             Requested size: 325.215pt x 260.174pt.
 
-] [20
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 538.
+[13 <./figures/ch3_toy1.png>]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 435.
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [21] [22
+)
+<figures/ch3_toy3.png, id=314, 361.35pt x 216.81pt>
+File: figures/ch3_toy3.png Graphic file (type png)
+<use figures/ch3_toy3.png>
+Package pdftex.def Info: figures/ch3_toy3.png  used on input line 438.
+(pdftex.def)             Requested size: 325.215pt x 195.1305pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[14 <./figures/ch3_toy2.png>]
+<figures/ch3_toyrho.png, id=322, 505.89pt x 216.81pt>
+File: figures/ch3_toyrho.png Graphic file (type png)
+<use figures/ch3_toyrho.png>
+Package pdftex.def Info: figures/ch3_toyrho.png  used on input line 447.
+(pdftex.def)             Requested size: 433.62pt x 185.84093pt.
+[15 <./figures/ch3_toy3.png> <./figures/ch3_toyrho.png>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[16]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[17] [18] [19]
+<figures/ch3_toy4.png, id=349, 361.35pt x 216.81pt>
+File: figures/ch3_toy4.png Graphic file (type png)
+<use figures/ch3_toy4.png>
+Package pdftex.def Info: figures/ch3_toy4.png  used on input line 540.
+(pdftex.def)             Requested size: 325.215pt x 195.1305pt.
+<figures/ch3_toy5.png, id=350, 361.35pt x 216.81pt>
+File: figures/ch3_toy5.png Graphic file (type png)
+<use figures/ch3_toy5.png>
+Package pdftex.def Info: figures/ch3_toy5.png  used on input line 548.
+(pdftex.def)             Requested size: 325.215pt x 195.1305pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[20]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[21 <./figures/ch3_toy4.png> <./figures/ch3_toy5.png>] [22]
+Chapter 4.
+[23
+
+] [24
+
+] [25] [26
 
 ]
 Appendix A.
 
-LaTeX Warning: Reference `ref-labels' on page 23 undefined on input line 552.
+LaTeX Warning: Reference `ref-labels' on page 27 undefined on input line 601.
 
 
-LaTeX Warning: Reference `ref-labels' on page 23 undefined on input line 555.
+LaTeX Warning: Reference `ref-labels' on page 27 undefined on input line 604.
 
-[23] [24
+[27] [28
 
 ]
 Appendix B.
-[25] [26
+[29] [30
 
-] [27] [28
+] [31] [32
 
 ]
-Underfull \hbox (badness 1472) in paragraph at lines 587--589
+Underfull \hbox (badness 1472) in paragraph at lines 639--641
  \T1/lmr/m/n/12 soft-ware for an-a-lyz-ing the health ef-fects of mul-ti-ple con-cur-rent ex-po-sures
  []
 
-[29
 
-] (./Elizabeth-Zhang_StatThesis.aux)
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[33
+
+] [34] (./Elizabeth-Zhang_StatThesis.aux)
  ***********
 LaTeX2e <2023-11-01>
 L3 programming layer <2023-11-01>
@@ -657,25 +690,25 @@ L3 programming layer <2023-11-01>
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `Elizabeth-Zhang_StatThesis.out' has not changed.
-(rerunfilecheck)             Checksum: CBB50E77A2061B05DD39D67FC585167F;4633.
+(rerunfilecheck)             Checksum: BC3226672D5A1E6C14FFED9F1AAEBE14;5135.
  )
 (\end occurred inside a group at level 1)
 
 ### semi simple group (level 1) entered at line 207 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 13313 strings out of 476238
- 213731 string characters out of 5795602
+ 13388 strings out of 476238
+ 213520 string characters out of 5795602
  1934530 words of memory out of 5000000
- 34923 multiletter control sequences out of 15000+600000
+ 34974 multiletter control sequences out of 15000+600000
  623355 words of font info for 82 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,12n,79p,1534b,697s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,1534b,725s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Elizabeth-Zhang_StatThesis.pdf (41 pages, 346857 bytes).
+Output written on Elizabeth-Zhang_StatThesis.pdf (46 pages, 704320 bytes).
 PDF statistics:
- 514 PDF objects out of 1000 (max. 8388607)
- 421 compressed objects within 5 object streams
- 100 named destinations out of 1000 (max. 500000)
- 253 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 566 PDF objects out of 1000 (max. 8388607)
+ 470 compressed objects within 5 object streams
+ 124 named destinations out of 1000 (max. 500000)
+ 287 words of extra memory for PDF output out of 10000 (max. 10000000)
 
