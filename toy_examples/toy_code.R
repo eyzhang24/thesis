@@ -6,6 +6,10 @@ library(splines)
 # set theme for plots
 theme_set(theme_light())
 theme_update(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+theme_update(
+  strip.background = element_rect(color="gray", fill="white"), 
+  strip.text = element_text(color = "gray30")
+)
 
 ########
 # generate simulated points

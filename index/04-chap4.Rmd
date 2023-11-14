@@ -8,6 +8,39 @@ require(ggplot2)
 
 ## Past simulation studies
 
-## MADRES data
+Lit review of past sim studies which include bayesian regression approaches + others, note how they haven't focused on interactions 
 
+## Methods
 
+What are our aims? 
+
+### Models
+
+Models compared, specify the parameters for each (justify them!)
+
+- MLR
+- MLR with known form of interactions specified
+- BKMR with component-wise
+- BKMR with hierarchical
+- BMIM? extension of BKMR with hierarchical 
+- BSR
+
+### MADRES data
+
+- cite original study design paper
+- cite Howe et al. 2021, which applied BKMR and BSR to this data, what did they find? 
+
+### Simulating data
+
+- use original predictor values in MADRES data. allows us to explore these methods on real-world data
+- simulate outcome using a formula w/ different types of interaction
+- change effect size (three levels?)
+- change nature of interaction (mathematical formulation, two- or three-way, b/t just exposures or b/t exposures and covariates)
+
+### Model assessment
+
+- how many times is interaction picked up? 
+
+## Results
+
+- figures + tables w/ model performance

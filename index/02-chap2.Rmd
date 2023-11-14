@@ -1,4 +1,6 @@
-# Humanistic perspective {#humanistic}
+# Humanistic Perspective {#humanistic}
+
+
 <!--
 This file is for including Chapter 2.  
 
