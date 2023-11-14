@@ -117,7 +117,7 @@ As we move through the predictor space, we can think of the prediction as a cont
 
 $$
 \textrm{cor}(h_i, h_j) = \textrm{exp}\{-\frac{||
-x_{im}-x_{jm}||}{\rho}\},
+\textbf{x}_{i}-\textbf{x}_{j}||}{\rho}\},
 $$
 
 \noindent which allows us to see that values of $h$ near each other will have a higher correlation and thus similar values. This is also why the resulting function is smooth.
