@@ -156,7 +156,7 @@ Use this space to thank those who have helped you in the thesis process (profess
   framerule = 1.5mm, rulecolor = \color{black!15}
   }
 
-\title{Bayesian Nonparametric Regression Models for Quantifying Complex Interactions in Exposure Mixture Studies}
+\title{Flexible Bayesian Regression Models for Quantifying Complex Interactions in Exposure Mixture Studies}
 \author{Your R. Name}
 \date{April DD, 20YY}
 \division{}
@@ -236,23 +236,23 @@ Use this space to thank those who have helped you in the thesis process (profess
 \hypertarget{intro}{%
 \chapter{Introduction}\label{intro}}
 
-Rapid industrial development has created conditions of cumulative chronic toxicity which pose an acute risk to the wellbeing of humans and our living environment. In fact, it has been estimated that human activity releases chemicals at a rate of 220 billion tons per annum (Cribb, 2016). Scholars have recently declared that, at this global rate of chemical release, humanity has now surpassed the safe operating space of the planetary boundary for novel entities (Persson et al., 2022). As a result, exposure to low levels of pollutants has become an inevitable peril of daily life (Naidu et al., 2021; Vineis, 2018). Hence, it is especially timely that we prompt regulatory control of industrial pollution through studies which investigate the health effects of chemical exposures.
+Rapid industrial development has created conditions of cumulative chronic toxicity which pose an acute risk to the wellbeing of humans and our living environment. In fact, it has been estimated that, globally, human activity releases chemicals at a rate of 220 billion tons per annum (Cribb, 2016). These staggering levels of pollution have led scholars to formally declare that humanity has surpassed the safe operating space of the planetary boundary for novel entities (Persson et al., 2022). As a result, exposure to low levels of pollutants has become an inevitable peril of daily life (Naidu et al., 2021; Vineis, 2018). In this new era of pervasive toxicity, understanding the nature and severity of health effects associated with chemical exposures is especially timely.
 
-For this, we turn to epidemiological studies. The broad field of preventive epidemiology involves the identification of potentially modifiable risk factors that contribute to the burden of disease within human populations. Environmental epidemiology, in particular, considers the effect of environmental exposures --- chemical or otherwise. However, studies concerning chemical pollutants in environmental epidemiology have historically focused on elucidating the effect and mechanisms of exposures to a single pollutant. In reality, humans are invariably exposed to numerous complex chemical mixtures which together contribute to the progression of adverse health outcomes. Therefore, risk assessments of single pollutants likely fail to capture the true consequences of these complex exposures (Heys et al., 2016). Assessing mixtures of chemicals can also have more direct implications for public health interventions. The United States Environmental Protection Agency (U.S. EPA) currently passes regulations for individual pollutants. In practice, though, regulation occurs by controlling the source of pollution, which is responsible for the production of a whole mixture of chemicals with specific joint effects on human health. As a result, the National Academies of Science has advocated for a multipollutant regulatory approach, which is likely to be more protective of human health (Committee on Incorporating 21st Century Science into Risk-Based Evaluations et al., 2017).
+For this, we turn to epidemiological studies. The broad field of preventive epidemiology involves the identification of potentially modifiable risk factors that contribute to the burden of disease within human populations. Environmental epidemiology, in particular, considers the effect of environmental exposures --- chemical or otherwise. However, studies concerning chemical pollutants in environmental epidemiology have historically focused on elucidating the effect and mechanisms of exposures to a single pollutant. In reality, humans are invariably exposed to numerous complex chemical mixtures which together contribute to the progression of adverse health outcomes. Therefore, risk assessments of single pollutants likely fail to capture the true consequences of these complex exposures (Heys, Shore, Pereira, Jones, \& Martin, 2016). Assessing mixtures of chemicals can also have more direct implications for public health interventions. The United States Environmental Protection Agency (U.S. EPA) currently passes regulations for individual pollutants. In practice, though, regulation occurs by controlling the source of pollution, which is responsible for the production of a whole mixture of chemicals with specific joint effects on human health. As a result, the National Academies of Science has advocated for a multipollutant regulatory approach, which is likely to be more protective of human health (Committee on Incorporating 21st Century Science into Risk-Based Evaluations, Board on Environmental Studies and Toxicology, Division on Earth and Life Studies, \& National Academies of Sciences, Engineering, and Medicine, 2017).
 
 There are clear practical motivations for studies that examine the health effects of exposure to co-occurring chemical mixtures, hereafter referred to as exposure mixtures. However, expanding the focus of analysis from one exposure to multiple exposures introduces unique statistical challenges. In addition to a common issue of small effect sizes and small sample sizes present in most exposure analyses, multiple exposure analyses must also contend with high-dimensionality, collinearity, non-linear effects, and non-additive interactions (Yu et al., 2022). In particular, data with numerous pollutants, or predictors, require exponentially greater levels of complexity and time cost in analysis. Collinearity between exposures is common when analyzing pollutants from a single source and can lead to unstable estimates in a generalized linear model if left unaccounted for. Finally, exposures can have both non-linear single effects and non-additive interaction effects, which are difficult to capture unless explicitly specified in the model.
 
-The classic multiple linear regression framework often fails to capture the true effects in this setting. In the past few years, a wide variety of statistical methods have been developed to overcome these challenges (Gibson et al., 2019; Yu et al., 2022), which have been accompanied by a host of comparative simulation studies for general mixture scenarios (e.g., Hoskovec et al., 2021; Lazarevic et al., 2020; Pesenti et al., 2023). However, to our knowledge, there has yet to be a simulation study which provides conclusive guidance about the ability of these methods to conduct inference on non-additive interactions between exposures, particularly when the nature and effect sizes of these interactions vary.
+The classic multiple linear regression framework often fails to capture the true effects in this setting. In the past few years, a wide variety of statistical methods have been developed to overcome these challenges (Gibson et al., 2019; Yu et al., 2022), which have been accompanied by a host of comparative simulation studies for general mixture scenarios {[}e.g., Hoskovec, Benka-Coker, Severson, Magzamen, \& Wilson (2021); lazarevic\_performance\_2020; pesenti\_comparative\_2023{]}. However, to our knowledge, there has yet to be a simulation study which provides conclusive guidance about the ability of these methods to conduct inference on non-additive interactions between exposures, particularly when the nature and effect sizes of these interactions vary.
 
 The goal of this thesis is to fill this gap in the literature by exploring the theory and performance of Bayesian regression techniques for quantifying complex interactions between multiple environmental exposures and related covariates. Specifically, we will compare two recently developed models for estimating the health effects of exposure mixtures: Bayesian Kernel Machine Regression (BKMR, Bobb et al., 2015) and Bayesian Semiparametric Regression (BSR, Antonelli et al., 2020).
 
-In an age where anthropogenic actions have radically reshaped the earth, humanistic inquiry can offer critical insights into how we navigate the hazards of our rapidly changing environment. We begin in Chapter 2 by contextualizing this thesis with a brief overview of cultural and social understandings of toxicity. Chapter 3 explains the motivation for studying interactions and provides background on the theory of Bayesian methods for analyzing exposure mixtures. Chapter 4 assesses the performance of these methods using a simulation study, based on a dataset with information on the relationship between prenatal exposure to heavy metals and gestational weight. Chapter 5 explores an application on X data {[}TBD{]}. We conclude with a discussion of the implications of this work for the future study of complex interactions in exposure mixture studies.
+In an age where anthropogenic actions have radically reshaped the earth, humanistic inquiry can offer critical insights into how we navigate the hazards of our rapidly changing environment. We begin in Chapter 2 by contextualizing this thesis with a brief overview of cultural and social understandings of toxicity. Chapter 3 explains the motivation for studying interactions and provides background on the theory of Bayesian methods for analyzing exposure mixtures. Chapter 4 assesses the performance of these methods using a simulation study, based on a dataset with information on the relationship between prenatal exposure to heavy metals and gestational weight. We conclude with a discussion of the implications of this work for the future study of complex interactions in exposure mixture studies.
 
 \hypertarget{humanistic}{%
-\chapter{Humanistic perspective}\label{humanistic}}
+\chapter{Humanistic Perspective}\label{humanistic}}
 
 \hypertarget{bayes}{%
-\chapter{Bayesian regression methods}\label{bayes}}
+\chapter{Bayesian Regression Methods}\label{bayes}}
 
 \hypertarget{motivation}{%
 \section{Motivation}\label{motivation}}
@@ -281,7 +281,7 @@ It is important also to acknowledge, here, that there is a limit to how many var
 
 Thus far, we have discussed interactions within a statistical paradigm. However, in addition to being an interesting estimation challenge, non-additive interactions are also relevant in exposure mixture studies from both a mechanistic and public health point of view.
 
-From a mechanistic perspective, a non-additive statistical interaction between two chemical exposures suggests that these molecules may be functionally interacting with each other. Theoretical models propose that such interactions can be classified as either synergistic or antagonistic (Heys, Shore, Pereira, Jones, \& Martin, 2016; Plackett \& Hewlett, 1952). In a synergistic interaction, the joint effects of a mixture exceed the independent effects of each component. This usually occurs if a chemical induces an enzyme involved with the activation of a second chemical or if a chemical inhibits an enzyme that would have otherwise degraded a second chemical. For example, various synergistic interactions between heavy metals have been documented in the literature (e.g., Paithankar, Saini, Dwivedi, Sharma, \& Chowdhuri, 2021; Wang, Mukherjee, \& Park, 2018).
+From a mechanistic perspective, a non-additive statistical interaction between two chemical exposures suggests that these molecules may be functionally interacting with each other. Theoretical models propose that such interactions can be classified as either synergistic or antagonistic (Heys et al., 2016; Plackett \& Hewlett, 1952). In a synergistic interaction, the joint effects of a mixture exceed the independent effects of each component. This usually occurs if a chemical induces an enzyme involved with the activation of a second chemical or if a chemical inhibits an enzyme that would have otherwise degraded a second chemical. For example, various synergistic interactions between heavy metals have been documented in the literature (e.g., Paithankar, Saini, Dwivedi, Sharma, \& Chowdhuri, 2021; Wang, Mukherjee, \& Park, 2018).
 
 On the other hand, in an antagonistic interaction, the joint effects of a mixture are less than their independent effects. This can occur either through competition at the target site of an enzyme or through direct chemical reactions with each other. In general, synergistic interactions are more concerning in risk assessments, as they lead to underestimation of the true toxicity of a mixture.
 
@@ -298,11 +298,11 @@ In this section, we introduce the theory of BKMR. First, we define the notation 
 \begin{itemize}
 \tightlist
 \item
-  \(\textbf{x}_m\) is a predictor variable in the predictor matrix \(\textbf{X}\) with \(m = 1, \dots, M\), measuring exposure variables or covariates in this case
+  \(X_m\) is a predictor variable in the predictor matrix \(\textbf{X}\) with \(m = 1, \dots, M\), measuring exposure variables or covariates in this case
 \item
   \(\textbf{x}_i\) is a vector of values for a single observation in \(\textbf{X}\) with \(i = 1, \dots, n\)
 \item
-  \(x_{im}\) is an observation of \(\textbf{x}_m\)
+  \(x_{im}\) is an observation of \(X_m\)
 \item
   \(Y_i\) is an observation of \(\textbf{Y}\), measuring the health outcome in this case
 \item
@@ -342,10 +342,10 @@ We begin by introducing kernel machine regression, with attention to its specifi
 To contextualize this method, we start at the typical linear regression setting,
 
 \[
-Y_i = \textbf{x}_i^\top\boldsymbol{\beta} + \epsilon_i,
+Y_i = \textbf{x}_i\boldsymbol{\beta} + \epsilon_i,
 \]
 
-\noindent where \(Y_i\) measures a health outcome at a given point, \(\textbf{x}_i = [x_{1},\dots,x_{M}]^\top\) is a vector of M exposures or covariates (hereafter referred to as predictors), \(\boldsymbol{\beta}\) is a vector of weights, and \(\epsilon_i\) is a random variable from \(\boldsymbol\epsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\). We can see that this function assumes that there is a linear relationship between the exposure and the response, and that the combined effects of multiple exposures are additive.
+\noindent where \(Y_i\) measures a health outcome at a given point, \(\textbf{x}_i = [x_{i1},\dots,x_{iM}]\) is a vector of M exposures or covariates (hereafter referred to as predictors), \(\boldsymbol{\beta}\) is a vector of weights, and \(\epsilon_i\) is a random variable from \(\boldsymbol\epsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\). We can see that this function assumes that there is a linear relationship between the exposure and the response, and that the combined effects of multiple exposures are additive.
 
 Kernel machine regression defines this relationship using a flexible function \(h: \mathbb{R}^M \rightarrow \mathbb{R}\), where
 
@@ -381,7 +381,7 @@ As we move through the predictor space, we can think of the prediction as a cont
 
 \[
 \textrm{cor}(h_i, h_j) = \textrm{exp}\{-\frac{||
-x_{im}-x_{jm}||}{\rho}\},
+\textbf{x}_{i}-\textbf{x}_{j}||}{\rho}\},
 \]
 
 \noindent which allows us to see that values of \(h\) near each other will have a higher correlation and thus similar values. This is also why the resulting function is smooth.
@@ -447,7 +447,7 @@ Now, we fit a kernel machine regression on this data with \(\rho=2\) using the \
 
 \caption{Fitted kernel machine regression with $\rho=2$.}\label{fig:toy3}
 \end{figure}
-We can see in figure \ref{fig:toy3} that kernel machine regression captures the complex non-linear relationship between \(Y\) and \(x\) and closely follows the true distribution. We do note, though, that the estimation is less precise at the tails, where there is less information provided by local observations. We can also use this example to consider the effect of various values of \(\rho\) on the smoothness of the \(h\) function.
+We can see in Figure \ref{fig:toy3} that kernel machine regression captures the complex non-linear relationship between \(Y\) and \(x\) and closely follows the true distribution. We do note, though, that the estimation is less precise at the tails, where there is less information provided by local observations. We can also use this example to consider the effect of various values of \(\rho\) on the smoothness of the \(h\) function.
 \begin{figure}
 
 {\centering \includegraphics[width=1\linewidth]{figures/ch3_toyrho} 
@@ -461,7 +461,7 @@ Figure \ref{fig:toyrho} demonstrates the effect of relatively smaller and larger
 \hypertarget{variable-selection}{%
 \subsection{Variable selection}\label{variable-selection}}
 
-Now that we have defined kernel machine regression, we can extend it to the Bayesian paradigm. bobb\_bayesian\_2015 showed that the Bayesian approach can outperform frequentist kernel machine regression because simultaneous variable selection and estimation can better capture the exposure-response relationship. In this section, we discuss the two methods for Bayesian variable selection in BKMR: hierarchical variable selection and component-wise variable selection (Bobb et al., 2015).
+Now that we have defined kernel machine regression, we can extend it to the Bayesian paradigm. Bobb et al. (2015) showed that the Bayesian approach can outperform frequentist kernel machine regression because simultaneous variable selection and estimation can better capture the exposure-response relationship. In this section, we discuss the two methods for Bayesian variable selection in BKMR: hierarchical variable selection and component-wise variable selection (Bobb et al., 2015).
 
 Component-wise selection follows the same framework as variable selection in a typical Bayesian multiple regression except, instead of augmenting each predictor, we augment the kernel function as
 
@@ -553,8 +553,81 @@ differences w/ bkmr
 \item
   bsr highly dependent on the choice of function
 \end{itemize}
+Defining notation for spline regression:
+\begin{itemize}
+\tightlist
+\item
+  x
+\end{itemize}
+BSR specific notation:
+\begin{itemize}
+\tightlist
+\item
+  x
+\end{itemize}
 \hypertarget{spline-regression}{%
 \subsection{Spline regression}\label{spline-regression}}
+
+We begin by introducing spline regression, with attention to its specific implementation in BSR. Spline regression is a semiparametric regression technique that can be used to capture non-linear effects. In this introduction, we follow the presentation of spline regression provided by Antonelli et al. (2020), with additional details and explanation from Hastie, Tibshirani, \& Friedman (2009).
+
+Spline regression defines the regression relationship as
+
+\[
+Y_i = f(\textbf{x}_i) + \epsilon_i,
+\]
+
+\noindent where \(f\) is defined by a set of basis functions and \(\epsilon_i\) is a random variable from \(\boldsymbol\epsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\). BSR uses natural spline bases. In order to understand how these are constructed, we start with a broad definition of basis expansions, before exploring linear, cubic, and then natural spline bases.
+
+We determine the basis expansion by considering a piece-wise function of \(X_i\) with some order \(P\) and some set of \(K\) knots defining \(K+1\) disjoint intervals. BSR places knots at uniformly sized quantiles within the boundaries of \(X_i\). The most commonly used orders are \(P=1,2,\textrm{and } 4\), the constant, linear, and cubic splines, respectively. To begin, let us consider a continuous piece-wise linear spline basis (i.e., \(P=2\)) of a one-dimensional \(X\) with two interior knots. In this case, we use the following four basis functions:
+
+\[
+b_1(X)=1, \hspace{0.25in} b_2(X)=X, \hspace{0.25in} b_3(X)=(X-\xi_1)_+, \hspace{0.25in} b_4(X)=(X-\xi_2)_+,
+\]
+
+\noindent where \(\xi_1\) and \(\xi_2\) are the two interior knots, and \(t_+\) denotes the positive part. These bases are used to construct the regression model \(f(X)=\sum_{j=1}^4\beta_jb_j(X)\), which requires estimating \(K+P=4\) parameters. We can check the continuity restrictions at the knots by seeing that \(f(\xi_1^-)=\beta_1 + \xi_1\beta_2\) and \(f(\xi_1^+)= \beta_1 + \xi_1\beta_2+ (\xi_1-\xi_1)\beta_3\) are equal.
+
+Now, in the case of exposure mixtures, we want smoother functions that can capture the non-linear relationship between the response and the predictors. We can achieve this by increasing the order to \(P=4\) and using a cubic spline, with continuous first and second derivatives at the knots. The cubic spline is the lowest-order spline for which knot-discontinuity cannot be detected by the human eye. For example, for one \(X\) with two interior knots, we use the following six basis functions:
+
+\[
+\begin{split}
+b_1(X)=1, \hspace{0.25in}b_2(X)=X, \hspace{0.25in}b_3(X)=X^2, \\
+b_4(X)=X^3, \hspace{0.25in} b_5(X)=(X-\xi_1)^3_+, \hspace{0.25in} b_6(X)=(X-\xi_2)^3_+.
+\end{split}
+\]
+
+\noindent Now, the regression model is defined as \(f(X)= \sum_{j=1}^6\beta_jb_j(X)\) and requires estimating \(K+P=6\) parameters. It can be shown that \(f'(\xi_i^-)= f'(\xi_i^+)\) and \(f''(\xi_i^-)= f''(\xi_i^+)\).
+
+However, the behavior of polynomials near the boundaries of \(X\), where there is less information, can be erratic. Natural cubic splines, also referred to as just natural splines, address this by imposing an additional restriction of linearity at the boundaries of \(X\). Paradoxically, this also leads to a simpler model with four fewer parameters to estimate. A general definition of the \(K\) basis functions for a natural spline with interior knots \(\xi_j\), \(j=1,\dots,K\), is given by:
+
+\[
+\begin{split}
+N_1(X)=1, \hspace{0.25in} N_2(X)=X, \hspace{0.25in} N_{k+2}(X)=d_k(X)-d_{K-1}(X), \\
+d_k(X)=\frac{(X-\xi_k)^3_+ - (X-\xi_K)^3_+}{\xi_K-\xi_k}.
+\end{split}
+\]
+
+\noindent Here, the regression model is defined as \(f(X) = \sum_{j=1}^K\beta_jN_j(X)\), with \(K\) parameters, equal to \(d\) degrees of freedom in BSR.
+
+Now that we have defined natural splines, we introduce the construction of \(f\) in BSR by first assuming a two-dimensional case with \(X_1\) and \(X_2\). We define
+
+\[
+\begin{split}
+f(X_1) = \widetilde{X}_1\boldsymbol{\beta}_1, \hspace{0.25in} f(X_2) = \widetilde{X}_2\boldsymbol{\beta}_2,\\
+f(X_1,X_2) = \widetilde{X}_1\boldsymbol{\beta}_1 + \widetilde{X}_2\boldsymbol{\beta}_2 + \widetilde{X}_{12}\boldsymbol{\beta}_{12},
+\end{split}
+\]
+
+\noindent where \(\widetilde{X}_m=[b_{m1}(X_m),\dots,b_{md}(X_m)]\) represents a \(d\)-dimensional basis function expansion for \(m=1,2\), and \(\widetilde{X}_{12}= [b_{11}(X_1)b_{21}(X_2), b_{11}(X_1)b_{22}(X_2), \dots, b_{1d}(X_1)b_{2d}(X_2)]\) represents a \(d^2\)-dimensional basis expansion of the interaction between \(X_1\) and \(X_2\). Note that we must explicitly model the effect of the interaction term by assuming a multiplicative interaction between the basis functions of the predictors.
+
+Extending to the multi-dimensional setting, BSR assumes the following general model formulation:
+
+\[
+\begin{split}
+f(\textbf{x}_i)= \sum_{h=1}^pf^{(h)}(\textbf{x}_i), \\
+f^{(h)}(\textbf{x}_i)= \sum_{j_1=1}^M\widetilde{X}_{ij_1}\boldsymbol\beta_{j_1}^{(h)} + 
+\sum_{j_1=2}^M\sum_{j_2<j_1}\widetilde{X}_{ij_1j_2}\boldsymbol\beta_{j_1j_2}^{(h)} + \dots,
+\end{split}
+\]
 
 \hypertarget{connection-to-mixed-models-1}{%
 \subsection{Connection to mixed models}\label{connection-to-mixed-models-1}}
@@ -575,10 +648,31 @@ differences w/ bkmr
 
 }
 
-\caption{Spline regression}\label{fig:toy5}
+\caption{Cubic spline regression}\label{fig:toy5}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch3_toy6} 
+
+}
+
+\caption{Natural spline regression}\label{fig:toy6}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{figures/ch3_toybounds} 
+
+}
+
+\caption{Natural and cubic spline regression extrapolated outside the bounds of $x$}\label{fig:toybounds}
 \end{figure}
 \hypertarget{sparsity-inducing-priors}{%
 \subsection{Sparsity inducing priors}\label{sparsity-inducing-priors}}
+
+\[
+P(\boldsymbol\beta_X^{(h)}|\boldsymbol\zeta) = \bigg(1-\prod_{j\in S}\zeta_{jh}\bigg)\delta_{\textbf{0}} +
+\bigg(\prod_{j\in S}\zeta_{jh}\bigg) \psi_1(\boldsymbol\beta_S^{(h)}),
+\]
 
 \hypertarget{prior-specification-1}{%
 \subsection{Prior specification}\label{prior-specification-1}}
@@ -741,6 +835,9 @@ Corrections may be made to the body of the thesis, but every such correction wil
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-antonelli_estimating_2020}{}}%
+Antonelli, J., Mazumdar, M., Bellinger, D., Christiani, D., Wright, R., \& Coull, B. (2020). Estimating the health effects of environmental mixtures using {Bayesian} semiparametric regression and sparsity inducing priors. \emph{The Annals of Applied Statistics}, \emph{14}(1), 257--275. http://doi.org/\href{https://doi.org/10.1214/19-AOAS1307}{10.1214/19-AOAS1307}
+
 \leavevmode\vadjust pre{\hypertarget{ref-bellavia_statistical_2021}{}}%
 Bellavia, A. (2021). \emph{Statistical {Methods} for {Environmental} {Mixtures}}. Retrieved from \url{https://bookdown.org/andreabellavia/mixtures/preface.html}
 
@@ -756,11 +853,26 @@ Bobb, J. F., Claus Henn, B., Valeri, L., \& Coull, B. A. (2018). Statistical sof
 \leavevmode\vadjust pre{\hypertarget{ref-bobb_bayesian_2015}{}}%
 Bobb, J. F., Valeri, L., Claus Henn, B., Christiani, D. C., Wright, R. O., Mazumdar, M., \ldots{} Coull, B. A. (2015). Bayesian kernel machine regression for estimating the health effects of multi-pollutant mixtures. \emph{Biostatistics}, \emph{16}(3), 493--508. http://doi.org/\href{https://doi.org/10.1093/biostatistics/kxu058}{10.1093/biostatistics/kxu058}
 
+\leavevmode\vadjust pre{\hypertarget{ref-committee_on_incorporating_21st_century_science_into_risk-based_evaluations_using_2017}{}}%
+Committee on Incorporating 21st Century Science into Risk-Based Evaluations, Board on Environmental Studies and Toxicology, Division on Earth and Life Studies, \& National Academies of Sciences, Engineering, and Medicine. (2017). \emph{Using 21st {Century} {Science} to {Improve} {Risk}-{Related} {Evaluations}}. Washington, D.C.: National Academies Press. http://doi.org/\href{https://doi.org/10.17226/24635}{10.17226/24635}
+
+\leavevmode\vadjust pre{\hypertarget{ref-cribb_surviving_2016}{}}%
+Cribb, J. (2016). \emph{Surviving the 21st century: {Humanity}'s ten great challenges and how we can overcome them}. Springer.
+
+\leavevmode\vadjust pre{\hypertarget{ref-gibson_overview_2019}{}}%
+Gibson, E. A., Nunez, Y., Abuawad, A., Zota, A. R., Renzetti, S., Devick, K. L., \ldots{} Kioumourtzoglou, M.-A. (2019). An overview of methods to address distinct research questions on environmental mixtures: An application to persistent organic pollutants and leukocyte telomere length. \emph{Environmental Health}, \emph{18}(1), 76. http://doi.org/\href{https://doi.org/10.1186/s12940-019-0515-1}{10.1186/s12940-019-0515-1}
+
 \leavevmode\vadjust pre{\hypertarget{ref-halford_how_2005}{}}%
 Halford, G. S., Baker, R., McCredden, J. E., \& Bain, J. D. (2005). How {Many} {Variables} {Can} {Humans} {Process}? \emph{Psychological Science}, \emph{16}(1), 70--76. http://doi.org/\href{https://doi.org/10.1111/j.0956-7976.2005.00782.x}{10.1111/j.0956-7976.2005.00782.x}
 
+\leavevmode\vadjust pre{\hypertarget{ref-hastie_elements_2009}{}}%
+Hastie, T., Tibshirani, R., \& Friedman, J. (2009). \emph{The {Elements} of {Statistical} {Learning}}. New York, NY: Springer New York. http://doi.org/\href{https://doi.org/10.1007/978-0-387-84858-7}{10.1007/978-0-387-84858-7}
+
 \leavevmode\vadjust pre{\hypertarget{ref-heys_risk_2016}{}}%
 Heys, K., Shore, R., Pereira, M., Jones, K., \& Martin, F. (2016). Risk assessment of environmental mixture effects. \emph{RSC Advances}, \emph{6}(53), 47844--47857. http://doi.org/\href{https://doi.org/10.1039/C6RA05406D}{10.1039/C6RA05406D}
+
+\leavevmode\vadjust pre{\hypertarget{ref-hoskovec_model_2021}{}}%
+Hoskovec, L., Benka-Coker, W., Severson, R., Magzamen, S., \& Wilson, A. (2021). Model choice for estimating the association between exposure to chemical mixtures and health outcomes: {A} simulation study. \emph{PLOS ONE}, \emph{16}(3), e0249236. http://doi.org/\href{https://doi.org/10.1371/journal.pone.0249236}{10.1371/journal.pone.0249236}
 
 \leavevmode\vadjust pre{\hypertarget{ref-kannan_exposures_2006}{}}%
 Kannan, S., Misra, D. P., Dvonch, J. T., \& Krishnakumar, A. (2006). Exposures to {Airborne} {Particulate} {Matter} and {Adverse} {Perinatal} {Outcomes}: {A} {Biologically} {Plausible} {Mechanistic} {Framework} for {Exploring} {Potential} {Effect} {Modification} by {Nutrition}. \emph{Environmental Health Perspectives}, \emph{114}(11), 1636--1642. http://doi.org/\href{https://doi.org/10.1289/ehp.9081}{10.1289/ehp.9081}
@@ -780,8 +892,14 @@ Müller, H.-G. (1987). Weighted {Local} {Regression} and {Kernel} {Methods} for 
 \leavevmode\vadjust pre{\hypertarget{ref-nadaraya_estimating_1964}{}}%
 Nadaraya, E. A. (1964). On {Estimating} {Regression}. \emph{Theory of Probability \& Its Applications}, \emph{9}(1), 141--142. http://doi.org/\href{https://doi.org/10.1137/1109020}{10.1137/1109020}
 
+\leavevmode\vadjust pre{\hypertarget{ref-naidu_chemical_2021}{}}%
+Naidu, R., Biswas, B., Willett, I. R., Cribb, J., Kumar Singh, B., Paul Nathanail, C., \ldots{} Aitken, R. J. (2021). Chemical pollution: {A} growing peril and potential catastrophic risk to humanity. \emph{Environment International}, \emph{156}, 106616. http://doi.org/\href{https://doi.org/10.1016/j.envint.2021.106616}{10.1016/j.envint.2021.106616}
+
 \leavevmode\vadjust pre{\hypertarget{ref-paithankar_heavy_2021}{}}%
 Paithankar, J. G., Saini, S., Dwivedi, S., Sharma, A., \& Chowdhuri, D. K. (2021). Heavy metal associated health hazards: {An} interplay of oxidative stress and signal transduction. \emph{Chemosphere}, \emph{262}, 128350. http://doi.org/\href{https://doi.org/10.1016/j.chemosphere.2020.128350}{10.1016/j.chemosphere.2020.128350}
+
+\leavevmode\vadjust pre{\hypertarget{ref-persson_outside_2022}{}}%
+Persson, L., Carney Almroth, B. M., Collins, C. D., Cornell, S., De Wit, C. A., Diamond, M. L., \ldots{} Hauschild, M. Z. (2022). Outside the {Safe} {Operating} {Space} of the {Planetary} {Boundary} for {Novel} {Entities}. \emph{Environmental Science \& Technology}, \emph{56}(3), 1510--1521. http://doi.org/\href{https://doi.org/10.1021/acs.est.1c04158}{10.1021/acs.est.1c04158}
 
 \leavevmode\vadjust pre{\hypertarget{ref-plackett_quantal_1952}{}}%
 Plackett, R. L., \& Hewlett, P. S. (1952). Quantal {Responses} to {Mixtures} of {Poisons}. \emph{Journal of the Royal Statistical Society: Series B (Methodological)}, \emph{14}(2), 141--154. http://doi.org/\href{https://doi.org/10.1111/j.2517-6161.1952.tb00108.x}{10.1111/j.2517-6161.1952.tb00108.x}
@@ -798,6 +916,9 @@ Siemiatycki, J., \& Thomas, D. C. (1981). Biological {Models} and {Statistical} 
 \leavevmode\vadjust pre{\hypertarget{ref-vanderweele_tutorial_2014}{}}%
 VanderWeele, T. J., \& Knol, M. J. (2014). A {Tutorial} on {Interaction}. \emph{Epidemiologic Methods}, \emph{3}(1), 33--72. http://doi.org/\href{https://doi.org/10.1515/em-2013-0005}{10.1515/em-2013-0005}
 
+\leavevmode\vadjust pre{\hypertarget{ref-vineis_john_2018}{}}%
+Vineis, P. (2018). From {John} {Snow} to omics: The long journey of environmental epidemiology. \emph{European Journal of Epidemiology}, \emph{33}(4), 355--363. http://doi.org/\href{https://doi.org/10.1007/s10654-018-0398-4}{10.1007/s10654-018-0398-4}
+
 \leavevmode\vadjust pre{\hypertarget{ref-wagaman_probability_2021}{}}%
 Wagaman, A. S., \& Dobrow, R. P. (2021). \emph{Probability: {With} {Applications} and {R}} (1st ed.). Wiley. http://doi.org/\href{https://doi.org/10.1002/9781119692430}{10.1002/9781119692430}
 
@@ -809,6 +930,9 @@ Ward, J. B., Gartner, D. R., Keyes, K. M., Fliss, M. D., McClure, E. S., \& Robi
 
 \leavevmode\vadjust pre{\hypertarget{ref-watson_smooth_1964}{}}%
 Watson, G. S. (1964). Smooth {Regression} {Analysis}. \emph{Sankhyā: The Indian Journal of Statistics}, \emph{26}(4), 359--372.
+
+\leavevmode\vadjust pre{\hypertarget{ref-yu_review_2022}{}}%
+Yu, L., Liu, W., Wang, X., Ye, Z., Tan, Q., Qiu, W., \ldots{} Chen, W. (2022). A review of practical statistical methods used in epidemiological studies to estimate the health effects of multi-pollutant mixture. \emph{Environmental Pollution}, \emph{306}, 119356. http://doi.org/\href{https://doi.org/10.1016/j.envpol.2022.119356}{10.1016/j.envpol.2022.119356}
 
 \end{CSLReferences}
 % Index?

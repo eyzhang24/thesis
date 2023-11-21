@@ -51,9 +51,9 @@ In this section, we introduce the theory of BKMR. First, we define the notation 
 
 <!-- -   observations are from $i = 1, \dots ,n$ -->
 
--   $\textbf{x}_m$ is a predictor variable in the predictor matrix $\textbf{X}$ with $m = 1, \dots, M$, measuring exposure variables or covariates in this case
+-   $X_m$ is a predictor variable in the predictor matrix $\textbf{X}$ with $m = 1, \dots, M$, measuring exposure variables or covariates in this case
 -   $\textbf{x}_i$ is a vector of values for a single observation in $\textbf{X}$ with $i = 1, \dots, n$
--   $x_{im}$ is an observation of $\textbf{x}_m$
+-   $x_{im}$ is an observation of $X_m$
 -   $Y_i$ is an observation of $\textbf{Y}$, measuring the health outcome in this case
 -   $h(\cdot)$ is the flexible function relating $\textbf{x}$ to $\textbf{Y}$
 -   $k$ is the kernel function, the Gaussian in this case
@@ -78,10 +78,10 @@ We begin by introducing kernel machine regression, with attention to its specifi
 To contextualize this method, we start at the typical linear regression setting,
 
 $$
-Y_i = \textbf{x}_i^\top\boldsymbol{\beta} + \epsilon_i,
+Y_i = \textbf{x}_i\boldsymbol{\beta} + \epsilon_i,
 $$
 
-\noindent where $Y_i$ measures a health outcome at a given point, $\textbf{x}_i = [x_{1},\dots,x_{M}]^\top$ is a vector of M exposures or covariates (hereafter referred to as predictors), $\boldsymbol{\beta}$ is a vector of weights, and $\epsilon_i$ is a random variable from $\boldsymbol\epsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$. We can see that this function assumes that there is a linear relationship between the exposure and the response, and that the combined effects of multiple exposures are additive.
+\noindent where $Y_i$ measures a health outcome at a given point, $\textbf{x}_i = [x_{i1},\dots,x_{iM}]$ is a vector of M exposures or covariates (hereafter referred to as predictors), $\boldsymbol{\beta}$ is a vector of weights, and $\epsilon_i$ is a random variable from $\boldsymbol\epsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$. We can see that this function assumes that there is a linear relationship between the exposure and the response, and that the combined effects of multiple exposures are additive.
 
 Kernel machine regression defines this relationship using a flexible function $h: \mathbb{R}^M \rightarrow \mathbb{R}$, where
 
@@ -174,7 +174,7 @@ Now, we fit a kernel machine regression on this data with $\rho=2$ using the `st
 include_graphics(path = "figures/ch3_toy3.png")
 ```
 
-We can see in figure \@ref(fig:toy3) that kernel machine regression captures the complex non-linear relationship between $Y$ and $x$ and closely follows the true distribution. We do note, though, that the estimation is less precise at the tails, where there is less information provided by local observations. We can also use this example to consider the effect of various values of $\rho$ on the smoothness of the $h$ function.
+We can see in Figure \@ref(fig:toy3) that kernel machine regression captures the complex non-linear relationship between $Y$ and $x$ and closely follows the true distribution. We do note, though, that the estimation is less precise at the tails, where there is less information provided by local observations. We can also use this example to consider the effect of various values of $\rho$ on the smoothness of the $h$ function.
 
 ```{r toyrho, fig.cap="Fitted kernel machine regression with $\\rho=0.02$ and $\\rho=50$.", out.width = '100%', echo = FALSE}
 include_graphics(path = "figures/ch3_toyrho.png")
@@ -184,7 +184,7 @@ Figure \@ref(fig:toyrho) demonstrates the effect of relatively smaller and large
 
 ### Variable selection
 
-Now that we have defined kernel machine regression, we can extend it to the Bayesian paradigm. bobb_bayesian_2015 showed that the Bayesian approach can outperform frequentist kernel machine regression because simultaneous variable selection and estimation can better capture the exposure-response relationship. In this section, we discuss the two methods for Bayesian variable selection in BKMR: hierarchical variable selection and component-wise variable selection [@bobb_bayesian_2015].
+Now that we have defined kernel machine regression, we can extend it to the Bayesian paradigm. @bobb_bayesian_2015 showed that the Bayesian approach can outperform frequentist kernel machine regression because simultaneous variable selection and estimation can better capture the exposure-response relationship. In this section, we discuss the two methods for Bayesian variable selection in BKMR: hierarchical variable selection and component-wise variable selection [@bobb_bayesian_2015].
 
 Component-wise selection follows the same framework as variable selection in a typical Bayesian multiple regression except, instead of augmenting each predictor, we augment the kernel function as
 
@@ -266,7 +266,76 @@ differences w/ bkmr
 -   kernel regression is computationally intensive w/ large datasets but can handle many predictors
 -   bsr highly dependent on the choice of function
 
+Defining notation for spline regression:
+
+-   x
+
+BSR specific notation: 
+
+-   x
+
 ### Spline regression
+
+We begin by introducing spline regression, with attention to its specific implementation in BSR. Spline regression is a semiparametric regression technique that can be used to capture non-linear effects. In this introduction, we follow the presentation of spline regression provided by @antonelli_estimating_2020, with additional details and explanation from @hastie_elements_2009.
+
+Spline regression defines the regression relationship as
+
+$$
+Y_i = f(\textbf{x}_i) + \epsilon_i,
+$$
+
+\noindent where $f$ is defined by a set of basis functions and $\epsilon_i$ is a random variable from $\boldsymbol\epsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$. BSR uses natural spline bases. In order to understand how these are constructed, we start with a broad definition of basis expansions, before exploring linear, cubic, and then natural spline bases. 
+
+We determine the basis expansion by considering a piece-wise function of $X_i$ with some order $P$ and some set of $K$ knots defining $K+1$ disjoint intervals. BSR places knots at uniformly sized quantiles within the boundaries of $X_i$. The most commonly used orders are $P=1,2,\textrm{and } 4$, the constant, linear, and cubic splines, respectively. To begin, let us consider a continuous piece-wise linear spline basis (i.e., $P=2$) of a one-dimensional $X$ with two interior knots. In this case, we use the following four basis functions:
+
+$$
+b_1(X)=1, \hspace{0.25in} b_2(X)=X, \hspace{0.25in} b_3(X)=(X-\xi_1)_+, \hspace{0.25in} b_4(X)=(X-\xi_2)_+,
+$$
+
+\noindent where $\xi_1$ and $\xi_2$ are the two interior knots, and $t_+$ denotes the positive part. These bases are used to construct the regression model $f(X)=\sum_{j=1}^4\beta_jb_j(X)$, which requires estimating $K+P=4$ parameters. We can check the continuity restrictions at the knots by seeing that $f(\xi_1^-)=\beta_1 + \xi_1\beta_2$ and $f(\xi_1^+)= \beta_1 + \xi_1\beta_2+ (\xi_1-\xi_1)\beta_3$ are equal.
+
+Now, in the case of exposure mixtures, we want smoother functions that can capture the non-linear relationship between the response and the predictors. We can achieve this by increasing the order to $P=4$ and using a cubic spline, with continuous first and second derivatives at the knots. The cubic spline is the lowest-order spline for which knot-discontinuity cannot be detected by the human eye. For example, for one $X$ with two interior knots, we use the following six basis functions: 
+
+$$
+\begin{split}
+b_1(X)=1, \hspace{0.25in}b_2(X)=X, \hspace{0.25in}b_3(X)=X^2, \\
+b_4(X)=X^3, \hspace{0.25in} b_5(X)=(X-\xi_1)^3_+, \hspace{0.25in} b_6(X)=(X-\xi_2)^3_+.
+\end{split}
+$$
+
+\noindent Now, the regression model is defined as $f(X)= \sum_{j=1}^6\beta_jb_j(X)$ and requires estimating $K+P=6$ parameters. It can be shown that $f'(\xi_i^-)= f'(\xi_i^+)$ and $f''(\xi_i^-)= f''(\xi_i^+)$. 
+
+However, the behavior of polynomials near the boundaries of $X$, where there is less information, can be erratic. Natural cubic splines, also referred to as just natural splines, address this by imposing an additional restriction of linearity at the boundaries of $X$. Paradoxically, this also leads to a simpler model with four fewer parameters to estimate. A general definition of the $K$ basis functions for a natural spline with interior knots $\xi_j$, $j=1,\dots,K$, is given by:
+
+$$
+\begin{split}
+N_1(X)=1, \hspace{0.25in} N_2(X)=X, \hspace{0.25in} N_{k+2}(X)=d_k(X)-d_{K-1}(X), \\
+d_k(X)=\frac{(X-\xi_k)^3_+ - (X-\xi_K)^3_+}{\xi_K-\xi_k}.
+\end{split}
+$$
+
+\noindent Here, the regression model is defined as $f(X) = \sum_{j=1}^K\beta_jN_j(X)$, with $K$ parameters, equal to $d$ degrees of freedom in BSR. 
+
+Now that we have defined natural splines, we introduce the construction of $f$ in BSR by first assuming a two-dimensional case with $X_1$ and $X_2$. We define
+
+$$
+\begin{split}
+f(X_1) = \widetilde{X}_1\boldsymbol{\beta}_1, \hspace{0.25in} f(X_2) = \widetilde{X}_2\boldsymbol{\beta}_2,\\
+f(X_1,X_2) = \widetilde{X}_1\boldsymbol{\beta}_1 + \widetilde{X}_2\boldsymbol{\beta}_2 + \widetilde{X}_{12}\boldsymbol{\beta}_{12},
+\end{split}
+$$
+
+\noindent where $\widetilde{X}_m=[b_{m1}(X_m),\dots,b_{md}(X_m)]$ represents a $d$-dimensional basis function expansion for $m=1,2$, and $\widetilde{X}_{12}= [b_{11}(X_1)b_{21}(X_2), b_{11}(X_1)b_{22}(X_2), \dots, b_{1d}(X_1)b_{2d}(X_2)]$ represents a $d^2$-dimensional basis expansion of the interaction between $X_1$ and $X_2$. Note that we must explicitly model the effect of the interaction term by assuming a multiplicative interaction between the basis functions of the predictors. 
+
+Extending to the multi-dimensional setting, BSR assumes the following general model formulation: 
+
+$$
+\begin{split}
+f(\textbf{x}_i)= \sum_{h=1}^pf^{(h)}(\textbf{x}_i), \\
+f^{(h)}(\textbf{x}_i)= \sum_{j_1=1}^M\widetilde{X}_{ij_1}\boldsymbol\beta_{j_1}^{(h)} + 
+\sum_{j_1=2}^M\sum_{j_2<j_1}\widetilde{X}_{ij_1j_2}\boldsymbol\beta_{j_1j_2}^{(h)} + \dots,
+\end{split}
+$$
 
 ### Connection to mixed models
 
@@ -276,11 +345,25 @@ differences w/ bkmr
 include_graphics(path = "figures/ch3_toy4.png")
 ```
 
-```{r toy5, fig.cap="Spline regression", out.width = '75%', echo = FALSE}
+```{r toy5, fig.cap="Cubic spline regression", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch3_toy5.png")
 ```
 
+```{r toy6, fig.cap="Natural spline regression", out.width = '75%', echo = FALSE}
+include_graphics(path = "figures/ch3_toy6.png")
+```
+
+```{r toybounds, fig.cap="Natural and cubic spline regression extrapolated outside the bounds of $x$", out.width = '100%', echo = FALSE}
+include_graphics(path = "figures/ch3_toybounds.png")
+```
+
+
 ### Sparsity inducing priors
+
+$$
+P(\boldsymbol\beta_X^{(h)}|\boldsymbol\zeta) = \bigg(1-\prod_{j\in S}\zeta_{jh}\bigg)\delta_{\textbf{0}} +
+\bigg(\prod_{j\in S}\zeta_{jh}\bigg) \psi_1(\boldsymbol\beta_S^{(h)}),
+$$
 
 ### Prior specification
 

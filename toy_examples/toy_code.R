@@ -1,5 +1,4 @@
 library(tidyverse)
-library(bkmr)
 library(stats)
 library(splines)
 
@@ -17,8 +16,8 @@ theme_update(
 
 # generate data from distribution
 set.seed(0) # reproducibility
-x <- seq(0, 25, length.out = 50)
-Y <- exp(x/10) + 2*sin(x/2) + rnorm(50, mean = 0, sd = 0.5)
+x <- seq(0, 25, length.out = 51)
+Y <- exp(x/10) + 2*sin(x/2) + rnorm(51, mean = 0, sd = 0.5)
 df <- data.frame(x, Y)
 
 # plot data and linear regression line
@@ -78,30 +77,33 @@ q3 <- ggplot(df) +
   geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), 
                 linetype = "dashed", color = "darkorange") +
   geom_line(aes(x, Yhat), color = "deepskyblue3") 
+q3
 
 # save plot
 ggsave("index/figures/ch3_toy3.png", plot = q3, device = "png", 
        width = 5, height = 3)
 
 # fit kernel regression with sigma = 5, bandwidth = 40/3
-kmr_toy2 <- ksmooth(df$x, df$Y, kernel = "normal", bandwidth = 40/3, x.points = df$x)
+kmr_toy_5 <- ksmooth(df$x, df$Y, kernel = "normal", bandwidth = 40/3, x.points = df$x)
 
 # fit kernel regression with sigma = 0.1, bandwith = 8/30
-kmr_toy3 <- ksmooth(df$x, df$Y, kernel = "normal", bandwidth = 8/30, x.points = df$x)
+kmr_toy_1 <- ksmooth(df$x, df$Y, kernel = "normal", bandwidth = 8/30, x.points = df$x)
 
 # re-join data
-df2 <- df |> 
-  left_join(as.data.frame(kmr_toy2), by = "x") |> 
+dfrho <- df |> 
+  left_join(as.data.frame(kmr_toy_5), by = "x") |> 
   rename("rho = 50" = y) |> 
-  left_join(as.data.frame(kmr_toy3), by = "x") |> 
+  left_join(as.data.frame(kmr_toy_1), by = "x") |> 
   rename("rho = 0.02" = y) |> 
+  select(-Yhat) |> 
   pivot_longer(cols = c("rho = 50", "rho = 0.02"), values_to = "Yhat")
 
 # plot kernel regression with two values of rho
-qrho <- ggplot(df2) +
+qrho <- ggplot(dfrho) +
   geom_point(aes(x, Y)) +
   geom_line(aes(x, Yhat), color = "deepskyblue3") +
   facet_wrap(~name)
+qrho
 
 # save plot
 ggsave("index/figures/ch3_toyrho.png", plot = qrho, device = "png", 
@@ -111,12 +113,14 @@ ggsave("index/figures/ch3_toyrho.png", plot = qrho, device = "png",
 # spline regression
 ########
 
-kn <- c(25/3, 50/3) # 3 knots of equal width
+kn <- c(5, 10, 15, 20) # 3 knots of equal width
 
 # fit linear spline regression
 spline_toy_line <- lm(Y ~ bs(x, knots = kn, degree = 1), data = df)
 p_line <- predict(spline_toy_line, se = T)
 df$Yhats_line <- p_line$fit
+# df$Ylows <- df$Yhats - 1.96 * p$se.fit
+# df$Yups <- df$Yhats + 1.96 * p$se.fit
 
 q4 <- ggplot(df) +
   geom_point(aes(x, Y)) +
@@ -125,27 +129,68 @@ q4 <- ggplot(df) +
   geom_line(aes(x, Yhats_line), color = "deepskyblue3") +
   # geom_ribbon(aes(x, ymin = Ylows_line, ymax = Yups_line), fill = "gray70", alpha = 0.3) +
   geom_vline(xintercept = kn, linetype = "dotted")
+q4
 
 # save plot
 ggsave("index/figures/ch3_toy4.png", plot = q4, device = "png", 
        width = 5, height = 3)
 
-# fit cubic/natural spline regression
-spline_toy <- lm(Y ~ bs(x, knots = kn), data = df)
-p <- predict(spline_toy, se = T)
-df$Yhats <- p$fit
-# df$Ylows <- df$Yhats - 1.96 * p$se.fit
-# df$Yups <- df$Yhats + 1.96 * p$se.fit
+# fit cubic spline regression
+spline_toy_cub <- lm(Y ~ bs(x, knots = kn), data = df)
+p_cub <- predict(spline_toy_cub, se = T)
+df$Yhats_cub <- p_cub$fit
 
 # plot spline regression estimation
 q5 <- ggplot(df) +
   geom_point(aes(x, Y)) +
   geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), 
                 linetype = "dashed", color = "darkorange") +
-  geom_line(aes(x, Yhats), color = "deepskyblue3") +
-  # geom_ribbon(aes(x, ymin = Ylows, ymax = Yups), fill = "gray70", alpha = 0.3) +
+  geom_line(aes(x, Yhats_cub), color = "deepskyblue3") +
   geom_vline(xintercept = kn, linetype = "dotted")
+q5
 
 # save plot
 ggsave("index/figures/ch3_toy5.png", plot = q5, device = "png", 
        width = 5, height = 3)
+
+# fit natural spline regression
+spline_toy_nat <- lm(Y ~ ns(x, knots = kn), data = df)
+p_nat <- predict(spline_toy_nat, se = T)
+df$Yhats_nat <- p_nat$fit
+
+# plot spline regression estimation
+q6 <- ggplot(df) +
+  geom_point(aes(x, Y)) +
+  geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), 
+                linetype = "dashed", color = "darkorange") +
+  geom_line(aes(x, Yhats_nat), color = "deepskyblue3") +
+  geom_vline(xintercept = c(5, 10, 15, 20), linetype = "dotted")
+q6
+
+# save plot
+ggsave("index/figures/ch3_toy6.png", plot = q6, device = "png", 
+       width = 5, height = 3)
+
+# see what happens outside of the bounds
+x_longer <- seq(-5, 30, length.out = 81)
+y_longer_cub <- predict(spline_toy_cub, newdata = data.frame(x = x_longer))
+y_longer_nat <- predict(spline_toy_nat, newdata = data.frame(x = x_longer))
+
+df_longer <- data.frame(
+  x = c(x_longer, x_longer), 
+  spline = c(rep("Cubic", 81), rep("Natural", 81)), 
+  Yhat = c(y_longer_cub, y_longer_nat)
+)
+
+# plot outside of bounds
+qbounds <- ggplot(df_longer) + 
+  geom_line(aes(x, Yhat), color = "deepskyblue3") +
+  geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), 
+                linetype = "dashed", color = "darkorange") +
+  geom_vline(xintercept = c(0, 25), linetype = "dotted") +
+  facet_wrap(~spline) 
+qbounds
+
+# save plot
+ggsave("index/figures/ch3_toybounds.png", plot = qbounds, device = "png", 
+       width = 7, height = 3)
