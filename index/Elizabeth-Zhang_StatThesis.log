@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.20)  20 NOV 2023 21:21
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.20)  21 NOV 2023 09:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -643,37 +643,37 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [24]
-<figures/ch3_toy4.png, id=453, 361.35pt x 216.81pt>
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[25]
+<figures/ch3_toy4.png, id=457, 361.35pt x 216.81pt>
 File: figures/ch3_toy4.png Graphic file (type png)
 <use figures/ch3_toy4.png>
-Package pdftex.def Info: figures/ch3_toy4.png  used on input line 639.
+Package pdftex.def Info: figures/ch3_toy4.png  used on input line 643.
 (pdftex.def)             Requested size: 325.215pt x 195.1305pt.
-<figures/ch3_toy5.png, id=454, 361.35pt x 216.81pt>
+<figures/ch3_toy5.png, id=458, 361.35pt x 216.81pt>
 File: figures/ch3_toy5.png Graphic file (type png)
 <use figures/ch3_toy5.png>
-Package pdftex.def Info: figures/ch3_toy5.png  used on input line 647.
+Package pdftex.def Info: figures/ch3_toy5.png  used on input line 651.
+(pdftex.def)             Requested size: 325.215pt x 195.1305pt.
+<figures/ch3_toy6.png, id=459, 361.35pt x 216.81pt>
+File: figures/ch3_toy6.png Graphic file (type png)
+<use figures/ch3_toy6.png>
+Package pdftex.def Info: figures/ch3_toy6.png  used on input line 659.
 (pdftex.def)             Requested size: 325.215pt x 195.1305pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[25]
-<figures/ch3_toy6.png, id=460, 361.35pt x 216.81pt>
-File: figures/ch3_toy6.png Graphic file (type png)
-<use figures/ch3_toy6.png>
-Package pdftex.def Info: figures/ch3_toy6.png  used on input line 655.
-(pdftex.def)             Requested size: 325.215pt x 195.1305pt.
-<figures/ch3_toybounds.png, id=461, 505.89pt x 216.81pt>
+[26 <./figures/ch3_toy4.png>]
+<figures/ch3_toybounds.png, id=466, 505.89pt x 216.81pt>
 File: figures/ch3_toybounds.png Graphic file (type png)
 <use figures/ch3_toybounds.png>
-Package pdftex.def Info: figures/ch3_toybounds.png  used on input line 663.
+Package pdftex.def Info: figures/ch3_toybounds.png  used on input line 667.
 (pdftex.def)             Requested size: 433.62pt x 185.84093pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[26 <./figures/ch3_toy4.png> <./figures/ch3_toy5.png>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-[27 <./figures/ch3_toy6.png> <./figures/ch3_toybounds.png>] [28] [29] [30
+[27 <./figures/ch3_toy5.png> <./figures/ch3_toy6.png>] [28 <./figures/ch3_toybounds.png>] [29] [30
 
 ]
 Chapter 4.
@@ -684,10 +684,10 @@ Chapter 4.
 ]
 Appendix A.
 
-LaTeX Warning: Reference `ref-labels' on page 35 undefined on input line 806.
+LaTeX Warning: Reference `ref-labels' on page 35 undefined on input line 810.
 
 
-LaTeX Warning: Reference `ref-labels' on page 35 undefined on input line 809.
+LaTeX Warning: Reference `ref-labels' on page 35 undefined on input line 813.
 
 [35] [36
 
@@ -698,7 +698,7 @@ Appendix B.
 ] [39] [40
 
 ]
-Underfull \hbox (badness 1472) in paragraph at lines 850--852
+Underfull \hbox (badness 1472) in paragraph at lines 854--856
  \T1/lmr/m/n/12 soft-ware for an-a-lyz-ing the health ef-fects of mul-ti-ple con-cur-rent ex-po-sures
  []
 
@@ -711,22 +711,22 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [42]
-Underfull \hbox (badness 2237) in paragraph at lines 877--879
+Underfull \hbox (badness 2237) in paragraph at lines 881--883
  \T1/lmr/m/n/12 Plau-si-ble Mech-a-nis-tic Frame-work for Ex-plor-ing Po-ten-tial Ef-fect Mod-i-fi-ca-
  []
 
 
-Underfull \hbox (badness 2608) in paragraph at lines 880--882
+Underfull \hbox (badness 2608) in paragraph at lines 884--886
  []\T1/lmr/m/n/12 Kordas, K., Lön-nerdal, B., & Stoltz-fus, R. J. (2007). In-ter-ac-tions be-
  []
 
 
-Underfull \hbox (badness 1205) in paragraph at lines 880--882
+Underfull \hbox (badness 1205) in paragraph at lines 884--886
  \T1/lmr/m/n/12 tween nu-tri-tion and en-vi-ron-men-tal ex-po-sures: Ef-fects on health out-comes
  []
 
 
-Underfull \hbox (badness 1484) in paragraph at lines 880--882
+Underfull \hbox (badness 1484) in paragraph at lines 884--886
  \T1/lmr/m/n/12 in women and chil-dren. \T1/lmr/m/it/12 The Jour-nal of Nu-tri-tion\T1/lmr/m/n/12 , \T1/lmr/m/it/12 137\T1/lmr/m/n/12 (12), 2794--2797.
  []
 
@@ -734,12 +734,12 @@ Underfull \hbox (badness 1484) in paragraph at lines 880--882
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [43]
-Overfull \hbox (54.04335pt too wide) in paragraph at lines 898--900
+Overfull \hbox (54.04335pt too wide) in paragraph at lines 902--904
  \T1/lmr/m/n/12 trans-duc-tion. \T1/lmr/m/it/12 Chemo-sphere\T1/lmr/m/n/12 , \T1/lmr/m/it/12 262\T1/lmr/m/n/12 , 128350. http://doi.org/[][]10.1016/j.chemosphere.2020.128350[][] 
  []
 
 
-Underfull \hbox (badness 1259) in paragraph at lines 919--921
+Underfull \hbox (badness 1259) in paragraph at lines 923--925
  \T1/lmr/m/n/12 men-tal epi-demi-ol-ogy. \T1/lmr/m/it/12 Eu-ro-pean Jour-nal of Epi-demi-ol-ogy\T1/lmr/m/n/12 , \T1/lmr/m/it/12 33\T1/lmr/m/n/12 (4), 355--363.
  []
 
@@ -762,15 +762,15 @@ Package rerunfilecheck Info: File `Elizabeth-Zhang_StatThesis.out' has not chang
 ### semi simple group (level 1) entered at line 207 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 13505 strings out of 476233
- 217048 string characters out of 5795524
- 1936555 words of memory out of 5000000
- 35033 multiletter control sequences out of 15000+600000
+ 13503 strings out of 476233
+ 216994 string characters out of 5795524
+ 1935555 words of memory out of 5000000
+ 35031 multiletter control sequences out of 15000+600000
  623355 words of font info for 82 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,19n,79p,1699b,787s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,1699b,787s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Elizabeth-Zhang_StatThesis.pdf (59 pages, 865504 bytes).
+Output written on Elizabeth-Zhang_StatThesis.pdf (59 pages, 866242 bytes).
 PDF statistics:
  763 PDF objects out of 1000 (max. 8388607)
  650 compressed objects within 7 object streams

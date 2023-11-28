@@ -489,7 +489,9 @@ Hierarchical variable selection involves partitioning the predictors \(\textbf{x
 
 \[
 \boldsymbol\delta_{\mathcal{S}_g} | \omega_g \sim 
-\text{Multinomial}(\omega_g, \boldsymbol\pi_{\mathcal{S}_g}), g=1,\dots,G,\\
+\text{Multinomial}(\omega_g, \boldsymbol\pi_{\mathcal{S}_g}), g=1,\dots,G,
+\]
+\[
 \omega_g \sim\text{Bernoulli}(\pi),
 \]
 
@@ -589,10 +591,10 @@ b_1(X)=1, \hspace{0.25in} b_2(X)=X, \hspace{0.25in} b_3(X)=(X-\xi_1)_+, \hspace{
 Now, in the case of exposure mixtures, we want smoother functions that can capture the non-linear relationship between the response and the predictors. We can achieve this by increasing the order to \(P=4\) and using a cubic spline, with continuous first and second derivatives at the knots. The cubic spline is the lowest-order spline for which knot-discontinuity cannot be detected by the human eye. For example, for one \(X\) with two interior knots, we use the following six basis functions:
 
 \[
-\begin{split}
-b_1(X)=1, \hspace{0.25in}b_2(X)=X, \hspace{0.25in}b_3(X)=X^2, \\
+b_1(X)=1, \hspace{0.25in}b_2(X)=X, \hspace{0.25in}b_3(X)=X^2, 
+\]
+\[
 b_4(X)=X^3, \hspace{0.25in} b_5(X)=(X-\xi_1)^3_+, \hspace{0.25in} b_6(X)=(X-\xi_2)^3_+.
-\end{split}
 \]
 
 \noindent Now, the regression model is defined as \(f(X)= \sum_{j=1}^6\beta_jb_j(X)\) and requires estimating \(K+P=6\) parameters. It can be shown that \(f'(\xi_i^-)= f'(\xi_i^+)\) and \(f''(\xi_i^-)= f''(\xi_i^+)\).
@@ -600,10 +602,10 @@ b_4(X)=X^3, \hspace{0.25in} b_5(X)=(X-\xi_1)^3_+, \hspace{0.25in} b_6(X)=(X-\xi_
 However, the behavior of polynomials near the boundaries of \(X\), where there is less information, can be erratic. Natural cubic splines, also referred to as just natural splines, address this by imposing an additional restriction of linearity at the boundaries of \(X\). Paradoxically, this also leads to a simpler model with four fewer parameters to estimate. A general definition of the \(K\) basis functions for a natural spline with interior knots \(\xi_j\), \(j=1,\dots,K\), is given by:
 
 \[
-\begin{split}
-N_1(X)=1, \hspace{0.25in} N_2(X)=X, \hspace{0.25in} N_{k+2}(X)=d_k(X)-d_{K-1}(X), \\
+N_1(X)=1, \hspace{0.25in} N_2(X)=X, \hspace{0.25in} N_{k+2}(X)=d_k(X)-d_{K-1}(X), 
+\]
+\[
 d_k(X)=\frac{(X-\xi_k)^3_+ - (X-\xi_K)^3_+}{\xi_K-\xi_k}.
-\end{split}
 \]
 
 \noindent Here, the regression model is defined as \(f(X) = \sum_{j=1}^K\beta_jN_j(X)\), with \(K\) parameters, equal to \(d\) degrees of freedom in BSR.
@@ -611,10 +613,10 @@ d_k(X)=\frac{(X-\xi_k)^3_+ - (X-\xi_K)^3_+}{\xi_K-\xi_k}.
 Now that we have defined natural splines, we introduce the construction of \(f\) in BSR by first assuming a two-dimensional case with \(X_1\) and \(X_2\). We define
 
 \[
-\begin{split}
-f(X_1) = \widetilde{X}_1\boldsymbol{\beta}_1, \hspace{0.25in} f(X_2) = \widetilde{X}_2\boldsymbol{\beta}_2,\\
+f(X_1) = \widetilde{X}_1\boldsymbol{\beta}_1, \hspace{0.25in} f(X_2) = \widetilde{X}_2\boldsymbol{\beta}_2,
+\]
+\[
 f(X_1,X_2) = \widetilde{X}_1\boldsymbol{\beta}_1 + \widetilde{X}_2\boldsymbol{\beta}_2 + \widetilde{X}_{12}\boldsymbol{\beta}_{12},
-\end{split}
 \]
 
 \noindent where \(\widetilde{X}_m=[b_{m1}(X_m),\dots,b_{md}(X_m)]\) represents a \(d\)-dimensional basis function expansion for \(m=1,2\), and \(\widetilde{X}_{12}= [b_{11}(X_1)b_{21}(X_2), b_{11}(X_1)b_{22}(X_2), \dots, b_{1d}(X_1)b_{2d}(X_2)]\) represents a \(d^2\)-dimensional basis expansion of the interaction between \(X_1\) and \(X_2\). Note that we must explicitly model the effect of the interaction term by assuming a multiplicative interaction between the basis functions of the predictors.
@@ -622,12 +624,14 @@ f(X_1,X_2) = \widetilde{X}_1\boldsymbol{\beta}_1 + \widetilde{X}_2\boldsymbol{\b
 Extending to the multi-dimensional setting, BSR assumes the following general model formulation:
 
 \[
-\begin{split}
-f(\textbf{x}_i)= \sum_{h=1}^pf^{(h)}(\textbf{x}_i), \\
-f^{(h)}(\textbf{x}_i)= \sum_{j_1=1}^M\widetilde{X}_{ij_1}\boldsymbol\beta_{j_1}^{(h)} + 
-\sum_{j_1=2}^M\sum_{j_2<j_1}\widetilde{X}_{ij_1j_2}\boldsymbol\beta_{j_1j_2}^{(h)} + \dots,
-\end{split}
+f(\textbf{x}_i)= \sum_{h=1}^pf^{(h)}(\textbf{x}_i), 
 \]
+\[
+f^{(h)}(\textbf{x}_i)= \sum_{j_1=1}^M\widetilde{x}_{ij_1}\boldsymbol\beta_{j_1}^{(h)} + 
+\sum_{j_1=2}^M\sum_{j_2<j_1}\widetilde{x}_{ij_1j_2}\boldsymbol\beta_{j_1j_2}^{(h)} + \dots,
+\]
+
+``When the regression coefficients are identifiable only up to a constant, it means that there are multiple sets of coefficients that could produce the same observed data. This lack of identifiability can complicate the interpretation of individual coefficients and hinder the ability to make precise inferences about the underlying relationships in the data.''
 
 \hypertarget{connection-to-mixed-models-1}{%
 \subsection{Connection to mixed models}\label{connection-to-mixed-models-1}}

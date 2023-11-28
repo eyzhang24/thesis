@@ -32,7 +32,7 @@ Models compared, specify the parameters for each (justify them!)
 
 ### Simulating data
 
-- use original predictor values in MADRES data. allows us to explore these methods on real-world data
+- use original predictor values in MADRES data. allows us to explore these methods on predictors with realistic correlation structure
 - simulate outcome using a formula w/ different types of interaction
 - change effect size (three levels?)
 - change nature of interaction (mathematical formulation, two- or three-way, b/t just exposures or b/t exposures and covariates)
