@@ -24,6 +24,7 @@
 \usepackage{rotating}
 \usepackage{fancyvrb}
 % User-added packages:
+	\usepackage{amsmath}
 % End user-added packages
 
 %===========================================================
@@ -251,23 +252,49 @@ In an age where anthropogenic actions have radically reshaped the earth, humanis
 \hypertarget{humanistic}{%
 \chapter{Humanistic Perspective}\label{humanistic}}
 
+List of loose ideas:
+\begin{itemize}
+\tightlist
+\item
+  goal of modernism: define single causes for single effects
+\item
+  study chemicals in isolation to obtain purely mechanistic explanation of their toxicity
+\item
+  contrast with idea of relationality: entities cannot be understood without considering their \emph{relationality} to other surrounding entities
+\item
+  relationality disrupts the notion of bounded objects
+\item
+  motivation for chemical mixtures: chemicals themselves are not independent from surrounding chemicals
+\item
+  motivation for chemical mixtures in the context of social epidemiology: the effects of chemicals are modulated by structural/social conditions
+\item
+  relationality also disrupts Cartesian split between body and mind
+\item
+  racial hierarchy positions certain groups closer to the bounds of the corporal body, while other groups have transcended these bounds and are defined by their intellect (i.e., the mind)
+\item
+  result --\textgreater{} some bodies are seen as inherently more susceptible to chemical exposure, more ``porous''
+\item
+  leads to damage centered research which, while well-intentioned, inadvertently de-humanizes marginalized groups
+\item
+  remedy: relationality leads into concept of alterlife, modern life is inseparable from alteration due to chemical exposure
+\end{itemize}
 \hypertarget{bayes}{%
 \chapter{Bayesian Regression Methods}\label{bayes}}
 
 \hypertarget{motivation}{%
 \section{Motivation}\label{motivation}}
 
-We are interested in using Bayesian regression techniques to characterize the nature of complex interactions in exposure mixture studies. We begin in this section by reviewing definitions for what constitutes a complex interaction and their public health and biological relevance.
+We are interested in using Bayesian regression techniques to characterize the nature of complex interactions in exposure mixture studies. We begin by reviewing definitions for what constitutes a complex interaction and why interactions are relevant from public health and biological relevance.
 
 \hypertarget{interactions-from-a-statistical-perspective}{%
 \subsection{Interactions from a statistical perspective}\label{interactions-from-a-statistical-perspective}}
 
 First, we define additivity and non-additivity in the traditional statistical paradigm (Siemiatycki \& Thomas, 1981). Suppose we have two variables \(x_1\) and \(x_2\), and we want to consider their effect on some outcome of interest. If specifying {[}effect due to \(x_1\) and \(x_2\){]} = {[}effect due to \(x_1\){]} + {[}effect due to \(x_2\){]} can adequately capture this relationship, then we say that \(x_1\) and \(x_2\) each have an \textbf{additive effect} on the outcome and that there is no interaction between them. On the other hand, if there is variability in the outcome that can be captured by an additional term equal to some function of \(x_1\) and \(x_2\), we say that there is a \textbf{non-additive interaction} between \(x_1\) and \(x_2\). In this case, {[}effect due to \(x_1\) and \(x_2\){]} = {[}effect due to \(x_1\){]} + {[}effect due to \(x_2\){]} + {[}effect due to \(f(x_1, x_2)\){]}, where \(f\) is non-zero for some values of \(x_1\) and \(x_2\).
 
-For our sake, we consider any non-additive interaction to be complex. Complex interactions can be difficult to detect. To see why, let us consider running a linear regression for \(Y\) on \(x_1\) and \(x_2\). The regression would be defined as
+For our sake, we consider any non-additive interaction to be complex, meaning that they are difficult to detect. To see why, let us consider running a linear regression for \(Y\) on \(x_1\) and \(x_2\). The regression would be defined as
 
 \[
-\widehat{Y} = \beta_0+\beta_1x_1+\beta_2x_2 + \beta_{12}f(x_1, x_2),
+\widehat{Y} = \widehat\beta_0+\widehat\beta_1x_1+\widehat\beta_2x_2 + \widehat\beta_{12}f(x_1, x_2),
 \]
 
 \noindent where the \(\beta\)'s represent the effect sizes. We can see that the form of the interaction must be explicitly specified in the formulation of the model. Most commonly, a multiplicative interaction is assessed, where \(f(x_1, x_2) = x_1*x_2\). However, a non-additive interaction can take on many different forms, the true nature of which is difficult to determine analytically.
@@ -287,22 +314,22 @@ On the other hand, in an antagonistic interaction, the joint effects of a mixtur
 
 It should be noted, though, that while statistical interactions may provide some insight into how exposure mixtures are related to health, they cannot confirm their underlying biology (VanderWeele \& Knol, 2014). If the goal is to assess a meaningful biological interaction, then the discovery of a statistical interaction should be followed up by a functional study.
 
-Now, from a public health perspective, we might be interested in how exposure mixtures interact with other covariates, or, in other words, how social and health factors might mediate the relationship between a health outcome and chemical exposures (VanderWeele \& Knol, 2014). In our case, we can include these additional covariates in the exposure mixture model, where, statistically, they would contribute to the model in the same manner as another chemical exposure: a predictor. A statistical interaction in our model between a covariate and an exposure would indicate that the \emph{magnitude} of the effect of reducing the level of an exposure might differ across various levels of the covariate. This finding would be relevant to public health policy makers, as the potential benefit of regulating a pollutant might differ across groups. For instance, it has been suggested that nutritional intake may modify susceptibility to chemical exposures (e.g., Kannan, Misra, Dvonch, \& Krishnakumar, 2006; Kordas, Lönnerdal, \& Stoltzfus, 2007)
+Now, from a public health perspective, we might be interested in how exposure mixtures interact with other covariates, or, in other words, how social and health factors might mediate the relationship between a health outcome and chemical exposures (VanderWeele \& Knol, 2014). In our case, we can include these additional covariates in the exposure mixture model, where, statistically, they would contribute to the model in the same manner as another chemical exposure: a predictor. A statistical interaction in our model between a covariate and an exposure would indicate that the \emph{magnitude} of the effect of reducing the level of an exposure might differ across various levels of the covariate. This finding could be relevant to public health policy makers, as the potential benefit of regulating a pollutant might differ across groups. For instance, it has been suggested that nutritional intake may modify susceptibility to chemical exposures (e.g., Kannan, Misra, Dvonch, \& Krishnakumar, 2006; Kordas, Lönnerdal, \& Stoltzfus, 2007).
 
 In many cases, we might assess a covariate related to health inequity, such as socioeconomic status. We provide a cautionary comment, here, that an interaction term should not be the \emph{sole} measure used to measure a health disparity (Ward et al., 2019). In this case, we should first consider the independent, additive association between the covariate and levels of exposure or rates of a health outcome, in order to contextualize the meaning of a potential interaction term.
 
-\hypertarget{bayesian-kernel-machine-regression}{%
-\section{Bayesian kernel machine regression}\label{bayesian-kernel-machine-regression}}
+\hypertarget{bkmr}{%
+\section{Bayesian kernel machine regression}\label{bkmr}}
 
 In this section, we introduce the theory of BKMR. First, we define the notation that we will be using for kernel machine regression:
 \begin{itemize}
 \tightlist
 \item
-  \(X_m\) is a predictor variable in the predictor matrix \(\textbf{X}\) with \(m = 1, \dots, M\), measuring exposure variables or covariates in this case
+  \(X_m\) is a predictor variable in the predictor matrix \(\textbf{X}\) with \(m = 1, \dots, M\), measuring exposure variables or covariates
 \item
   \(\textbf{x}_i\) is a vector of values for a single observation in \(\textbf{X}\) with \(i = 1, \dots, n\)
 \item
-  \(x_{im}\) is an observation of \(X_m\)
+  \(x_{im}\) is the \(i\)th observation of \(X_m\)
 \item
   \(Y_i\) is an observation of \(\textbf{Y}\), measuring the health outcome in this case
 \item
@@ -314,9 +341,9 @@ In this section, we introduce the theory of BKMR. First, we define the notation 
 \item
   \(\rho\) is the parameter inside the kernel function which controls smoothness
 \item
-  \(\tau\) is the parameter multiplied by the kernel matrix to relate \(\textbf{K}\) to \(h\)
+  \(\tau\) is the parameter multiplied by the kernel matrix to relate \(\textbf{K}\) to \(h\), and
 \item
-  \(\boldsymbol\epsilon_i \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\) are the residuals of the response
+  \(\boldsymbol\epsilon_i \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\) are the residuals of the response.
 \end{itemize}
 And, we define the notation that we will be using specific to BKMR:
 \begin{itemize}
@@ -330,9 +357,9 @@ And, we define the notation that we will be using specific to BKMR:
 \item
   \(\{\delta_m|\textbf{x}_m \in{\mathcal{S}_g}\}\) is an indicator variable in \(\boldsymbol\delta_{\mathcal{S}_g}\) which represents inclusion of a parameter in group \(g\) in the model
 \item
-  \(\pi\) is the prior probability of inclusion of a predictor in the model
+  \(\pi\) is the prior probability of inclusion of a predictor in the model, and
 \item
-  \(\lambda \equiv \tau\sigma^{-2}\) is a convenient way to define the prior on \(\tau\)
+  \(\lambda \equiv \tau\sigma^{-2}\) is a convenient way to define the prior on \(\tau\).
 \end{itemize}
 \hypertarget{kernel-machine-regression}{%
 \subsection{Kernel machine regression}\label{kernel-machine-regression}}
@@ -358,11 +385,11 @@ Y_i = h(\textbf{x}_i) + \epsilon_i.
 There are many choices of functions for \(k\). BKMR uses the Gaussian kernel, also known as the radial basis function or, sometimes, the squared exponential kernel. The Gaussian kernel is defined as
 
 \[
-k(\textbf{x}, \textbf{x}') = \textrm{exp}\{
--\frac{||\textbf{x}-\textbf{x}'||^2}{\rho}\},
+k(\textbf{x}, \textbf{x}') = \textrm{exp}\bigg\{
+-\frac{||\textbf{x}-\textbf{x}'||^2}{\rho} \bigg\},
 \]
 
-\noindent where \(||\textbf{x}-\textbf{x}'||^2 = \sum_{m=1}^M{(x_{m}-x_{m}')^2}\) for a set of predictors values \(\textbf{x}\) and the predictor values of a second subject \(\textbf{x}'\), and \(\rho\) is a tuning parameter that controls the relationship between the correlation between two points and their distance. Greater values of \(\rho\) will enforce more dependence between points and make the resulting function smoother. \(h\) is related to \(k\) by a multiplicative constant \(\tau\), a tuning parameter which controls the vertical scale of \(h\).
+\noindent where \(||\textbf{x}-\textbf{x}'||^2 = \sum_{m=1}^M{(x_{m}-x_{m}')^2}\) for a set of predictors values \(\textbf{x}\) and the predictor values of another subject \(\textbf{x}'\), and \(\rho\) is a tuning parameter that controls the relationship between the correlation between two points and their distance. Greater values of \(\rho\) will enforce more dependence between points and make the resulting function smoother. \(h\) is related to \(k\) by a multiplicative constant \(\tau\), a tuning parameter which controls the vertical scale of \(h\).
 
 Now that we have defined \(h\) and \(k\), we can think about how to characterize the relationship between our response and predictors. Kernel machine regression is a nonparametric technique because it does not specify a functional form for this relationship. Hence, we will think about estimating the response at a particular query point. Operationally, Müller (1987) demonstrated that kernel machine regression uses a weighted average of all the observations in the dataset to estimate the response, defined as
 
@@ -380,8 +407,8 @@ Now that we have defined \(h\) and \(k\), we can think about how to characterize
 As we move through the predictor space, we can think of the prediction as a continuous moving average of local points in the dataset. The correlation between two values of \(h\) is defined as
 
 \[
-\textrm{cor}(h_i, h_j) = \textrm{exp}\{-\frac{||
-\textbf{x}_{i}-\textbf{x}_{j}||}{\rho}\},
+\textrm{cor}(h_i, h_j) = \textrm{exp} \bigg\{-\frac{||
+\textbf{x}_{i}-\textbf{x}_{j}||^2}{\rho} \bigg\},
 \]
 
 \noindent which allows us to see that values of \(h\) near each other will have a higher correlation and thus similar values. This is also why the resulting function is smooth.
@@ -411,12 +438,12 @@ Y_i \overset{\mathrm{ind}}{\sim} N(h(\textbf{x}_i), \sigma^2) \text{ for } i = 1
 
 \noindent where \(\sigma^2\) comes from the variance of the residuals. Here, \(h\) can be interpreted as a random effect.
 
-\hypertarget{toy-example}{%
-\subsection{Toy example}\label{toy-example}}
+\hypertarget{bkmrtoy}{%
+\subsection{Toy example}\label{bkmrtoy}}
 
 In the following section, we illustrate kernel machine regression with a toy example.
 
-Consider the following case where we want to model the relationship between a single predictor and a response variable. Suppose the true relationship between \(x\) and \(Y\) is defined \(Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})\).
+Consider the following case where we want to model the relationship between a single predictor and a response variable. Suppose the true relationship between \(x\) and \(Y\) is defined \(Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})\). We simulate 51 equally spaced observations of \(x\) from 0 to 25, with error \(\epsilon_i \overset{\text{iid}}\sim N(0, 0.25)\).
 \begin{figure}
 
 {\centering \includegraphics[width=0.75\linewidth]{figures/ch3_toy1} 
@@ -436,7 +463,7 @@ To visualize how kernel machine regression works as a moving weighted average, w
 
 \caption{A query point of 12.5 and the weights of neighboring observations based on a Gaussian kernel}\label{fig:toy2}
 \end{figure}
-Figure \ref{fig:toy2} identifies the query point and assigns corresponding weights to the neighboring points based on a normal distribution, which shares the same density as the Gaussian kernel. In this case, we will specify \(\rho = 2\), which is synonymous with assigning the weights using a normal distribution with \(\sigma^2=1\). We can see how an appropriate estimate for \(h(12.5)\) can be obtained by taking a weighted average of the \(x\)'s, with those observations nearby weighted the most heavily.
+Figure \ref{fig:toy2} identifies the query point and assigns corresponding weights to the neighboring points based on a normal distribution, which shares the same density as the Gaussian kernel. In this case, we will specify \(\rho = 2\), which is synonymous with assigning the weights using a normal distribution with \(\sigma^2=1\). We can see how an appropriate estimate for \(h(12.5)\) can be obtained by taking a weighted average of the \(Y\)'s, with those observations nearby weighted the most heavily.
 
 Now, we fit a kernel machine regression on this data with \(\rho=2\) using the \texttt{stats} package in R (R Core Team, 2013).
 \begin{figure}
@@ -445,7 +472,7 @@ Now, we fit a kernel machine regression on this data with \(\rho=2\) using the \
 
 }
 
-\caption{Fitted kernel machine regression with $\rho=2$.}\label{fig:toy3}
+\caption{Fitted kernel machine regression (blue) with $\rho=2$ compared to the true distribution (orange).}\label{fig:toy3}
 \end{figure}
 We can see in Figure \ref{fig:toy3} that kernel machine regression captures the complex non-linear relationship between \(Y\) and \(x\) and closely follows the true distribution. We do note, though, that the estimation is less precise at the tails, where there is less information provided by local observations. We can also use this example to consider the effect of various values of \(\rho\) on the smoothness of the \(h\) function.
 \begin{figure}
@@ -466,7 +493,7 @@ Now that we have defined kernel machine regression, we can extend it to the Baye
 Component-wise selection follows the same framework as variable selection in a typical Bayesian multiple regression except, instead of augmenting each predictor, we augment the kernel function as
 
 \[
-k(\textbf{x}, \textbf{x}'|\textbf{r}) = \text{exp}\{ -\sum_{m=1}^Mr_m(x_m-x_m')^2\},
+k(\textbf{x}, \textbf{x}'|\textbf{r}) = \text{exp}\bigg\{ -\sum_{m=1}^Mr_m(x_m-x_m')^2 \bigg\},
 \]
 
 \noindent where \(\textbf{r}=[r_1,\dots,r_M]^\top\). We define \(r_m=1/{\rho_m}\), the inverse of the tuning parameter \(\rho_m\) for each \(\textbf{x}_m\), as we want \(r_m\) to be able to take on the value of \(0\) when a variable is removed during the selection process. We now define the kernel matrix \(\textbf{K}_{\textbf{X},\textbf{r}}\) as the \(n\times n\) matrix with \((i,j)\)th element \(k(\textbf{x}, \textbf{x}'|\textbf{r})\). To allow \(r_m\) to equal 0 with non-zero probability, we first define an indicator variable determining whether or not a predictor is included in the variable, which is distributed as
@@ -481,20 +508,16 @@ k(\textbf{x}, \textbf{x}'|\textbf{r}) = \text{exp}\{ -\sum_{m=1}^Mr_m(x_m-x_m')^
 r_m|\delta_m \sim \delta_mf(r_m) + (1-\delta_m)P_0,
 \]
 
-\noindent where \(f(\cdot)\) is some pdf with support \(\mathbb{R}^+\) and \(P_0\) denotes the density with point mass at 0.
+\noindent where \(f(\cdot)\) is some pdf with support \(\mathbb{R}^+\), and \(P_0\) denotes the density with point mass at 0.
 
 While this process of component-wise variable selection works well in a typical multiple regression setting, it can lead to unreliable estimates in situations where the predictors are highly correlated with each other, which is common in exposure mixture studies. In this case, the correlated components contribute similar information to the model, and component-wise variable selection is not able to distinguish which predictor is important. BKMR deals with this problem by introducing hierarchical variable selection.
 
-Hierarchical variable selection involves partitioning the predictors \(\textbf{x}_1, \dots, \textbf{x}_M\) a priori into groups \(\mathcal{S}_g\) with \(g = 1,\dots,G\). These groups should be selected with the aim of keeping within-group correlation high and between-group correlation low. The indicators from \(r_m|\delta_m\) are now distributed as
-
-\[
+Hierarchical variable selection involves partitioning the predictors \(\textbf{x}_1, \dots, \textbf{x}_M\) into groups \(\mathcal{S}_g\) with \(g = 1,\dots,G\). These groups should be selected by the user based on a prior knowledge, with the aim of keeping within-group correlation high and between-group correlation low. The indicators from \(r_m|\delta_m\) are now distributed as
+\begin{gather*}
 \boldsymbol\delta_{\mathcal{S}_g} | \omega_g \sim 
-\text{Multinomial}(\omega_g, \boldsymbol\pi_{\mathcal{S}_g}), g=1,\dots,G,
-\]
-\[
+\text{Multinomial}(\omega_g, \boldsymbol\pi_{\mathcal{S}_g}), g=1,\dots,G,\\
 \omega_g \sim\text{Bernoulli}(\pi),
-\]
-
+\end{gather*}
 \noindent where \(\boldsymbol\delta_{\mathcal{S}_g}=\{\delta_m|\textbf{x}_m \in{\mathcal{S}_g}\}\) and \(\boldsymbol\pi_{\mathcal{S}_g}\) are vectors of indicator variables and prior probabilities, respectively, of a predictor \(\textbf{x}_m\) in group \(\mathcal{S}_g\) entering the model. By this approach, at most one predictor in each group is allowed to enter the model.
 
 While hierarchical variable selection resolves the issue of multicollinearity, it requires specifying subgroups of predictors a priori and assumes that one predictor in each group can capture the information of the rest. Hence, care should be taken to justify the partitioning of predictors when taking this approach.
@@ -504,11 +527,11 @@ Note also that the posterior means of \(\delta_m\) generated from these variable
 \hypertarget{prior-specification}{%
 \subsection{Prior specification}\label{prior-specification}}
 
-In this section, we specify the prior distributions and parameters used by the BKMR algorithm (Bobb et al., 2015).
+In this section, we specify the default prior distributions and parameters used by the BKMR algorithm (Bobb et al., 2015).
 
 BKMR, by default, assumes \(\rho_m=1/r_m \sim \text{Unif}(a_r,b_r)\), a flat prior between \(a_r\) and \(b_r\) for which the default values are 0 and 100, respectively (Bobb, 2017a). This defines the prior probability of \(\rho\) as equally distributed across any value from 0 to 100. This inverse of this prior corresponds to the slab component of the ``slab-and-spike'' prior, where \(r_m|\delta_m \sim \delta_m\text{Unif}^{-1}(a_r, b_r) + (1-\delta_m)P_0\). As a flat prior, this distribution should be chosen when we have no prior knowledge about the smoothness of the exposure-response function, with hyperparameters \(a_r\) and \(b_r\) selected to represent the range of values we expect \(\rho\) to potentially span.
 
-We have seen that kernel machine regression responds strongly to different values of \(r_m=1/\rho\), and, accordingly, the model fit of BKMR is sensitive to their prior distribution. In general, the posterior inclusion probabilities generated from the variable selection procedure are particularly sensitive to this prior, though their relative importance tends to remain stable (Bobb, Claus Henn, Valeri, \& Coull, 2018). As such, the BKMR algorithm also offers the options to define uniform and gamma priors for the \(r_m=1/\rho\).
+We have seen that the smoothness of a kernel machine regression responds strongly to different values of \(r_m=1/\rho\), and, accordingly, the model fit of BKMR is sensitive to their prior distribution. In general, the posterior inclusion probabilities generated from the variable selection procedure are particularly sensitive to this prior, though their relative importance tends to remain stable (Bobb, Claus Henn, Valeri, \& Coull, 2018). As such, the BKMR algorithm also offers the options to define uniform and gamma priors for the \(r_m=1/\rho\).
 
 Moreover, BKMR assumes that the prior probability of including a predictor (\(\delta_m\)) or group of predictors (\(\omega_g\)) in the model is distributed \(\pi \sim \text{Beta}(a_\pi, b_\pi)\). The default hyperparameters are \(a_\pi=b_\pi=1\), which represent a flat, uninformative prior between 0 and 1. When the hierarchical selection approach is applied, equal values for \(\boldsymbol\pi_{\mathcal{S}_g}\), the probabilities of inclusion for each component in group \(\mathcal{S}_g\), are assumed.
 
@@ -525,36 +548,9 @@ While each distribution generated by the Gibbs step is always accepted, the dist
 
 A major computational limitation of BKMR is that at each iteration of the MCMC algorithm, the \(n \times n\) augmented kernel matrix \(\textbf{K}_{\textbf{Z},\textbf{r}}\) must be inverted multiple times. BKMR can employ a Gaussian predictive process which involves specifying a set of \(l\) points, or ``knots,'' that are a subset of the predictor space. The vector of predictors can be approximated by projection on this lower dimensional space, which allows the algorithm to perform inversions on an \(l\times l\) matrix. A general suggestion is to use this approach to speed up the algorithm when \(n\) is large and to specify \(l\approx n/10\) (Bellavia, 2021).
 
-\hypertarget{bayesian-multiple-index-model-extension}{%
-\subsection{Bayesian multiple index model extension}\label{bayesian-multiple-index-model-extension}}
+\hypertarget{bsr}{%
+\section{Bayesian semiparametric regression}\label{bsr}}
 
-We briefly introduce an extension\ldots{} \emph{decide whether to keep this section later}
-
-A recent proposal by McGee, Wilson, Webster, \& Coull (2023)
-\begin{itemize}
-\tightlist
-\item
-  incorporate weighted quantile sums regression + g computation
-\item
-  cite alex's paper w/ bayesian approach
-\item
-  allows variables to contribute through a weighted quantile index.
-\end{itemize}
-provides a promising extension to BKMR that resolves the issue with hierarchical variable selection, so we might consider it in our simulations
-
-\hypertarget{bayesian-semiparametric-regression}{%
-\section{Bayesian semiparametric regression}\label{bayesian-semiparametric-regression}}
-
-differences w/ bkmr
-\begin{itemize}
-\tightlist
-\item
-  makes distributional assumptions about the dataset
-\item
-  kernel regression is computationally intensive w/ large datasets but can handle many predictors
-\item
-  bsr highly dependent on the choice of function
-\end{itemize}
 Defining notation for spline regression:
 \begin{itemize}
 \tightlist
@@ -582,6 +578,8 @@ Y_i = f(\textbf{x}_i) + \epsilon_i,
 
 We determine the basis expansion by considering a piece-wise function of \(X_i\) with some order \(P\) and some set of \(K\) knots defining \(K+1\) disjoint intervals. BSR places knots at uniformly sized quantiles within the boundaries of \(X_i\). The most commonly used orders are \(P=1,2,\textrm{and } 4\), the constant, linear, and cubic splines, respectively. To begin, let us consider a continuous piece-wise linear spline basis (i.e., \(P=2\)) of a one-dimensional \(X\) with two interior knots. In this case, we use the following four basis functions:
 
+\nointerlineskip
+
 \[
 b_1(X)=1, \hspace{0.25in} b_2(X)=X, \hspace{0.25in} b_3(X)=(X-\xi_1)_+, \hspace{0.25in} b_4(X)=(X-\xi_2)_+,
 \]
@@ -589,108 +587,126 @@ b_1(X)=1, \hspace{0.25in} b_2(X)=X, \hspace{0.25in} b_3(X)=(X-\xi_1)_+, \hspace{
 \noindent where \(\xi_1\) and \(\xi_2\) are the two interior knots, and \(t_+\) denotes the positive part. These bases are used to construct the regression model \(f(X)=\sum_{j=1}^4\beta_jb_j(X)\), which requires estimating \(K+P=4\) parameters. We can check the continuity restrictions at the knots by seeing that \(f(\xi_1^-)=\beta_1 + \xi_1\beta_2\) and \(f(\xi_1^+)= \beta_1 + \xi_1\beta_2+ (\xi_1-\xi_1)\beta_3\) are equal.
 
 Now, in the case of exposure mixtures, we want smoother functions that can capture the non-linear relationship between the response and the predictors. We can achieve this by increasing the order to \(P=4\) and using a cubic spline, with continuous first and second derivatives at the knots. The cubic spline is the lowest-order spline for which knot-discontinuity cannot be detected by the human eye. For example, for one \(X\) with two interior knots, we use the following six basis functions:
-
-\[
-b_1(X)=1, \hspace{0.25in}b_2(X)=X, \hspace{0.25in}b_3(X)=X^2, 
-\]
-\[
+\begin{gather*}
+b_1(X)=1, \hspace{0.25in}b_2(X)=X, \hspace{0.25in}b_3(X)=X^2, \\
 b_4(X)=X^3, \hspace{0.25in} b_5(X)=(X-\xi_1)^3_+, \hspace{0.25in} b_6(X)=(X-\xi_2)^3_+.
-\]
-
+\end{gather*}
 \noindent Now, the regression model is defined as \(f(X)= \sum_{j=1}^6\beta_jb_j(X)\) and requires estimating \(K+P=6\) parameters. It can be shown that \(f'(\xi_i^-)= f'(\xi_i^+)\) and \(f''(\xi_i^-)= f''(\xi_i^+)\).
 
 However, the behavior of polynomials near the boundaries of \(X\), where there is less information, can be erratic. Natural cubic splines, also referred to as just natural splines, address this by imposing an additional restriction of linearity at the boundaries of \(X\). Paradoxically, this also leads to a simpler model with four fewer parameters to estimate. A general definition of the \(K\) basis functions for a natural spline with interior knots \(\xi_j\), \(j=1,\dots,K\), is given by:
-
-\[
-N_1(X)=1, \hspace{0.25in} N_2(X)=X, \hspace{0.25in} N_{k+2}(X)=d_k(X)-d_{K-1}(X), 
-\]
-\[
+\begin{gather*}
+N_1(X)=1, \hspace{0.25in} N_2(X)=X, \hspace{0.25in} N_{k+2}(X)=d_k(X)-d_{K-1}(X), \\
 d_k(X)=\frac{(X-\xi_k)^3_+ - (X-\xi_K)^3_+}{\xi_K-\xi_k}.
-\]
+\end{gather*}
+\noindent Here, the regression model is defined as \(f(X) = \sum_{j=1}^K\beta_jN_j(X)\), with \(K\) parameters. BSR uses natural splines to specify the regression relationship.
 
-\noindent Here, the regression model is defined as \(f(X) = \sum_{j=1}^K\beta_jN_j(X)\), with \(K\) parameters, equal to \(d\) degrees of freedom in BSR.
+\hypertarget{toy-example}{%
+\subsection{Toy example}\label{toy-example}}
 
-Now that we have defined natural splines, we introduce the construction of \(f\) in BSR by first assuming a two-dimensional case with \(X_1\) and \(X_2\). We define
+In the following section, we illustrate spline regression using the same toy example used to introduce kernel machiner regression. See Section \ref{bkmrtoy} and Figure \ref{fig:toy1} for details on the parameters used to generate simulated data.
 
-\[
-f(X_1) = \widetilde{X}_1\boldsymbol{\beta}_1, \hspace{0.25in} f(X_2) = \widetilde{X}_2\boldsymbol{\beta}_2,
-\]
-\[
-f(X_1,X_2) = \widetilde{X}_1\boldsymbol{\beta}_1 + \widetilde{X}_2\boldsymbol{\beta}_2 + \widetilde{X}_{12}\boldsymbol{\beta}_{12},
-\]
-
-\noindent where \(\widetilde{X}_m=[b_{m1}(X_m),\dots,b_{md}(X_m)]\) represents a \(d\)-dimensional basis function expansion for \(m=1,2\), and \(\widetilde{X}_{12}= [b_{11}(X_1)b_{21}(X_2), b_{11}(X_1)b_{22}(X_2), \dots, b_{1d}(X_1)b_{2d}(X_2)]\) represents a \(d^2\)-dimensional basis expansion of the interaction between \(X_1\) and \(X_2\). Note that we must explicitly model the effect of the interaction term by assuming a multiplicative interaction between the basis functions of the predictors.
-
-Extending to the multi-dimensional setting, BSR assumes the following general model formulation:
-
-\[
-f(\textbf{x}_i)= \sum_{h=1}^pf^{(h)}(\textbf{x}_i), 
-\]
-\[
-f^{(h)}(\textbf{x}_i)= \sum_{j_1=1}^M\widetilde{x}_{ij_1}\boldsymbol\beta_{j_1}^{(h)} + 
-\sum_{j_1=2}^M\sum_{j_2<j_1}\widetilde{x}_{ij_1j_2}\boldsymbol\beta_{j_1j_2}^{(h)} + \dots,
-\]
-
-``When the regression coefficients are identifiable only up to a constant, it means that there are multiple sets of coefficients that could produce the same observed data. This lack of identifiability can complicate the interpretation of individual coefficients and hinder the ability to make precise inferences about the underlying relationships in the data.''
-
-\hypertarget{connection-to-mixed-models-1}{%
-\subsection{Connection to mixed models}\label{connection-to-mixed-models-1}}
-
-\hypertarget{toy-example-1}{%
-\subsection{Toy example}\label{toy-example-1}}
+As in Section \ref{bkmrtoy}, we consider a case where we want to model the relationship between a single predictor and a response variable, where the true relationship between \(x\) and \(Y\) is defined \(Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})\). We fit a series of linear, cubic, and then natural spline regressions to illustrate the general framework of a natural spline regression.
 \begin{figure}
 
 {\centering \includegraphics[width=0.75\linewidth]{figures/ch3_toy4} 
 
 }
 
-\caption{Linear spline regression}\label{fig:toy4}
+\caption{Linear spline regression (blue) with four knots (dotted lines) compared to the true distribution (orange).}\label{fig:toy4}
 \end{figure}
+Figure \ref{fig:toy4} illustrates the fit proposed by a linear spline regression with order \(P=2\). We can see that the implementation of knots allows for even a linear fit to capture more of the nuances in this nonlinear relationship, as compared to a standard linear regression.
 \begin{figure}
 
 {\centering \includegraphics[width=0.75\linewidth]{figures/ch3_toy5} 
 
 }
 
-\caption{Cubic spline regression}\label{fig:toy5}
+\caption{Cubic spline regression (blue) with four knots (dotted lines) compared to the true distribution (orange).}\label{fig:toy5}
 \end{figure}
+However, this linear spline regression is still unable to fully estimate the nonlinearity in our example. Increasing the order to \(P=4\) with a cubic spline regression offers additional flexibility. Figure \ref{fig:toy5} illustrates the fit proposed by this model. Here, we can see the benefits of using a cubic polynomial relationship in a nonlinear setting: the estimated relationship is continuous at the knots, and the nonlinear relationship has been flexibly captured.
 \begin{figure}
 
 {\centering \includegraphics[width=0.75\linewidth]{figures/ch3_toy6} 
 
 }
 
-\caption{Natural spline regression}\label{fig:toy6}
+\caption{Natural spline regression (blue) with four knots (dotted lines) compared to the true distribution (orange).}\label{fig:toy6}
 \end{figure}
+Our final modification involves imposing linearity constraints on the boundaries of \(x\) to implement a natural spline regression. Figure \ref{fig:toy6} shows that the fit estimated using a natural spline regression. The fitted line is only slightly different than that proposed by a cubic spline regression in Figure \ref{fig:toy5}. The most noticeable difference is that the slopes of the tails of the natural spline regression are less extreme than for the cubic spline regression.
 \begin{figure}
 
 {\centering \includegraphics[width=1\linewidth]{figures/ch3_toybounds} 
 
 }
 
-\caption{Natural and cubic spline regression extrapolated outside the bounds of $x$}\label{fig:toybounds}
+\caption{Natural and cubic spline regression (blue) compared to the true distribution (orange) extrapolated outside the bounds of $x$ (dotted lines).}\label{fig:toybounds}
 \end{figure}
+Extrapolation outside the scope of \(x\) allows us to see the effect of the lineary constraints imposed by natural regression. Figure \ref{fig:toybounds} demonstrates how the cubic spline regression behaves erratically outside the bounds of \(x\), as the cubic polynomial lines tend toward \(\pm\infty\), while the natural spline regression follows a more appropriate linear trend. As the natural spline regression is more reliable near the boundaries of \(x\) and also simpler to estimate, BSR adopts the use of natural splines.
+
+\hypertarget{model-formulation-in-bsr}{%
+\subsection{Model formulation in BSR}\label{model-formulation-in-bsr}}
+
+Now that we have defined natural splines, we introduce BSR, following the presentation in Antonelli et al. (2020). We demonstrate the construction of \(f\) in BSR by first assuming a two-dimensional case with predictors \(X_1\) and \(X_2\). We define
+\begin{gather*}
+f(X_1) = \widetilde{X}_1\boldsymbol{\beta}_1, \hspace{0.25in} f(X_2) = \widetilde{X}_2\boldsymbol{\beta}_2,\\
+f(X_1,X_2) = \widetilde{X}_1\boldsymbol{\beta}_1 + \widetilde{X}_2\boldsymbol{\beta}_2 + \widetilde{X}_{12}\boldsymbol{\beta}_{12},
+\end{gather*}
+\noindent where \(\widetilde{X}_m=[b_{m1}(X_m),\dots,b_{md}(X_m)]\) represents a \(d\)-dimensional basis function expansion for \(m=1,2\), and \(\widetilde{X}_{12}= [b_{11}(X_1)b_{21}(X_2), b_{11}(X_1)b_{22}(X_2), \dots, b_{1d}(X_1)b_{2d}(X_2)]\) represents a \(d^2\)-dimensional basis expansion of the interaction between \(X_1\) and \(X_2\). Note that we must explicitly model the effect of the interaction term by assuming a multiplicative interaction between the basis functions of the predictors.
+
+Extending to the multi-dimensional setting, BSR assumes the following general model formulation:
+\begin{gather*}
+f(\textbf{x}_i)= \sum_{h=1}^pf^{(h)}(\textbf{x}_i), \\
+f^{(h)}(\textbf{x}_i)= \sum_{j_1=1}^M\widetilde{x}_{ij_1}\boldsymbol\beta_{j_1}^{(h)} + 
+\sum_{j_1=2}^M\sum_{j_2<j_1}\widetilde{x}_{ij_1j_2}\boldsymbol\beta_{j_1j_2}^{(h)} + \dots,
+\end{gather*}
+\noindent where \(f^{(h)}(\textbf{x}_i)\) includes a summation of all \(p\)-way interactions. The inclusion of all \(p\)-way interactions makes the model far too overparameterized. Moreover, \(f(\textbf{x}_i)\) is a sum of \(k\) different functions \(f^{(h)}(\textbf{x}_i)\) where a value for \(k\) is selected in order to capture all exposure effects in the model. Each of the \(k\) functions has the same functional form, and so the regression coefficients for a function \(f^{(h)}(\textbf{x}_i)\) are only identifiable up to a constant --- this means that there are multiple sets of coefficients that could be estimated from the same data.
+
 \hypertarget{sparsity-inducing-priors}{%
 \subsection{Sparsity inducing priors}\label{sparsity-inducing-priors}}
 
-\[
-P(\boldsymbol\beta_X^{(h)}|\boldsymbol\zeta) = \bigg(1-\prod_{j\in S}\zeta_{jh}\bigg)\delta_{\textbf{0}} +
-\bigg(\prod_{j\in S}\zeta_{jh}\bigg) \psi_1(\boldsymbol\beta_S^{(h)}),
-\]
+In order to handle the overparameterization and non-identifiability of the model, BSR implements multivariate sparsity inducing priors. In this section, we follow the presentation provided in Antonelli et al. (2020).
+
+First, we define indicators \(\boldsymbol\zeta=\{\zeta_{jh}\}\) representing whether the \(j\)th exposure is included in the \(h\)th function:
+\begin{align*}
+P(\zeta_{jh}) &= \tau_h^{\zeta_{jh}}(1-\tau_h)^{1-\zeta_{jh}} 
+I(A_h\not\subset A_{h'}\forall h'\neq h \textrm{ or } A_h=\{\}),\\
+&\textrm{where } A_h=\{j:\zeta_h=1\}.
+\end{align*}
+\noindent Here, the indicators follow a Bernoulli distribution with prior probability of inclusion \(\tau_h\). The posterior means of \(\boldsymbol\zeta\) can be interpreted as measures of relative variable importance. We include an indicator function \(I()\) that represents whether the function \(h\) contains a unique set of predictors. This indicator ensures that no function contains predictors that are a subset of those in another function, in which case this function would be redundant and thus removed from the model entirely.
+
+Now, we assume a multivariate slab-and-spike prior on the regression coefficients:
+\begin{align*}
+P(\boldsymbol\beta_X^{(h)}|\boldsymbol\zeta) &= \bigg(1-\prod_{j\in S}\zeta_{jh}\bigg)P_{\textbf{0}} +
+\bigg(\prod_{j\in S}\zeta_{jh}\bigg) \psi_1(\boldsymbol\beta_S^{(h)}), \\
+&\textrm{where } S \textrm{ is some subset of } {1, 2, \dots, p}.
+\end{align*}
+\noindent Here, \(P_{\textbf{0}}\) denotes the density with point mass at \(\textbf0\), and \(\psi_1()\) is a multivariate normal distribution with mean \(\textbf0\) and covariance \(\boldsymbol\Sigma_{\boldsymbol\beta}\), a diagonal matrix with \(\sigma^2\sigma_{\boldsymbol\beta}^2\) on the diagonals.
 
 \hypertarget{prior-specification-1}{%
 \subsection{Prior specification}\label{prior-specification-1}}
-
+\begin{itemize}
+\tightlist
+\item
+  hyper prior vs.~empirical bayes strategy for sigma beta
+\item
+  lower bound on slab variance
+\item
+  properties of priors for higher-order interactions
+\end{itemize}
 \hypertarget{the-mcmc-algorithm-1}{%
 \subsection{The MCMC algorithm}\label{the-mcmc-algorithm-1}}
-
+\begin{itemize}
+\tightlist
+\item
+  include brief detail on how MCMC algorithm deals with lower-order interactions that are a subset of higher-order interactions
+\end{itemize}
 \hypertarget{detecting-interactions}{%
 \section{Detecting interactions}\label{detecting-interactions}}
 
-Discuss options for detecting interactions. Briefly describe MLR
+In Section \ref{motivation}, we highlighted the challenges of analytically testing for the presence of interactions in exposure mixture studies. These challenges motivated a theoretical exploration of BKMR and BSR in Sections \ref{bkmr} and \ref{bsr}. Now, we discuss and compare the options that BKMR and BSR provide for inference on the presence of interactions. We also include discussion on theoretical advantages and disadvantages to each.
 
-\hypertarget{bkmr}{%
-\subsection{BKMR}\label{bkmr}}
+\hypertarget{bkmr-1}{%
+\subsection{BKMR}\label{bkmr-1}}
 
 Since the flexible \(h\) function in kernel machine regression allows us to forgo any assumptions about the nature of the relationship between the health outome and predictors, BKMR can potentially capture complex interactions between predictors. The challenge with using BKMR to do this, however, is that there is no formal framework for conducting inference on the presence of interactions.
 
@@ -704,23 +720,24 @@ How to detect interactions:
 \item
   can conduct inference on inter-quantile difference --- has yet to be a formal assessment of how this approach performs in various settings
 \end{itemize}
-\hypertarget{bmim}{%
-\subsection{BMIM}\label{bmim}}
-\begin{itemize}
-\tightlist
-\item
-  note how interactions work w/in groups and b/t groups
-\end{itemize}
-\hypertarget{bsr}{%
-\subsection{BSR}\label{bsr}}
+\hypertarget{bsr-1}{%
+\subsection{BSR}\label{bsr-1}}
 
 BSR can conduct inference
 
-\hypertarget{toy-example-2}{%
-\subsection{Toy example}\label{toy-example-2}}
+\hypertarget{differences-between-bkmr-and-bsr}{%
+\subsection{Differences between BKMR and BSR}\label{differences-between-bkmr-and-bsr}}
 
-Potentially provide toy example
-
+differences w/ bkmr
+\begin{itemize}
+\tightlist
+\item
+  makes distributional assumptions about the dataset
+\item
+  kernel regression is computationally intensive w/ large datasets but can handle many predictors
+\item
+  bsr highly dependent on the choice of function
+\end{itemize}
 \hypertarget{sims}{%
 \chapter{Simulations}\label{sims}}
 
@@ -767,7 +784,7 @@ Models compared, specify the parameters for each (justify them!)
 \begin{itemize}
 \tightlist
 \item
-  use original predictor values in MADRES data. allows us to explore these methods on real-world data
+  use original predictor values in MADRES data. allows us to explore these methods on predictors with realistic correlation structure
 \item
   simulate outcome using a formula w/ different types of interaction
 \item
@@ -886,9 +903,6 @@ Kordas, K., Lönnerdal, B., \& Stoltzfus, R. J. (2007). Interactions between nut
 
 \leavevmode\vadjust pre{\hypertarget{ref-liu_semiparametric_2007}{}}%
 Liu, D., Lin, X., \& Ghosh, D. (2007). Semiparametric {Regression} of {Multidimensional} {Genetic} {Pathway} {Data}: {Least}-{Squares} {Kernel} {Machines} and {Linear} {Mixed} {Models}. \emph{Biometrics}, \emph{63}(4), 1079--1088. http://doi.org/\href{https://doi.org/10.1111/j.1541-0420.2007.00799.x}{10.1111/j.1541-0420.2007.00799.x}
-
-\leavevmode\vadjust pre{\hypertarget{ref-mcgee_bayesian_2023}{}}%
-McGee, G., Wilson, A., Webster, T. F., \& Coull, B. A. (2023). Bayesian multiple index models for environmental mixtures. \emph{Biometrics}, \emph{79}(1), 462--474. http://doi.org/\href{https://doi.org/10.1111/biom.13569}{10.1111/biom.13569}
 
 \leavevmode\vadjust pre{\hypertarget{ref-muller_weighted_1987}{}}%
 Müller, H.-G. (1987). Weighted {Local} {Regression} and {Kernel} {Methods} for {Nonparametric} {Curve} {Fitting}. \emph{Journal of the American Statistical Association}, \emph{82}(397), 231--238. http://doi.org/\href{https://doi.org/10.1080/01621459.1987.10478425}{10.1080/01621459.1987.10478425}

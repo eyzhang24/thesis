@@ -5,6 +5,20 @@ output:
 ---
 # Humanistic Perspective {#humanistic}
 
+List of loose ideas:
+
+- goal of modernism: define single causes for single effects
+- study chemicals in isolation to obtain purely mechanistic explanation of their toxicity
+- contrast with idea of relationality: entities cannot be understood without considering their *relationality* to other surrounding entities
+- relationality disrupts the notion of bounded objects
+- motivation for chemical mixtures: chemicals themselves are not independent from surrounding chemicals
+- motivation for chemical mixtures in the context of social epidemiology: the effects of chemicals are modulated by structural/social conditions
+- relationality also disrupts Cartesian split between body and mind
+- racial hierarchy positions certain groups closer to the bounds of the corporal body, while other groups have transcended these bounds and are defined by their intellect (i.e., the mind)
+- result --> some bodies are seen as inherently more susceptible to chemical exposure, more "porous" 
+- leads to damage centered research which, while well-intentioned, inadvertently de-humanizes marginalized groups
+- remedy: relationality leads into concept of alterlife, modern life is inseparable from alteration due to chemical exposure
+
 <!--
 This file is for including Chapter 2.  
 
