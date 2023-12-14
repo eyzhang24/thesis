@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.20)  11 DEC 2023 11:46
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.12.11)  13 DEC 2023 10:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **Elizabeth-Zhang_StatThesis.tex
 (./Elizabeth-Zhang_StatThesis.tex
 LaTeX2e <2023-11-01>
-L3 programming layer <2023-11-09>
+L3 programming layer <2023-12-08>
 (./amherstthesis.cls
 Document Class: amherstthesis 2019/08/26 Amherst College Statistics
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/base/book.cls
@@ -13,15 +13,15 @@ Document Class: book 2023/05/17 v1.4n Standard LaTeX document class
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/base/bk12.clo
 File: bk12.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
 )
-\c@part=\count186
-\c@chapter=\count187
-\c@section=\count188
-\c@subsection=\count189
-\c@subsubsection=\count190
-\c@paragraph=\count191
-\c@subparagraph=\count192
-\c@figure=\count193
-\c@table=\count194
+\c@part=\count187
+\c@chapter=\count188
+\c@section=\count189
+\c@subsection=\count190
+\c@subsubsection=\count191
+\c@paragraph=\count192
+\c@subparagraph=\count193
+\c@figure=\count194
+\c@table=\count195
 \abovecaptionskip=\skip48
 \belowcaptionskip=\skip49
 \bibindent=\dimen140
@@ -98,14 +98,14 @@ Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 ) (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
-\inf@bad=\count195
+\inf@bad=\count196
 LaTeX Info: Redefining \frac on input line 234.
-\uproot@=\count196
-\leftroot@=\count197
+\uproot@=\count197
+\leftroot@=\count198
 LaTeX Info: Redefining \overline on input line 399.
 LaTeX Info: Redefining \colon on input line 410.
-\classnum@=\count198
-\DOTSCASE@=\count199
+\classnum@=\count199
+\DOTSCASE@=\count266
 LaTeX Info: Redefining \ldots on input line 496.
 LaTeX Info: Redefining \dots on input line 499.
 LaTeX Info: Redefining \cdots on input line 620.
@@ -118,20 +118,20 @@ LaTeX Info: Redefining \Bigg on input line 725.
 \big@size=\dimen145
 LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
-\macc@depth=\count266
+\macc@depth=\count267
 LaTeX Info: Redefining \bmod on input line 905.
 LaTeX Info: Redefining \pmod on input line 910.
 LaTeX Info: Redefining \smash on input line 940.
 LaTeX Info: Redefining \relbar on input line 970.
 LaTeX Info: Redefining \Relbar on input line 971.
-\c@MaxMatrixCols=\count267
+\c@MaxMatrixCols=\count268
 \dotsspace@=\muskip16
-\c@parentequation=\count268
-\dspbrk@lvl=\count269
+\c@parentequation=\count269
+\dspbrk@lvl=\count270
 \tag@help=\toks21
-\row@=\count270
-\column@=\count271
-\maxfields@=\count272
+\row@=\count271
+\column@=\count272
+\maxfields@=\count273
 \andhelp@=\toks22
 \eqnshift@=\dimen146
 \alignsep@=\dimen147
@@ -171,17 +171,17 @@ Package: longtable 2023-11-01 v4.19 Multi-page Table package (DPC)
 \LTright=\skip66
 \LTpre=\skip67
 \LTpost=\skip68
-\LTchunksize=\count273
+\LTchunksize=\count274
 \LTcapwidth=\dimen152
 \LT@head=\box53
 \LT@firsthead=\box54
 \LT@foot=\box55
 \LT@lastfoot=\box56
 \LT@gbox=\box57
-\LT@cols=\count274
-\LT@rows=\count275
-\c@LT@tables=\count276
-\c@LT@chunks=\count277
+\LT@cols=\count275
+\LT@rows=\count276
+\c@LT@tables=\count277
+\c@LT@chunks=\count278
 \LT@p@ftn=\toks31
 ) (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
@@ -195,12 +195,12 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \cmidrulesep=\dimen160
 \cmidrulekern=\dimen161
 \defaultaddspace=\dimen162
-\@cmidla=\count278
-\@cmidlb=\count279
+\@cmidla=\count279
+\@cmidlb=\count280
 \@aboverulesep=\dimen163
 \@belowrulesep=\dimen164
-\@thisruleclass=\count280
-\@lastruleclass=\count281
+\@thisruleclass=\count281
+\@lastruleclass=\count282
 \@thisrulewidth=\dimen165
 ) (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip17
@@ -237,14 +237,14 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
-\c@section@level=\count282
+\c@section@level=\count283
 ) (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count283
+\etb@tempcnta=\count284
 )
 \@linkdim=\dimen166
-\Hy@linkcounter=\count284
-\Hy@pagecounter=\count285
+\Hy@linkcounter=\count285
+\Hy@pagecounter=\count286
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2023-11-26 v7.01g Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
@@ -252,7 +252,7 @@ Now handling font encoding PD1 ...
 ) (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count286
+\Hy@SavedSpaceFactor=\count287
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2023-11-26 v7.01g Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
@@ -265,7 +265,7 @@ Package hyperref Info: Plain pages OFF on input line 4196.
 Package hyperref Info: Backreferencing OFF on input line 4201.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4448.
-\c@Hy@tempcnt=\count287
+\c@Hy@tempcnt=\count288
 LaTeX Info: Redefining \url on input line 4786.
 \XeTeXLinkMargin=\dimen167
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/generic/bitset/bitset.sty
@@ -273,7 +273,7 @@ Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
 ))
-\Fld@menulength=\count288
+\Fld@menulength=\count289
 \Field@Width=\dimen168
 \Fld@charsize=\dimen169
 Package hyperref Info: Hyper figures OFF on input line 6065.
@@ -287,9 +287,9 @@ Package hyperref Info: PDF/A mode OFF on input line 6095.
 Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
 package with kernel methods
 )
-\Hy@abspage=\count289
-\c@Item=\count290
-\c@Hfootnote=\count291
+\Hy@abspage=\count290
+\c@Item=\count291
+\c@Hfootnote=\count292
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/hyperref/hpdftex.def
@@ -298,8 +298,8 @@ File: hpdftex.def 2023-11-26 v7.01g Hyperref driver for pdfTeX
 Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend package
 with kernel methods
 )
-\Fld@listcount=\count292
-\c@bookmark@seq@number=\count293
+\Fld@listcount=\count293
+\c@bookmark@seq@number=\count294
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 Package: rerunfilecheck 2022-07-10 v1.10 Rerun checks for auxiliary files (HO)
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
@@ -344,7 +344,7 @@ LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 (Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
 ) (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count294
+\c@float@type=\count295
 \float@exts=\toks32
 \float@box=\box58
 \@float@everytoks=\toks33
@@ -354,18 +354,18 @@ Package: rotating 2016/08/11 v2.16d rotated objects in LaTeX
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2022/04/13 v1.1d Standard LaTeX ifthen package (DPC)
 )
-\c@r@tfl@t=\count295
+\c@r@tfl@t=\count296
 \rotFPtop=\skip70
 \rotFPbot=\skip71
 \rot@float@box=\box60
 \rot@mess@toks=\toks34
 ) (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
 Package: fancyvrb 2023/11/06 4.5b verbatim text (tvz,hv)
-\FV@CodeLineNo=\count296
+\FV@CodeLineNo=\count297
 \FV@InFile=\read2
 \FV@TabBox=\box61
-\c@FancyVerbLine=\count297
-\FV@StepNumber=\count298
+\c@FancyVerbLine=\count298
+\FV@StepNumber=\count299
 \FV@OutFile=\write3
 ) (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2023/11/15 v3.01 LaTeX color extensions (UK)
@@ -399,8 +399,8 @@ Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
 \caption@hangindent=\dimen177
 Package caption Info: Standard document class detected.
 )
-\c@caption@flags=\count299
-\c@continuedfloat=\count300
+\c@caption@flags=\count300
+\c@continuedfloat=\count301
 Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: longtable package is loaded.
@@ -419,43 +419,50 @@ Package: titlesec 2023/10/27 v2.16 Sectioning titles
 \titlewidth=\dimen180
 \titlewidthlast=\dimen181
 \titlewidthfirst=\dimen182
+) (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/framed/framed.sty
+Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
+\OuterFrameSep=\skip74
+\fb@frw=\dimen183
+\fb@frh=\dimen184
+\FrameRule=\dimen185
+\FrameSep=\dimen186
 )
-\cslhangindent=\skip74
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 206.
+\cslhangindent=\skip75
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 246.
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2023-11-09 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count301
+\l__color_backend_stack_int=\count302
 \l__pdf_internal_box=\box63
 ) (./Elizabeth-Zhang_StatThesis.aux)
 \openout1 = `Elizabeth-Zhang_StatThesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 206.
-LaTeX Font Info:    ... okay on input line 206.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 206.
-LaTeX Font Info:    ... okay on input line 206.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 206.
-LaTeX Font Info:    ... okay on input line 206.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 206.
-LaTeX Font Info:    ... okay on input line 206.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 206.
-LaTeX Font Info:    ... okay on input line 206.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 206.
-LaTeX Font Info:    ... okay on input line 206.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 206.
-LaTeX Font Info:    ... okay on input line 206.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 206.
-LaTeX Font Info:    ... okay on input line 206.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 206.
-LaTeX Font Info:    ... okay on input line 206.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 246.
+LaTeX Font Info:    ... okay on input line 246.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 246.
+LaTeX Font Info:    ... okay on input line 246.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 246.
+LaTeX Font Info:    ... okay on input line 246.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 246.
+LaTeX Font Info:    ... okay on input line 246.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 246.
+LaTeX Font Info:    ... okay on input line 246.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 246.
+LaTeX Font Info:    ... okay on input line 246.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 246.
+LaTeX Font Info:    ... okay on input line 246.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 246.
+LaTeX Font Info:    ... okay on input line 246.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 246.
+LaTeX Font Info:    ... okay on input line 246.
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-Package hyperref Info: Link coloring ON on input line 206.
+Package hyperref Info: Link coloring ON on input line 246.
 (./Elizabeth-Zhang_StatThesis.out) (./Elizabeth-Zhang_StatThesis.out)
 \@outlinefile=\write4
 \openout4 = `Elizabeth-Zhang_StatThesis.out'.
@@ -513,14 +520,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 LaTeX Font Info:    Trying to load font information for U+msb on input line 1.
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [5]
-
-LaTeX Warning: Reference `ref-labels' on page vi undefined on input line 39.
-
-
-LaTeX Warning: Reference `ref-labels' on page vi undefined on input line 40.
-
-)
+) [5])
 \tf@toc=\write5
 \openout5 = `Elizabeth-Zhang_StatThesis.toc'.
 
@@ -547,7 +547,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.243 
+l.283 
        [1
 
 ]
@@ -557,18 +557,15 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning (ext4): destination with the same identifier (name{page.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.247 
+l.287 
        [2] [3] [4
 
 ]
 Chapter 2.
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 259.
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 299.
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-Underfull \vbox (badness 6300) has occurred while \output is active []
-
-[5{/Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}] [6]
+) [5{/Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}] [6]
 Chapter 3.
 [7
 
@@ -576,7 +573,7 @@ Chapter 3.
 
 Package amsmath Warning: Foreign command \atopwithdelims;
 (amsmath)                \frac or \genfrac should be used instead
-(amsmath)                 on input line 302.
+(amsmath)                 on input line 351.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -586,9 +583,9 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [9] [10]
 LaTeX Font Info:    Font shape `U/lasy/b/n' in size <8> not available
-(Font)              Font shape `U/lasy/m/n' tried instead on input line 346.
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 395.
 LaTeX Font Info:    Font shape `U/lasy/b/n' in size <6> not available
-(Font)              Font shape `U/lasy/m/n' tried instead on input line 346.
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 395.
 [11]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -599,37 +596,37 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [14]
-<figures/ch3_toy1.png, id=378, 361.35pt x 216.81pt>
+<figures/ch3_toy1.png, id=374, 361.35pt x 216.81pt>
 File: figures/ch3_toy1.png Graphic file (type png)
 <use figures/ch3_toy1.png>
-Package pdftex.def Info: figures/ch3_toy1.png  used on input line 449.
+Package pdftex.def Info: figures/ch3_toy1.png  used on input line 498.
 (pdftex.def)             Requested size: 325.215pt x 195.1305pt.
-<figures/ch3_toy2.png, id=380, 361.35pt x 289.08pt>
+<figures/ch3_toy2.png, id=376, 361.35pt x 289.08pt>
 File: figures/ch3_toy2.png Graphic file (type png)
 <use figures/ch3_toy2.png>
-Package pdftex.def Info: figures/ch3_toy2.png  used on input line 460.
+Package pdftex.def Info: figures/ch3_toy2.png  used on input line 509.
 (pdftex.def)             Requested size: 325.215pt x 260.174pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [15 <./figures/ch3_toy1.png>]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 468.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 517.
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-<figures/ch3_toy3.png, id=389, 361.35pt x 216.81pt>
+<figures/ch3_toy3.png, id=385, 361.35pt x 216.81pt>
 File: figures/ch3_toy3.png Graphic file (type png)
 <use figures/ch3_toy3.png>
-Package pdftex.def Info: figures/ch3_toy3.png  used on input line 471.
+Package pdftex.def Info: figures/ch3_toy3.png  used on input line 520.
 (pdftex.def)             Requested size: 325.215pt x 195.1305pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [16 <./figures/ch3_toy2.png>]
-<figures/ch3_toyrho.png, id=397, 505.89pt x 216.81pt>
+<figures/ch3_toyrho.png, id=393, 505.89pt x 216.81pt>
 File: figures/ch3_toyrho.png Graphic file (type png)
 <use figures/ch3_toyrho.png>
-Package pdftex.def Info: figures/ch3_toyrho.png  used on input line 480.
+Package pdftex.def Info: figures/ch3_toyrho.png  used on input line 529.
 (pdftex.def)             Requested size: 433.62pt x 185.84093pt.
 
 Underfull \vbox (badness 2865) has occurred while \output is active []
@@ -644,37 +641,37 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [23]
-<figures/ch3_toy4.png, id=437, 361.35pt x 216.81pt>
+<figures/ch3_toy4.png, id=433, 361.35pt x 216.81pt>
 File: figures/ch3_toy4.png Graphic file (type png)
 <use figures/ch3_toy4.png>
-Package pdftex.def Info: figures/ch3_toy4.png  used on input line 611.
+Package pdftex.def Info: figures/ch3_toy4.png  used on input line 660.
 (pdftex.def)             Requested size: 325.215pt x 195.1305pt.
 
 Underfull \vbox (badness 1867) has occurred while \output is active []
 
 [24]
-<figures/ch3_toy5.png, id=445, 361.35pt x 216.81pt>
+<figures/ch3_toy5.png, id=440, 361.35pt x 216.81pt>
 File: figures/ch3_toy5.png Graphic file (type png)
 <use figures/ch3_toy5.png>
-Package pdftex.def Info: figures/ch3_toy5.png  used on input line 620.
+Package pdftex.def Info: figures/ch3_toy5.png  used on input line 669.
 (pdftex.def)             Requested size: 325.215pt x 195.1305pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [25 <./figures/ch3_toy4.png>]
-<figures/ch3_toy6.png, id=452, 361.35pt x 216.81pt>
+<figures/ch3_toy6.png, id=448, 361.35pt x 216.81pt>
 File: figures/ch3_toy6.png Graphic file (type png)
 <use figures/ch3_toy6.png>
-Package pdftex.def Info: figures/ch3_toy6.png  used on input line 629.
+Package pdftex.def Info: figures/ch3_toy6.png  used on input line 678.
 (pdftex.def)             Requested size: 325.215pt x 195.1305pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [26 <./figures/ch3_toy5.png>]
-<figures/ch3_toybounds.png, id=459, 505.89pt x 216.81pt>
+<figures/ch3_toybounds.png, id=455, 505.89pt x 216.81pt>
 File: figures/ch3_toybounds.png Graphic file (type png)
 <use figures/ch3_toybounds.png>
-Package pdftex.def Info: figures/ch3_toybounds.png  used on input line 638.
+Package pdftex.def Info: figures/ch3_toybounds.png  used on input line 687.
 (pdftex.def)             Requested size: 433.62pt x 185.84093pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -698,97 +695,110 @@ Chapter 4.
 
 ]
 Appendix A.
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 882.
 
-LaTeX Warning: Reference `ref-labels' on page 37 undefined on input line 827.
+LaTeX Font Warning: Font shape `T1/lmtt/bx/it' in size <12> not available
+(Font)              Font shape `T1/lmtt/b/sl' tried instead on input line 901.
+
+[37] [38]
+Underfull \vbox (badness 10000) detected at line 1005
+ []
 
 
-LaTeX Warning: Reference `ref-labels' on page 37 undefined on input line 830.
+Underfull \vbox (badness 10000) detected at line 1005
+ []
 
-[37] [38
+[39] [40]
+Underfull \vbox (badness 10000) detected at line 1093
+ []
 
-]
+
+Underfull \vbox (badness 10000) detected at line 1093
+ []
+
+[41] [42]
 Appendix B.
-[39] [40
+[43
 
-] [41] [42
+] [44
+
+] [45] [46
 
 ]
-Underfull \hbox (badness 1472) in paragraph at lines 871--873
+Underfull \hbox (badness 1472) in paragraph at lines 1133--1135
  \T1/lmr/m/n/12 soft-ware for an-a-lyz-ing the health ef-fects of mul-ti-ple con-cur-rent ex-po-sures
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[43
+[47
 
 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[44]
-Underfull \hbox (badness 2237) in paragraph at lines 898--900
+[48]
+Underfull \hbox (badness 2237) in paragraph at lines 1160--1162
  \T1/lmr/m/n/12 Plau-si-ble Mech-a-nis-tic Frame-work for Ex-plor-ing Po-ten-tial Ef-fect Mod-i-fi-ca-
  []
 
 
-Underfull \hbox (badness 2608) in paragraph at lines 901--903
+Underfull \hbox (badness 2608) in paragraph at lines 1163--1165
  []\T1/lmr/m/n/12 Kordas, K., Lön-nerdal, B., & Stoltz-fus, R. J. (2007). In-ter-ac-tions be-
  []
 
 
-Underfull \hbox (badness 1205) in paragraph at lines 901--903
+Underfull \hbox (badness 1205) in paragraph at lines 1163--1165
  \T1/lmr/m/n/12 tween nu-tri-tion and en-vi-ron-men-tal ex-po-sures: Ef-fects on health out-comes
  []
 
 
-Underfull \hbox (badness 1484) in paragraph at lines 901--903
+Underfull \hbox (badness 1484) in paragraph at lines 1163--1165
  \T1/lmr/m/n/12 in women and chil-dren. \T1/lmr/m/it/12 The Jour-nal of Nu-tri-tion\T1/lmr/m/n/12 , \T1/lmr/m/it/12 137\T1/lmr/m/n/12 (12), 2794--2797.
  []
 
 
-Overfull \hbox (54.04335pt too wide) in paragraph at lines 916--918
+Overfull \hbox (54.04335pt too wide) in paragraph at lines 1178--1180
  \T1/lmr/m/n/12 trans-duc-tion. \T1/lmr/m/it/12 Chemo-sphere\T1/lmr/m/n/12 , \T1/lmr/m/it/12 262\T1/lmr/m/n/12 , 128350. http://doi.org/[][]10.1016/j.chemosphere.2020.128350[][] 
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[45]
-Underfull \hbox (badness 1259) in paragraph at lines 937--939
+[49]
+Underfull \hbox (badness 1259) in paragraph at lines 1199--1201
  \T1/lmr/m/n/12 men-tal epi-demi-ol-ogy. \T1/lmr/m/it/12 Eu-ro-pean Jour-nal of Epi-demi-ol-ogy\T1/lmr/m/n/12 , \T1/lmr/m/it/12 33\T1/lmr/m/n/12 (4), 355--363.
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[46] [47] (./Elizabeth-Zhang_StatThesis.aux)
+[50] [51] (./Elizabeth-Zhang_StatThesis.aux)
  ***********
 LaTeX2e <2023-11-01>
-L3 programming layer <2023-11-09>
+L3 programming layer <2023-12-08>
  ***********
-
-LaTeX Warning: There were undefined references.
-
 Package rerunfilecheck Info: File `Elizabeth-Zhang_StatThesis.out' has not changed.
-(rerunfilecheck)             Checksum: 5583AE8BA77797939C8D516C46B18A21;6742.
+(rerunfilecheck)             Checksum: D671739879D788B92BF2979220330105;6526.
  )
 (\end occurred inside a group at level 1)
 
-### semi simple group (level 1) entered at line 208 (\begingroup)
+### semi simple group (level 1) entered at line 248 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 13511 strings out of 476233
- 217043 string characters out of 5795524
- 1935555 words of memory out of 5000000
- 35044 multiletter control sequences out of 15000+600000
- 623355 words of font info for 82 fonts, out of 8000000 for 9000
+ 13623 strings out of 476137
+ 218746 string characters out of 5793650
+ 1941470 words of memory out of 5000000
+ 35242 multiletter control sequences out of 15000+600000
+ 624312 words of font info for 85 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  75i,12n,79p,1699b,779s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Elizabeth-Zhang_StatThesis.pdf (59 pages, 882556 bytes).
+</Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtko10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtti10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on Elizabeth-Zhang_StatThesis.pdf (63 pages, 943593 bytes).
 PDF statistics:
- 775 PDF objects out of 1000 (max. 8388607)
- 658 compressed objects within 7 object streams
- 182 named destinations out of 1000 (max. 500000)
- 385 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 803 PDF objects out of 1000 (max. 8388607)
+ 676 compressed objects within 7 object streams
+ 184 named destinations out of 1000 (max. 500000)
+ 377 words of extra memory for PDF output out of 10000 (max. 10000000)
 

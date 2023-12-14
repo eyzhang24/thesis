@@ -353,7 +353,7 @@ f(X_1) = \widetilde{X}_1\boldsymbol{\beta}_1, \hspace{0.25in} f(X_2) = \widetild
 f(X_1,X_2) = \widetilde{X}_1\boldsymbol{\beta}_1 + \widetilde{X}_2\boldsymbol{\beta}_2 + \widetilde{X}_{12}\boldsymbol{\beta}_{12},
 \end{gather*}
 
-\noindent where $\widetilde{X}_m=[b_{m1}(X_m),\dots,b_{md}(X_m)]$ represents a $d$-dimensional basis function expansion for $m=1,2$, and $\widetilde{X}_{12}= [b_{11}(X_1)b_{21}(X_2), b_{11}(X_1)b_{22}(X_2), \dots, b_{1d}(X_1)b_{2d}(X_2)]$ represents a $d^2$-dimensional basis expansion of the interaction between $X_1$ and $X_2$. Note that we must explicitly model the effect of the interaction term by assuming a multiplicative interaction between the basis functions of the predictors. 
+\noindent where $\widetilde{X}_m=[b_{m1}(X_m),\dots,b_{md}(X_m)]$ represents a $d$-dimensional basis function expansion for $m=1,2$, and $\widetilde{X}_{12}= [b_{11}(X_1)b_{21}(X_2), b_{11}(X_1)b_{22}(X_2), \dots, b_{1d}(X_1)b_{2d}(X_2)]$ represents a $d^2$-dimensional basis expansion of the interaction between $X_1$ and $X_2$. $d$ is an influential tuning parameter. BSR by default assumes that all predictors have the same number of degrees of freedom and uses a WAIC model selection criterion to select $d$, which approximates leave one out cross validation. Note that we must explicitly model the effect of the interaction term by assuming a multiplicative interaction between the basis functions of the predictors. 
 
 Extending to the multi-dimensional setting, BSR assumes the following general model formulation: 
 
@@ -391,13 +391,24 @@ P(\boldsymbol\beta_X^{(h)}|\boldsymbol\zeta) &= \bigg(1-\prod_{j\in S}\zeta_{jh}
 
 ### Prior specification
 
-- hyper prior vs. empirical bayes strategy for sigma beta
-- lower bound on slab variance 
-- properties of priors for higher-order interactions
+In this section, we discuss the priors and their default specifications in BSR [@antonelli_estimating_2020]. 
+
+The priors on $\boldsymbol\Sigma_{\boldsymbol\beta}$, the diagonal matrix with $\sigma^2\sigma^2_{\boldsymbol\beta}$ on the diagonals, control the shrinkage of $\boldsymbol\beta_S^{(h)}$. Variable selection is sensitive to the choice of prior on this parameter, so BSR implements an empirical Bayes strategy to obtain a prior distribution for $\sigma^2_{\boldsymbol\beta}$ based on the data. While this is not a fully Bayesian approach, it has been shown that this strategy works better in practice [@antonelli_estimating_2020]. Additionally, the default prior for $\sigma^2$ is assumed to follow a $\textrm{Gamma}(0.001, 0.001)$ distribution. 
+
+However, when there is a weak relationship between the exposures and relationship, the estimated prior variance for the slab $\sigma^2_{\boldsymbol\beta}$ can be very small. In this case, the shape of the slab approximates the point mass of 0 at the spike, and the posterior inclusion probabilities become difficult to accurately estimate. BSR avoids this by imposing a lower bound on the variance. This is determined by establishing a constant value for $\tau_h$, the prior probability of inclusion, for all $h$ and then permuting the rows of $Y$ (i.e., breaking up the relationship). Then, a grid of values for $\sigma^2_{\boldsymbol\beta}$ are tested until some predefined threshold of the posterior probability of inclusion is obtained (e.g., 0.25 for a main effect and 0.05 for a two-way interaction). If the empirical Bayes estimate for $\sigma^2_{\boldsymbol\beta}$ is less than this lower bound, then the lower bound is used instead. 
+
+Finally, BSR assumes that $\tau_h \sim \textrm{Beta}(M,\gamma)$, which defines the prior probability of including a predictor for all functions $h$. If $M$ is some predefined constant, and $\gamma=p$, the number of predictors, then the prior amount of sparsity should increase as the number of predictors increases. 
+
+<!-- - $\tau_h \sim \textrm{Beta}(M,\gamma)$, where $\gamma=p$ and $M$ is some constant -->
+<!--   - note that this leads to stronger penalization of higher-order interaction terms if scaled with $p$ if $\gamma \geq p+M-1$ -->
 
 ### The MCMC algorithm
 
-- include brief detail on how MCMC algorithm deals with lower-order interactions that are a subset of higher-order interactions
+We also briefly discuss the MCMC algorithm employed by BSR [@antonelli_estimating_2020]. 
+
+BSR uses an MCMC algorithm to obtain posterior distributions of $\sigma^2$ and $\tau_h$. In particular, Gibbs samplers are employed to sample $\sigma^2$ and $\tau_h$ from their full distributions and to update $\boldsymbol\zeta$ and $\boldsymbol\beta_S^{(h)}$. Every $T$ MCMC iterations, BSR uses a Monte Carlo expectation maximization algorithm with a Gibbs sampler to update  $\sigma^2_{\boldsymbol\beta}$. The empirical Bayes estimate is obtained once $\sigma^2_{\boldsymbol\beta}$ converges, at which point the MCMC runs conditional on this estimated variance. 
+
+Notably, this algorithm must deal with the explicit specification of interaction terms in the model. Any additive univariate effect or lower-order interaction term is, by definition, a subset of some higher-order interaction term. As the MCMC algorithm searches the model space, it might accept a move to a higher-order interaction and get stuck in a local mode, when, in reality, a simpler model should be preferred. BSR handles this challenge by imposing a constraint in the MCMC algorithm: if the inclusion of a $j$th order interaction term is being considered, then the algorithm must also evaluate all $j-1$th order models. If the truth is some lower-order model, then this strategy avoids the undesired convergence to a local mode. When the model is complex, maintaining reversibility of updates under this strategy can be computationally challenging with a Gibbs sampler; in this case, using a Metropolis Hastings sampler is computationally faster. 
 
 ## Detecting interactions
 

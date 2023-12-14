@@ -113,14 +113,12 @@ ggsave("index/figures/ch3_toyrho.png", plot = qrho, device = "png",
 # spline regression
 ########
 
-kn <- c(5, 10, 15, 20) # 3 knots of equal width
+kn <- c(5, 10, 15, 20) # 4 knots of equal width
 
 # fit linear spline regression
 spline_toy_line <- lm(Y ~ bs(x, knots = kn, degree = 1), data = df)
 p_line <- predict(spline_toy_line, se = T)
 df$Yhats_line <- p_line$fit
-# df$Ylows <- df$Yhats - 1.96 * p$se.fit
-# df$Yups <- df$Yhats + 1.96 * p$se.fit
 
 q4 <- ggplot(df) +
   geom_point(aes(x, Y)) +

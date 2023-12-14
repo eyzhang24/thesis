@@ -140,6 +140,46 @@ Use this space to thank those who have helped you in the thesis process (profess
 
 % Formatting R code display
 % Syntax highlighting #22
+  \usepackage{color}
+  \usepackage{fancyvrb}
+  \newcommand{\VerbBar}{|}
+  \newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+  \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+  % Add ',fontsize=\small' for more characters per line
+  \usepackage{framed}
+  \definecolor{shadecolor}{RGB}{248,248,248}
+  \newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+  \newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+  \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+  \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+  \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+  \newcommand{\BuiltInTok}[1]{#1}
+  \newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+  \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+  \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+  \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+  \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+  \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+  \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+  \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+  \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+  \newcommand{\ExtensionTok}[1]{#1}
+  \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+  \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+  \newcommand{\ImportTok}[1]{#1}
+  \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+  \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+  \newcommand{\NormalTok}[1]{#1}
+  \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+  \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+  \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+  \newcommand{\RegionMarkerTok}[1]{#1}
+  \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+  \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+  \newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+  \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+  \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+  \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 
 % Formatting R code: set baselinestretch = 1.5 for double-spacing
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{
@@ -257,24 +297,33 @@ List of loose ideas:
 \tightlist
 \item
   goal of modernism: define single causes for single effects
-\item
-  study chemicals in isolation to obtain purely mechanistic explanation of their toxicity
+  \begin{itemize}
+  \tightlist
+  \item
+    study chemicals in isolation to obtain purely mechanistic explanation of their toxicity
+  \end{itemize}
 \item
   contrast with idea of relationality: entities cannot be understood without considering their \emph{relationality} to other surrounding entities
-\item
-  relationality disrupts the notion of bounded objects
-\item
-  motivation for chemical mixtures: chemicals themselves are not independent from surrounding chemicals
-\item
-  motivation for chemical mixtures in the context of social epidemiology: the effects of chemicals are modulated by structural/social conditions
+  \begin{itemize}
+  \tightlist
+  \item
+    relationality disrupts the notion of bounded objects
+  \item
+    motivation for chemical mixtures: chemicals themselves are not independent from surrounding chemicals
+  \item
+    motivation for chemical mixtures in the context of social epidemiology: the effects of chemicals are modulated by structural/social conditions
+  \end{itemize}
 \item
   relationality also disrupts Cartesian split between body and mind
-\item
-  racial hierarchy positions certain groups closer to the bounds of the corporal body, while other groups have transcended these bounds and are defined by their intellect (i.e., the mind)
-\item
-  result --\textgreater{} some bodies are seen as inherently more susceptible to chemical exposure, more ``porous''
-\item
-  leads to damage centered research which, while well-intentioned, inadvertently de-humanizes marginalized groups
+  \begin{itemize}
+  \tightlist
+  \item
+    racial hierarchy positions certain groups closer to the bounds of the corporal body, while other groups have transcended these bounds and are defined by their intellect (i.e., the mind)
+  \item
+    result --\textgreater{} some bodies are seen as inherently more susceptible to chemical exposure, more ``porous''
+  \item
+    leads to damage centered research which, while well-intentioned, inadvertently de-humanizes marginalized groups
+  \end{itemize}
 \item
   remedy: relationality leads into concept of alterlife, modern life is inseparable from alteration due to chemical exposure
 \end{itemize}
@@ -818,17 +867,230 @@ And here's some other random info: the first paragraph after a chapter title or 
 
 \appendix
 
-\hypertarget{the-first-appendix}{%
-\chapter{The First Appendix}\label{the-first-appendix}}
+\hypertarget{code}{%
+\chapter{Code}\label{code}}
 
-This first appendix includes all of the R chunks of code that were hidden throughout the document (using the \texttt{include\ =\ FALSE} chunk tag) to help with readibility and/or setup.
+This first appendix includes all of the R chunks of code that were hidden throughout the document.
 
-\hypertarget{in-the-main-file-refref-labels}{%
-\section{In the main file \ref{ref-labels}:}\label{in-the-main-file-refref-labels}}
+\hypertarget{code-for-chapter-refbayes}{%
+\section{Code for Chapter \ref{bayes}:}\label{code-for-chapter-refbayes}}
 
-\hypertarget{in-chapter-refref-labels}{%
-\section{In Chapter \ref{ref-labels}:}\label{in-chapter-refref-labels}}
+The code for this chapter generates a toy example, used to demonstrate the kernel machine regression and spline regression techniques.
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#load packages}
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(stats)}
+\FunctionTok{library}\NormalTok{(splines)}
+\end{Highlighting}
+\end{Shaded}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# set theme for plots}
+\FunctionTok{theme\_set}\NormalTok{(}\FunctionTok{theme\_light}\NormalTok{())}
+\FunctionTok{theme\_update}\NormalTok{(}\AttributeTok{panel.grid.major =} \FunctionTok{element\_blank}\NormalTok{(), }
+             \AttributeTok{panel.grid.minor =} \FunctionTok{element\_blank}\NormalTok{())}
+\FunctionTok{theme\_update}\NormalTok{(}
+  \AttributeTok{strip.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{color=}\StringTok{"gray"}\NormalTok{, }\AttributeTok{fill=}\StringTok{"white"}\NormalTok{), }
+  \AttributeTok{strip.text =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{color =} \StringTok{"gray30"}\NormalTok{)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+\CommentTok{\# generate simulated points}
+\DocumentationTok{\#\#\#\#\#\#\#\#}
 
+\CommentTok{\# generate data from distribution}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{0}\NormalTok{) }\CommentTok{\# reproducibility}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{25}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{51}\NormalTok{)}
+\NormalTok{Y }\OtherTok{\textless{}{-}} \FunctionTok{exp}\NormalTok{(x}\SpecialCharTok{/}\DecValTok{10}\NormalTok{) }\SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\FunctionTok{sin}\NormalTok{(x}\SpecialCharTok{/}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{51}\NormalTok{, }\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(x, Y)}
+
+\CommentTok{\# plot data and linear regression line}
+\NormalTok{q1 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(df, }\FunctionTok{aes}\NormalTok{(x, Y)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_function}\NormalTok{(}\AttributeTok{fun =} \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{exp}\NormalTok{(x}\SpecialCharTok{/}\DecValTok{10}\NormalTok{) }\SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\FunctionTok{sin}\NormalTok{(x}\SpecialCharTok{/}\DecValTok{2}\NormalTok{), }
+                \AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{color =} \StringTok{"darkorange"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{"lm"}\NormalTok{, }\AttributeTok{formula =} \StringTok{"y\textasciitilde{}x"}\NormalTok{, }
+              \AttributeTok{color =} \StringTok{"deepskyblue3"}\NormalTok{, }\AttributeTok{fill =} \StringTok{"gray70"}\NormalTok{, }
+              \AttributeTok{linewidth =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{se =}\NormalTok{ F)}
+
+\CommentTok{\# save plot}
+\FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/ch3\_toy1.png"}\NormalTok{, }\AttributeTok{plot =}\NormalTok{ q1, }\AttributeTok{device =} \StringTok{"png"}\NormalTok{, }
+       \AttributeTok{width =} \DecValTok{5}\NormalTok{, }\AttributeTok{height =} \DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+\CommentTok{\# kernel regression}
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+
+\CommentTok{\# get normal distribution of weights around query points}
+\NormalTok{df}\SpecialCharTok{$}\NormalTok{Weight }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{x, }\AttributeTok{mean =} \FloatTok{12.5}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# plot points colored by their weights}
+\NormalTok{p1 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(df, }\FunctionTok{aes}\NormalTok{(x, Y)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =}\NormalTok{ Weight)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_function}\NormalTok{(}\AttributeTok{fun =} \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{exp}\NormalTok{(x}\SpecialCharTok{/}\DecValTok{10}\NormalTok{) }\SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\FunctionTok{sin}\NormalTok{(x}\SpecialCharTok{/}\DecValTok{2}\NormalTok{), }
+                \AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{color =} \StringTok{"darkorange"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FloatTok{12.5}\NormalTok{, }\AttributeTok{linetype =} \StringTok{"dotted"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
+
+\CommentTok{\# plot a curve of weights}
+\NormalTok{normcurv }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x =} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{25}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{250}\NormalTok{)) }
+\NormalTok{normcurv}\SpecialCharTok{$}\NormalTok{Weight }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{(normcurv}\SpecialCharTok{$}\NormalTok{x, }\AttributeTok{mean =} \FloatTok{12.5}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1}\NormalTok{)}
+\NormalTok{p2 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(normcurv, }\FunctionTok{aes}\NormalTok{(x, Weight, }\AttributeTok{color =}\NormalTok{ Weight)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{breaks =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.2}\NormalTok{, }\FloatTok{0.4}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{) }
+
+\CommentTok{\# stitch plots together}
+\NormalTok{q2 }\OtherTok{\textless{}{-}}\NormalTok{ cowplot}\SpecialCharTok{::}\FunctionTok{plot\_grid}\NormalTok{(p1, p2, }\AttributeTok{ncol =} \DecValTok{1}\NormalTok{, }\AttributeTok{rel\_heights =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.7}\NormalTok{, }\FloatTok{0.3}\NormalTok{))}
+\NormalTok{q2}
+
+\CommentTok{\# save plot}
+\FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/ch3\_toy2.png"}\NormalTok{, }\AttributeTok{plot =}\NormalTok{ q2, }\AttributeTok{device =} \StringTok{"png"}\NormalTok{, }
+       \AttributeTok{width =} \DecValTok{5}\NormalTok{, }\AttributeTok{height =} \DecValTok{4}\NormalTok{)}
+
+\CommentTok{\# fit kernel regression with sigma = 1, bandwidth = 8/3}
+\NormalTok{kmr\_toy }\OtherTok{\textless{}{-}} \FunctionTok{ksmooth}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{x, df}\SpecialCharTok{$}\NormalTok{Y, }\AttributeTok{kernel =} \StringTok{"normal"}\NormalTok{, }
+                   \AttributeTok{bandwidth =} \DecValTok{8}\SpecialCharTok{/}\DecValTok{3}\NormalTok{, }\AttributeTok{x.points =}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{x)}
+\NormalTok{df }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{left\_join}\NormalTok{(}\FunctionTok{as.data.frame}\NormalTok{(kmr\_toy), }\AttributeTok{by =} \StringTok{"x"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{rename}\NormalTok{(}\AttributeTok{Yhat =}\NormalTok{ y)}
+
+\CommentTok{\# plot kernel regression estimation}
+\NormalTok{q3 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(df) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x, Y)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_function}\NormalTok{(}\AttributeTok{fun =} \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{exp}\NormalTok{(x}\SpecialCharTok{/}\DecValTok{10}\NormalTok{) }\SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\FunctionTok{sin}\NormalTok{(x}\SpecialCharTok{/}\DecValTok{2}\NormalTok{), }
+                \AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{color =} \StringTok{"darkorange"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x, Yhat), }\AttributeTok{color =} \StringTok{"deepskyblue3"}\NormalTok{) }
+\NormalTok{q3}
+
+\CommentTok{\# save plot}
+\FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/ch3\_toy3.png"}\NormalTok{, }\AttributeTok{plot =}\NormalTok{ q3, }\AttributeTok{device =} \StringTok{"png"}\NormalTok{, }
+       \AttributeTok{width =} \DecValTok{5}\NormalTok{, }\AttributeTok{height =} \DecValTok{3}\NormalTok{)}
+
+\CommentTok{\# fit kernel regression with sigma = 5, bandwidth = 40/3}
+\NormalTok{kmr\_toy\_5 }\OtherTok{\textless{}{-}} \FunctionTok{ksmooth}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{x, df}\SpecialCharTok{$}\NormalTok{Y, }\AttributeTok{kernel =} \StringTok{"normal"}\NormalTok{, }
+                     \AttributeTok{bandwidth =} \DecValTok{40}\SpecialCharTok{/}\DecValTok{3}\NormalTok{, }\AttributeTok{x.points =}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{x)}
+
+\CommentTok{\# fit kernel regression with sigma = 0.1, bandwith = 8/30}
+\NormalTok{kmr\_toy\_1 }\OtherTok{\textless{}{-}} \FunctionTok{ksmooth}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{x, df}\SpecialCharTok{$}\NormalTok{Y, }\AttributeTok{kernel =} \StringTok{"normal"}\NormalTok{, }
+                     \AttributeTok{bandwidth =} \DecValTok{8}\SpecialCharTok{/}\DecValTok{30}\NormalTok{, }\AttributeTok{x.points =}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{x)}
+
+\CommentTok{\# re{-}join data}
+\NormalTok{dfrho }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{left\_join}\NormalTok{(}\FunctionTok{as.data.frame}\NormalTok{(kmr\_toy\_5), }\AttributeTok{by =} \StringTok{"x"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{rename}\NormalTok{(}\StringTok{"rho = 50"} \OtherTok{=}\NormalTok{ y) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{left\_join}\NormalTok{(}\FunctionTok{as.data.frame}\NormalTok{(kmr\_toy\_1), }\AttributeTok{by =} \StringTok{"x"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{rename}\NormalTok{(}\StringTok{"rho = 0.02"} \OtherTok{=}\NormalTok{ y) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{Yhat) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{pivot\_longer}\NormalTok{(}\AttributeTok{cols =} \FunctionTok{c}\NormalTok{(}\StringTok{"rho = 50"}\NormalTok{, }\StringTok{"rho = 0.02"}\NormalTok{), }\AttributeTok{values\_to =} \StringTok{"Yhat"}\NormalTok{)}
+
+\CommentTok{\# plot kernel regression with two values of rho}
+\NormalTok{qrho }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(dfrho) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x, Y)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x, Yhat), }\AttributeTok{color =} \StringTok{"deepskyblue3"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{name)}
+\NormalTok{qrho}
+
+\CommentTok{\# save plot}
+\FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/ch3\_toyrho.png"}\NormalTok{, }\AttributeTok{plot =}\NormalTok{ qrho, }\AttributeTok{device =} \StringTok{"png"}\NormalTok{, }
+       \AttributeTok{width =} \DecValTok{7}\NormalTok{, }\AttributeTok{height =} \DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+\CommentTok{\# spline regression}
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+
+\NormalTok{kn }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{20}\NormalTok{) }\CommentTok{\# 4 knots of equal width}
+
+\CommentTok{\# fit linear spline regression}
+\NormalTok{spline\_toy\_line }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Y }\SpecialCharTok{\textasciitilde{}} \FunctionTok{bs}\NormalTok{(x, }\AttributeTok{knots =}\NormalTok{ kn, }\AttributeTok{degree =} \DecValTok{1}\NormalTok{), }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{p\_line }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(spline\_toy\_line, }\AttributeTok{se =}\NormalTok{ T)}
+\NormalTok{df}\SpecialCharTok{$}\NormalTok{Yhats\_line }\OtherTok{\textless{}{-}}\NormalTok{ p\_line}\SpecialCharTok{$}\NormalTok{fit}
+
+\NormalTok{q4 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(df) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x, Y)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_function}\NormalTok{(}\AttributeTok{fun =} \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{exp}\NormalTok{(x}\SpecialCharTok{/}\DecValTok{10}\NormalTok{) }\SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\FunctionTok{sin}\NormalTok{(x}\SpecialCharTok{/}\DecValTok{2}\NormalTok{), }
+                \AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{color =} \StringTok{"darkorange"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x, Yhats\_line), }\AttributeTok{color =} \StringTok{"deepskyblue3"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ kn, }\AttributeTok{linetype =} \StringTok{"dotted"}\NormalTok{)}
+\NormalTok{q4}
+
+\CommentTok{\# save plot}
+\FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/ch3\_toy4.png"}\NormalTok{, }\AttributeTok{plot =}\NormalTok{ q4, }\AttributeTok{device =} \StringTok{"png"}\NormalTok{, }
+       \AttributeTok{width =} \DecValTok{5}\NormalTok{, }\AttributeTok{height =} \DecValTok{3}\NormalTok{)}
+
+\CommentTok{\# fit cubic spline regression}
+\NormalTok{spline\_toy\_cub }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Y }\SpecialCharTok{\textasciitilde{}} \FunctionTok{bs}\NormalTok{(x, }\AttributeTok{knots =}\NormalTok{ kn), }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{p\_cub }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(spline\_toy\_cub, }\AttributeTok{se =}\NormalTok{ T)}
+\NormalTok{df}\SpecialCharTok{$}\NormalTok{Yhats\_cub }\OtherTok{\textless{}{-}}\NormalTok{ p\_cub}\SpecialCharTok{$}\NormalTok{fit}
+
+\CommentTok{\# plot spline regression estimation}
+\NormalTok{q5 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(df) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x, Y)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_function}\NormalTok{(}\AttributeTok{fun =} \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{exp}\NormalTok{(x}\SpecialCharTok{/}\DecValTok{10}\NormalTok{) }\SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\FunctionTok{sin}\NormalTok{(x}\SpecialCharTok{/}\DecValTok{2}\NormalTok{), }
+                \AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{color =} \StringTok{"darkorange"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x, Yhats\_cub), }\AttributeTok{color =} \StringTok{"deepskyblue3"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ kn, }\AttributeTok{linetype =} \StringTok{"dotted"}\NormalTok{)}
+\NormalTok{q5}
+
+\CommentTok{\# save plot}
+\FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/ch3\_toy5.png"}\NormalTok{, }\AttributeTok{plot =}\NormalTok{ q5, }\AttributeTok{device =} \StringTok{"png"}\NormalTok{, }
+       \AttributeTok{width =} \DecValTok{5}\NormalTok{, }\AttributeTok{height =} \DecValTok{3}\NormalTok{)}
+
+\CommentTok{\# fit natural spline regression}
+\NormalTok{spline\_toy\_nat }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Y }\SpecialCharTok{\textasciitilde{}} \FunctionTok{ns}\NormalTok{(x, }\AttributeTok{knots =}\NormalTok{ kn), }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{p\_nat }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(spline\_toy\_nat, }\AttributeTok{se =}\NormalTok{ T)}
+\NormalTok{df}\SpecialCharTok{$}\NormalTok{Yhats\_nat }\OtherTok{\textless{}{-}}\NormalTok{ p\_nat}\SpecialCharTok{$}\NormalTok{fit}
+
+\CommentTok{\# plot spline regression estimation}
+\NormalTok{q6 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(df) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x, Y)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_function}\NormalTok{(}\AttributeTok{fun =} \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{exp}\NormalTok{(x}\SpecialCharTok{/}\DecValTok{10}\NormalTok{) }\SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\FunctionTok{sin}\NormalTok{(x}\SpecialCharTok{/}\DecValTok{2}\NormalTok{), }
+                \AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{color =} \StringTok{"darkorange"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x, Yhats\_nat), }\AttributeTok{color =} \StringTok{"deepskyblue3"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{20}\NormalTok{), }\AttributeTok{linetype =} \StringTok{"dotted"}\NormalTok{)}
+\NormalTok{q6}
+
+\CommentTok{\# save plot}
+\FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/ch3\_toy6.png"}\NormalTok{, }\AttributeTok{plot =}\NormalTok{ q6, }\AttributeTok{device =} \StringTok{"png"}\NormalTok{, }
+       \AttributeTok{width =} \DecValTok{5}\NormalTok{, }\AttributeTok{height =} \DecValTok{3}\NormalTok{)}
+
+\CommentTok{\# see what happens outside of the bounds}
+\NormalTok{x\_longer }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{5}\NormalTok{, }\DecValTok{30}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{81}\NormalTok{)}
+\NormalTok{y\_longer\_cub }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(spline\_toy\_cub, }
+                        \AttributeTok{newdata =} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x\_longer))}
+\NormalTok{y\_longer\_nat }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(spline\_toy\_nat, }
+                        \AttributeTok{newdata =} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x\_longer))}
+
+\NormalTok{df\_longer }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{x =} \FunctionTok{c}\NormalTok{(x\_longer, x\_longer), }
+  \AttributeTok{spline =} \FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\StringTok{"Cubic"}\NormalTok{, }\DecValTok{81}\NormalTok{), }\FunctionTok{rep}\NormalTok{(}\StringTok{"Natural"}\NormalTok{, }\DecValTok{81}\NormalTok{)), }
+  \AttributeTok{Yhat =} \FunctionTok{c}\NormalTok{(y\_longer\_cub, y\_longer\_nat)}
+\NormalTok{)}
+
+\CommentTok{\# plot outside of bounds}
+\NormalTok{qbounds }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(df\_longer) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x, Yhat), }\AttributeTok{color =} \StringTok{"deepskyblue3"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_function}\NormalTok{(}\AttributeTok{fun =} \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{exp}\NormalTok{(x}\SpecialCharTok{/}\DecValTok{10}\NormalTok{) }\SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\FunctionTok{sin}\NormalTok{(x}\SpecialCharTok{/}\DecValTok{2}\NormalTok{), }
+                \AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{color =} \StringTok{"darkorange"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{25}\NormalTok{), }\AttributeTok{linetype =} \StringTok{"dotted"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{spline) }
+\NormalTok{qbounds}
+
+\CommentTok{\# save plot}
+\FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/ch3\_toybounds.png"}\NormalTok{, }\AttributeTok{plot =}\NormalTok{ qbounds, }
+       \AttributeTok{device =} \StringTok{"png"}\NormalTok{, }\AttributeTok{width =} \DecValTok{7}\NormalTok{, }\AttributeTok{height =} \DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 \hypertarget{the-second-appendix}{%
 \chapter{The Second Appendix}\label{the-second-appendix}}
 
