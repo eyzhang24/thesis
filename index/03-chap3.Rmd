@@ -12,13 +12,13 @@ library(knitr)
 
 ## Motivation {#motivation}
 
-We are interested in using Bayesian regression techniques to characterize the nature of complex interactions in exposure mixture studies. We begin by reviewing definitions for what constitutes a complex interaction and why interactions are relevant from public health and biological relevance. 
+We are interested in using Bayesian regression techniques to characterize the nature of non-additive interactions in exposure mixture studies. We begin by reviewing definitions for what constitutes an interaction and why interactions are relevant from public health and biological relevance. 
 
 ### Interactions from a statistical perspective
 
 First, we define additivity and non-additivity in the traditional statistical paradigm [@siemiatycki_biological_1981]. Suppose we have two variables $x_1$ and $x_2$, and we want to consider their effect on some outcome of interest. If specifying [effect due to $x_1$ and $x_2$] = [effect due to $x_1$] + [effect due to $x_2$] can adequately capture this relationship, then we say that $x_1$ and $x_2$ each have an **additive effect** on the outcome and that there is no interaction between them. On the other hand, if there is variability in the outcome that can be captured by an additional term equal to some function of $x_1$ and $x_2$, we say that there is a **non-additive interaction** between $x_1$ and $x_2$. In this case, [effect due to $x_1$ and $x_2$] = [effect due to $x_1$] + [effect due to $x_2$] + [effect due to $f(x_1, x_2)$], where $f$ is non-zero for some values of $x_1$ and $x_2$. 
 
-For our sake, we consider any non-additive interaction to be complex, meaning that they are difficult to detect. To see why, let us consider running a linear regression for $Y$ on $x_1$ and $x_2$. The regression would be defined as
+For our sake, when we refer to "interaction," we mean any non-additive interaction. We consider such non-additive interactions to be complex, meaning that they are difficult to detect. To see why, let us consider running a linear regression for $Y$ on $x_1$ and $x_2$. The regression would be defined as
 
 $$
 \widehat{Y} = \widehat\beta_0+\widehat\beta_1x_1+\widehat\beta_2x_2 + \widehat\beta_{12}f(x_1, x_2),
@@ -367,7 +367,7 @@ f(X_1) = \widetilde{X}_1\boldsymbol{\beta}_1, \hspace{0.25in} f(X_2) = \widetild
 f(X_1,X_2) = \widetilde{X}_1\boldsymbol{\beta}_1 + \widetilde{X}_2\boldsymbol{\beta}_2 + \widetilde{X}_{12}\boldsymbol{\beta}_{12},
 \end{gather*}
 
-\noindent where $\widetilde{X}_m=[b_{m1}(X_m),\dots,b_{md}(X_m)]$ represents a $d$-dimensional basis function expansion for $m=1,2$, and $\widetilde{X}_{12}= [b_{11}(X_1)b_{21}(X_2), b_{11}(X_1)b_{22}(X_2), \dots, b_{1d}(X_1)b_{2d}(X_2)]$ represents a $d^2$-dimensional basis expansion of the interaction between $X_1$ and $X_2$. $d$ is an influential tuning parameter. BSR by default assumes that all predictors have the same number of degrees of freedom and uses a WAIC model selection criterion to select $d$, which approximates leave one out cross validation. Note that we must explicitly model the effect of the interaction term by assuming a multiplicative interaction between the basis functions of the predictors. 
+\noindent where $\widetilde{X}_m=[b_{m1}(X_m),\dots,b_{md}(X_m)]$ represents a $d$-dimensional basis function expansion for $m=1,2$, and $\widetilde{X}_{12}= [b_{11}(X_1)b_{21}(X_2), b_{11}(X_1)b_{22}(X_2), \dots, b_{1d}(X_1)b_{2d}(X_2)]$ represents a $d^2$-dimensional basis expansion of the interaction between $X_1$ and $X_2$. $d$ is an influential tuning parameter. BSR by default assumes that all predictors have the same number of degrees of freedom and uses the Watanabe-Akaike (WAIC) model selection criterion to select $d$, which approximates leave one out cross validation. Note that we must explicitly model the effect of the interaction term by assuming a multiplicative interaction between the basis functions of the predictors. 
 
 Extending to the multi-dimensional setting, BSR assumes the following general model formulation: 
 
@@ -422,7 +422,7 @@ We also briefly discuss the MCMC algorithm employed by BSR [@antonelli_estimatin
 
 BSR uses an MCMC algorithm to obtain posterior distributions of $\sigma^2$ and $\tau_h$. In particular, Gibbs samplers are employed to sample $\sigma^2$ and $\tau_h$ from their full distributions and to update $\boldsymbol\zeta$ and $\boldsymbol\beta_S^{(h)}$. Every $T$ MCMC iterations, BSR uses a Monte Carlo expectation maximization algorithm with a Gibbs sampler to update $\sigma^2_{\boldsymbol\beta}$. The empirical Bayes estimate is obtained once $\sigma^2_{\boldsymbol\beta}$ converges, at which point the MCMC runs conditional on this estimated variance. 
 
-Notably, this algorithm must deal with the explicit specification of interaction terms in the model. Any additive univariate effect or lower-order interaction term is, by definition, a subset of some higher-order interaction term. As the MCMC algorithm searches the model space, it might accept a move to a higher-order interaction and get stuck in a local mode, when, in reality, a simpler model should be preferred. BSR handles this challenge by imposing a constraint in the MCMC algorithm: if the inclusion of a $p$th order interaction term is being considered, then the algorithm must also evaluate all $(p-1)$th order models. If the truth is some lower-order model, then this strategy avoids the undesired convergence to a local mode. When the model is complex, maintaining reversibility of updates under this strategy can be computationally challenging with a Gibbs sampler; in this case, using a Metropolis Hastings sampler is computationally faster. 
+Notably, this algorithm must deal with the explicit specification of interaction terms in the model. Any additive univariate effect or lower-order interaction term is, by definition, a subset of some higher-order interaction term. As the MCMC algorithm searches the model space, it might accept a move to a higher-order interaction and get stuck in a local mode when, in reality, a simpler model should be preferred. BSR handles this challenge by imposing a constraint in the MCMC algorithm: if the inclusion of a $p$th order interaction term is being considered, then the algorithm must also evaluate all $(p-1)$th order models. If the truth is some lower-order model, then this strategy avoids the undesirable convergence to a local mode. When the model is complex, maintaining reversibility of updates under this strategy can be computationally challenging with a Gibbs sampler; in this case, using a Metropolis Hastings sampler is computationally faster. 
 
 ## Detecting interactions
 
@@ -432,22 +432,26 @@ In Section \@ref(motivation), we highlighted the challenges of analytically test
 
 Since the flexible $h$ function in kernel machine regression allows us to forgo any assumptions about the nature of the relationship between the health outome and predictors, BKMR can potentially capture complex interactions between predictors. The challenge with using BKMR to do this, however, is that there is no formal framework for conducting inference on the presence of interactions.
 
-And, if we specify hierarchical variable selection, then 
+Currently, the most common approach to detecting interactions is through a qualitative assessment of visual diagnostic plots [@bobb_introduction_2017]. Two- or three-way interactions can be assessed by plotting the estimated predictor-response relation for one/two predictors at various quantiles of another predictor, while setting all other predictors at fixed quantile values. For instance, if we are interested in the interaction between $X_1$ and $X_2$, we can plot the estimated regression line against $X_1$ at the 0.25, 0.5, and 0.75 quantiles of $X_2$ and vice versa. In the three-way case of $X_1$, $X_2$, and $X_3$, we can plot the estimated regression surface against $X_1$ and $X_2$ at the 0.25, 0.5, and 0.75 quantiles of $X_3$. If the shape of the estimation changes meaningfully, then there might be evidence of an interaction. 
 
-How to detect interactions:
+A slightly more formal inferential approach for two-way interactions involves using summary statistics [@bobb_introduction_2017; @bobb_example_2017]. In this case, we can calculate the difference in estimated response values for $X_1$ at two quantiles, say, 0.25 and 0.75, of $X_2$ and then generate a confidence interval. If we observe that the interval does not contain 0, then there is evidence of an interaction. The choice of quantiles here is important. If there is a parachute-like regression surface between the response and two predictors, the summary statistics might mask the true nature of the relationship. 
 
-- can visualize relationship at various quantiles of other predictor
-- can conduct inference on inter-quantile difference — has yet to be a formal assessment of how this approach performs in various settings 
+Notably, if we specify hierarchical variable selection to handle multicollinearity, then only one predictor in each a priori defined group can enter the model. If there exists some true interaction between predictors in one group, then BKMR will be unable to incorporate it into the final model. Moreover, interactions between predictors in separate groups can only be identified if both are selected into the final model based on their within-group posterior inclusion probabilities. Hence, if detecting interactions is a goal when using BKMR with hierarchical variable selection, groups should be carefully selected, and the influence of group membership should be considered in model interpretation. 
 
 ### BSR
 
-BSR can conduct inference
+Providing formal inference on the presence of interactions was one of the primary motivations for the development of BSR. BSR explicitly incorporates interaction terms in its model formulation, and the model fitting process assigns posterior inclusion probabilities for any $m$-dimensional interaction from the posterior means of the $\boldsymbol\zeta$ matrix. Such probabilities can be used to quantifiably measure the strength of a potential interaction. We can also compare posterior inclusion probabilities for interactions with the posterior inclusion probabilities for their individual components, which can be used to compare predictors' interactive effects with their marginal effects. 
+
+The visualization and summary statistics approaches available in BKMR are also possible in BSR. In particular, it is helpful to follow up the identification of a potential interaction with a visual assessment using the estimated predictor-response relationship at fixed quantiles of other predictors. The major benefit of BSR is that the posterior inclusion probabilities serve as a quantifiable uncertainty metric for the presence of interactions. 
 
 ### Differences between BKMR and BSR
 
-differences w/ bkmr
+We have explained how the inferential framework of BSR improves upon the BKMR approach for the detection of complex interactions. We also briefly compare general features of their model formulations. 
 
--   makes distributional assumptions about the dataset
--   kernel regression is computationally intensive w/ large datasets but can handle many predictors
--   bsr highly dependent on the choice of function
+While BKMR is a fully nonparametric approach, BSR is a semiparametric approach because it makes distributional assumptions about the data (i.e., that the relationship can be adequately captured by a $d$-dimensional natural spline basis expansion). As BKMR uses the kernel technique, its implementation can become computationally intensive for datasets with large $n$, while BSR is able to scale with $n$. 
 
+BSR is highly sensitive to the choice of $d$, the degrees of freedom. While it employs a WAIC approach to selecting the best $d$, this parameter introduces an additional tuning step in the analysis. Both approaches can be highly sensitive to the specification of certain priors. BSR offers an empirical Bayes strategy for $\sigma^2_{\boldsymbol\beta}$, the variance of a predictor's probability of inclusion. On the other hand, the choice of prior on the influential smoothing parameter, $\rho$, in BKMR is up to the user. 
+
+We also note that BKMR offers a hierarchical variable selection approach to dealing with collinearity between predictors. While this is an additional decision that must be specified by the user, it offers a formal approach to dealing with collinear predictors. BSR does not explicitly account for collinearity in its model formulation, which can lead to erroneous interpretations of variable importance if unaccounted for. 
+
+<!-- Notes: complex vs. non-additive interaction, clarify in first section; decide what to do with covariates!! -->

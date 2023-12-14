@@ -8,13 +8,36 @@ require(ggplot2)
 
 ## Past simulation studies
 
-Lit review of past sim studies which include bayesian regression approaches + others, note how they haven't focused on interactions 
+Lit review of past sim studies which include bayesian regression approaches + others, note how they haven't focused on interactions + recent models
+
+- @lazarevic_performance_2020 compares a braod range methods for variable selection (including bkmr)
+- @hoskovec_model_2021 compares general performance of broad range of methods (including bkmr)
+- @pesenti_comparative_2023 compares three bayesian approaches for variable selection (including bkmr and bsr)
+- @lampa_identification_2014 study of interactions only w/ bayesian additive reg trees
+- @barrera-gomez_systematic_2017 study of interaction effects, does not include more recent developments
+- @keil_quantile-based_2020 ex. simulation study w/ birth weights
 
 ## Methods
 
 What are our aims? 
 
+### MADRES data
+
+- @bastain_study_2019 original study design paper
+- @howe_prenatal_2020 applied BKMR and BSR to this data, what did they find? 
+
+### Simulating data
+
+- use original predictor values in MADRES data. allows us to explore these methods on predictors with realistic correlation structure
+- simulate outcome using a formula w/ different types of interaction
+- change effect size (three levels?)
+- change nature of interaction (mathematical formulation, two- or three-way, b/t just exposures or b/t exposures and covariates)
+- take into account collinear structure (interactions b/t correlated exposures or uncorrelated exposures?)
+
+
 ### Models
+
+Software: @bobb_statistical_2018 on CRAN, @antonelli_estimating_2020 on GitHub
 
 Models compared, specify the parameters for each (justify them!)
 
@@ -25,22 +48,14 @@ Models compared, specify the parameters for each (justify them!)
 - BMIM? extension of BKMR with hierarchical 
 - BSR
 
-### MADRES data
-
-- cite original study design paper
-- cite Howe et al. 2021, which applied BKMR and BSR to this data, what did they find? 
-
-### Simulating data
-
-- use original predictor values in MADRES data. allows us to explore these methods on predictors with realistic correlation structure
-- simulate outcome using a formula w/ different types of interaction
-- change effect size (three levels?)
-- change nature of interaction (mathematical formulation, two- or three-way, b/t just exposures or b/t exposures and covariates)
+check convergence with trace plots
 
 ### Model assessment
 
 - how many times is interaction picked up? 
+- potentially explore mpower package
 
 ## Results
 
+- example output from representative model 
 - figures + tables w/ model performance
