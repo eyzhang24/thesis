@@ -60,7 +60,7 @@ In this section, we introduce the theory of BKMR. First, we define the notation 
 -   $\textbf{K}$ is the $n \times n$ kernel matrix, with $(i, j)$th element $k(\textbf{x}_i, \textbf{x}_j)$
 -   $\rho$ is the parameter inside the kernel function which controls smoothness
 -   $\tau$ is the parameter multiplied by the kernel matrix to relate $\textbf{K}$ to $h$, and
--   $\boldsymbol\epsilon_i \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$ are the residuals of the response.
+-   $\boldsymbol\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$ are the residuals of the response.
 
 And, we define the notation that we will be using specific to BKMR: 
 
@@ -78,15 +78,15 @@ We begin by introducing kernel machine regression, with attention to its specifi
 To contextualize this method, we start at the typical linear regression setting,
 
 $$
-Y_i = \textbf{x}_i\boldsymbol{\beta} + \epsilon_i,
+Y_i = \textbf{x}_i\boldsymbol{\beta} + \varepsilon_i,
 $$
 
-\noindent where $Y_i$ measures a health outcome at a given point, $\textbf{x}_i = [x_{i1},\dots,x_{iM}]$ is a vector of M exposures or covariates (hereafter referred to as predictors), $\boldsymbol{\beta}$ is a vector of weights, and $\epsilon_i$ is a random variable from $\boldsymbol\epsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$. We can see that this function assumes that there is a linear relationship between the exposure and the response, and that the combined effects of multiple exposures are additive.
+\noindent where $Y_i$ measures a health outcome at a given point, $\textbf{x}_i = [x_{i1},\dots,x_{iM}]$ is a vector of M exposures or covariates (hereafter referred to as predictors), $\boldsymbol{\beta}$ is a vector of weights, and $\varepsilon_i$ is a random variable from $\boldsymbol\varepsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$. We can see that this function assumes that there is a linear relationship between the exposure and the response, and that the combined effects of multiple exposures are additive.
 
 Kernel machine regression defines this relationship using a flexible function $h: \mathbb{R}^M \rightarrow \mathbb{R}$, where
 
 $$
-Y_i = h(\textbf{x}_i) + \epsilon_i.
+Y_i = h(\textbf{x}_i) + \varepsilon_i.
 $$
 
 \noindent Here, $h(\cdot)$ is represented by the function $k(\cdot, \cdot)$, a kernel. The kernel controls the covariance, or the similarity, between values of $h(\textbf{x})$ and as such ensures that points near each other on the prediction surface will have similar values --- or, in other words, that the prediction surface will be smooth. In the case of kernel machine regression, we define a positive definite kernel where $k: \mathbb{R}^M\times \mathbb{R}^M \rightarrow \mathbb{R}$.
@@ -150,7 +150,7 @@ $$
 
 In the following section, we illustrate kernel machine regression with a toy example.
 
-Consider the following case where we want to model the relationship between a single predictor and a response variable. Suppose the true relationship between $x$ and $Y$ is defined $Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})$. We simulate 51 equally spaced observations of $x$ from 0 to 25, with error $\epsilon_i \overset{\text{iid}}\sim N(0, 0.25)$.
+Consider the following case where we want to model the relationship between a single predictor and a response variable. Suppose the true relationship between $x$ and $Y$ is defined $Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})$. We simulate 51 equally spaced observations of $x$ from 0 to 25, with error $\varepsilon_i \overset{\text{iid}}\sim N(0, 0.25)$.
 
 ```{r toy1, fig.cap = "Non-linear data with a true distribution (orange) and a fitted linear regression (blue).", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch3_toy1.png")
@@ -260,13 +260,27 @@ A major computational limitation of BKMR is that at each iteration of the MCMC a
 
 ## Bayesian semiparametric regression {#bsr}
 
-Defining notation for spline regression:
+In this section, we introduce the theory of BSR. First, we define the notation that we will be using for spline regression:
 
--   x
+- $X_m$ is a predictor variable in the predictor matrix $\textbf{X}$ with $m=1,\dots,M$, measuring exposure variables or covariates
+- $\textbf{x}_i$ is a vector of values for a single observation in $\textbf{X}$ with $i=1,\dots,n$
+- $Y_i$ is an observation of $\textbf{Y}$, measuring the health outcome in this case
+- $f(\cdot)$ relates $\textbf{x}_i$ to $Y_i$ by a set of basis functions, $b_j(X)$
+- $\beta_j$ is a weight on the $j$th basis function
+- $P$ is the order of the basis expansion
+- $K$ is a set of $\xi_k$, $k=1,\dots,K$, interior knots defining $K+1$ disjoint intervals, and
+- $\boldsymbol\varepsilon_i \overset{\textrm{iid}}\sim N(0,\sigma^2)$ are the residuals of the response.
 
-BSR specific notation: 
+And, we define the notation that we will be using specific to BSR:
 
--   x
+- $\widetilde{X}_m$ is a $d$-dimensional basis function expansion of $X_m$
+- $\widetilde{X}_{m_1m_2}$ is a $d^2$-dimensional basis expansion of the interaction between $X_{m_1}$ and $X_{m_2}$
+- $f^{(h)}(\cdot)$, where $h=1,\dots,H$ are a set of functions that sum up to $f(\cdot)$
+- $\boldsymbol\zeta = \{\zeta_{mh}\}$ is an indicator for whether the $m$th predictor is included in the $h$th function
+- $\boldsymbol\beta_S^{(h)}$ is a vector of all the coefficients on the predictors in function $h$
+- $\sigma^2_{\boldsymbol\beta}$ is the prior variance on the coefficients, and
+- $\boldsymbol\Sigma_{\boldsymbol\beta}$ is a diagonal matrix with the variances of the multivariate slab prior, $\sigma^2\sigma^2_{\boldsymbol\beta}$, on the diagonals.
+
 
 ### Spline regression
 
@@ -275,12 +289,12 @@ We begin by introducing spline regression, with attention to its specific implem
 Spline regression defines the regression relationship as
 
 $$
-Y_i = f(\textbf{x}_i) + \epsilon_i,
+Y_i = f(\textbf{x}_i) + \varepsilon_i,
 $$
 
-\noindent where $f$ is defined by a set of basis functions and $\epsilon_i$ is a random variable from $\boldsymbol\epsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$. BSR uses natural spline bases. In order to understand how these are constructed, we start with a broad definition of basis expansions, before exploring linear, cubic, and then natural spline bases. 
+\noindent where $f$ is defined by a set of basis functions and $\varepsilon_i$ is a random variable from $\boldsymbol\varepsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$. BSR uses natural spline bases. In order to understand how these are constructed, we start with a broad definition of basis expansions, before exploring linear, cubic, and then natural spline bases. 
 
-We determine the basis expansion by considering a piece-wise function of $X_i$ with some order $P$ and some set of $K$ knots defining $K+1$ disjoint intervals. BSR places knots at uniformly sized quantiles within the boundaries of $X_i$. The most commonly used orders are $P=1,2,\textrm{and } 4$, the constant, linear, and cubic splines, respectively. To begin, let us consider a continuous piece-wise linear spline basis (i.e., $P=2$) of a one-dimensional $X$ with two interior knots. In this case, we use the following four basis functions:
+We determine the basis expansion by considering a piece-wise function of $X_m$ with some order $P$ and some set of $K$ knots defining $K+1$ disjoint intervals. BSR places knots at uniformly sized quantiles within the boundaries of $X_m$. The most commonly used orders are $P=1,2,\textrm{and } 4$, the constant, linear, and cubic splines, respectively. To begin, let us consider a continuous piece-wise linear spline basis (i.e., $P=2$) of a one-dimensional $X$ with two interior knots. In this case, we use the following four basis functions:
 
 \nointerlineskip
 \[
@@ -308,11 +322,11 @@ However, the behavior of polynomials near the boundaries of $X$, where there is 
 <!-- $$ -->
 
 \begin{gather*}
-N_1(X)=1, \hspace{0.25in} N_2(X)=X, \hspace{0.25in} N_{k+2}(X)=d_k(X)-d_{K-1}(X), \\
+b_1(X)=1, \hspace{0.25in} b_2(X)=X, \hspace{0.25in} b_{k+2}(X)=d_k(X)-d_{K-1}(X), \\
 d_k(X)=\frac{(X-\xi_k)^3_+ - (X-\xi_K)^3_+}{\xi_K-\xi_k}.
 \end{gather*}
 
-\noindent Here, the regression model is defined as $f(X) = \sum_{j=1}^K\beta_jN_j(X)$, with $K$ parameters. BSR uses natural splines to specify the regression relationship. 
+\noindent Here, the regression model is defined as $f(X) = \sum_{j=1}^K\beta_jb_j(X)$, with $K$ parameters. BSR uses natural splines to specify the regression relationship. 
 
 ### Toy example
 
@@ -358,33 +372,33 @@ f(X_1,X_2) = \widetilde{X}_1\boldsymbol{\beta}_1 + \widetilde{X}_2\boldsymbol{\b
 Extending to the multi-dimensional setting, BSR assumes the following general model formulation: 
 
 \begin{gather*}
-f(\textbf{x}_i)= \sum_{h=1}^pf^{(h)}(\textbf{x}_i), \\
-f^{(h)}(\textbf{x}_i)= \sum_{j_1=1}^M\widetilde{x}_{ij_1}\boldsymbol\beta_{j_1}^{(h)} + 
-\sum_{j_1=2}^M\sum_{j_2<j_1}\widetilde{x}_{ij_1j_2}\boldsymbol\beta_{j_1j_2}^{(h)} + \dots,
+f(\textbf{x}_i)= \sum_{h=1}^Hf^{(h)}(\textbf{x}_i), \\
+f^{(h)}(\textbf{x}_i)= \sum_{m_1=1}^M\widetilde{x}_{im_1}\boldsymbol\beta_{m_1}^{(h)} + 
+\sum_{m_1=2}^M\sum_{m_2<m_1}\widetilde{x}_{im_1m_2}\boldsymbol\beta_{m_1m_2}^{(h)} + \dots,
 \end{gather*}
 
-\noindent where $f^{(h)}(\textbf{x}_i)$ includes a summation of all $p$-way interactions. The inclusion of all $p$-way interactions makes the model far too overparameterized. Moreover, $f(\textbf{x}_i)$ is a sum of $k$ different functions $f^{(h)}(\textbf{x}_i)$ where a value for $k$ is selected in order to capture all exposure effects in the model. Each of the $k$ functions has the same functional form, and so the regression coefficients for a function $f^{(h)}(\textbf{x}_i)$ are only identifiable up to a constant — this means that there are multiple sets of coefficients that could be estimated from the same data. 
+\noindent where $f^{(h)}(\textbf{x}_i)$ includes a summation of all $M$-way interactions. The inclusion of all $M$-way interactions makes the model far too overparameterized. Moreover, $f(\textbf{x}_i)$ is a sum of $k$ different functions $f^{(h)}(\textbf{x}_i)$ where a value for $H$ is selected in order to capture all exposure effects in the model. Each of the $H$ functions has the same functional form, and so the regression coefficients for a function $f^{(h)}(\textbf{x}_i)$ are only identifiable up to a constant — this means that there are multiple sets of coefficients that could be estimated from the same data. 
 
 ### Sparsity inducing priors
 
 In order to handle the overparameterization and non-identifiability of the model, BSR implements multivariate sparsity inducing priors. In this section, we follow the presentation provided in @antonelli_estimating_2020. 
 
-First, we define indicators $\boldsymbol\zeta=\{\zeta_{jh}\}$ representing whether the $j$th exposure is included in the $h$th function: 
+First, we define indicators $\boldsymbol\zeta=\{\zeta_{mh}\}$ representing whether the $m$th exposure is included in the $h$th function: 
 
 \begin{align*}
-P(\zeta_{jh}) &= \tau_h^{\zeta_{jh}}(1-\tau_h)^{1-\zeta_{jh}} 
+P(\zeta_{mh}) &= \tau_h^{\zeta_{mh}}(1-\tau_h)^{1-\zeta_{mh}} 
 I(A_h\not\subset A_{h'}\forall h'\neq h \textrm{ or } A_h=\{\}),\\
-&\textrm{where } A_h=\{j:\zeta_h=1\}.
+&\textrm{where } A_h=\{m:\zeta_h=1\}.
 \end{align*}
 
-\noindent Here, the indicators follow a Bernoulli distribution with prior probability of inclusion $\tau_h$. The posterior means of $\boldsymbol\zeta$ can be interpreted as measures of relative variable importance. We include an indicator function $I()$ that represents whether the function $h$ contains a unique set of predictors. This indicator ensures that no function contains predictors that are a subset of those in another function, in which case this function would be redundant and thus removed from the model entirely. 
+\noindent Here, the indicators follow a Bernoulli distribution with prior probability of inclusion $\tau_h$. The posterior means of $\boldsymbol\zeta$ can be interpreted as measures of relative variable importance. We include an indicator function $I()$ that represents whether the function $h$ contains a unique set of predictors. This indicator ensures that no function contains predictors that are a subset of those in another function, $h'$, in which case this function would be redundant and thus removed from the model entirely. 
 
 Now, we assume a multivariate slab-and-spike prior on the regression coefficients:
 
 \begin{align*}
-P(\boldsymbol\beta_X^{(h)}|\boldsymbol\zeta) &= \bigg(1-\prod_{j\in S}\zeta_{jh}\bigg)P_{\textbf{0}} +
-\bigg(\prod_{j\in S}\zeta_{jh}\bigg) \psi_1(\boldsymbol\beta_S^{(h)}), \\
-&\textrm{where } S \textrm{ is some subset of } {1, 2, \dots, p}.
+P(\boldsymbol\beta_S^{(h)}|\boldsymbol\zeta) &= \bigg(1-\prod_{m\in S}\zeta_{mh}\bigg)P_{\textbf{0}} +
+\bigg(\prod_{m\in S}\zeta_{mh}\bigg) \psi_1(\boldsymbol\beta_S^{(h)}), \\
+&\textrm{where } S \textrm{ is some subset of } {1, 2, \dots, m}.
 \end{align*}
 
 \noindent Here, $P_{\textbf{0}}$ denotes the density with point mass at $\textbf0$, and $\psi_1()$ is a multivariate normal distribution with mean $\textbf0$ and covariance $\boldsymbol\Sigma_{\boldsymbol\beta}$, a diagonal matrix with $\sigma^2\sigma_{\boldsymbol\beta}^2$ on the diagonals. 
@@ -397,7 +411,7 @@ The priors on $\boldsymbol\Sigma_{\boldsymbol\beta}$, the diagonal matrix with $
 
 However, when there is a weak relationship between the exposures and relationship, the estimated prior variance for the slab $\sigma^2_{\boldsymbol\beta}$ can be very small. In this case, the shape of the slab approximates the point mass of 0 at the spike, and the posterior inclusion probabilities become difficult to accurately estimate. BSR avoids this by imposing a lower bound on the variance. This is determined by establishing a constant value for $\tau_h$, the prior probability of inclusion, for all $h$ and then permuting the rows of $Y$ (i.e., breaking up the relationship). Then, a grid of values for $\sigma^2_{\boldsymbol\beta}$ are tested until some predefined threshold of the posterior probability of inclusion is obtained (e.g., 0.25 for a main effect and 0.05 for a two-way interaction). If the empirical Bayes estimate for $\sigma^2_{\boldsymbol\beta}$ is less than this lower bound, then the lower bound is used instead. 
 
-Finally, BSR assumes that $\tau_h \sim \textrm{Beta}(M,\gamma)$, which defines the prior probability of including a predictor for all functions $h$. If $M$ is some predefined constant, and $\gamma=p$, the number of predictors, then the prior amount of sparsity should increase as the number of predictors increases. 
+Finally, BSR assumes that $\tau_h \sim \textrm{Beta}(L,\gamma)$, which defines the prior probability of including a predictor for all functions $h$. If $L$ is some predefined constant, and $\gamma=m$, the number of predictors, then the prior amount of sparsity should increase as the number of predictors increases. 
 
 <!-- - $\tau_h \sim \textrm{Beta}(M,\gamma)$, where $\gamma=p$ and $M$ is some constant -->
 <!--   - note that this leads to stronger penalization of higher-order interaction terms if scaled with $p$ if $\gamma \geq p+M-1$ -->
@@ -406,9 +420,9 @@ Finally, BSR assumes that $\tau_h \sim \textrm{Beta}(M,\gamma)$, which defines t
 
 We also briefly discuss the MCMC algorithm employed by BSR [@antonelli_estimating_2020]. 
 
-BSR uses an MCMC algorithm to obtain posterior distributions of $\sigma^2$ and $\tau_h$. In particular, Gibbs samplers are employed to sample $\sigma^2$ and $\tau_h$ from their full distributions and to update $\boldsymbol\zeta$ and $\boldsymbol\beta_S^{(h)}$. Every $T$ MCMC iterations, BSR uses a Monte Carlo expectation maximization algorithm with a Gibbs sampler to update  $\sigma^2_{\boldsymbol\beta}$. The empirical Bayes estimate is obtained once $\sigma^2_{\boldsymbol\beta}$ converges, at which point the MCMC runs conditional on this estimated variance. 
+BSR uses an MCMC algorithm to obtain posterior distributions of $\sigma^2$ and $\tau_h$. In particular, Gibbs samplers are employed to sample $\sigma^2$ and $\tau_h$ from their full distributions and to update $\boldsymbol\zeta$ and $\boldsymbol\beta_S^{(h)}$. Every $T$ MCMC iterations, BSR uses a Monte Carlo expectation maximization algorithm with a Gibbs sampler to update $\sigma^2_{\boldsymbol\beta}$. The empirical Bayes estimate is obtained once $\sigma^2_{\boldsymbol\beta}$ converges, at which point the MCMC runs conditional on this estimated variance. 
 
-Notably, this algorithm must deal with the explicit specification of interaction terms in the model. Any additive univariate effect or lower-order interaction term is, by definition, a subset of some higher-order interaction term. As the MCMC algorithm searches the model space, it might accept a move to a higher-order interaction and get stuck in a local mode, when, in reality, a simpler model should be preferred. BSR handles this challenge by imposing a constraint in the MCMC algorithm: if the inclusion of a $j$th order interaction term is being considered, then the algorithm must also evaluate all $j-1$th order models. If the truth is some lower-order model, then this strategy avoids the undesired convergence to a local mode. When the model is complex, maintaining reversibility of updates under this strategy can be computationally challenging with a Gibbs sampler; in this case, using a Metropolis Hastings sampler is computationally faster. 
+Notably, this algorithm must deal with the explicit specification of interaction terms in the model. Any additive univariate effect or lower-order interaction term is, by definition, a subset of some higher-order interaction term. As the MCMC algorithm searches the model space, it might accept a move to a higher-order interaction and get stuck in a local mode, when, in reality, a simpler model should be preferred. BSR handles this challenge by imposing a constraint in the MCMC algorithm: if the inclusion of a $p$th order interaction term is being considered, then the algorithm must also evaluate all $(p-1)$th order models. If the truth is some lower-order model, then this strategy avoids the undesired convergence to a local mode. When the model is complex, maintaining reversibility of updates under this strategy can be computationally challenging with a Gibbs sampler; in this case, using a Metropolis Hastings sampler is computationally faster. 
 
 ## Detecting interactions
 

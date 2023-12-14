@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.12.11)  13 DEC 2023 10:20
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.12.14)  14 DEC 2023 14:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **Elizabeth-Zhang_StatThesis.tex
 (./Elizabeth-Zhang_StatThesis.tex
 LaTeX2e <2023-11-01>
-L3 programming layer <2023-12-08>
+L3 programming layer <2023-12-11>
 (./amherstthesis.cls
 Document Class: amherstthesis 2019/08/26 Amherst College Statistics
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/base/book.cls
@@ -637,41 +637,37 @@ Underfull \vbox (badness 3907) has occurred while \output is active []
 [18]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[19] [20] [21] [22]
+[19] [20] [21] [22] [23]
 Underfull \vbox (badness 10000) has occurred while \output is active []
-
-[23]
-<figures/ch3_toy4.png, id=433, 361.35pt x 216.81pt>
-File: figures/ch3_toy4.png Graphic file (type png)
-<use figures/ch3_toy4.png>
-Package pdftex.def Info: figures/ch3_toy4.png  used on input line 660.
-(pdftex.def)             Requested size: 325.215pt x 195.1305pt.
-
-Underfull \vbox (badness 1867) has occurred while \output is active []
 
 [24]
-<figures/ch3_toy5.png, id=440, 361.35pt x 216.81pt>
+<figures/ch3_toy4.png, id=438, 361.35pt x 216.81pt>
+File: figures/ch3_toy4.png Graphic file (type png)
+<use figures/ch3_toy4.png>
+Package pdftex.def Info: figures/ch3_toy4.png  used on input line 688.
+(pdftex.def)             Requested size: 325.215pt x 195.1305pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[25]
+<figures/ch3_toy5.png, id=447, 361.35pt x 216.81pt>
 File: figures/ch3_toy5.png Graphic file (type png)
 <use figures/ch3_toy5.png>
-Package pdftex.def Info: figures/ch3_toy5.png  used on input line 669.
+Package pdftex.def Info: figures/ch3_toy5.png  used on input line 697.
 (pdftex.def)             Requested size: 325.215pt x 195.1305pt.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-[25 <./figures/ch3_toy4.png>]
-<figures/ch3_toy6.png, id=448, 361.35pt x 216.81pt>
+<figures/ch3_toy6.png, id=449, 361.35pt x 216.81pt>
 File: figures/ch3_toy6.png Graphic file (type png)
 <use figures/ch3_toy6.png>
-Package pdftex.def Info: figures/ch3_toy6.png  used on input line 678.
+Package pdftex.def Info: figures/ch3_toy6.png  used on input line 706.
 (pdftex.def)             Requested size: 325.215pt x 195.1305pt.
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 2941) has occurred while \output is active []
 
-[26 <./figures/ch3_toy5.png>]
-<figures/ch3_toybounds.png, id=455, 505.89pt x 216.81pt>
+[26 <./figures/ch3_toy4.png> <./figures/ch3_toy5.png>]
+<figures/ch3_toybounds.png, id=456, 505.89pt x 216.81pt>
 File: figures/ch3_toybounds.png Graphic file (type png)
 <use figures/ch3_toybounds.png>
-Package pdftex.def Info: figures/ch3_toybounds.png  used on input line 687.
+Package pdftex.def Info: figures/ch3_toybounds.png  used on input line 715.
 (pdftex.def)             Requested size: 433.62pt x 185.84093pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -679,105 +675,99 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 [27 <./figures/ch3_toy6.png>]
 Underfull \vbox (badness 1365) has occurred while \output is active []
 
-[28 <./figures/ch3_toybounds.png>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+[28 <./figures/ch3_toybounds.png>] [29] [30] [31] [32] [33] [34
 
-[29]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-[30] [31] [32]
+]
 Chapter 4.
-[33
+[35] [36] [37
 
-] [34] [35
-
-] [36
+] [38
 
 ]
 Appendix A.
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 882.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 912.
 
 LaTeX Font Warning: Font shape `T1/lmtt/bx/it' in size <12> not available
-(Font)              Font shape `T1/lmtt/b/sl' tried instead on input line 901.
-
-[37] [38]
-Underfull \vbox (badness 10000) detected at line 1005
- []
-
-
-Underfull \vbox (badness 10000) detected at line 1005
- []
+(Font)              Font shape `T1/lmtt/b/sl' tried instead on input line 931.
 
 [39] [40]
-Underfull \vbox (badness 10000) detected at line 1093
+Underfull \vbox (badness 10000) detected at line 1035
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1093
+Underfull \vbox (badness 10000) detected at line 1035
  []
 
 [41] [42]
+Underfull \vbox (badness 10000) detected at line 1123
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1123
+ []
+
+[43] [44]
 Appendix B.
-[43
+[45
 
-] [44
+] [46
 
-] [45] [46
+] [47] [48
 
 ]
-Underfull \hbox (badness 1472) in paragraph at lines 1133--1135
+Underfull \hbox (badness 1472) in paragraph at lines 1163--1165
  \T1/lmr/m/n/12 soft-ware for an-a-lyz-ing the health ef-fects of mul-ti-ple con-cur-rent ex-po-sures
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[47
+[49
 
 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[48]
-Underfull \hbox (badness 2237) in paragraph at lines 1160--1162
+[50]
+Underfull \hbox (badness 2237) in paragraph at lines 1190--1192
  \T1/lmr/m/n/12 Plau-si-ble Mech-a-nis-tic Frame-work for Ex-plor-ing Po-ten-tial Ef-fect Mod-i-fi-ca-
  []
 
 
-Underfull \hbox (badness 2608) in paragraph at lines 1163--1165
+Underfull \hbox (badness 2608) in paragraph at lines 1193--1195
  []\T1/lmr/m/n/12 Kordas, K., Lön-nerdal, B., & Stoltz-fus, R. J. (2007). In-ter-ac-tions be-
  []
 
 
-Underfull \hbox (badness 1205) in paragraph at lines 1163--1165
+Underfull \hbox (badness 1205) in paragraph at lines 1193--1195
  \T1/lmr/m/n/12 tween nu-tri-tion and en-vi-ron-men-tal ex-po-sures: Ef-fects on health out-comes
  []
 
 
-Underfull \hbox (badness 1484) in paragraph at lines 1163--1165
+Underfull \hbox (badness 1484) in paragraph at lines 1193--1195
  \T1/lmr/m/n/12 in women and chil-dren. \T1/lmr/m/it/12 The Jour-nal of Nu-tri-tion\T1/lmr/m/n/12 , \T1/lmr/m/it/12 137\T1/lmr/m/n/12 (12), 2794--2797.
  []
 
 
-Overfull \hbox (54.04335pt too wide) in paragraph at lines 1178--1180
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[51]
+Overfull \hbox (54.04335pt too wide) in paragraph at lines 1211--1213
  \T1/lmr/m/n/12 trans-duc-tion. \T1/lmr/m/it/12 Chemo-sphere\T1/lmr/m/n/12 , \T1/lmr/m/it/12 262\T1/lmr/m/n/12 , 128350. http://doi.org/[][]10.1016/j.chemosphere.2020.128350[][] 
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[49]
-Underfull \hbox (badness 1259) in paragraph at lines 1199--1201
+[52]
+Underfull \hbox (badness 1259) in paragraph at lines 1235--1237
  \T1/lmr/m/n/12 men-tal epi-demi-ol-ogy. \T1/lmr/m/it/12 Eu-ro-pean Jour-nal of Epi-demi-ol-ogy\T1/lmr/m/n/12 , \T1/lmr/m/it/12 33\T1/lmr/m/n/12 (4), 355--363.
  []
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-[50] [51] (./Elizabeth-Zhang_StatThesis.aux)
+[53] (./Elizabeth-Zhang_StatThesis.aux)
  ***********
 LaTeX2e <2023-11-01>
-L3 programming layer <2023-12-08>
+L3 programming layer <2023-12-11>
  ***********
 Package rerunfilecheck Info: File `Elizabeth-Zhang_StatThesis.out' has not changed.
 (rerunfilecheck)             Checksum: D671739879D788B92BF2979220330105;6526.
@@ -787,18 +777,18 @@ Package rerunfilecheck Info: File `Elizabeth-Zhang_StatThesis.out' has not chang
 ### semi simple group (level 1) entered at line 248 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 13623 strings out of 476137
- 218746 string characters out of 5793650
- 1941470 words of memory out of 5000000
- 35242 multiletter control sequences out of 15000+600000
+ 13627 strings out of 476141
+ 218818 string characters out of 5793751
+ 1941457 words of memory out of 5000000
+ 35238 multiletter control sequences out of 15000+600000
  624312 words of font info for 85 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  75i,12n,79p,1699b,779s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtko10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtti10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Elizabeth-Zhang_StatThesis.pdf (63 pages, 943593 bytes).
+Output written on Elizabeth-Zhang_StatThesis.pdf (65 pages, 951033 bytes).
 PDF statistics:
- 803 PDF objects out of 1000 (max. 8388607)
- 676 compressed objects within 7 object streams
- 184 named destinations out of 1000 (max. 500000)
+ 816 PDF objects out of 1000 (max. 8388607)
+ 687 compressed objects within 7 object streams
+ 188 named destinations out of 1000 (max. 500000)
  377 words of extra memory for PDF output out of 10000 (max. 10000000)
 

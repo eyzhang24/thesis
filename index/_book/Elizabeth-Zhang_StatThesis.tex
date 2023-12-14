@@ -283,7 +283,7 @@ For this, we turn to epidemiological studies. The broad field of preventive epid
 
 There are clear practical motivations for studies that examine the health effects of exposure to co-occurring chemical mixtures, hereafter referred to as exposure mixtures. However, expanding the focus of analysis from one exposure to multiple exposures introduces unique statistical challenges. In addition to a common issue of small effect sizes and small sample sizes present in most exposure analyses, multiple exposure analyses must also contend with high-dimensionality, collinearity, non-linear effects, and non-additive interactions (Yu et al., 2022). In particular, data with numerous pollutants, or predictors, require exponentially greater levels of complexity and time cost in analysis. Collinearity between exposures is common when analyzing pollutants from a single source and can lead to unstable estimates in a generalized linear model if left unaccounted for. Finally, exposures can have both non-linear single effects and non-additive interaction effects, which are difficult to capture unless explicitly specified in the model.
 
-The classic multiple linear regression framework often fails to capture the true effects in this setting. In the past few years, a wide variety of statistical methods have been developed to overcome these challenges (Gibson et al., 2019; Yu et al., 2022), which have been accompanied by a host of comparative simulation studies for general mixture scenarios {[}e.g., Hoskovec, Benka-Coker, Severson, Magzamen, \& Wilson (2021); lazarevic\_performance\_2020; pesenti\_comparative\_2023{]}. However, to our knowledge, there has yet to be a simulation study which provides conclusive guidance about the ability of these methods to conduct inference on non-additive interactions between exposures, particularly when the nature and effect sizes of these interactions vary.
+The classic multiple linear regression framework often fails to capture the true effects in this setting. In the past few years, a wide variety of statistical methods have been developed to overcome these challenges (Gibson et al., 2019; Yu et al., 2022), which have been accompanied by a host of comparative simulation studies for general mixture scenarios (e.g., Hoskovec, Benka-Coker, Severson, Magzamen, \& Wilson, 2021; Lazarevic, Knibbs, Sly, \& Barnett, 2020; Pesenti et al., 2023). However, to our knowledge, there has yet to be a simulation study which provides conclusive guidance about the ability of these methods to conduct inference on non-additive interactions between exposures, particularly when the nature and effect sizes of these interactions vary.
 
 The goal of this thesis is to fill this gap in the literature by exploring the theory and performance of Bayesian regression techniques for quantifying complex interactions between multiple environmental exposures and related covariates. Specifically, we will compare two recently developed models for estimating the health effects of exposure mixtures: Bayesian Kernel Machine Regression (BKMR, Bobb et al., 2015) and Bayesian Semiparametric Regression (BSR, Antonelli et al., 2020).
 
@@ -392,7 +392,7 @@ In this section, we introduce the theory of BKMR. First, we define the notation 
 \item
   \(\tau\) is the parameter multiplied by the kernel matrix to relate \(\textbf{K}\) to \(h\), and
 \item
-  \(\boldsymbol\epsilon_i \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\) are the residuals of the response.
+  \(\boldsymbol\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\) are the residuals of the response.
 \end{itemize}
 And, we define the notation that we will be using specific to BKMR:
 \begin{itemize}
@@ -418,15 +418,15 @@ We begin by introducing kernel machine regression, with attention to its specifi
 To contextualize this method, we start at the typical linear regression setting,
 
 \[
-Y_i = \textbf{x}_i\boldsymbol{\beta} + \epsilon_i,
+Y_i = \textbf{x}_i\boldsymbol{\beta} + \varepsilon_i,
 \]
 
-\noindent where \(Y_i\) measures a health outcome at a given point, \(\textbf{x}_i = [x_{i1},\dots,x_{iM}]\) is a vector of M exposures or covariates (hereafter referred to as predictors), \(\boldsymbol{\beta}\) is a vector of weights, and \(\epsilon_i\) is a random variable from \(\boldsymbol\epsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\). We can see that this function assumes that there is a linear relationship between the exposure and the response, and that the combined effects of multiple exposures are additive.
+\noindent where \(Y_i\) measures a health outcome at a given point, \(\textbf{x}_i = [x_{i1},\dots,x_{iM}]\) is a vector of M exposures or covariates (hereafter referred to as predictors), \(\boldsymbol{\beta}\) is a vector of weights, and \(\varepsilon_i\) is a random variable from \(\boldsymbol\varepsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\). We can see that this function assumes that there is a linear relationship between the exposure and the response, and that the combined effects of multiple exposures are additive.
 
 Kernel machine regression defines this relationship using a flexible function \(h: \mathbb{R}^M \rightarrow \mathbb{R}\), where
 
 \[
-Y_i = h(\textbf{x}_i) + \epsilon_i.
+Y_i = h(\textbf{x}_i) + \varepsilon_i.
 \]
 
 \noindent Here, \(h(\cdot)\) is represented by the function \(k(\cdot, \cdot)\), a kernel. The kernel controls the covariance, or the similarity, between values of \(h(\textbf{x})\) and as such ensures that points near each other on the prediction surface will have similar values --- or, in other words, that the prediction surface will be smooth. In the case of kernel machine regression, we define a positive definite kernel where \(k: \mathbb{R}^M\times \mathbb{R}^M \rightarrow \mathbb{R}\).
@@ -492,7 +492,7 @@ Y_i \overset{\mathrm{ind}}{\sim} N(h(\textbf{x}_i), \sigma^2) \text{ for } i = 1
 
 In the following section, we illustrate kernel machine regression with a toy example.
 
-Consider the following case where we want to model the relationship between a single predictor and a response variable. Suppose the true relationship between \(x\) and \(Y\) is defined \(Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})\). We simulate 51 equally spaced observations of \(x\) from 0 to 25, with error \(\epsilon_i \overset{\text{iid}}\sim N(0, 0.25)\).
+Consider the following case where we want to model the relationship between a single predictor and a response variable. Suppose the true relationship between \(x\) and \(Y\) is defined \(Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})\). We simulate 51 equally spaced observations of \(x\) from 0 to 25, with error \(\varepsilon_i \overset{\text{iid}}\sim N(0, 0.25)\).
 \begin{figure}
 
 {\centering \includegraphics[width=0.75\linewidth]{figures/ch3_toy1} 
@@ -600,17 +600,45 @@ A major computational limitation of BKMR is that at each iteration of the MCMC a
 \hypertarget{bsr}{%
 \section{Bayesian semiparametric regression}\label{bsr}}
 
-Defining notation for spline regression:
+In this section, we introduce the theory of BSR. First, we define the notation that we will be using for spline regression:
 \begin{itemize}
 \tightlist
 \item
-  x
+  \(X_m\) is a predictor variable in the predictor matrix \(\textbf{X}\) with \(m=1,\dots,M\), measuring exposure variables or covariates
+\item
+  \(\textbf{x}_i\) is a vector of values for a single observation in \(\textbf{X}\) with \(i=1,\dots,n\)
+\item
+  \(Y_i\) is an observation of \(\textbf{Y}\), measuring the health outcome in this case
+\item
+  \(f(\cdot)\) relates \(\textbf{x}_i\) to \(Y_i\) by a set of basis functions, \(b_j(X)\)
+\item
+  \(\beta_j\) is a weight on the \(j\)th basis function
+\item
+  \(P\) is the order of the basis expansion
+\item
+  \(K\) is a set of \(\xi_k\), \(k=1,\dots,K\), interior knots defining \(K+1\) disjoint intervals, and
+\item
+  \(\boldsymbol\varepsilon_i \overset{\textrm{iid}}\sim N(0,\sigma^2)\) are the residuals of the response.
 \end{itemize}
-BSR specific notation:
+And, we define the notation that we will be using specific to BSR:
 \begin{itemize}
 \tightlist
 \item
-  x
+  \(\widetilde{X}_m\) is a \(d\)-dimensional basis function expansion of \(X_m\)
+\item
+  \(\widetilde{X}_{m_1m_2}\) is a \(d^2\) dimensional basis expansion of the interaction between \(X_{m_1}\) and \(X_{m_2}\)
+\item
+  \(f^{(h)}(\cdot)\), where \(h=1,\dots,H\) are a set of functions that sum up to \(f(\cdot)\)
+\item
+  \(\boldsymbol\zeta = \{\zeta_{mh}\}\) is an indicator for whether the \(m\)th predictor is included in the \(h\)th function
+\item
+  \(\tau_h\) is the prior probability of inclusion for the \(h\)th function
+\item
+  \(\boldsymbol\beta_S^{(h)}\) is a vector of all the coefficients on the predictors in function \(h\)
+\item
+  \(\sigma^2_{\boldsymbol\beta}\) is the prior variance on the coefficients, and
+\item
+  \(\boldsymbol\Sigma_{\boldsymbol\beta}\) is a diagonal matrix with the variances of the multivariate slab prior, \(\sigma^2\sigma^2_{\boldsymbol\beta}\), on the diagonals.
 \end{itemize}
 \hypertarget{spline-regression}{%
 \subsection{Spline regression}\label{spline-regression}}
@@ -620,12 +648,12 @@ We begin by introducing spline regression, with attention to its specific implem
 Spline regression defines the regression relationship as
 
 \[
-Y_i = f(\textbf{x}_i) + \epsilon_i,
+Y_i = f(\textbf{x}_i) + \varepsilon_i,
 \]
 
-\noindent where \(f\) is defined by a set of basis functions and \(\epsilon_i\) is a random variable from \(\boldsymbol\epsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\). BSR uses natural spline bases. In order to understand how these are constructed, we start with a broad definition of basis expansions, before exploring linear, cubic, and then natural spline bases.
+\noindent where \(f\) is defined by a set of basis functions and \(\varepsilon_i\) is a random variable from \(\boldsymbol\varepsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\). BSR uses natural spline bases. In order to understand how these are constructed, we start with a broad definition of basis expansions, before exploring linear, cubic, and then natural spline bases.
 
-We determine the basis expansion by considering a piece-wise function of \(X_i\) with some order \(P\) and some set of \(K\) knots defining \(K+1\) disjoint intervals. BSR places knots at uniformly sized quantiles within the boundaries of \(X_i\). The most commonly used orders are \(P=1,2,\textrm{and } 4\), the constant, linear, and cubic splines, respectively. To begin, let us consider a continuous piece-wise linear spline basis (i.e., \(P=2\)) of a one-dimensional \(X\) with two interior knots. In this case, we use the following four basis functions:
+We determine the basis expansion by considering a piece-wise function of \(X_m\) with some order \(P\) and some set of \(K\) knots defining \(K+1\) disjoint intervals. BSR places knots at uniformly sized quantiles within the boundaries of \(X_m\). The most commonly used orders are \(P=1,2,\textrm{and } 4\), the constant, linear, and cubic splines, respectively. To begin, let us consider a continuous piece-wise linear spline basis (i.e., \(P=2\)) of a one-dimensional \(X\) with two interior knots. In this case, we use the following four basis functions:
 
 \nointerlineskip
 
@@ -644,10 +672,10 @@ b_4(X)=X^3, \hspace{0.25in} b_5(X)=(X-\xi_1)^3_+, \hspace{0.25in} b_6(X)=(X-\xi_
 
 However, the behavior of polynomials near the boundaries of \(X\), where there is less information, can be erratic. Natural cubic splines, also referred to as just natural splines, address this by imposing an additional restriction of linearity at the boundaries of \(X\). Paradoxically, this also leads to a simpler model with four fewer parameters to estimate. A general definition of the \(K\) basis functions for a natural spline with interior knots \(\xi_j\), \(j=1,\dots,K\), is given by:
 \begin{gather*}
-N_1(X)=1, \hspace{0.25in} N_2(X)=X, \hspace{0.25in} N_{k+2}(X)=d_k(X)-d_{K-1}(X), \\
+b_1(X)=1, \hspace{0.25in} b_2(X)=X, \hspace{0.25in} b_{k+2}(X)=d_k(X)-d_{K-1}(X), \\
 d_k(X)=\frac{(X-\xi_k)^3_+ - (X-\xi_K)^3_+}{\xi_K-\xi_k}.
 \end{gather*}
-\noindent Here, the regression model is defined as \(f(X) = \sum_{j=1}^K\beta_jN_j(X)\), with \(K\) parameters. BSR uses natural splines to specify the regression relationship.
+\noindent Here, the regression model is defined as \(f(X) = \sum_{j=1}^K\beta_jb_j(X)\), with \(K\) parameters. BSR uses natural splines to specify the regression relationship.
 
 \hypertarget{toy-example}{%
 \subsection{Toy example}\label{toy-example}}
@@ -700,55 +728,57 @@ Now that we have defined natural splines, we introduce BSR, following the presen
 f(X_1) = \widetilde{X}_1\boldsymbol{\beta}_1, \hspace{0.25in} f(X_2) = \widetilde{X}_2\boldsymbol{\beta}_2,\\
 f(X_1,X_2) = \widetilde{X}_1\boldsymbol{\beta}_1 + \widetilde{X}_2\boldsymbol{\beta}_2 + \widetilde{X}_{12}\boldsymbol{\beta}_{12},
 \end{gather*}
-\noindent where \(\widetilde{X}_m=[b_{m1}(X_m),\dots,b_{md}(X_m)]\) represents a \(d\)-dimensional basis function expansion for \(m=1,2\), and \(\widetilde{X}_{12}= [b_{11}(X_1)b_{21}(X_2), b_{11}(X_1)b_{22}(X_2), \dots, b_{1d}(X_1)b_{2d}(X_2)]\) represents a \(d^2\)-dimensional basis expansion of the interaction between \(X_1\) and \(X_2\). Note that we must explicitly model the effect of the interaction term by assuming a multiplicative interaction between the basis functions of the predictors.
+\noindent where \(\widetilde{X}_m=[b_{m1}(X_m),\dots,b_{md}(X_m)]\) represents a \(d\)-dimensional basis function expansion for \(m=1,2\), and \(\widetilde{X}_{12}= [b_{11}(X_1)b_{21}(X_2), b_{11}(X_1)b_{22}(X_2), \dots, b_{1d}(X_1)b_{2d}(X_2)]\) represents a \(d^2\)-dimensional basis expansion of the interaction between \(X_1\) and \(X_2\). \(d\) is an influential tuning parameter. BSR by default assumes that all predictors have the same number of degrees of freedom and uses a WAIC model selection criterion to select \(d\), which approximates leave one out cross validation. Note that we must explicitly model the effect of the interaction term by assuming a multiplicative interaction between the basis functions of the predictors.
 
 Extending to the multi-dimensional setting, BSR assumes the following general model formulation:
 \begin{gather*}
-f(\textbf{x}_i)= \sum_{h=1}^pf^{(h)}(\textbf{x}_i), \\
-f^{(h)}(\textbf{x}_i)= \sum_{j_1=1}^M\widetilde{x}_{ij_1}\boldsymbol\beta_{j_1}^{(h)} + 
-\sum_{j_1=2}^M\sum_{j_2<j_1}\widetilde{x}_{ij_1j_2}\boldsymbol\beta_{j_1j_2}^{(h)} + \dots,
+f(\textbf{x}_i)= \sum_{h=1}^Hf^{(h)}(\textbf{x}_i), \\
+f^{(h)}(\textbf{x}_i)= \sum_{m_1=1}^M\widetilde{x}_{im_1}\boldsymbol\beta_{m_1}^{(h)} + 
+\sum_{m_1=2}^M\sum_{m_2<m_1}\widetilde{x}_{im_1m_2}\boldsymbol\beta_{m_1m_2}^{(h)} + \dots,
 \end{gather*}
-\noindent where \(f^{(h)}(\textbf{x}_i)\) includes a summation of all \(p\)-way interactions. The inclusion of all \(p\)-way interactions makes the model far too overparameterized. Moreover, \(f(\textbf{x}_i)\) is a sum of \(k\) different functions \(f^{(h)}(\textbf{x}_i)\) where a value for \(k\) is selected in order to capture all exposure effects in the model. Each of the \(k\) functions has the same functional form, and so the regression coefficients for a function \(f^{(h)}(\textbf{x}_i)\) are only identifiable up to a constant --- this means that there are multiple sets of coefficients that could be estimated from the same data.
+\noindent where \(f^{(h)}(\textbf{x}_i)\) includes a summation of all \(M\)-way interactions. The inclusion of all \(p\)-way interactions makes the model far too overparameterized. Moreover, \(f(\textbf{x}_i)\) is a sum of \(k\) different functions \(f^{(h)}(\textbf{x}_i)\) where a value for \(H\) is selected in order to capture all exposure effects in the model. Each of the \(H\) functions has the same functional form, and so the regression coefficients for a function \(f^{(h)}(\textbf{x}_i)\) are only identifiable up to a constant --- this means that there are multiple sets of coefficients that could be estimated from the same data.
 
 \hypertarget{sparsity-inducing-priors}{%
 \subsection{Sparsity inducing priors}\label{sparsity-inducing-priors}}
 
 In order to handle the overparameterization and non-identifiability of the model, BSR implements multivariate sparsity inducing priors. In this section, we follow the presentation provided in Antonelli et al. (2020).
 
-First, we define indicators \(\boldsymbol\zeta=\{\zeta_{jh}\}\) representing whether the \(j\)th exposure is included in the \(h\)th function:
+First, we define indicators \(\boldsymbol\zeta=\{\zeta_{mh}\}\) representing whether the \(m\)th exposure is included in the \(h\)th function:
 \begin{align*}
-P(\zeta_{jh}) &= \tau_h^{\zeta_{jh}}(1-\tau_h)^{1-\zeta_{jh}} 
+P(\zeta_{mh}) &= \tau_h^{\zeta_{mh}}(1-\tau_h)^{1-\zeta_{mh}} 
 I(A_h\not\subset A_{h'}\forall h'\neq h \textrm{ or } A_h=\{\}),\\
-&\textrm{where } A_h=\{j:\zeta_h=1\}.
+&\textrm{where } A_h=\{m:\zeta_h=1\}.
 \end{align*}
-\noindent Here, the indicators follow a Bernoulli distribution with prior probability of inclusion \(\tau_h\). The posterior means of \(\boldsymbol\zeta\) can be interpreted as measures of relative variable importance. We include an indicator function \(I()\) that represents whether the function \(h\) contains a unique set of predictors. This indicator ensures that no function contains predictors that are a subset of those in another function, in which case this function would be redundant and thus removed from the model entirely.
+\noindent Here, the indicators follow a Bernoulli distribution with prior probability of inclusion \(\tau_h\). The posterior means of \(\boldsymbol\zeta\) can be interpreted as measures of relative variable importance. We include an indicator function \(I()\) that represents whether the function \(h\) contains a unique set of predictors. This indicator ensures that no function contains predictors that are a subset of those in another function, \(h'\), in which case this function would be redundant and thus removed from the model entirely.
 
 Now, we assume a multivariate slab-and-spike prior on the regression coefficients:
 \begin{align*}
-P(\boldsymbol\beta_X^{(h)}|\boldsymbol\zeta) &= \bigg(1-\prod_{j\in S}\zeta_{jh}\bigg)P_{\textbf{0}} +
-\bigg(\prod_{j\in S}\zeta_{jh}\bigg) \psi_1(\boldsymbol\beta_S^{(h)}), \\
-&\textrm{where } S \textrm{ is some subset of } {1, 2, \dots, p}.
+P(\boldsymbol\beta_S^{(h)}|\boldsymbol\zeta) &= \bigg(1-\prod_{m\in S}\zeta_{mh}\bigg)P_{\textbf{0}} +
+\bigg(\prod_{m\in S}\zeta_{mh}\bigg) \psi_1(\boldsymbol\beta_S^{(h)}), \\
+&\textrm{where } S \textrm{ is some subset of } {1, 2, \dots, m}.
 \end{align*}
 \noindent Here, \(P_{\textbf{0}}\) denotes the density with point mass at \(\textbf0\), and \(\psi_1()\) is a multivariate normal distribution with mean \(\textbf0\) and covariance \(\boldsymbol\Sigma_{\boldsymbol\beta}\), a diagonal matrix with \(\sigma^2\sigma_{\boldsymbol\beta}^2\) on the diagonals.
 
 \hypertarget{prior-specification-1}{%
 \subsection{Prior specification}\label{prior-specification-1}}
-\begin{itemize}
-\tightlist
-\item
-  hyper prior vs.~empirical bayes strategy for sigma beta
-\item
-  lower bound on slab variance
-\item
-  properties of priors for higher-order interactions
-\end{itemize}
+
+In this section, we discuss the priors and their default specifications in BSR (Antonelli et al., 2020).
+
+The priors on \(\boldsymbol\Sigma_{\boldsymbol\beta}\), the diagonal matrix with \(\sigma^2\sigma^2_{\boldsymbol\beta}\) on the diagonals, control the shrinkage of \(\boldsymbol\beta_S^{(h)}\). Variable selection is sensitive to the choice of prior on this parameter, so BSR implements an empirical Bayes strategy to obtain a prior distribution for \(\sigma^2_{\boldsymbol\beta}\) based on the data. While this is not a fully Bayesian approach, it has been shown that this strategy works better in practice (Antonelli et al., 2020). Additionally, the default prior for \(\sigma^2\) is assumed to follow a \(\textrm{Gamma}(0.001, 0.001)\) distribution.
+
+However, when there is a weak relationship between the exposures and relationship, the estimated prior variance for the slab \(\sigma^2_{\boldsymbol\beta}\) can be very small. In this case, the shape of the slab approximates the point mass of 0 at the spike, and the posterior inclusion probabilities become difficult to accurately estimate. BSR avoids this by imposing a lower bound on the variance. This is determined by establishing a constant value for \(\tau_h\), the prior probability of inclusion, for all \(h\) and then permuting the rows of \(Y\) (i.e., breaking up the relationship). Then, a grid of values for \(\sigma^2_{\boldsymbol\beta}\) are tested until some predefined threshold of the posterior probability of inclusion is obtained (e.g., 0.25 for a main effect and 0.05 for a two-way interaction). If the empirical Bayes estimate for \(\sigma^2_{\boldsymbol\beta}\) is less than this lower bound, then the lower bound is used instead.
+
+Finally, BSR assumes that \(\tau_h \sim \textrm{Beta}(L,\gamma)\), which defines the prior probability of including a predictor for all functions \(h\). If \(L\) is some predefined constant, and \(\gamma=m\), the number of predictors, then the prior amount of sparsity should increase as the number of predictors increases.
+
 \hypertarget{the-mcmc-algorithm-1}{%
 \subsection{The MCMC algorithm}\label{the-mcmc-algorithm-1}}
-\begin{itemize}
-\tightlist
-\item
-  include brief detail on how MCMC algorithm deals with lower-order interactions that are a subset of higher-order interactions
-\end{itemize}
+
+We also briefly discuss the MCMC algorithm employed by BSR (Antonelli et al., 2020).
+
+BSR uses an MCMC algorithm to obtain posterior distributions of \(\sigma^2\) and \(\tau_h\). In particular, Gibbs samplers are employed to sample \(\sigma^2\) and \(\tau_h\) from their full distributions and to update \(\boldsymbol\zeta\) and \(\boldsymbol\beta_S^{(h)}\). Every \(T\) MCMC iterations, BSR uses a Monte Carlo expectation maximization algorithm with a Gibbs sampler to update \(\sigma^2_{\boldsymbol\beta}\). The empirical Bayes estimate is obtained once \(\sigma^2_{\boldsymbol\beta}\) converges, at which point the MCMC runs conditional on this estimated variance.
+
+Notably, this algorithm must deal with the explicit specification of interaction terms in the model. Any additive univariate effect or lower-order interaction term is, by definition, a subset of some higher-order interaction term. As the MCMC algorithm searches the model space, it might accept a move to a higher-order interaction and get stuck in a local mode, when, in reality, a simpler model should be preferred. BSR handles this challenge by imposing a constraint in the MCMC algorithm: if the inclusion of a \(p\)th order interaction term is being considered, then the algorithm must also evaluate all \((p-1)\)th order models. If the truth is some lower-order model, then this strategy avoids the undesired convergence to a local mode. When the model is complex, maintaining reversibility of updates under this strategy can be computationally challenging with a Gibbs sampler; in this case, using a Metropolis Hastings sampler is computationally faster.
+
 \hypertarget{detecting-interactions}{%
 \section{Detecting interactions}\label{detecting-interactions}}
 
@@ -1163,6 +1193,9 @@ Kannan, S., Misra, D. P., Dvonch, J. T., \& Krishnakumar, A. (2006). Exposures t
 \leavevmode\vadjust pre{\hypertarget{ref-kordas_interactions_2007}{}}%
 Kordas, K., Lönnerdal, B., \& Stoltzfus, R. J. (2007). Interactions between nutrition and environmental exposures: Effects on health outcomes in women and children. \emph{The Journal of Nutrition}, \emph{137}(12), 2794--2797. http://doi.org/\href{https://doi.org/10.1093/jn/137.12.2794}{10.1093/jn/137.12.2794}
 
+\leavevmode\vadjust pre{\hypertarget{ref-lazarevic_performance_2020}{}}%
+Lazarevic, N., Knibbs, L. D., Sly, P. D., \& Barnett, A. G. (2020). Performance of variable and function selection methods for estimating the nonlinear health effects of correlated chemical mixtures: {A} simulation study. \emph{Statistics in Medicine}, \emph{39}(27), 3947--3967. http://doi.org/\href{https://doi.org/10.1002/sim.8701}{10.1002/sim.8701}
+
 \leavevmode\vadjust pre{\hypertarget{ref-liu_semiparametric_2007}{}}%
 Liu, D., Lin, X., \& Ghosh, D. (2007). Semiparametric {Regression} of {Multidimensional} {Genetic} {Pathway} {Data}: {Least}-{Squares} {Kernel} {Machines} and {Linear} {Mixed} {Models}. \emph{Biometrics}, \emph{63}(4), 1079--1088. http://doi.org/\href{https://doi.org/10.1111/j.1541-0420.2007.00799.x}{10.1111/j.1541-0420.2007.00799.x}
 
@@ -1180,6 +1213,9 @@ Paithankar, J. G., Saini, S., Dwivedi, S., Sharma, A., \& Chowdhuri, D. K. (2021
 
 \leavevmode\vadjust pre{\hypertarget{ref-persson_outside_2022}{}}%
 Persson, L., Carney Almroth, B. M., Collins, C. D., Cornell, S., De Wit, C. A., Diamond, M. L., \ldots{} Hauschild, M. Z. (2022). Outside the {Safe} {Operating} {Space} of the {Planetary} {Boundary} for {Novel} {Entities}. \emph{Environmental Science \& Technology}, \emph{56}(3), 1510--1521. http://doi.org/\href{https://doi.org/10.1021/acs.est.1c04158}{10.1021/acs.est.1c04158}
+
+\leavevmode\vadjust pre{\hypertarget{ref-pesenti_comparative_2023}{}}%
+Pesenti, N., Quatto, P., Colicino, E., Cancello, R., Scacchi, M., \& Zambon, A. (2023). Comparative efficacy of three {Bayesian} variable selection methods in the context of weight loss in obese women. \emph{Frontiers in Nutrition}, \emph{10}, 1203925. http://doi.org/\href{https://doi.org/10.3389/fnut.2023.1203925}{10.3389/fnut.2023.1203925}
 
 \leavevmode\vadjust pre{\hypertarget{ref-plackett_quantal_1952}{}}%
 Plackett, R. L., \& Hewlett, P. S. (1952). Quantal {Responses} to {Mixtures} of {Poisons}. \emph{Journal of the Royal Statistical Society: Series B (Methodological)}, \emph{14}(2), 141--154. http://doi.org/\href{https://doi.org/10.1111/j.2517-6161.1952.tb00108.x}{10.1111/j.2517-6161.1952.tb00108.x}
