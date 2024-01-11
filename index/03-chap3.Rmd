@@ -16,17 +16,17 @@ We are interested in using Bayesian regression techniques to characterize the na
 
 ### Interactions from a statistical perspective
 
-First, we define additivity and non-additivity in the traditional statistical paradigm [@siemiatycki_biological_1981]. Suppose we have two variables $x_1$ and $x_2$, and we want to consider their effect on some outcome of interest. If specifying [effect due to $x_1$ and $x_2$] = [effect due to $x_1$] + [effect due to $x_2$] can adequately capture this relationship, then we say that $x_1$ and $x_2$ each have an **additive effect** on the outcome and that there is no interaction between them. On the other hand, if there is variability in the outcome that can be captured by an additional term equal to some function of $x_1$ and $x_2$, we say that there is a **non-additive interaction** between $x_1$ and $x_2$. In this case, [effect due to $x_1$ and $x_2$] = [effect due to $x_1$] + [effect due to $x_2$] + [effect due to $f(x_1, x_2)$], where $f$ is non-zero for some values of $x_1$ and $x_2$. 
+First, we define additivity and non-additivity in the traditional statistical paradigm [@siemiatycki_biological_1981]. Suppose we have two variables $x_1$ and $x_2$, and we want to consider their effect on some outcome of interest. If specifying [effect due to $x_1$ and $x_2$] = [effect due to $x_1$] + [effect due to $x_2$] can adequately capture this relationship, then we say that $x_1$ and $x_2$ each have an **additive effect** on the outcome and that there is no interaction between them. On the other hand, if there is variability in the outcome that can be captured by an additional term equal to some function of $x_1$ and $x_2$, we say that there is a **non-additive interaction** between $x_1$ and $x_2$. In this case, [effect due to $x_1$ and $x_2$] = [effect due to $x_1$] + [effect due to $x_2$] + [effect due to $f(x_1, x_2)$], where $f$ is a non-zero function.
 
-For our sake, when we refer to "interaction," we mean any non-additive interaction. We consider such non-additive interactions to be complex, meaning that they are difficult to detect. To see why, let us consider running a linear regression for $Y$ on $x_1$ and $x_2$. The regression would be defined as
+For our sake, when we refer to "interaction," we mean any non-additive interaction. We consider such non-additive interactions to be complex, meaning that they are difficult to detect. To see why, let us consider running a linear regression for $Y$ on $x_1$ and $x_2$. The theoretical model would be defined as
 
 $$
-\widehat{Y} = \widehat\beta_0+\widehat\beta_1x_1+\widehat\beta_2x_2 + \widehat\beta_{12}f(x_1, x_2),
+Y = \beta_0+\beta_1x_1+\beta_2x_2 + \beta_{12}f(x_1, x_2),
 $$
 
 \noindent where the $\beta$'s represent the effect sizes. We can see that the form of the interaction must be explicitly specified in the formulation of the model. Most commonly, a multiplicative interaction is assessed, where $f(x_1, x_2) = x_1*x_2$. However, a non-additive interaction can take on many different forms, the true nature of which is difficult to determine analytically. 
 
-We used a two-predictor case above, but interactions can also exist between two or more variables (i.e., two-way by $f(x_1, x_2)$, three-way by $f(x_1, x_2, x_3)$, etc.). And if we wanted to assess all possible interactions, the number to consider quickly becomes intractable in high-dimensional settings. For instance, consider modelling 10 predictors in the above linear regression setting. In order to be assessed, each interaction must be explicitly specified as a new term in the model. Even if we only considered one form for the interaction, including all possible two-way interactions would involve adding ${10 \choose 2} = 45$ additional terms to the model, and all possible three-way interactions would add ${10 \choose 3} = 120$ additional terms.
+We used a two-predictor case above, but interactions can also exist between more variables (i.e., two-way by $f(x_1, x_2)$, three-way by $f(x_1, x_2, x_3)$, etc.). So, if we wanted to assess all possible interactions, the number to consider quickly becomes intractable in high-dimensional settings. For instance, consider modelling 10 predictors in the above linear regression setting. In order to be assessed, each interaction must be explicitly specified as a new term in the model. Even if we only considered one form for each interaction, including all possible two-way interactions would involve adding ${10 \choose 2} = 45$ additional terms to the model, and all possible three-way interactions would add ${10 \choose 3} = 120$ additional terms.
 
 It is important also to acknowledge, here, that there is a limit to how many variables can be included in an interaction before it becomes incomprehensible to most humans. For instance, @halford_how_2005 suggest that there is a steep decline in interpretability from three- to four-way interactions, and that five-way interactions are only interpreted correctly at chance level [@halford_how_2005]. Hence, for practical purposes, we will limit our exploration to two- and three-way interactions. 
 
@@ -34,7 +34,7 @@ It is important also to acknowledge, here, that there is a limit to how many var
 
 Thus far, we have discussed interactions within a statistical paradigm. However, in addition to being an interesting estimation challenge, non-additive interactions are also relevant in exposure mixture studies from both a mechanistic and public health point of view. 
 
-From a mechanistic perspective, a non-additive statistical interaction between two chemical exposures suggests that these molecules may be functionally interacting with each other. Theoretical models propose that such interactions can be classified as either synergistic or antagonistic [@heys_risk_2016; @plackett_quantal_1952]. In a synergistic interaction, the joint effects of a mixture exceed the independent effects of each component. This usually occurs if a chemical induces an enzyme involved with the activation of a second chemical or if a chemical inhibits an enzyme that would have otherwise degraded a second chemical. For example, various synergistic interactions between heavy metals have been documented in the literature [e.g., @paithankar_heavy_2021; @wang_associations_2018]. 
+From a mechanistic perspective, a non-additive statistical interaction between two chemical exposures suggests that these compounds may be functionally interacting with each other. Theoretical models propose that such interactions can be classified as either synergistic or antagonistic [@heys_risk_2016; @plackett_quantal_1952]. In a synergistic interaction, the joint effects of a mixture exceed the independent effects of each component. This usually occurs if a chemical induces an enzyme involved with the activation of a second chemical or if a chemical inhibits an enzyme that would have otherwise degraded a second chemical. For example, it has been shown that organophosphates slow the degradation of pyrethoids by inhibiting detoxifying enzymes — these two classes of chemicals are often found together in commercial insecticide mixtures [@hernandez_toxic_2013].
 
 On the other hand, in an antagonistic interaction, the joint effects of a mixture are less than their independent effects. This can occur either through competition at the target site of an enzyme or through direct chemical reactions with each other. In general, synergistic interactions are more concerning in risk assessments, as they lead to underestimation of the true toxicity of a mixture. 
 
@@ -45,7 +45,7 @@ Now, from a public health perspective, we might be interested in how exposure mi
 In many cases, we might assess a covariate related to health inequity, such as socioeconomic status. We provide a cautionary comment, here, that an interaction term should not be the *sole* measure used to measure a health disparity [@ward_how_2019]. In this case, we should first consider the independent, additive association between the covariate and levels of exposure or rates of a health outcome, in order to contextualize the meaning of a potential interaction term. 
 
 
-## Bayesian kernel machine regression {#bkmr}
+## Bayesian kernel machine regression (BKMR) {#bkmr}
 
 In this section, we introduce the theory of BKMR. First, we define the notation that we will be using for kernel machine regression:
 
@@ -58,7 +58,7 @@ In this section, we introduce the theory of BKMR. First, we define the notation 
 -   $h(\cdot)$ is the flexible function relating $\textbf{x}$ to $\textbf{Y}$
 -   $k$ is the kernel function, the Gaussian in this case
 -   $\textbf{K}$ is the $n \times n$ kernel matrix, with $(i, j)$th element $k(\textbf{x}_i, \textbf{x}_j)$
--   $\rho$ is the parameter inside the kernel function which controls smoothness
+-   $\rho$ is the parameter which controls smoothnessm, associated with the kernel function
 -   $\tau$ is the parameter multiplied by the kernel matrix to relate $\textbf{K}$ to $h$, and
 -   $\boldsymbol\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$ are the residuals of the response.
 
@@ -152,29 +152,25 @@ In the following section, we illustrate kernel machine regression with a toy exa
 
 Consider the following case where we want to model the relationship between a single predictor and a response variable. Suppose the true relationship between $x$ and $Y$ is defined $Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})$. We simulate 51 equally spaced observations of $x$ from 0 to 25, with error $\varepsilon_i \overset{\text{iid}}\sim N(0, 0.25)$.
 
-```{r toy1, fig.cap = "Non-linear data with a true distribution (orange) and a fitted linear regression (blue).", out.width = '75%', echo = FALSE}
+```{r toy1, fig.cap = "Non-linear data with a true relationship (orange) and a fitted linear regression (blue).", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch3_toy1.png")
 ```
 
 Figure \@ref(fig:toy1) illustrates the shape of our simulated non-linear data and the fit proposed by a simple linear regression. We can observe that the linear regression fails to capture the true non-linear relationship. In this case, this would lead to an underestimation of the true association between $x$ and $Y$. Now, we will try to capture this relationship using kernel machine regression.
 
-To visualize how kernel machine regression works as a moving weighted average, we can consider a query point of 12.5.
-
 ```{r toy2, fig.cap="A query point of 12.5 and the weights of neighboring observations based on a Gaussian kernel", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch3_toy2.png")
 ```
 
-Figure \@ref(fig:toy2) identifies the query point and assigns corresponding weights to the neighboring points based on a normal distribution, which shares the same density as the Gaussian kernel. In this case, we will specify $\rho = 2$, which is synonymous with assigning the weights using a normal distribution with $\sigma^2=1$. We can see how an appropriate estimate for $h(12.5)$ can be obtained by taking a weighted average of the $Y$'s, with those observations nearby weighted the most heavily.
+To visualize how kernel machine regression works as a moving weighted average, we can consider a query point of 12.5. Figure \@ref(fig:toy2) identifies the query point and assigns corresponding weights to the neighboring points based on a normal distribution, which shares the same density as the Gaussian kernel. In this case, we will specify $\rho = 2$, which is synonymous with assigning the weights using a normal distribution with $\sigma^2=1$. We can see how an appropriate estimate for $h(12.5)$ can be obtained by taking a weighted average of the $Y$'s, with those observations nearby weighted the most heavily.
 
 <!-- Note to self, bandwidth represent four times the quartiles of the probability density. In the case of a Gaussian kernel, the bandwidth represents $\frac{8}{3}\sigma$, so using an sd of 1 translates to bandwidth of 8/3 -->
 
-Now, we fit a kernel machine regression on this data with $\rho=2$ using the `stats` package in R [@r_core_team_r_2013].
-
-```{r toy3, fig.cap="Fitted kernel machine regression (blue) with $\\rho=2$ compared to the true distribution (orange).", out.width = '75%', echo = FALSE}
+```{r toy3, fig.cap="Fitted kernel machine regression (blue) with $\\rho=2$ compared to the true relationship (orange).", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch3_toy3.png")
 ```
 
-We can see in Figure \@ref(fig:toy3) that kernel machine regression captures the complex non-linear relationship between $Y$ and $x$ and closely follows the true distribution. We do note, though, that the estimation is less precise at the tails, where there is less information provided by local observations. We can also use this example to consider the effect of various values of $\rho$ on the smoothness of the $h$ function.
+Now, we fit a kernel machine regression on this data with $\rho=2$ using the `stats` package in R [@r_core_team_r_2013]. We can see in Figure \@ref(fig:toy3) that kernel machine regression captures the complex non-linear relationship between $Y$ and $x$ and closely follows the true relationship. We do note, though, that the estimation is less precise at the tails, where there is less information provided by local observations. We can also use this example to consider the effect of various values of $\rho$ on the smoothness of the $h$ function.
 
 ```{r toyrho, fig.cap="Fitted kernel machine regression with $\\rho=0.02$ and $\\rho=50$.", out.width = '100%', echo = FALSE}
 include_graphics(path = "figures/ch3_toyrho.png")
@@ -185,6 +181,8 @@ Figure \@ref(fig:toyrho) demonstrates the effect of relatively smaller and large
 ### Variable selection
 
 Now that we have defined kernel machine regression, we can extend it to the Bayesian paradigm. @bobb_bayesian_2015 showed that the Bayesian approach can outperform frequentist kernel machine regression because simultaneous variable selection and estimation can better capture the exposure-response relationship. In this section, we discuss the two methods for Bayesian variable selection in BKMR: hierarchical variable selection and component-wise variable selection [@bobb_bayesian_2015].
+
+*ADD SOME MORE DEVELOPMENT HERE*
 
 Component-wise selection follows the same framework as variable selection in a typical Bayesian multiple regression except, instead of augmenting each predictor, we augment the kernel function as
 
@@ -208,7 +206,9 @@ $$
 
 While this process of component-wise variable selection works well in a typical multiple regression setting, it can lead to unreliable estimates in situations where the predictors are highly correlated with each other, which is common in exposure mixture studies. In this case, the correlated components contribute similar information to the model, and component-wise variable selection is not able to distinguish which predictor is important. BKMR deals with this problem by introducing hierarchical variable selection.
 
-Hierarchical variable selection involves partitioning the predictors $\textbf{x}_1, \dots, \textbf{x}_M$ into groups $\mathcal{S}_g$ with $g = 1,\dots,G$. These groups should be selected by the user based on a prior knowledge, with the aim of keeping within-group correlation high and between-group correlation low. The indicators from $r_m|\delta_m$ are now distributed as
+*GIVE AN EXAMPLE WITH G=2*
+
+Hierarchical variable selection involves partitioning the predictors $\textbf{x}_1, \dots, \textbf{x}_M$ into $G$ groups, denoted $\mathcal{S}_g$ with $g = 1,\dots,G$. These groups should be selected by the user based on prior knowledge, with the aim of keeping within-group correlation high and between-group correlation low. The indicators from $r_m|\delta_m$ are now distributed as
 
 \begin{gather*}
 \boldsymbol\delta_{\mathcal{S}_g} | \omega_g \sim 
@@ -238,13 +238,13 @@ Finally, BKMR assumes that the inverse of the variance of the residuals is distr
 
 ### The MCMC algorithm
 
-Briefly, we discuss the algorithm used in the BKMR package [@bobb_bayesian_2015; @bobb_statistical_2018], with commentary on its implications for the model fitting process.
+Briefly, we discuss the algorithm used to find the solution in the BKMR package [@bobb_bayesian_2015; @bobb_statistical_2018], with commentary on its implications for the model fitting process.
 
-BKMR uses a Markov chain Monte Carlo (MCMC) algorithm with a mix of Gibbs and Metropolis-Hastings samplers to estimate the posterior distributions. In particular, a Gibbs step is used to update the distribution of $\sigma^2$ while a Metropolis-Hastings step is used to update the distribution of $\lambda$. For component-wise and hierarchical variable selection, $(\textbf{r}, \boldsymbol\delta, \boldsymbol\omega)$ are sampled jointly using a Metropolis-Hastings sampling scheme.
+BKMR uses a Markov chain Monte Carlo (MCMC) algorithm with a mix of Gibbs and Metropolis-Hastings samplers to estimate the posterior distributions of the parameters. In particular, a Gibbs step is used to update the distribution of $\sigma^2$ while a Metropolis-Hastings step is used to update the distribution of $\lambda$. For component-wise and hierarchical variable selection, $(\textbf{r}, \boldsymbol\delta, \boldsymbol\omega)$ are sampled jointly using a Metropolis-Hastings sampling scheme.
 
-While each distribution generated by the Gibbs step is always accepted, the distributions for $\lambda$ and $r_m$ generated by the Metroplis-Hastings steps are accepted based on an acceptance rate [@wagaman_probability_2021]. The standard deviation of the proposal distribution controls the acceptance rate and as such acts as a tuning parameter [@bobb_example_2017]. In general, increasing the standard deviation leads to lower acceptance rates. Acceptance rates that are too low lead to slower convergence, but rates that are too high can cause convergence to an non-optimal distribution.
+While each distribution generated by the Gibbs step is always accepted, the distributions for $\lambda$ and $r_m$ generated by the Metropolis-Hastings steps are accepted based on an acceptance rate [@wagaman_probability_2021]. The standard deviation of the proposal distribution controls the acceptance rate and as such acts as a tuning parameter [@bobb_example_2017]. In general, increasing the standard deviation leads to lower acceptance rates. Acceptance rates that are too low lead to slower convergence, but rates that are too high can cause convergence to a non-optimal distribution.
 
-A major computational limitation of BKMR is that at each iteration of the MCMC algorithm, the $n \times n$ augmented kernel matrix $\textbf{K}_{\textbf{Z},\textbf{r}}$ must be inverted multiple times. BKMR can employ a Gaussian predictive process which involves specifying a set of $l$ points, or "knots," that are a subset of the predictor space. The vector of predictors can be approximated by projection on this lower dimensional space, which allows the algorithm to perform inversions on an $l\times l$ matrix. A general suggestion is to use this approach to speed up the algorithm when $n$ is large and to specify $l\approx n/10$ [@bellavia_statistical_2021]. 
+A major computational limitation of BKMR is that at each iteration of the MCMC algorithm, the $n \times n$ augmented kernel matrix $\textbf{K}_{\textbf{Z},\textbf{r}}$ must be inverted multiple times. To offset this, BKMR can employ a Gaussian predictive process which involves specifying a set of $l$ points, or "knots," that are a subset of the predictor space. The vector of predictors can be approximated by projection onto this lower dimensional space, which allows the algorithm to perform inversions on an $l\times l$ matrix. A general suggestion is to use this approach to speed up the algorithm when $n$ is large and to specify $l\approx n/10$ [@bellavia_statistical_2021]. 
 
 <!-- ### Bayesian multiple index model extension -->
 
@@ -258,7 +258,7 @@ A major computational limitation of BKMR is that at each iteration of the MCMC a
 
 <!-- provides a promising extension to BKMR that resolves the issue with hierarchical variable selection, so we might consider it in our simulations  -->
 
-## Bayesian semiparametric regression {#bsr}
+## Bayesian semiparametric regression (BSR) {#bsr}
 
 In this section, we introduce the theory of BSR. First, we define the notation that we will be using for spline regression:
 
@@ -301,7 +301,7 @@ We determine the basis expansion by considering a piece-wise function of $X_m$ w
 b_1(X)=1, \hspace{0.25in} b_2(X)=X, \hspace{0.25in} b_3(X)=(X-\xi_1)_+, \hspace{0.25in} b_4(X)=(X-\xi_2)_+,
 \]
 
-\noindent where $\xi_1$ and $\xi_2$ are the two interior knots, and $t_+$ denotes the positive part. These bases are used to construct the regression model $f(X)=\sum_{j=1}^4\beta_jb_j(X)$, which requires estimating $K+P=4$ parameters. We can check the continuity restrictions at the knots by seeing that $f(\xi_1^-)=\beta_1 + \xi_1\beta_2$ and $f(\xi_1^+)= \beta_1 + \xi_1\beta_2+ (\xi_1-\xi_1)\beta_3$ are equal.
+\noindent where $\xi_1$ and $\xi_2$ are the two interior knots, and $t_+$ denotes the positive part. These bases are used to construct the regression model $f(X)=\sum_{j=1}^4\beta_jb_j(X)$, which requires estimating $K+P=4$ parameters. We can check the continuity restrictions at the knots by seeing that $f(\xi_1^-)=\beta_1 + \xi_1\beta_2$ and $f(\xi_1^+)= \beta_1 + \xi_1\beta_2+ (\xi_1-\xi_1)\beta_3$ are equal, and likewise at the second knot.
 
 Now, in the case of exposure mixtures, we want smoother functions that can capture the non-linear relationship between the response and the predictors. We can achieve this by increasing the order to $P=4$ and using a cubic spline, with continuous first and second derivatives at the knots. The cubic spline is the lowest-order spline for which knot-discontinuity cannot be detected by the human eye. For example, for one $X$ with two interior knots, we use the following six basis functions: 
 
@@ -310,7 +310,7 @@ b_1(X)=1, \hspace{0.25in}b_2(X)=X, \hspace{0.25in}b_3(X)=X^2, \\
 b_4(X)=X^3, \hspace{0.25in} b_5(X)=(X-\xi_1)^3_+, \hspace{0.25in} b_6(X)=(X-\xi_2)^3_+.
 \end{gather*}
 
-\noindent Now, the regression model is defined as $f(X)= \sum_{j=1}^6\beta_jb_j(X)$ and requires estimating $K+P=6$ parameters. It can be shown that $f'(\xi_i^-)= f'(\xi_i^+)$ and $f''(\xi_i^-)= f''(\xi_i^+)$. 
+\noindent Now, the regression model is defined as $f(X)= \sum_{j=1}^6\beta_jb_j(X)$ and requires estimating $K+P=6$ parameters. It can be shown that $f'(\xi_i^-)= f'(\xi_i^+)$ and $f''(\xi_i^-)= f''(\xi_i^+)$, and so forth. 
 
 However, the behavior of polynomials near the boundaries of $X$, where there is less information, can be erratic. Natural cubic splines, also referred to as just natural splines, address this by imposing an additional restriction of linearity at the boundaries of $X$. Paradoxically, this also leads to a simpler model with four fewer parameters to estimate. A general definition of the $K$ basis functions for a natural spline with interior knots $\xi_j$, $j=1,\dots,K$, is given by:
 
@@ -330,33 +330,33 @@ d_k(X)=\frac{(X-\xi_k)^3_+ - (X-\xi_K)^3_+}{\xi_K-\xi_k}.
 
 ### Toy example
 
-In the following section, we illustrate spline regression using the same toy example used to introduce kernel machiner regression. See Section \@ref(bkmrtoy) and Figure \@ref(fig:toy1) for details on the parameters used to generate simulated data. 
+In the following section, we illustrate spline regression using the same toy example used to introduce kernel machine regression. See Section \@ref(bkmrtoy) and Figure \@ref(fig:toy1) for details on the parameters used to generate simulated data. 
 
-As in Section \@ref(bkmrtoy), we consider a case where we want to model the relationship between a single predictor and a response variable, where the true relationship between $x$ and $Y$ is defined $Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})$. We fit a series of linear, cubic, and then natural spline regressions to illustrate the general framework of a natural spline regression. 
+As in Section \@ref(bkmrtoy), we consider a case where we want to model the relationship between a single predictor and a response variable, where the true relationship between $x$ and $Y$ is defined as $Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})$. We fit a series of linear, cubic, and then natural spline regressions to illustrate the general framework of a natural spline regression. 
 
-```{r toy4, fig.cap="Linear spline regression (blue) with four knots (dotted lines) compared to the true distribution (orange).", out.width = '75%', echo = FALSE}
+```{r toy4, fig.cap="Linear spline regression (blue) with four knots (dotted lines) compared to the true relationship (orange).", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch3_toy4.png")
 ```
 
 Figure \@ref(fig:toy4) illustrates the fit proposed by a linear spline regression with order $P=2$. We can see that the implementation of knots allows for even a linear fit to capture more of the nuances in this nonlinear relationship, as compared to a standard linear regression. 
 
-```{r toy5, fig.cap="Cubic spline regression (blue) with four knots (dotted lines) compared to the true distribution (orange).", out.width = '75%', echo = FALSE}
+```{r toy5, fig.cap="Cubic spline regression (blue) with four knots (dotted lines) compared to the true relationship (orange).", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch3_toy5.png")
 ```
 
 However, this linear spline regression is still unable to fully estimate the nonlinearity in our example. Increasing the order to $P=4$ with a cubic spline regression offers additional flexibility. Figure \@ref(fig:toy5) illustrates the fit proposed by this model. Here, we can see the benefits of using a cubic polynomial relationship in a nonlinear setting: the estimated relationship is continuous at the knots, and the nonlinear relationship has been flexibly captured. 
 
-```{r toy6, fig.cap="Natural spline regression (blue) with four knots (dotted lines) compared to the true distribution (orange).", out.width = '75%', echo = FALSE}
+```{r toy6, fig.cap="Natural spline regression (blue) with four knots (dotted lines) compared to the true relationship (orange).", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch3_toy6.png")
 ```
 
 Our final modification involves imposing linearity constraints on the boundaries of $x$ to implement a natural spline regression. Figure \@ref(fig:toy6) shows that the fit estimated using a natural spline regression. The fitted line is only slightly different than that proposed by a cubic spline regression in Figure \@ref(fig:toy5). The most noticeable difference is that the slopes of the tails of the natural spline regression are less extreme than for the cubic spline regression. 
 
-```{r toybounds, fig.cap="Natural and cubic spline regression (blue) compared to the true distribution (orange) extrapolated outside the bounds of $x$ (dotted lines).", out.width = '100%', echo = FALSE}
+```{r toybounds, fig.cap="Natural and cubic spline regression (blue) compared to the true relationship (orange) extrapolated outside the bounds of $x$ (dotted lines).", out.width = '100%', echo = FALSE}
 include_graphics(path = "figures/ch3_toybounds.png")
 ```
 
-Extrapolation outside the scope of $x$ allows us to see the effect of the lineary constraints imposed by natural regression. Figure \@ref(fig:toybounds) demonstrates how the cubic spline regression behaves erratically outside the bounds of $x$, as the cubic polynomial lines tend toward $\pm\infty$, while the natural spline regression follows a more appropriate linear trend. As the natural spline regression is more reliable near the boundaries of $x$ and also simpler to estimate, BSR adopts the use of natural splines. 
+Extrapolation outside the scope of $x$ allows us to see the effect of the linearity constraints imposed by natural regression. Figure \@ref(fig:toybounds) demonstrates how the cubic spline regression behaves erratically outside the bounds of $x$, as the cubic polynomial lines tend toward $\pm\infty$, while the natural spline regression follows a more appropriate linear trend. As the natural spline regression is more reliable near the boundaries of $x$ and also simpler to estimate, BSR adopts the use of natural splines. 
 
 ### Model formulation in BSR
 
@@ -386,7 +386,7 @@ In order to handle the overparameterization and non-identifiability of the model
 First, we define indicators $\boldsymbol\zeta=\{\zeta_{mh}\}$ representing whether the $m$th exposure is included in the $h$th function: 
 
 \begin{align*}
-P(\zeta_{mh}) &= \tau_h^{\zeta_{mh}}(1-\tau_h)^{1-\zeta_{mh}} 
+P(\zeta_{mh}=1) &= \tau_h^{\zeta_{mh}}(1-\tau_h)^{1-\zeta_{mh}} 
 I(A_h\not\subset A_{h'}\forall h'\neq h \textrm{ or } A_h=\{\}),\\
 &\textrm{where } A_h=\{m:\zeta_h=1\}.
 \end{align*}
@@ -422,7 +422,7 @@ We also briefly discuss the MCMC algorithm employed by BSR [@antonelli_estimatin
 
 BSR uses an MCMC algorithm to obtain posterior distributions of $\sigma^2$ and $\tau_h$. In particular, Gibbs samplers are employed to sample $\sigma^2$ and $\tau_h$ from their full distributions and to update $\boldsymbol\zeta$ and $\boldsymbol\beta_S^{(h)}$. Every $T$ MCMC iterations, BSR uses a Monte Carlo expectation maximization algorithm with a Gibbs sampler to update $\sigma^2_{\boldsymbol\beta}$. The empirical Bayes estimate is obtained once $\sigma^2_{\boldsymbol\beta}$ converges, at which point the MCMC runs conditional on this estimated variance. 
 
-Notably, this algorithm must deal with the explicit specification of interaction terms in the model. Any additive univariate effect or lower-order interaction term is, by definition, a subset of some higher-order interaction term. As the MCMC algorithm searches the model space, it might accept a move to a higher-order interaction and get stuck in a local mode when, in reality, a simpler model should be preferred. BSR handles this challenge by imposing a constraint in the MCMC algorithm: if the inclusion of a $p$th order interaction term is being considered, then the algorithm must also evaluate all $(p-1)$th order models. If the truth is some lower-order model, then this strategy avoids the undesirable convergence to a local mode. When the model is complex, maintaining reversibility of updates under this strategy can be computationally challenging with a Gibbs sampler; in this case, using a Metropolis Hastings sampler is computationally faster. 
+Notably, this algorithm must deal with the explicit specification of interaction terms in the model. Any additive univariate effect or lower-order interaction term is, by definition, a subset of some higher-order interaction term. As the MCMC algorithm searches the model space, it might accept a move to a higher-order interaction and get stuck in a local mode when, in reality, a simpler model should be preferred. BSR handles this challenge by imposing a constraint in the MCMC algorithm: if the inclusion of a $p$th order interaction term is being considered, then the algorithm must also evaluate all $(p-1)$th order models. If the truth is some lower-order model, then this strategy avoids the undesirable convergence to a local mode. When the model is complex, maintaining reversibility of updates under this strategy can be computationally challenging with a Gibbs sampler; in this case, using a Metropolis Hastings sampler is computationally faster [@antonelli_estimating_2020]. 
 
 ## Detecting interactions
 
@@ -440,7 +440,7 @@ Notably, if we specify hierarchical variable selection to handle multicollineari
 
 ### BSR
 
-Providing formal inference on the presence of interactions was one of the primary motivations for the development of BSR. BSR explicitly incorporates interaction terms in its model formulation, and the model fitting process assigns posterior inclusion probabilities for any $m$-dimensional interaction from the posterior means of the $\boldsymbol\zeta$ matrix. Such probabilities can be used to quantifiably measure the strength of a potential interaction. We can also compare posterior inclusion probabilities for interactions with the posterior inclusion probabilities for their individual components, which can be used to compare predictors' interactive effects with their marginal effects. 
+Providing formal inference on the presence of interactions was one of the primary motivations for the development of BSR. BSR explicitly incorporates interaction terms in its model formulation, and the model fitting process assigns posterior inclusion probabilities for any $m$-dimensional interaction from the posterior means of the $\boldsymbol\zeta$ matrix. Such probabilities can be used as a quantifiable measure of the strength of a potential interaction. We can also compare posterior inclusion probabilities for interactions with the posterior inclusion probabilities for their individual components, which can be used to compare predictors' interactive effects with their marginal effects. 
 
 The visualization and summary statistics approaches available in BKMR are also possible in BSR. In particular, it is helpful to follow up the identification of a potential interaction with a visual assessment using the estimated predictor-response relationship at fixed quantiles of other predictors. The major benefit of BSR is that the posterior inclusion probabilities serve as a quantifiable uncertainty metric for the presence of interactions. 
 

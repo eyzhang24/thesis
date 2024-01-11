@@ -1,11 +1,11 @@
 ---
 title: 'Flexible Bayesian Regression Models for Quantifying Complex Interactions in Exposure Mixture Studies'
-author: 'Your R. Name'
+author: 'Elizabeth Zhang'
 date: 'April DD, 20YY'
 institution: 'Amherst College'
-advisor: 'Advisor F. Name'
+advisor: 'Amy Wagaman'
 # Delete altadvisor line if you only have one advisor
-altadvisor: 'Your Other Advisor'
+# altadvisor: 'Your Other Advisor'
 # Change department to'Special Programs' if interdisciplinary thesis
 department: 'Mathematics and Statistics'
 degree: 'Bachelor of Arts'
