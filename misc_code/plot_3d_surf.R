@@ -142,21 +142,21 @@ save_image(fig14, "index/figures/surfaces/p14.png",
            width = 720, height = 480, scale = 3)
 
 # sinusoidal interaction, smaller effect size
-y15 <- with(data, 2*sin(0.25*pi*x1*x2))
+y15 <- with(data, sin(0.25*pi*x1*x2))
 fig15 <- create_plot(x1, x2, y15)
 fig15
 save_image(fig15, "index/figures/surfaces/p15.png", 
            width = 720, height = 480, scale = 3)
 
 # sinusoidal interaction, larger effect size
-y16 <- with(data, 4*sin(0.25*pi*x1*x2))
+y16 <- with(data, 2*sin(0.25*pi*x1*x2))
 fig16 <- create_plot(x1, x2, y16)
 fig16
 save_image(fig16, "index/figures/surfaces/p16.png", 
            width = 720, height = 480, scale = 3)
 
 ##########
-# marginally insignificant (Ni and Co)
+# highly correlated (Ni and Co)
 ##########
 
 # multiplicative interaction, smaller effect size

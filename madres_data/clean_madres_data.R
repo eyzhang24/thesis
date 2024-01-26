@@ -148,6 +148,9 @@ cor(u, method = "spearman")
 #fit copulas
 cfit_gaus <- fitCopula(normalCopula(dim = 15, dispstr = "un"), u)
 cfit_t <- fitCopula(tCopula(dim = 15, dispstr = "un", df.fixed = FALSE), u)
+# In var.mpl(copula, u) :
+#   the covariance matrix of the parameter estimates is computed as if 
+#   'df.fixed = TRUE' with df = 60.8950734746005
 cfit_t2 <- fitCopula(tCopula(dim = 15, dispstr = "un", df = 3, df.fixed = FALSE), u)
 cfit_t3 <- fitCopula(tCopula(dim = 15, dispstr = "un", df.fixed = TRUE), u)
 
@@ -174,11 +177,12 @@ names(lik_values) <- c("cfit_gaus", "cfit_t", "cfit_t2", "cfit_t3", #"cfit_t4", 
 sort(lik_values)
 
 #t copula performs best, proceed with this
+write_rds(cfit_t, "madres_data/tcop1.RDS")
 
 ########
 #fit t copula and simulate data
 ########
-# cfit_t <- fitCopula(tCopula(dim = 10, dispstr = "un"), u)
+cfit_t <- read_rds("madres_data/tcop1.RDS")
 #should df.fixed = TRUE (current default), or specified beforehand? 
 
 #get rho and degrees of freedom
@@ -257,33 +261,202 @@ ggpairs(comb_log, columns = 5:19,
 ##totals (3+3+3+2+1)*2 + 1 = 25 versions 
 
 df <- simulated[[1]]
-set.seed(1)
+set.seed(0)
 df2 <- df |> 
-  mutate(across(age:Sn, scale)) |> 
+  mutate(across(age:Sn, ~c(scale(.)))) |> 
+  mutate(across(mom_site:smoke, ~as.factor(round(.)))) |> 
   mutate(
-    response = 
+    r00 = 
       Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
-      age + 0.5*bmi +
-      rnorm(nrow(df), 0, 5) 
+      age + 0.5*bmi + 
+      case_when(race == 1 ~ 2, 
+                race == 2 ~ -0.5, 
+                race == 3 ~ 1, 
+                race == 4 ~ -0.25) +
+      ifelse(smoke == 1, -1, 0.5) +
+      rnorm(nrow(df), 0, 5), 
+    r01 = 
+      Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+      0.6*Hg*Ni + 
+      age + 0.5*bmi + 
+      case_when(race == 1 ~ 2, 
+                race == 2 ~ -0.5, 
+                race == 3 ~ 1, 
+                race == 4 ~ -0.25) +
+      ifelse(smoke == 1, -1, 0.5) +
+      rnorm(nrow(df), 0, 5), 
+    r02 = 
+      Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+      0.2*Hg*((Ni-1)^2) +
+      age + 0.5*bmi + 
+      case_when(race == 1 ~ 2, 
+                race == 2 ~ -0.5, 
+                race == 3 ~ 1, 
+                race == 4 ~ -0.25) +
+      ifelse(smoke == 1, -1, 0.5) +
+      rnorm(nrow(df), 0, 5), 
+    r03 = 
+      Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+      2*sin(0.25*pi*Hg*Ni) + 
+      age + 0.5*bmi + 
+      case_when(race == 1 ~ 2, 
+                race == 2 ~ -0.5, 
+                race == 3 ~ 1, 
+                race == 4 ~ -0.25) +
+      ifelse(smoke == 1, -1, 0.5) +
+      rnorm(nrow(df), 0, 5), 
+    r11 = 
+      Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+      Cd*As + 
+      age + 0.5*bmi + 
+      case_when(race == 1 ~ 2, 
+                race == 2 ~ -0.5, 
+                race == 3 ~ 1, 
+                race == 4 ~ -0.25) +
+      ifelse(smoke == 1, -1, 0.5) +
+      rnorm(nrow(df), 0, 5), 
+    r12 = 
+      Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+      0.2*Cd*((As-1)^2) +
+      age + 0.5*bmi + 
+      case_when(race == 1 ~ 2, 
+                race == 2 ~ -0.5, 
+                race == 3 ~ 1, 
+                race == 4 ~ -0.25) +
+      ifelse(smoke == 1, -1, 0.5) +
+      rnorm(nrow(df), 0, 5), 
+    r13 = 
+      Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+      2*sin(0.25*pi*Cd*As) + 
+      age + 0.5*bmi + 
+      case_when(race == 1 ~ 2, 
+                race == 2 ~ -0.5, 
+                race == 3 ~ 1, 
+                race == 4 ~ -0.25) +
+      ifelse(smoke == 1, -1, 0.5) +
+      rnorm(nrow(df), 0, 5), 
+    r21 = 
+      Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+      0.6*Co*Ni + 
+      age + 0.5*bmi + 
+      case_when(race == 1 ~ 2, 
+                race == 2 ~ -0.5, 
+                race == 3 ~ 1, 
+                race == 4 ~ -0.25) +
+      ifelse(smoke == 1, -1, 0.5) +
+      rnorm(nrow(df), 0, 5), 
+    r22 = 
+      Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+      0.2*Co*((Ni-1)^2) +
+      age + 0.5*bmi + 
+      case_when(race == 1 ~ 2, 
+                race == 2 ~ -0.5, 
+                race == 3 ~ 1, 
+                race == 4 ~ -0.25) +
+      ifelse(smoke == 1, -1, 0.5) +
+      rnorm(nrow(df), 0, 5), 
+    r23 = 
+      Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+      2*sin(0.25*pi*Co*Ni) + 
+      age + 0.5*bmi + 
+      case_when(race == 1 ~ 2, 
+                race == 2 ~ -0.5, 
+                race == 3 ~ 1, 
+                race == 4 ~ -0.25) +
+      ifelse(smoke == 1, -1, 0.5) +
+      rnorm(nrow(df), 0, 2), 
   ) |> 
   select(-sim)
-# df$response <- df2$response
 
-m1 <- lm(response ~ ., data = df2)
-summary(m1)  
-m2 <- lm(response ~ Hg + Sb +
+# m1 <- lm(response ~ ., data = df2)
+# summary(m1)  
+
+#fit oracle models
+m00 <- lm(r00 ~ Hg + Sb +
            I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
-           age + bmi, data = df2)
-summary(m2)
+           age + bmi + race + smoke, data = df2)
+summary(m00)$r.squared
+m01 <- lm(r01 ~ Hg + Sb +
+            I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+            Hg*Ni + 
+            age + bmi + race + smoke, data = df2)
+summary(m01)$r.squared
+m02 <- lm(r02 ~ Hg + Sb +
+            I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+            I(Hg*((Ni-1)^2)) + 
+            age + bmi + race + smoke, data = df2)
+summary(m02)$r.squared
+m03 <- lm(r03 ~ Hg + Sb +
+            I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+            I(sin(0.25*pi*Hg*Ni)) + 
+            age + bmi + race + smoke, data = df2)
+summary(m03)$r.squared
+m11 <- lm(r11 ~ Hg + Sb +
+            I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+            Hg*Ni + 
+            age + bmi + race + smoke, data = df2)
+summary(m11)$r.squared
+m12 <- lm(r12 ~ Hg + Sb +
+            I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+            I(Hg*((Ni-1)^2)) + 
+            age + bmi + race + smoke, data = df2)
+summary(m12)$r.squared
+m13 <- lm(r13 ~ Hg + Sb +
+            I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+            I(sin(0.25*pi*Hg*Ni)) + 
+            age + bmi + race + smoke, data = df2)
+summary(m13)$r.squared
+m21 <- lm(r21 ~ Hg + Sb +
+            I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+            Hg*Ni + 
+            age + bmi + race + smoke, data = df2)
+summary(m21)$r.squared
+m22 <- lm(r22 ~ Hg + Sb +
+            I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+            I(Hg*((Ni-1)^2)) + 
+            age + bmi + race + smoke, data = df2)
+summary(m22)$r.squared
+m23 <- lm(r23 ~ Hg + Sb +
+            I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+            I(sin(0.25*pi*Hg*Ni)) + 
+            age + bmi + race + smoke, data = df2)
+summary(m23)$r.squared
 
 #fit bkmr
-y <- df2$response
 Z <- df2 |> 
   select(As:Sn)
-X <- df2 |> 
-  select(mom_site:bmi)
-bk1 <- kmbayes(y = y, Z = Z, X = X, iter = 10000, verbose = FALSE, varsel = TRUE)
+X <- bind_cols(
+    data.frame(model.matrix(~ mom_site-1, data = df2)), 
+    data.frame(model.matrix(~ race-1, data = df2)), 
+    df2
+  ) |> 
+  select(mom_site2:mom_site5, race2:race4, smoke:bmi) |> 
+  mutate(across(everything(), as.numeric))
+bklist <- vector(mode='list', length=10)
+set.seed(0)
+for(i in 1:10) {
+  y <- df2[,i+15]
+  bk <- kmbayes(y = y, Z = Z, X = X, iter = 10000, verbose = FALSE, varsel = TRUE)
+  bklist[[i]] <- bk
+}
+write_rds(bklist, "madres_data/bk_test2.RDS")
 
+pips <- bklist |> 
+  purrr::map_df(\(x) {
+    ExtractPIPs(x) |> 
+      pivot_wider(names_from = variable, values_from = PIP) 
+  }) |> 
+  mutate(mod = names(df2)[16:25])
+
+pips |> 
+  pivot_longer(cols = As:Sn, names_to = "variable", values_to = "PIP") |> 
+  ggplot(aes(x = variable, y = PIP)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~mod, scales = "free_x")
+ggsave("madres_data/bk_test2.png", width = 7, height = 5)
+
+#model with no interactions
+bk1 <- bklist[[1]]
 #eval fit
 TracePlot(fit = bk1, par = "beta")
 TracePlot(fit = bk1, par = "sigsq.eps")
