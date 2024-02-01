@@ -48,8 +48,6 @@ Models compared, specify the parameters for each (justify them!)
 - MLR
 - MLR with known form of interactions specified (oracle method)
 - BKMR with component-wise
-- BKMR with hierarchical
-- BMIM? extension of BKMR with hierarchical 
 - BSR
 
 check convergence with trace plots

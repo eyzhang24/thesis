@@ -364,7 +364,7 @@ df2 <- df |>
                 race == 3 ~ 1, 
                 race == 4 ~ -0.25) +
       ifelse(smoke == 1, -1, 0.5) +
-      rnorm(nrow(df), 0, 2), 
+      rnorm(nrow(df), 0, 5), 
   ) |> 
   select(-sim)
 
@@ -381,6 +381,7 @@ m01 <- lm(r01 ~ Hg + Sb +
             Hg*Ni + 
             age + bmi + race + smoke, data = df2)
 summary(m01)$r.squared
+summary(m01)$coefficients[,4] # p-values
 m02 <- lm(r02 ~ Hg + Sb +
             I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
             I(Hg*((Ni-1)^2)) + 
@@ -469,3 +470,5 @@ ggplot(pred.resp.univar, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)
   geom_smooth(stat = "identity") + 
   facet_wrap(~ variable) +
   ylab("h(z)")
+
+# read back in first round of fitted datasets, simulate outcome, fit regression models
