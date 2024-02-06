@@ -74,10 +74,11 @@ epi_small <- epi |>
   #make new variables
   mutate(mom_site = as.factor(mom_site), 
          race = as.factor(case_when(
-           t1_demo_hispanic == 0 & t1_demo_race == 2 ~ 1, #white
-           t1_demo_hispanic == 0 ~ 2, #other, non-hispanic
-           t1_demo_hispanic == 1 & t1_demo_usa == 1 ~ 3, #hispanic in US
-           t1_demo_hispanic == 1 & t1_demo_usa == 0 ~ 4, #hispanic NOT in US
+           t1_demo_hispanic == 0 & t1_demo_race == 2 ~ 1, #non-hisp white
+           t1_demo_hispanic == 0 & t1_demo_race == 4 ~ 2, #non-hisp black
+           t1_demo_hispanic == 0 ~ 3, #other, non-hispanic
+           t1_demo_hispanic == 1 & t1_demo_usa == 1 ~ 4, #hispanic in US
+           t1_demo_hispanic == 1 & t1_demo_usa == 0 ~ 5, #hispanic NOT in US
            .default = NA
          )), 
          smoke = as.factor(ifelse(
@@ -106,6 +107,9 @@ epi_imp <- epi_small |>
   mutate(smoke = as.factor(ifelse(is.na(smoke), 0, smoke))) |> 
   #otherwise, impute mean
   mutate(across(where(is.numeric), ~ifelse(is.na(.), mean(.,na.rm = TRUE), .))) 
+
+#race
+table(epi_imp$race, useNA = 'ifany')
 
 ########
 #combine

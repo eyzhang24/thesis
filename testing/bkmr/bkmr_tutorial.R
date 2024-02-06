@@ -61,3 +61,7 @@ priorfits <- InvestigatePrior(y = y, Z = Z, X = X,
 
 PlotPriorFits(y = y, Z = Z, X = X, 
               fits = priorfits)
+
+# there are some packages where you can assess the effect size 
+# mostly in the psych literature
+# reach out to alex about parameters for simulation study

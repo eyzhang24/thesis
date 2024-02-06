@@ -1,16 +1,21 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Simulations {#sims}
 
 ```{r include_packages2, include = FALSE}
-require(knitr)
-require(dplyr)
-require(ggplot2)
+library(knitr)
+library(kableExtra)
+library(tidyverse)
 ```
 
 ## Past simulation studies
 
 @taylor_statistical_2016 conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Here, we preface our simulation study with a brief overview of examples in the literature which compare the efficacy of various methods using simulations. For each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest. 
 
-@lazarevic_performance_2020 compare the performance of a broad range of methods for accurate variable selection of important exposures. They simulated exposure data using a multivariate $t$-copula on real-world data and the response by specifying a regression relationship with only a subset of truly significant exposures and a normal error term. Two correlation structures were considered — one with the original Spearman correlation matrix and one with the values halved — as well as two signal-to-noise ratios — one with an $R^2$ for the true model at 10\% and one at 30\%. They found that BKMR, along with three other flexible regression methods that allow for nonlinearity, provided more accurate variable selection results compared to two machine learning methods. Moreover, they observed that, in general, low signal-to-noise ratios had a stronger impact on performance than did increasing multicollinearity. 
+@lazarevic_performance_2020 compare the performance of a broad range of methods for accurate variable selection of important exposures. They simulated exposure data using a multivariate $t$-copula based on real-world data and the response by specifying a regression relationship with only a subset of truly significant exposures and a normal error term. Two correlation structures were considered — one with the original Spearman correlation matrix and one with the values halved — as well as two signal-to-noise ratios — one with an $R^2$ for the true model at 10\% and one at 30\%. They found that BKMR, along with three other flexible regression methods that allow for nonlinearity, provided more accurate variable selection results compared to two machine learning methods. Moreover, they observed that, in general, low signal-to-noise ratios had a stronger impact on performance than did increasing multicollinearity. 
 
 @hoskovec_model_2021 compare Bayesian methods, including BKMR, while considering 4 research questions: accurate estimation, selection of important exposures, exclusion of unimportant exposures, and identification of interactions. They use observed exposure and covariate data to simulate response data using regression relationships; they considered three exposure-response scenarios of varying complexity and included two-way multiplicative interaction terms. For each simulated dataset, they randomly assigned exposures to be active components of the mixture to incorporate variability in the data. Overall, they found that Bayesian methods outperformed traditional linear regressions, and that BKMR performed best when the exposure-response function takes on a complex form. 
 
@@ -20,14 +25,21 @@ Finally, we briefly comment on studies by @sun_statistical_2013 and @barrera-gom
 
 ## Methods
 
-The goal of our simulation study is to provide guidance on the choice between BSR and BKMR for characterizing a diverse range of complex interactions between predictors. In particular, we aim to extend the findings from @pesenti_comparative_2023 by considering different forms of interactions with different effect sizes. To our knowledge, this is also the first comparative simulation study that considers interactions generated with non-multiplicative interaction terms. 
-
-*WHAT TO DO ABOUT COVARIATES *
+The goal of our simulation study is to provide guidance on the choice between BSR and BKMR for characterizing a diverse range of complex interactions between predictors. In particular, we aim to extend findings from previous simulation studies by considering a more comprehensive range of interaction types, including different effect sizes, non-multiplicative interactions, and three-way interactions. We also explore interactions between exposures and categorical covariates, a previously understudied form of interaction in exposure mixture studies.
 
 ### MADRES data
 
-- @bastain_study_2019 original study design paper
-- @howe_prenatal_2020 applied BKMR and BSR to this data, what did they find? 
+In order to make our simulations comparable to real-world exposure mixture studies, we based our simulation data on the Maternal And Developmental Risks from Environmental and Social Stressors (MADRES) pregnancy cohort. The MADRES cohort is an ongoing, prospective pregnancy cohort of predominantly lower-income, Hispanic women in Los Angeles, California, which began in 2015 [@bastain_study_2019]. Urine samples were collected by participants at their first visit, and questionnaires were administered during their first visit, with follow-ups at the first, second, and third trimesters. See @bastain_study_2019 for further details on study design. 
+
+@howe_prenatal_2020 previously examined the effect of prenatal metal mixtures of birth weight (BW) for gestational age (GA) in this cohort. They used BKMR to identify associations between metal mixtures and BW for GA, as well as BSR to conduct inference on interactions between metals. Briefly, using BKMR, they found that, of the metals in the mixture, Hg and Ni were most strongly associated with BW for GA. Moreover, BKMR results suggested that a potential interaction between Hg and Ni; however, when run through BSR, the PIP for this interaction was extremely small, despite being the highest of all two-way interactions. 
+
+Data from the study by @howe_prenatal_2020 were obtained from publicly available data in the Human Health Exposure Resource (HHEAR) Data Repository, which has been approved under Icahn School of Medicine at Mount Sinai IRB Protocol #16-00947. The Digital Object Identifiers associated with the urinary trace element data and epidemiological data are 10.36043/1945_159 and 10.36043/1945_177, respectively. 
+
+We followed the approach by @howe_prenatal_2020 for preparing the data for analysis. This resulted in retaining 10 metals in analysis: arsenic (As), cadmium (Cd), cobalt (Co), mercury (Hg), nickel (Ni), molybdenum (Mo), lead (Pb), antimony (Sb), tin (Sn), and thallium (Tl). @howe_prenatal_2020 used speciated As, but this was not available in HHEAR, so we used total As. Among the full range of covariates considered by @howe_prenatal_2020, we used the subset that were available in HHEAR: any smoke exposure during pregnancy, study site, maternal prepregnancy body mass index (BMI), maternal age during firt trimester, and maternal race by ethnicity and birth place. Race by ethnicity and birth place was collapsed into the following categories: non-Hispanic white, non-Hispanic black, non-Hispanic other, Hispanic born in the US, and Hispanic born outside the US. We observed 8 missing values for BMI in the data from HHEAR, which was not reported by @howe_prenatal_2020. These missing values were mean imputed. Our final analytic dataset included 252 participants, which was 10 fewer than in @howe_prenatal_2020, likely due to small discrepancies in their dataset and the one made available in HHEAR. 
+
+<!-- include study site??? -->
+
+- The data used for simulations in this thesis was supported by the National Institute of Environmental Health Sciences of the National Institutes of Health under Award Numbers U2CES026555 and U2CES026553. The content is solely the responsibility of the author and does not necessarily represent the official views of the National Institutes of Health.
 
 ### Simulating data
 
@@ -36,8 +48,48 @@ The goal of our simulation study is to provide guidance on the choice between BS
 - change effect size (three levels? — NOTE, this is diff from signal:noise ratio)
 - change nature of interaction (mathematical formulation, two- or three-way, b/t just exposures or b/t exposures and covariates)
 - take into account collinear structure (interactions b/t correlated exposures or uncorrelated exposures?)
-- 100 datasets for each scenario 
-  - 80/20 training testing split 
+- change sample size to inform study design
+
+Base case:
+
+\begin{multline*}
+Y_i = \textrm{Hg}_i + \frac{3}{1+\textrm{exp}(-4\textrm{Ni}_i)} + \frac{1.5}{1+\textrm{exp}(-4\textrm{Sn}_i)} - \textrm{Sb}_i^2 + 0.5\textrm{Sb}_i\\
++ \textrm{age} + 0.5\textrm{bmi} - \textrm{race}_{\textrm{oth}} - \textrm{race}_{\textrm{hisp.us}} - 1.5\textrm{race}_{\textrm{hisp.non}} -\textrm{smoke} + \varepsilon_i,
+\end{multline*}
+
+
+```{r, echo = FALSE}
+equations <- data.frame(
+  type = rep(c("Multiplicative\t", "Polynomial\t"), 4), 
+  small = c("0.3Hg$*$Ni", "0.1Hg$*($Ni$-1)^2$", 
+            "0.3Cd$*$As", "0.1Cd$*($As$-1)^2$", 
+            "0.3Hg$*$Co", "0.1Hg$*($Co$-1)^2$", 
+            "0.5Hg$*$Ni$*$Tl", "Hg$*($Ni$-1)^2*$Tl"), 
+  large = c("0.6Hg$*$Ni", "0.2Hg$*($Ni$-1)^2$", 
+            "0.6Cd$*$As", "0.2Cd$*($As$-1)^2$", 
+            "0.6Hg$*$Co", "0.2Hg$*($Co$-1)^2$", 
+            "Hg$*$Ni$*$Tl", "2Hg$*($Ni$-1)^2*$Tl")
+)
+labels <- c(
+  "Univariately significant" = 2, 
+  "Univariately insignificant" = 2, 
+  "Highly correlated" = 2, 
+  "Three-way interaction" = 2
+)
+
+equations |> 
+  kbl(booktabs = TRUE, escape = FALSE, 
+      col.names = c("", "Small", "Large"), 
+      caption = "Specification of interaction terms in simulation.") |> 
+  column_spec(1, width = "10em") |> 
+  add_header_above(header = c(" " = 1, "Effect size" = 2)) |>
+  pack_rows(index = labels) 
+```
+
+This resulted in a total of 39 scenarios. 
+
+- see appendix for surfaces
+
 
 ### Models
 
