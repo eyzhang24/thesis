@@ -13,7 +13,7 @@ library(tidyverse)
 
 ## Past simulation studies
 
-@taylor_statistical_2016 conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Here, we preface our simulation study with a brief overview of examples in the literature which compare the efficacy of various methods using simulations. For each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest. 
+Here, we preface our simulation study with a brief overview of examples in the literature which compare the efficacy of various methods using simulations. @taylor_statistical_2016 conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Thus, for each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest. 
 
 @lazarevic_performance_2020 compare the performance of a broad range of methods for accurate variable selection of important exposures. They simulated exposure data using a multivariate $t$-copula based on real-world data and the response by specifying a regression relationship with only a subset of truly significant exposures and a normal error term. Two correlation structures were considered — one with the original Spearman correlation matrix and one with the values halved — as well as two signal-to-noise ratios — one with an $R^2$ for the true model at 10\% and one at 30\%. They found that BKMR, along with three other flexible regression methods that allow for nonlinearity, provided more accurate variable selection results compared to two machine learning methods. Moreover, they observed that, in general, low signal-to-noise ratios had a stronger impact on performance than did increasing multicollinearity. 
 
@@ -35,15 +35,36 @@ In order to make our simulations comparable to real-world exposure mixture studi
 
 Data from the study by @howe_prenatal_2020 were obtained from publicly available data in the Human Health Exposure Resource (HHEAR) Data Repository, which has been approved under Icahn School of Medicine at Mount Sinai IRB Protocol #16-00947. The Digital Object Identifiers associated with the urinary trace element data and epidemiological data are 10.36043/1945_159 and 10.36043/1945_177, respectively. 
 
-We followed the approach by @howe_prenatal_2020 for preparing the data for analysis. This resulted in retaining 10 metals in analysis: arsenic (As), cadmium (Cd), cobalt (Co), mercury (Hg), nickel (Ni), molybdenum (Mo), lead (Pb), antimony (Sb), tin (Sn), and thallium (Tl). @howe_prenatal_2020 used speciated As, but this was not available in HHEAR, so we used total As. Among the full range of covariates considered by @howe_prenatal_2020, we used the subset that were available in HHEAR: any smoke exposure during pregnancy, study site, maternal prepregnancy body mass index (BMI), maternal age during firt trimester, and maternal race by ethnicity and birth place. Race by ethnicity and birth place was collapsed into the following categories: non-Hispanic white, non-Hispanic black, non-Hispanic other, Hispanic born in the US, and Hispanic born outside the US. We observed 8 missing values for BMI in the data from HHEAR, which was not reported by @howe_prenatal_2020. These missing values were mean imputed. Our final analytic dataset included 252 participants, which was 10 fewer than in @howe_prenatal_2020, likely due to small discrepancies in their dataset and the one made available in HHEAR. 
+We followed the approach by @howe_prenatal_2020 for preparing the data for analysis. This resulted in retaining 10 metals in analysis: arsenic (As), cadmium (Cd), cobalt (Co), mercury (Hg), nickel (Ni), molybdenum (Mo), lead (Pb), antimony (Sb), tin (Sn), and thallium (Tl). @howe_prenatal_2020 used speciated As, but this was not available in HHEAR, so we used total As. Metals were expressed in $\mu$g/g and natural log transformed to reduce right-skewness and then standardized to keep values scale-free. Among the full range of covariates considered by @howe_prenatal_2020, we used the subset of 4 that were available in HHEAR: any smoke exposure during pregnancy, maternal prepregnancy body mass index (BMI), maternal age during firt trimester, and maternal race by ethnicity and birth place. Race by ethnicity and birth place was collapsed into the following categories: non-Hispanic white, non-Hispanic black, non-Hispanic other, Hispanic born in the US, and Hispanic born outside the US. We observed 8 missing values for BMI in the data from HHEAR, which were not reported by @howe_prenatal_2020. We mean imputed these missing values. Our final analytic dataset included 252 participants, which was 10 fewer than in @howe_prenatal_2020, likely due to small discrepancies in their dataset and the one made available in HHEAR. 
 
 <!-- include study site??? -->
 
 - The data used for simulations in this thesis was supported by the National Institute of Environmental Health Sciences of the National Institutes of Health under Award Numbers U2CES026555 and U2CES026553. The content is solely the responsibility of the author and does not necessarily represent the official views of the National Institutes of Health.
 
-### Simulating data
+### Simulating predictor data
 
-- use original predictor values in MADRES data. allows us to explore these methods on predictors with realistic correlation structure OR use original correlation structure + multivariate t-copula
+*define predictor = both exposure and covariate*
+
+We simulated exposure and covariate data using a multivariate $t$-copula fit on the 252 participants in the MADRES cohort. We used copulas as they can preserve both the correlation structure and marginal distributions from the observed data, allowing us to replicate conditions in a real-world scenario. 
+
+First, we briefly introduce copulas in the context of their use in this simulation, based on the presentation in @nelsen_introduction_2006. Copulas are joint cumulative distribution functions (CDFs) defined on the unit cube $[0,1]^n$ that capture the dependence between $n$ uniformly distributed marginals. Sklar's theorem allows us to apply copulas to our observed data. Sklar's theorem states that, if $H(x_1, \dots x_n)$ is a joint CDF of the marginal CDFs $F_1(x_1), \dots, F_n(x_n)$, then there exists a copula $C$ such that, for all $(x_1, \dots, x_n)$ in $(X_1, \dots, X_n)$, 
+
+$$
+H(x_1, \dots x_n)=C(F_1(x_1), \dots, F_n(x_n)).
+$$
+
+\noindent Note that, by the probability integral transform, or the universality of the uniform, the CDFs $F_1(x_1), \dots, F_n(x_n)$ are distributed uniformly. 
+
+We have two categorical covariates in our data: smoke exposure and race by ethnicity and birthplace. 
+
+In our case, we transformed the observed predictor values to the uniform distribution based on their empirical marginal CDFs, a process called generating "pseudo-random" samples. Then, we fit the copula and back-transformed the data to its original marginal structure using the empirical marginal CDFs. The Spearman's rho correlation structure remains consistent through these transformations, as the ranking of the data is not affected. 
+
+Various families of copulas have been described, each of which specifies a different shape for the dependence structure. We fit the set of multivariate copulas used by @lazarevic_performance_2020 in their simulation study, which included the Gaussian, t, Gumbel, Frank, Clayton, and Joe copulas. We selected the __ copula based on ___. 
+
+*show correlation and marginal distribution of original and simulations*
+
+### Simulation predictor-response relationships
+
 - simulate outcome using a formula w/ different types of interaction
 - change effect size (three levels? — NOTE, this is diff from signal:noise ratio)
 - change nature of interaction (mathematical formulation, two- or three-way, b/t just exposures or b/t exposures and covariates)
@@ -60,15 +81,15 @@ Y_i = \textrm{Hg}_i + \frac{3}{1+\textrm{exp}(-4\textrm{Ni}_i)} + \frac{1.5}{1+\
 
 ```{r, echo = FALSE}
 equations <- data.frame(
-  type = rep(c("Multiplicative\t", "Polynomial\t"), 4), 
+  type = rep(c("Multiplicative", "Polynomial"), 4), 
   small = c("0.3Hg$*$Ni", "0.1Hg$*($Ni$-1)^2$", 
             "0.3Cd$*$As", "0.1Cd$*($As$-1)^2$", 
             "0.3Hg$*$Co", "0.1Hg$*($Co$-1)^2$", 
-            "0.5Hg$*$Ni$*$Tl", "Hg$*($Ni$-1)^2*$Tl"), 
+            "0.3Hg$*$Ni$*$Tl", "0.1Hg$*($Ni$-1)^2*$Tl"), 
   large = c("0.6Hg$*$Ni", "0.2Hg$*($Ni$-1)^2$", 
             "0.6Cd$*$As", "0.2Cd$*($As$-1)^2$", 
             "0.6Hg$*$Co", "0.2Hg$*($Co$-1)^2$", 
-            "Hg$*$Ni$*$Tl", "2Hg$*($Ni$-1)^2*$Tl")
+            "0.6Hg$*$Ni$*$Tl", "0.2Hg$*($Ni$-1)^2*$Tl")
 )
 labels <- c(
   "Univariately significant" = 2, 
@@ -80,13 +101,14 @@ labels <- c(
 equations |> 
   kbl(booktabs = TRUE, escape = FALSE, 
       col.names = c("", "Small", "Large"), 
-      caption = "Specification of interaction terms in simulation.") |> 
+      align = "lcc",
+      caption = "Specification of interaction terms in simulations.") |> 
   column_spec(1, width = "10em") |> 
   add_header_above(header = c(" " = 1, "Effect size" = 2)) |>
   pack_rows(index = labels) 
 ```
 
-This resulted in a total of 39 scenarios. 
+This resulted in a total of 42 scenarios. 
 
 - see appendix for surfaces
 

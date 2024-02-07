@@ -43,15 +43,50 @@ target_first <- target_small |>
   filter(Project_ID == min(Project_ID)) |> 
   ungroup()
 
-#correlation structure
-cor(target_first[, 5:14])
-# ggpairs(target_small, columns = 5:11)
+# correlation structure
+cor(target_first[, 5:14], method = "spearman")
+# univariate density plots
 target_first |> 
   select(5:14) |> 
   gather() |> 
   ggplot(aes(x = value)) +
   geom_density() + 
   facet_wrap(~key, scales = "free")
+
+# log transformed
+target_first |> 
+  select(5:14) |> 
+  # remove outliers
+  filter(Mo >=1, Sb <= 1.4) |> 
+  gather() |> 
+  ggplot(aes(x = log(value))) +
+  geom_density() + 
+  facet_wrap(~key, scales = "free")
+
+cor_mat <- cor(target_first[, 5:14], method = "spearman")
+cor_mat[lower.tri(cor_mat)] <- NA
+melt_cor <- reshape2::melt(cor_mat) |> 
+  mutate(label = ifelse(value == 1, NA, round(value, 2)))
+melt_cor |> 
+  ggplot(aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label = label), size = 3.5) +
+  scale_fill_gradient2(
+    limit = c(-0.6, 0.6), breaks = c(-0.6, -0.3, 0, 0.3, 0.6),
+    low = "deepskyblue3", mid = "white", high = "darkorange", 
+    na.value = NA) +
+  coord_fixed() +
+  labs(x = NULL, y = NULL, fill = "Spearman's rho") +
+  theme(
+    panel.grid.major.x = element_line(color = "grey85",
+                                      linewidth = 0.25,
+                                      linetype = 2), 
+    panel.border = element_blank(),
+    legend.justification = c(1, 0),
+    legend.position = c(0.9, 0.1),
+    legend.direction = "horizontal")+
+  guides(fill = guide_colorbar(barwidth = 7, barheight = 1,
+                               title.position = "top", title.hjust = 0.5))
 
 #save
 write_csv(target_first, "madres_data/target_first.csv")
@@ -102,7 +137,7 @@ apply(is.na(epi_small), 2, sum)
 #handle NA values
 epi_imp <- epi_small |> 
   #don't include birthweight
-  select(-c(gender, birthweight, GA)) |> 
+  select(-c(gender, birthweight, GA, mom_site)) |> 
   #na's for smoke during preg, set to 0
   mutate(smoke = as.factor(ifelse(is.na(smoke), 0, smoke))) |> 
   #otherwise, impute mean
@@ -130,6 +165,25 @@ comb_small <- comb |>
 
 write_csv(comb_small, "madres_data/base_data.csv")
 
+#look at correlation between race and chemicals
+comb_small |> 
+  mutate(across(10:19, log)) |> 
+  select(c(6, 8:19)) |> 
+  pivot_longer(cols = 2:12, names_to = "key", values_to = "value") |> 
+  mutate(race = as.factor(race)) |> 
+  ggplot(aes(x = race, y = value, color = race)) +
+  geom_boxplot() +
+  facet_wrap(~key, scales = "free_y")
+
+comb_small |> 
+  mutate(across(10:19, log)) |> 
+  select(c(7, 8:19)) |> 
+  pivot_longer(cols = 2:12, names_to = "key", values_to = "value") |> 
+  mutate(smoke = as.factor(smoke)) |> 
+  ggplot(aes(x = smoke, y = value, color = smoke)) +
+  geom_boxplot() +
+  facet_wrap(~key, scales = "free_y")
+
 ########
 #experiment with copula
 ########
@@ -143,77 +197,98 @@ comb_log <- comb_small |>
   mutate(across(where(is.factor), as.numeric))
 
 #spearman rho
-cor(comb_log[, 5:19], method = "spearman")
+cor(comb_log[, 7:19], method = "spearman")
 
 #create pseudo observations
-u <- pobs(comb_log[, 5:19])
+u <- pobs(comb_log[, 7:19])
+#jitter smoke uniformly 
+prop_smoke0 <- 1 - mean(comb_log$smoke)
+set.seed(0)
+u_smoke <- comb_log$smoke |> 
+  map_dbl(\(x) {
+    ifelse(x == 0, runif(1, 0, prop_smoke0), runif(1, prop_smoke0, 1))
+  })
+u[, 1] <- u_smoke
 cor(u, method = "spearman")
 
 #fit copulas
-cfit_gaus <- fitCopula(normalCopula(dim = 15, dispstr = "un"), u)
-cfit_t <- fitCopula(tCopula(dim = 15, dispstr = "un", df.fixed = FALSE), u)
+cfit_gaus <- fitCopula(normalCopula(dim = 13, dispstr = "un"), u)
+cfit_t <- fitCopula(tCopula(dim = 13, dispstr = "un", df.fixed = FALSE), u)
 # In var.mpl(copula, u) :
 #   the covariance matrix of the parameter estimates is computed as if 
 #   'df.fixed = TRUE' with df = 60.8950734746005
-cfit_t2 <- fitCopula(tCopula(dim = 15, dispstr = "un", df = 3, df.fixed = FALSE), u)
-cfit_t3 <- fitCopula(tCopula(dim = 15, dispstr = "un", df.fixed = TRUE), u)
+cfit_t2 <- fitCopula(tCopula(dim = 13, dispstr = "un", df = 4, df.fixed = TRUE), u)
+cfit_t3 <- fitCopula(tCopula(dim = 13, dispstr = "un", df = 10, df.fixed = TRUE), u)
 
-cfit_gum <- fitCopula(gumbelCopula(4, dim = 15), u)
-cfit_frank <- fitCopula(frankCopula(4, dim = 15), u)
-cfit_clay <- fitCopula(claytonCopula(4, dim = 15), u)
-cfit_joe <- fitCopula(joeCopula(4, dim = 15), u)
+cfit_gum <- fitCopula(gumbelCopula(4, dim = 13), u)
+cfit_frank <- fitCopula(frankCopula(4, dim = 13), u)
+cfit_clay <- fitCopula(claytonCopula(4, dim = 13), u)
+cfit_joe <- fitCopula(joeCopula(4, dim = 13), u)
+
+cfit_gum2 <- fitCopula(gumbelCopula(2, dim = 13), u)
+cfit_frank2 <- fitCopula(frankCopula(2, dim = 13), u)
+cfit_clay2 <- fitCopula(claytonCopula(2, dim = 13), u)
+cfit_joe2 <- fitCopula(joeCopula(2, dim = 13), u)
 
 #evaluate fit
 aic_values <- sapply(list(cfit_gaus, cfit_t, cfit_t2, cfit_t3, #cfit_t4, cfit_t5,
-                          cfit_gum, cfit_frank, 
-                          cfit_clay, cfit_joe), AIC)
+                          cfit_gum, cfit_frank, cfit_clay, cfit_joe, 
+                          cfit_gum2, cfit_frank2, cfit_clay2, cfit_joe2), AIC)
 names(aic_values) <- c("cfit_gaus", "cfit_t", "cfit_t2", "cfit_t3", #"cfit_t4", "cfit_t5",
-                       "cfit_gum", "cfit_frank", 
-                       "cfit_clay", "cfit_joe")
+                       "cfit_gum", "cfit_frank", "cfit_clay", "cfit_joe", 
+                       "cfit_gum2", "cfit_frank2", "cfit_clay2", "cfit_joe2")
 sort(aic_values)
 
 lik_values <- sapply(list(cfit_gaus, cfit_t, cfit_t2, cfit_t3, #cfit_t4, cfit_t5,
-                          cfit_gum, cfit_frank, 
-                          cfit_clay, cfit_joe), logLik)
+                          cfit_gum, cfit_frank, cfit_clay, cfit_joe, 
+                          cfit_gum2, cfit_frank2, cfit_clay2, cfit_joe2), logLik)
 names(lik_values) <- c("cfit_gaus", "cfit_t", "cfit_t2", "cfit_t3", #"cfit_t4", "cfit_t5",
-                       "cfit_gum", "cfit_frank", 
-                       "cfit_clay", "cfit_joe")
+                       "cfit_gum", "cfit_frank", "cfit_clay", "cfit_joe", 
+                       "cfit_gum2", "cfit_frank2", "cfit_clay2", "cfit_joe2")
 sort(lik_values)
 
-#t copula performs best, proceed with this
-write_rds(cfit_t, "madres_data/tcop1.RDS")
+#guassian copula performs best, proceed with this
+write_rds(cfit_gaus, "sim/gauscop.RDS")
 
 ########
 #fit t copula and simulate data
 ########
-cfit_t <- read_rds("madres_data/tcop1.RDS")
+cfit_gaus <- read_rds("sim/gauscop.RDS")
 #should df.fixed = TRUE (current default), or specified beforehand? 
 
 #get rho and degrees of freedom
-rho <- coef(cfit_t)[1:105]
-df <- coef(cfit_t)[106]
+rho <- coef(cfit_gaus)
 # rho <- coef(cfit_gaus)
 
 #create function for simulation
-simulate_data <- function(data, rho, df = 1) {
+simulate_data <- function(data, n, rho, prop_smoke, prop_race) {
   #'data = original observed data
-  #'rho = rho values from t-copula
-  #'df = degrees of freedom from t-copula
+  #'n = sample size
+  #'rho = rho values from normal copula
+  #'prop_smoke = proportion smoke from observed dataset
+  #'prop_race = table with race/eth values
   
   #simulate pseudo-observations from copula
-  samp <- rCopula(nrow(data), 
-                  # normalCopula(rho, dim = ncol(data), dispstr = "un"))
-                  tCopula(rho, dim = ncol(data), dispstr = "un", df = df))
+  samp <- rCopula(n, 
+                  normalCopula(rho, dim = ncol(data), dispstr = "un"))
   #transform pseudo-observations to observed marginal distributions
   sampt <- 1:ncol(data) |> 
     purrr::map_dfc(
       \(x) {
-        df <- data.frame(quantile(data[[x]], probs = samp[,x]), 
-                         row.names = NULL)
+        if(names(data)[x] == "smoke") {
+          df <- data.frame(ifelse(u_smoke < prop_smoke0, 0, 1), 
+                           row.names = NULL)
+        } else {
+          df <- data.frame(quantile(data[[x]], probs = samp[,x]), 
+                           row.names = NULL)
+        }
         names(df) <- names(data)[x]
         return(df)
       }
-    )
+    ) |> 
+    mutate(race = sample(x = names(prop_race), prob = prop_race,
+                         size = n, replace = T)) |> 
+    relocate(race)
   return(sampt)
 }
 
@@ -221,7 +296,9 @@ simulate_data <- function(data, rho, df = 1) {
 set.seed(0)
 simulated <- 1:10 |> 
   purrr::map(\(x) {
-    mutate(simulate_data(comb_log[,5:19], rho = rho, df = df), sim = x)
+    mutate(simulate_data(comb_log[,7:19], n = nrow(comb_log), rho = rho, 
+                         prop_smoke = 1-mean(comb_log$smoke), 
+                         prop_race = table(comb_log$race)), sim = x)
     })
 
 comb_sim <- bind_rows(simulated)
@@ -230,11 +307,11 @@ comb_sim <- bind_rows(simulated)
 comb_sim |> 
   mutate(sim = as.factor(sim)) |> 
   # mutate(across(age:Sn, scale)) |> 
-  pivot_longer(cols = 1:15) |>
+  pivot_longer(cols = 1:13) |>
   ggplot(aes(x = value, group = sim)) +
   geom_density(color = "grey10", alpha = 0.0001) + 
   geom_density(
-    data = comb_log |> select(5:19) |> pivot_longer(cols = 1:15),
+    data = comb_log |> select(7:19) |> pivot_longer(cols = 1:13),
     mapping = aes(x = value), 
     color = "darkorange", inherit.aes = FALSE
   ) +
