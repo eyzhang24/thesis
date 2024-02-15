@@ -39,7 +39,7 @@ We followed the approach by @howe_prenatal_2020 for preparing the data for analy
 
 <!-- include study site??? -->
 
-- The data used for simulations in this thesis was supported by the National Institute of Environmental Health Sciences of the National Institutes of Health under Award Numbers U2CES026555 and U2CES026553. The content is solely the responsibility of the author and does not necessarily represent the official views of the National Institutes of Health.
+- 
 
 ### Simulating predictor data
 
@@ -62,6 +62,10 @@ In our case, we transformed the observed predictor values to the uniform distrib
 Various families of copulas have been described, each of which specifies a different shape for the dependence structure. We fit the set of multivariate copulas used by @lazarevic_performance_2020 in their simulation study, which included the Gaussian, t, Gumbel, Frank, Clayton, and Joe copulas. We selected the __ copula based on ___. 
 
 *show correlation and marginal distribution of original and simulations*
+
+*to do: figure out models for 1000, write methods*
+
+*run bsr 5 times and see if there is consensus on # df's*
 
 ### Simulation predictor-response relationships
 
@@ -123,6 +127,10 @@ Models compared, specify the parameters for each (justify them!)
 - MLR with known form of interactions specified (oracle method)
 - BKMR with component-wise
 - BSR
+
+BKMR: 
+Howe ran 200,000 Markov chain Monte Carlo (MCMC) iterations using the default priors. The first half of iterations was used as burn-in. To reduce potential autocorrelation, we thinned the chains, selecting every 25th iteration. 
+- bobb recommends 50,000 iterations at least 
 
 check convergence with trace plots
 
