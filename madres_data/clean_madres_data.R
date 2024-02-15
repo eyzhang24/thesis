@@ -173,8 +173,10 @@ comb_small |>
   mutate(race = as.factor(race)) |> 
   ggplot(aes(x = race, y = value, color = race)) +
   geom_boxplot() +
+  scale_color_discrete(guide = "none") + 
   facet_wrap(~key, scales = "free_y")
 
+#look at correlation between smoke and chemicals
 comb_small |> 
   mutate(across(10:19, log)) |> 
   select(c(7, 8:19)) |> 
@@ -214,17 +216,12 @@ cor(u, method = "spearman")
 #fit copulas
 cfit_gaus <- fitCopula(normalCopula(dim = 13, dispstr = "un"), u)
 cfit_t <- fitCopula(tCopula(dim = 13, dispstr = "un", df.fixed = FALSE), u)
-# In var.mpl(copula, u) :
-#   the covariance matrix of the parameter estimates is computed as if 
-#   'df.fixed = TRUE' with df = 60.8950734746005
 cfit_t2 <- fitCopula(tCopula(dim = 13, dispstr = "un", df = 4, df.fixed = TRUE), u)
 cfit_t3 <- fitCopula(tCopula(dim = 13, dispstr = "un", df = 10, df.fixed = TRUE), u)
-
 cfit_gum <- fitCopula(gumbelCopula(4, dim = 13), u)
 cfit_frank <- fitCopula(frankCopula(4, dim = 13), u)
 cfit_clay <- fitCopula(claytonCopula(4, dim = 13), u)
 cfit_joe <- fitCopula(joeCopula(4, dim = 13), u)
-
 cfit_gum2 <- fitCopula(gumbelCopula(2, dim = 13), u)
 cfit_frank2 <- fitCopula(frankCopula(2, dim = 13), u)
 cfit_clay2 <- fitCopula(claytonCopula(2, dim = 13), u)
@@ -251,7 +248,7 @@ sort(lik_values)
 write_rds(cfit_gaus, "sim/gauscop.RDS")
 
 ########
-#fit t copula and simulate data
+#fit normal copula and simulate data
 ########
 cfit_gaus <- read_rds("sim/gauscop.RDS")
 #should df.fixed = TRUE (current default), or specified beforehand? 
