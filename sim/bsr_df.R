@@ -47,6 +47,9 @@ waic <- names(mod_paths) |>
 
 write_csv(waic, "sim/tables/test_waic.csv")
 
+##look at waic values
+waic <- read_csv("sim/tables/test_waic.csv")
+
 min_waic <- waic |> 
   group_by(case, trial) |> 
   filter(waic == min(waic)) |> 
@@ -64,5 +67,63 @@ waic |>
   )
 
 ggsave("sim/figs/test_waic.png", height = 7.5, width = 10)
+
+#second trial
+#extract names of files
+main_folder2 <- "sim/bsr_df_sm2"
+subfolders2 <- list.dirs(main_folder2, full.names = TRUE, recursive = TRUE)
+mod_subfolders2 <- subfolders2[grepl("mods", subfolders2)]
+mod_labels2 <- gsub("\\D", "", substr(mod_subfolders2, 16, nchar(mod_subfolders2)))
+mod_labels2 <- ifelse(mod_labels2 == "", 1, as.numeric(mod_labels2))
+
+mod_paths2 <- mod_subfolders2 |> 
+  purrr::map(\(x) {
+    list.files(x, full.names = TRUE)
+  }) |> 
+  setNames(nm = mod_labels2)
+
+waic2 <- names(mod_paths2) |> 
+  purrr::map_df(\(x) {
+    mod_paths2[[x]] |> 
+      purrr::map_df(\(y) {
+        bsr <- read_rds(y)
+        result <- data.frame(
+          df = c(1, 2, 3, 4, 5), 
+          waic = c(bsr[[1]]$waic, 
+                   bsr[[2]]$waic, 
+                   bsr[[3]]$waic, 
+                   bsr[[4]]$waic, 
+                   bsr[[5]]$waic), 
+          trial = rep(substr(y, nchar(y) - 4, nchar(y) - 4))
+        )
+        rm(bsr)
+        return(result)
+      }) |> 
+      mutate(case = x)
+  })
+
+write_csv(waic2, "sim/tables/test_waic2.csv")
+
+####compare them
+waic <- read_csv("sim/tables/test_waic.csv")
+waic2 <- read_csv("sim/tables/test_waic2.csv")
+waic_comb <- waic |> 
+  mutate(iter = 1) |> 
+  bind_rows(mutate(waic2, iter = 2))
+
+waic_comb |> 
+  filter(trial <= 5) |> 
+  mutate(df = as.factor(df)) |> 
+  ggplot(aes(x = iter, y = waic, color = df)) +
+  geom_point() +
+  geom_line() + 
+  scale_x_continuous(breaks = c(1, 2)) +
+  facet_wrap(~interaction(str_pad(case, 2, pad = "0"), trial), 
+             scales = "free_y", ncol = 17) +
+  theme(axis.text.y=element_blank(),
+        axis.ticks.y=element_blank() 
+  )
+
+ggsave("sim/figs/test_waic2.png", height = 7.5, width = 11)
 
   
