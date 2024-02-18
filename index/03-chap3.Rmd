@@ -172,7 +172,7 @@ To visualize how kernel machine regression works as a moving weighted average, w
 include_graphics(path = "figures/ch3_toy3.png")
 ```
 
-Now, we fit a kernel machine regression on this data with $\rho=2$ using the `stats` package in R [@r_core_team_r_2013]. We can see in Figure \@ref(fig:toy3) that kernel machine regression captures the complex non-linear relationship between $Y$ and $x$ and closely follows the true relationship. We do note, though, that the estimation is less precise at the tails, where there is less information provided by local observations. We can also use this example to consider the effect of various values of $\rho$ on the smoothness of the $h$ function.
+Now, we fit a kernel machine regression on this data with $\rho=2$ using the `stats` package in R. We can see in Figure \@ref(fig:toy3) that kernel machine regression captures the complex non-linear relationship between $Y$ and $x$ and closely follows the true relationship. We do note, though, that the estimation is less precise at the tails, where there is less information provided by local observations. We can also use this example to consider the effect of various values of $\rho$ on the smoothness of the $h$ function.
 
 ```{r toyrho, fig.cap="Fitted kernel machine regression with $\\rho=0.02$ and $\\rho=50$.", out.width = '100%', echo = FALSE}
 include_graphics(path = "figures/ch3_toyrho.png")
@@ -458,5 +458,7 @@ BSR is highly sensitive to the choice of $d$, the degrees of freedom. While it e
 We also note that BKMR offers a hierarchical variable selection approach to dealing with collinearity between exposures While this is an additional decision that must be specified by the user, it offers a formal approach to dealing with collinear exposures. BSR does not explicitly account for collinearity in its model formulation, which can lead to erroneous interpretations of variable importance if unaccounted for. 
 
 ### Exposure-covariate interactions
+
+*add exposure-covariate interaction challenges*
 
 <!-- Notes: complex vs. non-additive interaction, clarify in first section; decide what to do with covariates!! -->

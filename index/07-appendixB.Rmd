@@ -1,3 +1,938 @@
-# The Second Appendix
+# Code
 
-R code
+This second appendix includes all of the R chunks of code that were hidden throughout the document.
+
+<!-- ## In the main file \@ref(ref-labels): -->
+
+<!-- ```{r ref.label = 'include_packages', results = 'hide', echo = TRUE} -->
+<!-- ``` -->
+
+## Code for Chapter \@ref(bayes):
+
+The code for this chapter generates a toy example, used to demonstrate the kernel machine regression and spline regression techniques. 
+
+```{r}
+#load packages
+library(tidyverse)
+library(stats)
+library(splines)
+```
+
+```{r}
+# set theme for plots
+theme_set(theme_light())
+theme_update(panel.grid.major = element_blank(), 
+             panel.grid.minor = element_blank())
+theme_update(
+  strip.background = element_rect(color="gray", fill="white"), 
+  strip.text = element_text(color = "gray30")
+  )
+```
+
+```{r}
+########
+# generate simulated points
+########
+
+# generate data from distribution
+set.seed(0) # reproducibility
+x <- seq(0, 25, length.out = 51)
+Y <- exp(x/10) + 2*sin(x/2) + rnorm(51, mean = 0, sd = 0.5)
+df <- data.frame(x, Y)
+
+# plot data and linear regression line
+q1 <- ggplot(df, aes(x, Y)) +
+  geom_point() +
+  geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), 
+                linetype = "dashed", color = "darkorange") + 
+  geom_smooth(method = "lm", formula = "y~x", 
+              color = "deepskyblue3", fill = "gray70", 
+              linewidth = 0.5, se = F)
+
+# save plot
+ggsave("index/figures/ch3_toy1.png", plot = q1, device = "png", 
+       width = 5, height = 3)
+```
+
+```{r}
+########
+# kernel regression
+########
+
+# get normal distribution of weights around query points
+df$Weight <- dnorm(df$x, mean = 12.5, sd = 1)
+
+# plot points colored by their weights
+p1 <- ggplot(df, aes(x, Y)) +
+  geom_point(aes(color = Weight)) +
+  geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), 
+                linetype = "dashed", color = "darkorange") + 
+  geom_vline(xintercept = 12.5, linetype = "dotted") +
+  theme(legend.position = "none")
+
+# plot a curve of weights
+normcurv <- data.frame(x = seq(0, 25, length.out = 250)) 
+normcurv$Weight <- dnorm(normcurv$x, mean = 12.5, sd = 1)
+p2 <- ggplot(normcurv, aes(x, Weight, color = Weight)) +
+  geom_line() +
+  scale_y_continuous(breaks = c(0, 0.2, 0.4)) +
+  theme(legend.position = "none") 
+
+# stitch plots together
+q2 <- cowplot::plot_grid(p1, p2, ncol = 1, rel_heights = c(0.7, 0.3))
+q2
+
+# save plot
+ggsave("index/figures/ch3_toy2.png", plot = q2, device = "png", 
+       width = 5, height = 4)
+
+# fit kernel regression with sigma = 1, bandwidth = 8/3
+kmr_toy <- ksmooth(df$x, df$Y, kernel = "normal", 
+                   bandwidth = 8/3, x.points = df$x)
+df <- df |> 
+  left_join(as.data.frame(kmr_toy), by = "x") |> 
+  rename(Yhat = y)
+
+# plot kernel regression estimation
+q3 <- ggplot(df) +
+  geom_point(aes(x, Y)) +
+  geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), 
+                linetype = "dashed", color = "darkorange") +
+  geom_line(aes(x, Yhat), color = "deepskyblue3") 
+q3
+
+# save plot
+ggsave("index/figures/ch3_toy3.png", plot = q3, device = "png", 
+       width = 5, height = 3)
+
+# fit kernel regression with sigma = 5, bandwidth = 40/3
+kmr_toy_5 <- ksmooth(df$x, df$Y, kernel = "normal", 
+                     bandwidth = 40/3, x.points = df$x)
+
+# fit kernel regression with sigma = 0.1, bandwith = 8/30
+kmr_toy_1 <- ksmooth(df$x, df$Y, kernel = "normal", 
+                     bandwidth = 8/30, x.points = df$x)
+
+# re-join data
+dfrho <- df |> 
+  left_join(as.data.frame(kmr_toy_5), by = "x") |> 
+  rename("rho = 50" = y) |> 
+  left_join(as.data.frame(kmr_toy_1), by = "x") |> 
+  rename("rho = 0.02" = y) |> 
+  select(-Yhat) |> 
+  pivot_longer(cols = c("rho = 50", "rho = 0.02"), values_to = "Yhat")
+
+# plot kernel regression with two values of rho
+qrho <- ggplot(dfrho) +
+  geom_point(aes(x, Y)) +
+  geom_line(aes(x, Yhat), color = "deepskyblue3") +
+  facet_wrap(~name)
+qrho
+
+# save plot
+ggsave("index/figures/ch3_toyrho.png", plot = qrho, device = "png", 
+       width = 7, height = 3)
+```
+
+```{r}
+########
+# spline regression
+########
+
+kn <- c(5, 10, 15, 20) # 4 knots of equal width
+
+# fit linear spline regression
+spline_toy_line <- lm(Y ~ bs(x, knots = kn, degree = 1), data = df)
+p_line <- predict(spline_toy_line, se = T)
+df$Yhats_line <- p_line$fit
+
+q4 <- ggplot(df) +
+  geom_point(aes(x, Y)) +
+  geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), 
+                linetype = "dashed", color = "darkorange") +
+  geom_line(aes(x, Yhats_line), color = "deepskyblue3") +
+  geom_vline(xintercept = kn, linetype = "dotted")
+q4
+
+# save plot
+ggsave("index/figures/ch3_toy4.png", plot = q4, device = "png", 
+       width = 5, height = 3)
+
+# fit cubic spline regression
+spline_toy_cub <- lm(Y ~ bs(x, knots = kn), data = df)
+p_cub <- predict(spline_toy_cub, se = T)
+df$Yhats_cub <- p_cub$fit
+
+# plot spline regression estimation
+q5 <- ggplot(df) +
+  geom_point(aes(x, Y)) +
+  geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), 
+                linetype = "dashed", color = "darkorange") +
+  geom_line(aes(x, Yhats_cub), color = "deepskyblue3") +
+  geom_vline(xintercept = kn, linetype = "dotted")
+q5
+
+# save plot
+ggsave("index/figures/ch3_toy5.png", plot = q5, device = "png", 
+       width = 5, height = 3)
+
+# fit natural spline regression
+spline_toy_nat <- lm(Y ~ ns(x, knots = kn), data = df)
+p_nat <- predict(spline_toy_nat, se = T)
+df$Yhats_nat <- p_nat$fit
+
+# plot spline regression estimation
+q6 <- ggplot(df) +
+  geom_point(aes(x, Y)) +
+  geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), 
+                linetype = "dashed", color = "darkorange") +
+  geom_line(aes(x, Yhats_nat), color = "deepskyblue3") +
+  geom_vline(xintercept = c(5, 10, 15, 20), linetype = "dotted")
+q6
+
+# save plot
+ggsave("index/figures/ch3_toy6.png", plot = q6, device = "png", 
+       width = 5, height = 3)
+
+# see what happens outside of the bounds
+x_longer <- seq(-5, 30, length.out = 81)
+y_longer_cub <- predict(spline_toy_cub, 
+                        newdata = data.frame(x = x_longer))
+y_longer_nat <- predict(spline_toy_nat, 
+                        newdata = data.frame(x = x_longer))
+
+df_longer <- data.frame(
+  x = c(x_longer, x_longer), 
+  spline = c(rep("Cubic", 81), rep("Natural", 81)), 
+  Yhat = c(y_longer_cub, y_longer_nat)
+)
+
+# plot outside of bounds
+qbounds <- ggplot(df_longer) + 
+  geom_line(aes(x, Yhat), color = "deepskyblue3") +
+  geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), 
+                linetype = "dashed", color = "darkorange") +
+  geom_vline(xintercept = c(0, 25), linetype = "dotted") +
+  facet_wrap(~spline) 
+qbounds
+
+# save plot
+ggsave("index/figures/ch3_toybounds.png", plot = qbounds, 
+       device = "png", width = 7, height = 3)
+```
+
+## Code for Chapter \@ref(sims):
+
+The code for this chapter prepares the data from the MADRES study, generates simulated data, fits multiple linear regressions, BKMR, and BSR on the simulated data, and produces model output. 
+
+### Code for Chapter \@ref(madres):
+
+First, we clean the data from the MADRES study. 
+
+```{r}
+# load packages
+library(tidyverse)
+```
+
+```{r}
+# read in data
+target <- read_csv("madres_data/1945_TARGETED_DATA.csv")
+epi <- read_csv("madres_data/1945_EPI_DATA.csv")
+```
+
+```{r}
+########
+# clean target data
+########
+
+target_small <- target |> 
+  # if below LOD, use LOD / sqrt(2)
+  mutate(conc_mod = ifelse(Comment_code == 37, 
+                           LOD / sqrt(2), 
+                           Concentration)) |> 
+  # adjust for urine specific gravity: Ac = A × [(SGmean –1)/(SG–1)]
+  mutate(conc_mod = conc_mod * ((mean(target$SG)-1)/(SG-1))) |> 
+  select(Project_ID, SID, PID, child_PID, Analyte_Code, conc_mod) |> 
+  group_by(SID) |> 
+  mutate(Project_ID = min(Project_ID)) |> 
+  ungroup() |> 
+  pivot_wider(names_from = Analyte_Code, values_from = conc_mod) |> 
+  # howe kept As, Cd, Co, Hg, Ni, Tl, and Pb in main, Mo, Sb, and Sn in supp
+  # don't have modified version of As used in their paper
+  select(Project_ID, SID, PID, child_PID, 
+         As, Cd, Co, Hg, Ni, Tl, Pb, Mo, Sb, Sn)
+
+# save
+write_csv(target_small, "madres_data/target_small.csv")
+
+# only keep data from first trimester
+target_first <- target_small |> 
+  group_by(child_PID) |> 
+  filter(Project_ID == min(Project_ID)) |> 
+  ungroup()
+
+# save
+write_csv(target_first, "madres_data/target_first.csv")
+```
+
+```{r}
+########
+# clean epi data
+########
+
+# select relevant variables
+epi_small <- epi |> 
+  # make new categorical variables
+  mutate(mom_site = as.factor(mom_site), 
+         race = as.factor(case_when(
+           t1_demo_hispanic == 0 & t1_demo_race == 2 ~ 1, #non-hisp white
+           t1_demo_hispanic == 0 & t1_demo_race == 4 ~ 2, #non-hisp black
+           t1_demo_hispanic == 0 ~ 3, #other, non-hispanic
+           t1_demo_hispanic == 1 & t1_demo_usa == 1 ~ 4, #hispanic in US
+           t1_demo_hispanic == 1 & t1_demo_usa == 0 ~ 5, #hispanic NOT in US
+           .default = NA
+         )), 
+         smoke = as.factor(ifelse(
+           t1_smoke_preg == 1 | t2_smoke_preg == 1 | t3_smoke_preg == 1 |
+             t1_smoke == 1 | t2_smoke == 1 | t3_smoke == 1, 1, 0
+         ))) |> 
+  # replace -99 with NA
+  mutate(across(where(is.numeric), ~ifelse(. == -99, NA, .)))  |> 
+  dplyr::select(child_pid, mom_site, 
+                age = t1_mat_age, # age, trimester 1
+                bmi = t1_pre_BMI, # bmi
+                race, # maternal r/e
+                smoke, # ever-exposure to smoke
+                gender, birthweight, GA # birthweight + gestational age
+                # can't find anemia measure or AsB
+  ) 
+
+# handle NA values
+epi_imp <- epi_small |> 
+  # exclude birthweight (observed response)
+  # exclude study sitebecause of small categories
+  select(-c(gender, birthweight, GA, mom_site)) |> 
+  # na's for smoke during preg, set to 0
+  mutate(smoke = as.factor(ifelse(is.na(smoke), 0, smoke))) |> 
+  # impute mean for BMI
+  mutate(across(where(is.numeric), 
+                ~ifelse(is.na(.), mean(.,na.rm = TRUE), .))) 
+```
+
+```{r}
+########
+# combine epi and target data
+########
+comb <- epi_imp |> 
+  left_join(target_first, by = c("child_pid" = "child_PID")) |> 
+  relocate(child_pid, Project_ID, SID, PID, mom_site, race, smoke) 
+
+# remove outliers
+comb_small <- comb |> 
+  filter(Mo >=1, Sb <= 1.4)
+
+# save
+write_csv(comb_small, "madres_data/base_data.csv")
+```
+
+
+### Code for Chapter \@ref(copula):
+
+Next, we use copulas to simulate predictor data. We use the `copula` and `rslurm` packages in this section. This code was run on the Amherst HPC RStudio server. 
+
+```{r}
+# load packages
+library(tidyverse)
+library(copula)
+library(rslurm)
+```
+
+```{r}
+# read data back in
+comb_small <- read_csv("madres_data/base_data.csv")
+
+# log-transform target data
+comb_log <- comb_small |> 
+  mutate(across(10:19, log)) |> 
+  # factors back to numeric
+  mutate(across(where(is.factor), as.numeric))
+
+# check spearman's rho
+cor(comb_log[, 7:19], method = "spearman")
+```
+
+```{r}
+########
+# fit copulas
+########
+
+# create pseudo observations for continuous variables
+u <- pobs(comb_log[, 7:19])
+
+# fit checkerboard copula on smoke
+prop_smoke0 <- 1 - mean(comb_log$smoke)
+# jitter 0's and 1's uniformly within quantile
+set.seed(0)
+u_smoke <- comb_log$smoke |> 
+  map_dbl(\(x) {
+    ifelse(x == 0, runif(1, 0, prop_smoke0), runif(1, prop_smoke0, 1))
+  })
+u[, 1] <- u_smoke
+
+# fit copulas
+cfit_gaus <- fitCopula(normalCopula(dim = 13, dispstr = "un"), u)
+cfit_t1 <- fitCopula(tCopula(dim = 13, dispstr = "un", 
+                             df.fixed = FALSE), u)
+cfit_t2 <- fitCopula(tCopula(dim = 13, dispstr = "un", 
+                             df = 4, df.fixed = TRUE), u)
+cfit_t3 <- fitCopula(tCopula(dim = 13, dispstr = "un", 
+                             df = 10, df.fixed = TRUE), u)
+cfit_gum1 <- fitCopula(gumbelCopula(4, dim = 13), u)
+cfit_gum2 <- fitCopula(gumbelCopula(2, dim = 13), u)
+cfit_frank1 <- fitCopula(frankCopula(4, dim = 13), u)
+cfit_frank2 <- fitCopula(frankCopula(2, dim = 13), u)
+cfit_clay1 <- fitCopula(claytonCopula(4, dim = 13), u)
+cfit_clay2 <- fitCopula(claytonCopula(2, dim = 13), u)
+cfit_joe1 <- fitCopula(joeCopula(4, dim = 13), u)
+cfit_joe2 <- fitCopula(joeCopula(2, dim = 13), u)
+
+# evaluate fit using AIC
+aic_values <- sapply(list(cfit_gaus, cfit_t1, cfit_t2, cfit_t3, 
+                          cfit_gum1, cfit_gum2, cfit_frank1, cfit_frank2, 
+                          cfit_clay1, cfit_clay2, cfit_joe1, cfit_joe2
+                          ), AIC)
+names(aic_values) <- c("cfit_gaus", "cfit_t1", "cfit_t2", "cfit_t3",
+                       "cfit_gum", "cfit_gum2", "cfit_frank1", "cfit_frank2", 
+                       "cfit_clay1", "cfit_clay2", "cfit_joe1", "cfit_joe2")
+sort(aic_values)
+
+# evaluate fit using likelihood
+aic_values <- sapply(list(cfit_gaus, cfit_t1, cfit_t2, cfit_t3, 
+                          cfit_gum1, cfit_gum2, cfit_frank1, cfit_frank2, 
+                          cfit_clay1, cfit_clay2, cfit_joe1, cfit_joe2
+                          ), logLik)
+names(lik_values) <- c("cfit_gaus", "cfit_t1", "cfit_t2", "cfit_t3",
+                       "cfit_gum", "cfit_gum2", "cfit_frank1", "cfit_frank2", 
+                       "cfit_clay1", "cfit_clay2", "cfit_joe1", "cfit_joe2")
+sort(lik_values)
+
+# guassian copula performs best, proceed with this
+write_rds(cfit_gaus, "sim/gauscop.RDS")
+```
+
+```{r}
+########
+# simulate predictor data
+########
+
+# read copula back in 
+cfit_gaus <- read_rds("sim/gauscop.RDS")
+
+# extract rho 
+rho <- coef(cfit_gaus)
+
+# create function for simulation
+simulate_data <- function(data, n, rho, prop_smoke, prop_race) {
+  #' data = original observed data
+  #' n = sample size
+  #' rho = rho values from normal copula
+  #' prop_smoke = proportion smoke from observed dataset
+  #' prop_race = table with race/eth values
+  
+  # simulate pseudo-observations from copula
+  samp <- rCopula(n, normalCopula(rho, dim = ncol(data), dispstr = "un"))
+  
+  # transform pseudo-observations to observed marginal distributions
+  sampt <- 1:ncol(data) |> 
+    purrr::map_dfc(
+      \(x) {
+        if(names(data)[x] == "smoke") {
+          # use observed probability threshold for smoke
+          df <- data.frame(ifelse(samp[,x] < prop_smoke, 0, 1), 
+                           row.names = NULL)
+        } else {
+          # use empirical marginal CDF's for continuous
+          df <- data.frame(quantile(data[[x]], probs = samp[,x]), 
+                           row.names = NULL)
+        }
+        names(df) <- names(data)[x]
+        return(df)
+      }
+    ) |> 
+    # randomly sample race
+    mutate(race = sample(x = names(prop_race), prob = prop_race,
+                         size = n, replace = T)) |> 
+    relocate(race)
+  return(sampt)
+}
+
+# create function to run size 252 samples on hpc
+run_sim1 <- function() {
+  set.seed(0)
+  out <- 1:2100 |> 
+    purrr::map(\(x) {
+      mutate(simulate_data(comb_log_clip, n = nrow(comb_log_clip), rho = rho, 
+                           prop_smoke = 1-mean(comb_log_clip$smoke), 
+                           prop_race = table(comb_log$race)), 
+             race = as.numeric(race), 
+             sim = x) 
+    })
+  return(out)
+}
+
+# send job to hpc for size 252 samples
+sjob1 <- slurm_call(run_sim1, 
+                    global_objects = c('comb_log', 'comb_log_clip', 
+                                       'rho', 'simulate_data'),
+                    jobname = 'sim_data1')
+
+# get output
+out1 <- get_slurm_out(sjob1)
+write_rds(out1, "sim/sim_preds_sm.RDS")
+
+# create function to run size 1000 samples on hpc
+run_sim2 <- function() {
+  set.seed(1)
+  out <- 1:2100 |> 
+    purrr::map(\(x) {
+      mutate(simulate_data(comb_log_clip, n = 1000, rho = rho, 
+                           prop_smoke = 1-mean(comb_log_clip$smoke), 
+                           prop_race = table(comb_log$race)), 
+             race = as.numeric(race), 
+             sim = x)
+    })
+  return(out)
+}
+
+# send job to hpc for size 1000 samples
+sjob2 <- slurm_call(run_sim2, 
+                    global_objects = c('comb_log', 'comb_log_clip', 
+                                       'rho', 'simulate_data'),
+                    jobname = 'sim_data2')
+
+# get output
+out2 <- get_slurm_out(sjob2)
+write_rds(out2, "sim/sim_preds_lg.RDS")
+```
+
+### Code for Chapter \@ref(simresp):
+
+Next, we simulate the response data. We use the `rslurm` package in this section. This code was run on the Amherst HPC RStudio server. 
+
+```{r}
+# load packages
+library(tidyverse)
+library(rslurm)
+```
+
+
+```{r}
+##############
+# create functions for various response variables
+##############
+
+# base case, no interactions
+base_case <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+
+am1 <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           0.35*Hg*Ni + 
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+
+am2 <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           0.7*Hg*Ni + 
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+
+ap1 <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           0.13*Hg*((Ni-1)^2) +
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+
+ap2 <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           0.26*Hg*((Ni-1)^2) +
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+
+bm1 <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           0.35*Cd*As + 
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+
+bm2 <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           0.7*Cd*As + 
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+
+bp1 <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           0.125*Cd*((As-1)^2) +
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+
+bp2 <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           0.25*Cd*((As-1)^2) +
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+
+cm1 <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           0.3*Hg*Co + 
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+
+cm2 <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           0.6*Hg*Co + 
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+
+cp1 <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           0.15*Hg*((Co-1)^2) +
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+
+cp2 <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           0.3*Hg*((Co-1)^2) +
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+
+dm1 <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           0.3*Hg*Ni*Tl + 
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+
+dm2 <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           0.6*Hg*Ni*Tl + 
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+
+dp1 <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           0.09*Hg*((Ni-1)^2)*Tl +
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+
+dp2 <- function(df) {
+  mutate(df, y = 
+           Hg + 3/(1+exp(-4*Ni)) - (Sb^2) + 0.5*Sb + 1.5/(1+exp(-4*Sn)) + 
+           0.18*Hg*((Ni-1)^2)*Tl +
+           age + 0.5*bmi + 
+           case_when(race == 1 ~ 1, 
+                     race == 2 ~ 1.5, 
+                     race == 3 ~ 1, 
+                     race == 4 ~ 1, 
+                     race == 5 ~ 1.5) +
+           ifelse(smoke == 1, -1, 0.5) +
+           rnorm(nrow(df), 0, 5))
+}
+```
+
+```{r}
+#############
+# create response variables for exposure-exposure interxn
+#############
+
+# read output back in, size 252
+out1 <- read_rds("sim/sim_preds_sm.RDS")
+
+# create function for responses at size 252
+run_resp1 <- function() {
+  set.seed(0)
+  out1_resp1 <- out1 |> 
+    purrr::map(\(x) {
+      # get dataset number 
+      no <- x$sim[1] 
+      x <- x |> 
+        # scale log-transformed exposures
+        mutate(across(As:Sn, ~c(scale(.)))) 
+      df <- case_when(
+        no <= 100 ~ base_case(x), 
+        no <= 200 ~ am1(x), 
+        no <= 300 ~ am2(x), 
+        no <= 400 ~ ap1(x), 
+        no <= 500 ~ ap2(x), 
+        no <= 600 ~ bm1(x), 
+        no <= 700 ~ bm2(x), 
+        no <= 800 ~ bp1(x), 
+        no <= 900 ~ bp2(x), 
+        no <= 1000 ~ cm1(x), 
+        no <= 1100 ~ cm2(x), 
+        no <= 1200 ~ cp1(x), 
+        no <= 1300 ~ cp2(x), 
+        no <= 1400 ~ dm1(x), 
+        no <= 1500 ~ dm2(x), 
+        no <= 1600 ~ dp1(x), 
+        no <= 1700 ~ dp2(x), 
+        .default = x #note 1701 - 2100 is for cov-exp interxn
+      ) 
+    }) |> 
+    purrr::set_names(nm = c(
+      rep("_base", 100), 
+      rep("am1", 100), 
+      rep("am2", 100), 
+      rep("ap1", 100), 
+      rep("ap2", 100), 
+      rep("bm1", 100), 
+      rep("bm2", 100), 
+      rep("bp1", 100), 
+      rep("bp2", 100), 
+      rep("cm1", 100), 
+      rep("cm2", 100), 
+      rep("cp1", 100), 
+      rep("cp2", 100), 
+      rep("dm1", 100), 
+      rep("dm2", 100), 
+      rep("dp1", 100), 
+      rep("dp2", 100), 
+      rep("unset", 400)
+    )) 
+  return(out1_resp1)
+}
+
+# run to hpc
+runrespsm <- slurm_call(
+  run_resp1, 
+  global_objects = c('out1', 'base_case', 
+                     'am1', 'am2', 'ap1', 'ap2', 
+                     'bm1', 'bm2', 'bp1', 'bp2', 
+                     'cm1', 'cm2', 'cp1', 'cp2', 
+                     'dm1', 'dm2', 'dp1', 'dp2'),
+  jobname = 'sim_resp1')
+
+# get output
+out1_resp1 <- get_slurm_out(runrespsm)
+# only save for exp-exp interxns
+out1_resp1 <- out1_resp1[1:1700]
+write_rds(out1_resp1, "sim/sim_resp_sm_a.RDS")
+
+# read output back in, size 1000
+out2 <- read_rds("sim/sim_preds_lg.RDS")
+
+# create function for response at size 1000
+run_resp2 <- function() {
+  set.seed(0)
+  out2_resp1 <- out2 |> 
+    purrr::map(\(x) {
+      # get dataset number 
+      no <- x$sim[1]
+      x <- x |> 
+        mutate(across(As:Sn, ~c(scale(.)))) 
+      df <- case_when(
+        no <= 100 ~ base_case(x), 
+        no <= 200 ~ am1(x), 
+        no <= 300 ~ am2(x), 
+        no <= 400 ~ ap1(x), 
+        no <= 500 ~ ap2(x), 
+        no <= 600 ~ bm1(x), 
+        no <= 700 ~ bm2(x), 
+        no <= 800 ~ bp1(x), 
+        no <= 900 ~ bp2(x), 
+        no <= 1000 ~ cm1(x), 
+        no <= 1100 ~ cm2(x), 
+        no <= 1200 ~ cp1(x), 
+        no <= 1300 ~ cp2(x), 
+        no <= 1400 ~ dm1(x), 
+        no <= 1500 ~ dm2(x), 
+        no <= 1600 ~ dp1(x), 
+        no <= 1700 ~ dp2(x), 
+        .default = x #note 1701 - 2100 is for cov-exp interxn
+      ) 
+    }) |> 
+    purrr::set_names(nm = c(
+      rep("_base", 100), 
+      rep("am1", 100), 
+      rep("am2", 100), 
+      rep("ap1", 100), 
+      rep("ap2", 100), 
+      rep("bm1", 100), 
+      rep("bm2", 100), 
+      rep("bp1", 100), 
+      rep("bp2", 100), 
+      rep("cm1", 100), 
+      rep("cm2", 100), 
+      rep("cp1", 100), 
+      rep("cp2", 100), 
+      rep("dm1", 100), 
+      rep("dm2", 100), 
+      rep("dp1", 100), 
+      rep("dp2", 100), 
+      rep("unset", 400)
+    ))
+  return(out2_resp1)
+}
+
+# send to HPC
+runresplg <- slurm_call(
+  run_resp2, 
+  global_objects = c('out2', 'base_case', 
+                     'am1', 'am2', 'ap1', 'ap2', 
+                     'bm1', 'bm2', 'bp1', 'bp2', 
+                     'cm1', 'cm2', 'cp1', 'cp2', 
+                     'dm1', 'dm2', 'dp1', 'dp2'),
+  jobname = 'sim_resp2')
+
+# get output
+out2_resp1 <- get_slurm_out(runresplg)
+# only save output for exp-exp interxns for now
+out2_resp1 <- out2_resp1[1:1700]
+write_rds(out2_resp1, "sim/sim_resp_lg_a.RDS")
+```
+
+
+```{r}
+#############
+# create response variables for exposure-covariate interxn
+#############
+
+```
+
+### Code for Chapter \@ref(models):
+
+Here, we fit the models to our simulated data. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. This code was run on the Amherst HPC RStudio server. 
+
+### Code for Chapter \@ref(results):
+
+Here, we extract results from our simulation. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. 

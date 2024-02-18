@@ -142,6 +142,8 @@ The abstract should be a short summary of your thesis work. A paragraph is usual
 
 \Acknowledgments{
 Use this space to thank those who have helped you in the thesis process (professors, staff, friends, family, etc.). If you had special funding to conduct your thesis work, that should be acknowledged here as well.
+
+This work was performed in part using high-performance computing equipment at Amherst College obtained under National Science Foundation Grant Number 2117377. The data used for simulations in this thesis was supported by the National Institute of Environmental Health Sciences of the National Institutes of Health under Award Numbers U2CES026555 and U2CES026553. The content is solely the responsibility of the author and does not necessarily represent the official views of the National Science Foundation or the National Institutes of Health.
 }
 
 \Dedication{
@@ -272,6 +274,8 @@ Use this space to thank those who have helped you in the thesis process (profess
   \end{abstract}
   \begin{acknowledgments}
     Use this space to thank those who have helped you in the thesis process (professors, staff, friends, family, etc.). If you had special funding to conduct your thesis work, that should be acknowledged here as well.
+
+    This work was performed in part using high-performance computing equipment at Amherst College obtained under National Science Foundation Grant Number 2117377. The data used for simulations in this thesis was supported by the National Institute of Environmental Health Sciences of the National Institutes of Health under Award Numbers U2CES026555 and U2CES026553. The content is solely the responsibility of the author and does not necessarily represent the official views of the National Science Foundation or the National Institutes of Health.
   \end{acknowledgments}
 
   \hypersetup{linkcolor=black}
@@ -292,7 +296,7 @@ Use this space to thank those who have helped you in the thesis process (profess
 
 Rapid industrial development has created conditions of cumulative chronic toxicity which pose an acute risk to the wellbeing of humans and our living environment. In fact, it has been estimated that, globally, human activity releases chemicals at a rate of 220 billion tons per annum (Cribb, 2016). These staggering levels of pollution have led scholars to formally declare that humanity has surpassed the safe operating space of the planetary boundary for novel entities (Persson et al., 2022). As a result, exposure to low levels of pollutants has become an inevitable peril of daily life (Naidu et al., 2021; Vineis, 2018). In this new era of pervasive toxicity, understanding the nature and severity of health effects associated with chemical exposures is especially timely.
 
-For this, we turn to epidemiological studies. The broad field of preventive epidemiology involves the identification of potentially modifiable risk factors that contribute to the burden of disease within human populations. Environmental epidemiology, in particular, considers the effect of environmental exposures --- chemical or otherwise. However, studies concerning chemical pollutants in environmental epidemiology have historically focused on elucidating the effect and mechanisms of exposures to a single pollutant. In reality, humans are invariably exposed to numerous complex chemical mixtures which together contribute to the progression of adverse health outcomes. Therefore, risk assessments of single pollutants likely fail to capture the true consequences of these complex exposures (Heys, Shore, Pereira, Jones, \& Martin, 2016). Assessing mixtures of chemicals can also have more direct implications for public health interventions. The United States Environmental Protection Agency (U.S. EPA) currently passes regulations for individual pollutants. In practice, though, regulation occurs by controlling the source of pollution, which is responsible for the production of a whole mixture of chemicals with specific joint effects on human health. As a result, the National Academies of Science has advocated for a multipollutant regulatory approach, which is likely to be more protective of human health (Committee on Incorporating 21st Century Science into Risk-Based Evaluations, Board on Environmental Studies and Toxicology, Division on Earth and Life Studies, \& National Academies of Sciences, Engineering, and Medicine, 2017).
+For this, we turn to epidemiological studies. The broad field of preventive epidemiology involves the identification of potentially modifiable risk factors that contribute to the burden of disease within human populations. Environmental epidemiology, in particular, considers the effect of environmental exposures --- chemical or otherwise. However, studies concerning chemical pollutants in environmental epidemiology have historically focused on elucidating the effect and mechanisms of exposures to a single pollutant. In reality, humans are invariably exposed to numerous complex chemical mixtures which together contribute to the progression of adverse health outcomes. Therefore, risk assessments of single pollutants likely fail to capture the true consequences of these complex exposures (Heys, Shore, Pereira, Jones, \& Martin, 2016). Assessing mixtures of chemicals can also have more direct implications for public health interventions. The United States Environmental Protection Agency (U.S. EPA) currently passes regulations for individual pollutants. In practice, though, regulation occurs by controlling the source of pollution, which is responsible for the production of a whole mixture of chemicals with specific joint effects on human health. As a result, the National Academies of Science has advocated for a multipollutant regulatory approach, which is likely to be more protective of human health (National Academies of Sciences, Engineering, and Medicine, Division on Earth and Life Studies, Board on Environmental Studies and Toxicology, \& Committee on Incorporating 21st Century Science into Risk-Based Evaluations, 2017).
 
 There are clear practical motivations for studies that examine the health effects of exposure to co-occurring chemical mixtures, hereafter referred to as exposure mixtures. However, expanding the focus of analysis from one exposure to multiple exposures introduces unique statistical challenges. In addition to a common issue of small effect sizes and small sample sizes present in most exposure analyses, multiple exposure analyses must also contend with high-dimensionality, collinearity, non-linear effects, and non-additive interactions (Yu et al., 2022). In particular, data with numerous pollutants, or predictors, require exponentially greater levels of complexity and time cost in analysis. Collinearity between exposures is common when analyzing pollutants from a single source and can lead to unstable estimates in a generalized linear model if left unaccounted for. Finally, exposures can have both non-linear single effects and non-additive interaction effects, which are difficult to capture unless explicitly specified in the model.
 
@@ -387,11 +391,13 @@ In this section, we introduce the theory of BKMR. First, we define the notation 
 \begin{itemize}
 \tightlist
 \item
-  \(X_m\) is a predictor variable in the predictor matrix \(\textbf{X}\) with \(m = 1, \dots, M\), measuring exposure variables or covariates
+  \(X_m\) is an exposure in the exposure matrix \(\textbf{X}\) with \(m = 1, \dots, M\)
 \item
   \(\textbf{x}_i\) is a vector of values for a single observation in \(\textbf{X}\) with \(i = 1, \dots, n\)
 \item
   \(x_{im}\) is the \(i\)th observation of \(X_m\)
+\item
+  \(\textbf{z}_i\) is a vector of covariates for a single observation in the matrix \(\textbf{Z}\), which contains a set of covariates, with \(i = 1, \dots, n\)
 \item
   \(Y_i\) is an observation of \(\textbf{Y}\), measuring the health outcome in this case
 \item
@@ -403,7 +409,9 @@ In this section, we introduce the theory of BKMR. First, we define the notation 
 \item
   \(\rho\) is the parameter which controls smoothnessm, associated with the kernel function
 \item
-  \(\tau\) is the parameter multiplied by the kernel matrix to relate \(\textbf{K}\) to \(h\), and
+  \(\tau\) is the parameter multiplied by the kernel matrix to relate \(\textbf{K}\) to \(h\)
+\item
+  \(\boldsymbol{\beta}_{\textbf{z}}\) is a vector of the weights on the covariates, and
 \item
   \(\boldsymbol\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\) are the residuals of the response.
 \end{itemize}
@@ -431,18 +439,18 @@ We begin by introducing kernel machine regression, with attention to its specifi
 To contextualize this method, we start at the typical linear regression setting,
 
 \[
-Y_i = \textbf{x}_i\boldsymbol{\beta} + \varepsilon_i,
+Y_i = \textbf{x}_i^\top \boldsymbol{\beta}_{\textbf{x}} + \textbf{z}_i^\top \boldsymbol{\beta}_{\textbf{z}} + \varepsilon_i,
 \]
 
-\noindent where \(Y_i\) measures a health outcome at a given point, \(\textbf{x}_i = [x_{i1},\dots,x_{iM}]\) is a vector of M exposures or covariates (hereafter referred to as predictors), \(\boldsymbol{\beta}\) is a vector of weights, and \(\varepsilon_i\) is a random variable from \(\boldsymbol\varepsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\). We can see that this function assumes that there is a linear relationship between the exposure and the response, and that the combined effects of multiple exposures are additive.
+\noindent where \(Y_i\) measures a health outcome at a given point, \(\textbf{x}_i = [x_{i1},\dots,x_{iM}]\) is a vector of M exposures, \(\textbf{z}_i\) is a vector of covariates, \(\boldsymbol{\beta}_{\textbf{x}}\) and \(\boldsymbol{\beta}_{\textbf{z}}\) are vectors of weights for the exposures and covariates, respectively, and \(\varepsilon_i\) is a random variable from \(\boldsymbol\varepsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\). We can see that this function assumes that there is a linear relationship between the exposure and the response, and that the combined effects of multiple exposures are additive.
 
 Kernel machine regression defines this relationship using a flexible function \(h: \mathbb{R}^M \rightarrow \mathbb{R}\), where
 
 \[
-Y_i = h(\textbf{x}_i) + \varepsilon_i.
+Y_i = h(\textbf{x}_i) + \textbf{z}_i^\top \boldsymbol{\beta}_{\textbf{z}} + \varepsilon_i.
 \]
 
-\noindent Here, \(h(\cdot)\) is represented by the function \(k(\cdot, \cdot)\), a kernel. The kernel controls the covariance, or the similarity, between values of \(h(\textbf{x})\) and as such ensures that points near each other on the prediction surface will have similar values --- or, in other words, that the prediction surface will be smooth. In the case of kernel machine regression, we define a positive definite kernel where \(k: \mathbb{R}^M\times \mathbb{R}^M \rightarrow \mathbb{R}\).
+\noindent Here, \(h(\cdot)\) is represented by the function \(k(\cdot, \cdot)\), a kernel. The kernel controls the covariance, or the similarity, between values of \(h(\textbf{x})\) and as such ensures that points near each other on the prediction surface will have similar values --- or, in other words, that the prediction surface will be smooth. In the case of kernel machine regression, we define a positive definite kernel where \(k: \mathbb{R}^M\times \mathbb{R}^M \rightarrow \mathbb{R}\). Note also that covariates are assumed to have a linear, non-additive effect on the response.
 
 There are many choices of functions for \(k\). BKMR uses the Gaussian kernel, also known as the radial basis function or, sometimes, the squared exponential kernel. The Gaussian kernel is defined as
 
@@ -451,9 +459,9 @@ k(\textbf{x}, \textbf{x}') = \textrm{exp}\bigg\{
 -\frac{||\textbf{x}-\textbf{x}'||^2}{\rho} \bigg\},
 \]
 
-\noindent where \(||\textbf{x}-\textbf{x}'||^2 = \sum_{m=1}^M{(x_{m}-x_{m}')^2}\) for a set of predictors values \(\textbf{x}\) and the predictor values of another subject \(\textbf{x}'\), and \(\rho\) is a tuning parameter that controls the relationship between the correlation between two points and their distance. Greater values of \(\rho\) will enforce more dependence between points and make the resulting function smoother. \(h\) is related to \(k\) by a multiplicative constant \(\tau\), a tuning parameter which controls the vertical scale of \(h\).
+\noindent where \(||\textbf{x}-\textbf{x}'||^2 = \sum_{m=1}^M{(x_{m}-x_{m}')^2}\) for a set of exposure values \(\textbf{x}\) and the exposure values of another subject \(\textbf{x}'\), and \(\rho\) is a tuning parameter that controls the relationship between the correlation between two points and their distance. Greater values of \(\rho\) will enforce more dependence between points and make the resulting function smoother. \(h\) is related to \(k\) by a multiplicative constant \(\tau\), a tuning parameter which controls the vertical scale of \(h\).
 
-Now that we have defined \(h\) and \(k\), we can think about how to characterize the relationship between our response and predictors. Kernel machine regression is a nonparametric technique because it does not specify a functional form for this relationship. Hence, we will think about estimating the response at a particular query point. Operationally, Müller (1987) demonstrated that kernel machine regression uses a weighted average of all the observations in the dataset to estimate the response, defined as
+Now that we have defined \(h\) and \(k\), we can think about how to characterize the relationship between our response and exposures Kernel machine regression is a nonparametric technique because it does not specify a functional form for this relationship. Hence, we will think about estimating the response at a particular query point. Operationally, Müller (1987) demonstrated that kernel machine regression uses a weighted average of all the observations in the dataset to estimate the response, defined as
 
 \[
 \bar{Y} = \frac{\sum_{i=1}^nw_iY_i}{\sum_{i=1}^nw_i},
@@ -484,7 +492,7 @@ It is useful to make connections between this definition of kernel machine regre
 h(\textbf{x}) \sim \mathcal{GP}(\textbf{0}, \tau k(\textbf{x}, \textbf{x}')),
 \]
 
-\noindent with covariance function \(k\), where \(\textbf{x}\) is a vector of the predictor values, and \(\textbf{x}'\) contains the predictor values of another subject. A Gaussian process is a collection of random variables, of which any finite number follow a multivariate normal distribution (Schulz, Speekenbrink, \& Krause, 2018). Here, we assume that the expected value of the \(h\) function with input \(\textbf{x}\) is \(\textbf{0}\). We use \(k\) for the covariance function, which represents the dependence between the function values with inputs \(\textbf{x}\) and \(\textbf{x}'\): \(k(\textbf{x}, \textbf{x}') = \mathbb{E}[(h(\textbf{x})- \textbf{0}) (h(\textbf{x}')- \textbf{0})]\).
+\noindent with covariance function \(k\), where \(\textbf{x}\) is a vector of the exposure values, and \(\textbf{x}'\) contains the exposure values of another subject. A Gaussian process is a collection of random variables, of which any finite number follow a multivariate normal distribution (Schulz, Speekenbrink, \& Krause, 2018). Here, we assume that the expected value of the \(h\) function with input \(\textbf{x}\) is \(\textbf{0}\). We use \(k\) for the covariance function, which represents the dependence between the function values with inputs \(\textbf{x}\) and \(\textbf{x}'\): \(k(\textbf{x}, \textbf{x}') = \mathbb{E}[(h(\textbf{x})- \textbf{0}) (h(\textbf{x}')- \textbf{0})]\).
 
 Now, we can represent \(h\) as a collection of variables from a Gaussian process. \(h\) follows a multivariate normal distribution,
 
@@ -495,7 +503,7 @@ h({\textbf{x}}) \sim N(\textbf{0}, \tau\textbf{K}),
 \noindent where \(h({\textbf{x}}) = [h(\textbf{x}_1), h(\textbf{x}_2), \dots, h(\textbf{x}_n)]^\top\) and \(\textbf{K}\) is the kernel matrix. The kernel matrix is an \(n \times n\) matrix with \((i, j)\)th element \(k(\textbf{x}_i, \textbf{x}_j)\). Now, returning back to the regression view, we can think of each \(Y_i\) as following the distribution,
 
 \[
-Y_i \overset{\mathrm{ind}}{\sim} N(h(\textbf{x}_i), \sigma^2) \text{ for } i = 1,\dots,n,
+Y_i \overset{\mathrm{ind}}{\sim} N(h(\textbf{x}_i) + \textbf{z}_i^\top \boldsymbol{\beta}_{\textbf{z}}, \sigma^2) \text{ for } i = 1,\dots,n,
 \]
 
 \noindent where \(\sigma^2\) comes from the variance of the residuals. Here, \(h\) can be interpreted as a random effect.
@@ -532,7 +540,7 @@ To visualize how kernel machine regression works as a moving weighted average, w
 
 \caption{Fitted kernel machine regression (blue) with $\rho=2$ compared to the true relationship (orange).}\label{fig:toy3}
 \end{figure}
-Now, we fit a kernel machine regression on this data with \(\rho=2\) using the \texttt{stats} package in R (R Core Team, 2013). We can see in Figure \ref{fig:toy3} that kernel machine regression captures the complex non-linear relationship between \(Y\) and \(x\) and closely follows the true relationship. We do note, though, that the estimation is less precise at the tails, where there is less information provided by local observations. We can also use this example to consider the effect of various values of \(\rho\) on the smoothness of the \(h\) function.
+Now, we fit a kernel machine regression on this data with \(\rho=2\) using the \texttt{stats} package in R. We can see in Figure \ref{fig:toy3} that kernel machine regression captures the complex non-linear relationship between \(Y\) and \(x\) and closely follows the true relationship. We do note, though, that the estimation is less precise at the tails, where there is less information provided by local observations. We can also use this example to consider the effect of various values of \(\rho\) on the smoothness of the \(h\) function.
 \begin{figure}
 
 {\centering \includegraphics[width=1\linewidth]{figures/ch3_toyrho} 
@@ -548,15 +556,15 @@ Figure \ref{fig:toyrho} demonstrates the effect of relatively smaller and larger
 
 Now that we have defined kernel machine regression, we can extend it to the Bayesian paradigm. Bobb et al. (2015) showed that the Bayesian approach can outperform frequentist kernel machine regression because simultaneous variable selection and estimation can better capture the exposure-response relationship. In this section, we discuss the two methods for Bayesian variable selection in BKMR: hierarchical variable selection and component-wise variable selection (Bobb et al., 2015).
 
-\emph{ADD SOME MORE DEVELOPMENT HERE}
-
-Component-wise selection follows the same framework as variable selection in a typical Bayesian multiple regression except, instead of augmenting each predictor, we augment the kernel function as
+In order to perform variable selection, we define a parameter that puts a weight on each exposure. Each weight controls the degree to which its associated exposure contributes to the model. In component-wise selection, we do this by augmenting the kernel function as
 
 \[
 k(\textbf{x}, \textbf{x}'|\textbf{r}) = \text{exp}\bigg\{ -\sum_{m=1}^Mr_m(x_m-x_m')^2 \bigg\},
 \]
 
-\noindent where \(\textbf{r}=[r_1,\dots,r_M]^\top\). We define \(r_m=1/{\rho_m}\), the inverse of the tuning parameter \(\rho_m\) for each \(\textbf{x}_m\), as we want \(r_m\) to be able to take on the value of \(0\) when a variable is removed during the selection process. We now define the kernel matrix \(\textbf{K}_{\textbf{X},\textbf{r}}\) as the \(n\times n\) matrix with \((i,j)\)th element \(k(\textbf{x}, \textbf{x}'|\textbf{r})\). To allow \(r_m\) to equal 0 with non-zero probability, we first define an indicator variable determining whether or not a predictor is included in the variable, which is distributed as
+\noindent where \(\textbf{r}=[r_1,\dots,r_M]^\top\). We define \(r_m=1/{\rho_m}\), the inverse of the tuning parameter \(\rho_m\) for each \(\textbf{x}_m\). Now, we can imagine that an exposure that is not closely associated with the response will be be assigned a value of \(r_m\) close to 0, which corresponds to a larger value of \(\rho_m\). This larger value of \(\rho_m\) means that this exposure would contribute less to the exposure-response relationship, as depicted in the second panel of Figure \ref{fig:toyrho}.
+
+We now define the kernel matrix \(\textbf{K}_{\textbf{X},\textbf{r}}\) as the \(n\times n\) matrix with \((i,j)\)th element \(k(\textbf{x}, \textbf{x}'|\textbf{r})\). To allow \(r_m\) to equal 0 with non-zero probability, we first define an indicator variable determining whether or not a predictor is included in the variable, which is distributed as
 
 \[
 \delta_m \sim \text{Bernoulli}(\pi),
@@ -570,21 +578,21 @@ r_m|\delta_m \sim \delta_mf(r_m) + (1-\delta_m)P_0,
 
 \noindent where \(f(\cdot)\) is some pdf with support \(\mathbb{R}^+\), and \(P_0\) denotes the density with point mass at 0.
 
-While this process of component-wise variable selection works well in a typical multiple regression setting, it can lead to unreliable estimates in situations where the predictors are highly correlated with each other, which is common in exposure mixture studies. In this case, the correlated components contribute similar information to the model, and component-wise variable selection is not able to distinguish which predictor is important. BKMR deals with this problem by introducing hierarchical variable selection.
+While this process of component-wise variable selection works well in a typical multiple regression setting, it can lead to unreliable estimates in situations where the exposures are highly correlated with each other, which is common in exposure mixture studies. In this case, the correlated components contribute similar information to the model, and component-wise variable selection is not able to distinguish which exposure is important. BKMR deals with this problem by introducing hierarchical variable selection.
 
-\emph{GIVE AN EXAMPLE WITH G=2}
+Hierarchical variable selection involves partitioning the predictors \(\textbf{x}_1, \dots, \textbf{x}_M\) into \(G\) groups, denoted \(\mathcal{S}_g\) with \(g = 1,\dots,G\). These groups should be selected by the user based on prior knowledge, with the aim of keeping within-group correlation high and between-group correlation low. For instance, consider a situation with 4 chemicals, Hg, Pb, As, and Sn. If Hg, Pb, and As were strongly correlated with each other and each weakly correlated with Sn, we might define \(\mathcal{S}_1=\{\textrm{Hg, Pb, As}\}\) and \(\mathcal{S}_1=\{\textrm{Sn}\}\).
 
-Hierarchical variable selection involves partitioning the predictors \(\textbf{x}_1, \dots, \textbf{x}_M\) into \(G\) groups, denoted \(\mathcal{S}_g\) with \(g = 1,\dots,G\). These groups should be selected by the user based on prior knowledge, with the aim of keeping within-group correlation high and between-group correlation low. The indicators from \(r_m|\delta_m\) are now distributed as
+The indicators from \(r_m|\delta_m\) are now distributed as
 \begin{gather*}
 \boldsymbol\delta_{\mathcal{S}_g} | \omega_g \sim 
 \text{Multinomial}(\omega_g, \boldsymbol\pi_{\mathcal{S}_g}), g=1,\dots,G,\\
 \omega_g \sim\text{Bernoulli}(\pi),
 \end{gather*}
-\noindent where \(\boldsymbol\delta_{\mathcal{S}_g}=\{\delta_m|\textbf{x}_m \in{\mathcal{S}_g}\}\) and \(\boldsymbol\pi_{\mathcal{S}_g}\) are vectors of indicator variables and prior probabilities, respectively, of a predictor \(\textbf{x}_m\) in group \(\mathcal{S}_g\) entering the model. By this approach, at most one predictor in each group is allowed to enter the model.
+\noindent where \(\boldsymbol\delta_{\mathcal{S}_g}=\{\delta_m|\textbf{x}_m \in{\mathcal{S}_g}\}\) and \(\boldsymbol\pi_{\mathcal{S}_g}\) are vectors of indicator variables and prior probabilities, respectively, of a exposure \(\textbf{x}_m\) in group \(\mathcal{S}_g\) entering the model. By this approach, at most one exposure in each group is allowed to enter the model.
 
-While hierarchical variable selection resolves the issue of multicollinearity, it requires specifying subgroups of predictors a priori and assumes that one predictor in each group can capture the information of the rest. Hence, care should be taken to justify the partitioning of predictors when taking this approach.
+While hierarchical variable selection resolves the issue of multicollinearity, it requires specifying subgroups of predictors a priori and assumes that one exposure in each group can capture the information of the rest. Hence, care should be taken to justify the partitioning of exposures when taking this approach.
 
-Note also that the posterior means of \(\delta_m\) generated from these variable selection procedures represent the posterior probability of inclusion of \(\textbf{x}_m\). We can interpret these posterior ``inclusion probabilities'' as measures of the relative importance of each predictor. These measures can be used to understand the contribution of each exposure or covariate to the health outcome of interest in the model.
+Note also that the posterior means of \(\delta_m\) generated from these variable selection procedures represent the posterior probability of inclusion of \(\textbf{x}_m\). We can interpret these posterior inclusion probabilities (PIPs) as measures of the relative importance of each exposure These measures can be used to understand the contribution of each exposure to the health outcome of interest in the model.
 
 \hypertarget{prior-specification}{%
 \subsection{Prior specification}\label{prior-specification}}
@@ -593,7 +601,7 @@ In this section, we specify the default prior distributions and parameters used 
 
 BKMR, by default, assumes \(\rho_m=1/r_m \sim \text{Unif}(a_r,b_r)\), a flat prior between \(a_r\) and \(b_r\) for which the default values are 0 and 100, respectively (Bobb, 2017a). This defines the prior probability of \(\rho\) as equally distributed across any value from 0 to 100. This inverse of this prior corresponds to the slab component of the ``slab-and-spike'' prior, where \(r_m|\delta_m \sim \delta_m\text{Unif}^{-1}(a_r, b_r) + (1-\delta_m)P_0\). As a flat prior, this distribution should be chosen when we have no prior knowledge about the smoothness of the exposure-response function, with hyperparameters \(a_r\) and \(b_r\) selected to represent the range of values we expect \(\rho\) to potentially span.
 
-We have seen that the smoothness of a kernel machine regression responds strongly to different values of \(r_m=1/\rho\), and, accordingly, the model fit of BKMR is sensitive to their prior distribution. In general, the posterior inclusion probabilities generated from the variable selection procedure are particularly sensitive to this prior, though their relative importance tends to remain stable (Bobb, Claus Henn, Valeri, \& Coull, 2018). As such, the BKMR algorithm also offers the options to define uniform and gamma priors for the \(r_m=1/\rho\).
+We have seen that the smoothness of a kernel machine regression responds strongly to different values of \(r_m=1/\rho\), and, accordingly, the model fit of BKMR is sensitive to their prior distribution. In general, the PIPs generated from the variable selection procedure are particularly sensitive to this prior, though their relative importance tends to remain stable (Bobb, Claus Henn, Valeri, \& Coull, 2018). As such, the BKMR algorithm also offers the options to define uniform and gamma priors for the \(r_m=1/\rho\).
 
 Moreover, BKMR assumes that the prior probability of including a predictor (\(\delta_m\)) or group of predictors (\(\omega_g\)) in the model is distributed \(\pi \sim \text{Beta}(a_\pi, b_\pi)\). The default hyperparameters are \(a_\pi=b_\pi=1\), which represent a flat, uninformative prior between 0 and 1. When the hierarchical selection approach is applied, equal values for \(\boldsymbol\pi_{\mathcal{S}_g}\), the probabilities of inclusion for each component in group \(\mathcal{S}_g\), are assumed.
 
@@ -620,6 +628,8 @@ In this section, we introduce the theory of BSR. First, we define the notation t
   \(X_m\) is a predictor variable in the predictor matrix \(\textbf{X}\) with \(m=1,\dots,M\), measuring exposure variables or covariates
 \item
   \(\textbf{x}_i\) is a vector of values for a single observation in \(\textbf{X}\) with \(i=1,\dots,n\)
+\item
+  \(\textbf{z}_i\) is a vector of covariates for a single observation in the matrix \(\textbf{Z}\), which contains a set of covariates, with \(i = 1, \dots, n\)
 \item
   \(Y_i\) is an observation of \(\textbf{Y}\), measuring the health outcome in this case
 \item
@@ -656,13 +666,13 @@ And, we define the notation that we will be using specific to BSR:
 
 We begin by introducing spline regression, with attention to its specific implementation in BSR. Spline regression is a semiparametric regression technique that can be used to capture non-linear effects. In this introduction, we follow the presentation of spline regression provided by Antonelli et al. (2020), with additional details and explanation from Hastie, Tibshirani, \& Friedman (2009).
 
-Spline regression defines the regression relationship as
+BSR uses spline regression to define the regression relationship as
 
 \[
-Y_i = f(\textbf{x}_i) + \varepsilon_i,
+Y_i = f(\textbf{x}_i) + \textbf{z}_i^\top \boldsymbol{\beta}_{\textbf{z}} +\varepsilon_i,
 \]
 
-\noindent where \(f\) is defined by a set of basis functions and \(\varepsilon_i\) is a random variable from \(\boldsymbol\varepsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\). BSR uses natural spline bases. In order to understand how these are constructed, we start with a broad definition of basis expansions, before exploring linear, cubic, and then natural spline bases.
+\noindent where \(f\) is defined by a set of basis functions on the exposures, \(\textbf{x}_i\), \(\textbf{z}_i\) and \(\boldsymbol{\beta}_{\textbf{z}}\) are the covariates and their associated weights, and \(\varepsilon_i\) is a random variable from \(\boldsymbol\varepsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)\). BSR uses natural spline bases. In order to understand how these are constructed, we start with a broad definition of basis expansions, before exploring linear, cubic, and then natural spline bases.
 
 We determine the basis expansion by considering a piece-wise function of \(X_m\) with some order \(P\) and some set of \(K\) knots defining \(K+1\) disjoint intervals. BSR places knots at uniformly sized quantiles within the boundaries of \(X_m\). The most commonly used orders are \(P=1,2,\textrm{and } 4\), the constant, linear, and cubic splines, respectively. To begin, let us consider a continuous piece-wise linear spline basis (i.e., \(P=2\)) of a one-dimensional \(X\) with two interior knots. In this case, we use the following four basis functions:
 
@@ -693,7 +703,7 @@ d_k(X)=\frac{(X-\xi_k)^3_+ - (X-\xi_K)^3_+}{\xi_K-\xi_k}.
 
 In the following section, we illustrate spline regression using the same toy example used to introduce kernel machine regression. See Section \ref{bkmrtoy} and Figure \ref{fig:toy1} for details on the parameters used to generate simulated data.
 
-As in Section \ref{bkmrtoy}, we consider a case where we want to model the relationship between a single predictor and a response variable, where the true relationship between \(x\) and \(Y\) is defined as \(Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})\). We fit a series of linear, cubic, and then natural spline regressions to illustrate the general framework of a natural spline regression.
+As in Section \ref{bkmrtoy}, we consider a case where we want to model the relationship between a single exposure and a response variable, where the true relationship between \(x\) and \(Y\) is defined as \(Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})\). We fit a series of linear, cubic, and then natural spline regressions to illustrate the general framework of a natural spline regression.
 \begin{figure}
 
 {\centering \includegraphics[width=0.75\linewidth]{figures/ch3_toy4} 
@@ -734,12 +744,12 @@ Extrapolation outside the scope of \(x\) allows us to see the effect of the line
 \hypertarget{model-formulation-in-bsr}{%
 \subsection{Model formulation in BSR}\label{model-formulation-in-bsr}}
 
-Now that we have defined natural splines, we introduce BSR, following the presentation in Antonelli et al. (2020). We demonstrate the construction of \(f\) in BSR by first assuming a two-dimensional case with predictors \(X_1\) and \(X_2\). We define
+Now that we have defined natural splines, we introduce BSR, following the presentation in Antonelli et al. (2020). We demonstrate the construction of \(f\) in BSR by first assuming a two-dimensional case with exposures \(X_1\) and \(X_2\). We define
 \begin{gather*}
 f(X_1) = \widetilde{X}_1\boldsymbol{\beta}_1, \hspace{0.25in} f(X_2) = \widetilde{X}_2\boldsymbol{\beta}_2,\\
 f(X_1,X_2) = \widetilde{X}_1\boldsymbol{\beta}_1 + \widetilde{X}_2\boldsymbol{\beta}_2 + \widetilde{X}_{12}\boldsymbol{\beta}_{12},
 \end{gather*}
-\noindent where \(\widetilde{X}_m=[b_{m1}(X_m),\dots,b_{md}(X_m)]\) represents a \(d\)-dimensional basis function expansion for \(m=1,2\), and \(\widetilde{X}_{12}= [b_{11}(X_1)b_{21}(X_2), b_{11}(X_1)b_{22}(X_2), \dots, b_{1d}(X_1)b_{2d}(X_2)]\) represents a \(d^2\)-dimensional basis expansion of the interaction between \(X_1\) and \(X_2\). \(d\) is an influential tuning parameter. BSR by default assumes that all predictors have the same number of degrees of freedom and uses the Watanabe-Akaike (WAIC) model selection criterion to select \(d\), which approximates leave one out cross validation. Note that we must explicitly model the effect of the interaction term by assuming a multiplicative interaction between the basis functions of the predictors.
+\noindent where \(\widetilde{X}_m=[b_{m1}(X_m),\dots,b_{md}(X_m)]\) represents a \(d\)-dimensional basis function expansion for \(m=1,2\), and \(\widetilde{X}_{12}= [b_{11}(X_1)b_{21}(X_2), b_{11}(X_1)b_{22}(X_2), \dots, b_{1d}(X_1)b_{2d}(X_2)]\) represents a \(d^2\)-dimensional basis expansion of the interaction between \(X_1\) and \(X_2\). \(d\) is an influential tuning parameter. BSR by default assumes that all exposures have the same number of degrees of freedom and uses the Watanabe-Akaike (WAIC) model selection criterion to select \(d\), which approximates leave one out cross validation. Note that we must explicitly model the effect of the interaction term by assuming a multiplicative interaction between the basis functions of the predictors.
 
 Extending to the multi-dimensional setting, BSR assumes the following general model formulation:
 \begin{gather*}
@@ -760,7 +770,7 @@ P(\zeta_{mh}=1) &= \tau_h^{\zeta_{mh}}(1-\tau_h)^{1-\zeta_{mh}}
 I(A_h\not\subset A_{h'}\forall h'\neq h \textrm{ or } A_h=\{\}),\\
 &\textrm{where } A_h=\{m:\zeta_h=1\}.
 \end{align*}
-\noindent Here, the indicators follow a Bernoulli distribution with prior probability of inclusion \(\tau_h\). The posterior means of \(\boldsymbol\zeta\) can be interpreted as measures of relative variable importance. We include an indicator function \(I()\) that represents whether the function \(h\) contains a unique set of predictors. This indicator ensures that no function contains predictors that are a subset of those in another function, \(h'\), in which case this function would be redundant and thus removed from the model entirely.
+\noindent Here, the indicators follow a Bernoulli distribution with prior probability of inclusion \(\tau_h\). The posterior means of \(\boldsymbol\zeta\), i.e.~the PIPs, can be interpreted as measures of relative variable importance. We include an indicator function \(I()\) that represents whether the function \(h\) contains a unique set of predictors. This indicator ensures that no function contains exposures that are a subset of those in another function, \(h'\), in which case this function would be redundant and thus removed from the model entirely.
 
 Now, we assume a multivariate slab-and-spike prior on the regression coefficients:
 \begin{align*}
@@ -777,7 +787,7 @@ In this section, we discuss the priors and their default specifications in BSR (
 
 The priors on \(\boldsymbol\Sigma_{\boldsymbol\beta}\), the diagonal matrix with \(\sigma^2\sigma^2_{\boldsymbol\beta}\) on the diagonals, control the shrinkage of \(\boldsymbol\beta_S^{(h)}\). Variable selection is sensitive to the choice of prior on this parameter, so BSR implements an empirical Bayes strategy to obtain a prior distribution for \(\sigma^2_{\boldsymbol\beta}\) based on the data. While this is not a fully Bayesian approach, it has been shown that this strategy works better in practice (Antonelli et al., 2020). Additionally, the default prior for \(\sigma^2\) is assumed to follow a \(\textrm{Gamma}(0.001, 0.001)\) distribution.
 
-However, when there is a weak relationship between the exposures and relationship, the estimated prior variance for the slab \(\sigma^2_{\boldsymbol\beta}\) can be very small. In this case, the shape of the slab approximates the point mass of 0 at the spike, and the posterior inclusion probabilities become difficult to accurately estimate. BSR avoids this by imposing a lower bound on the variance. This is determined by establishing a constant value for \(\tau_h\), the prior probability of inclusion, for all \(h\) and then permuting the rows of \(Y\) (i.e., breaking up the relationship). Then, a grid of values for \(\sigma^2_{\boldsymbol\beta}\) are tested until some predefined threshold of the posterior probability of inclusion is obtained (e.g., 0.25 for a main effect and 0.05 for a two-way interaction). If the empirical Bayes estimate for \(\sigma^2_{\boldsymbol\beta}\) is less than this lower bound, then the lower bound is used instead.
+However, when there is a weak relationship between the exposures and relationship, the estimated prior variance for the slab \(\sigma^2_{\boldsymbol\beta}\) can be very small. In this case, the shape of the slab approximates the point mass of 0 at the spike, and the PIPs become difficult to accurately estimate. BSR avoids this by imposing a lower bound on the variance. This is determined by establishing a constant value for \(\tau_h\), the prior probability of inclusion, for all \(h\) and then permuting the rows of \(Y\) (i.e., breaking up the relationship). Then, a grid of values for \(\sigma^2_{\boldsymbol\beta}\) are tested until some predefined threshold of the posterior probability of inclusion is obtained (e.g., 0.25 for a main effect and 0.05 for a two-way interaction). If the empirical Bayes estimate for \(\sigma^2_{\boldsymbol\beta}\) is less than this lower bound, then the lower bound is used instead.
 
 Finally, BSR assumes that \(\tau_h \sim \textrm{Beta}(L,\gamma)\), which defines the prior probability of including a predictor for all functions \(h\). If \(L\) is some predefined constant, and \(\gamma=m\), the number of predictors, then the prior amount of sparsity should increase as the number of predictors increases (Antonelli et al., 2020).
 
@@ -798,31 +808,36 @@ In Section \ref{motivation}, we highlighted the challenges of analytically testi
 \hypertarget{bkmr-1}{%
 \subsection{BKMR}\label{bkmr-1}}
 
-Since the flexible \(h\) function in kernel machine regression allows us to forgo any assumptions about the nature of the relationship between the health outome and predictors, BKMR can potentially capture complex interactions between predictors. The challenge with using BKMR to do this, however, is that there is no formal framework for conducting inference on the presence of interactions.
+Since the flexible \(h\) function in kernel machine regression allows us to forgo any assumptions about the nature of the relationship between the health outome and exposures, BKMR can potentially capture complex interactions between exposures The challenge with using BKMR to do this, however, is that there is no formal framework for conducting inference on the presence of interactions.
 
-Currently, the most common approach to detecting interactions is through a qualitative assessment of visual diagnostic plots (Bobb, 2017a). Two- or three-way interactions can be assessed by plotting the estimated predictor-response relation for one/two predictors at various quantiles of another predictor, while setting all other predictors at fixed quantile values. For instance, if we are interested in the interaction between \(X_1\) and \(X_2\), we can plot the estimated regression line against \(X_1\) at the 0.25, 0.5, and 0.75 quantiles of \(X_2\) and vice versa. In the three-way case of \(X_1\), \(X_2\), and \(X_3\), we can plot the estimated regression surface against \(X_1\) and \(X_2\) at the 0.25, 0.5, and 0.75 quantiles of \(X_3\). If the shape of the estimation changes meaningfully, then there might be evidence of an interaction.
+Currently, the most common approach to detecting interactions is through a qualitative assessment of visual diagnostic plots (Bobb, 2017a). Two- or three-way interactions can be assessed by plotting the estimated exposure-response relation for one/two exposures at various quantiles of another exposure, while setting all other exposures at fixed quantile values. For instance, if we are interested in the interaction between \(X_1\) and \(X_2\), we can plot the estimated regression line against \(X_1\) at the 0.25, 0.5, and 0.75 quantiles of \(X_2\) and vice versa. In the three-way case of \(X_1\), \(X_2\), and \(X_3\), we can plot the estimated regression surface against \(X_1\) and \(X_2\) at the 0.25, 0.5, and 0.75 quantiles of \(X_3\). If the shape of the estimation changes meaningfully, then there might be evidence of an interaction.
 
-A slightly more formal inferential approach for two-way interactions involves using summary statistics (Bobb, 2017a, 2017b). In this case, we can calculate the difference in estimated response values for \(X_1\) at two quantiles, say, 0.25 and 0.75, of \(X_2\) and then generate a confidence interval. If we observe that the interval does not contain 0, then there is evidence of an interaction. The choice of quantiles here is important. If there is a parachute-like regression surface between the response and two predictors, the summary statistics might mask the true nature of the relationship.
+A slightly more formal inferential approach for two-way interactions involves using summary statistics (Bobb, 2017a, 2017b). In this case, we can calculate the difference in estimated response values for \(X_1\) at two quantiles, say, 0.25 and 0.75, of \(X_2\) and then generate a confidence interval. If we observe that the interval does not contain 0, then there is evidence of an interaction. The choice of quantiles here is important. If there is a parachute-like regression surface between the response and two exposures, the summary statistics might mask the true nature of the relationship.
 
-Notably, if we specify hierarchical variable selection to handle multicollinearity, then only one predictor in each a priori defined group can enter the model. If there exists some true interaction between predictors in one group, then BKMR will be unable to incorporate it into the final model. Moreover, interactions between predictors in separate groups can only be identified if both are selected into the final model based on their within-group posterior inclusion probabilities. Hence, if detecting interactions is a goal when using BKMR with hierarchical variable selection, groups should be carefully selected, and the influence of group membership should be considered in model interpretation.
+Notably, if we specify hierarchical variable selection to handle multicollinearity, then only one exposure in each a priori defined group can enter the model. If there exists some true interaction between exposures in one group, then BKMR will be unable to incorporate it into the final model. Moreover, interactions between exposures in separate groups can only be identified if both are selected into the final model based on their within-group PIPs. Hence, if detecting interactions is a goal when using BKMR with hierarchical variable selection, groups should be carefully selected, and the influence of group membership should be considered in model interpretation.
 
 \hypertarget{bsr-1}{%
 \subsection{BSR}\label{bsr-1}}
 
-Providing formal inference on the presence of interactions was one of the primary motivations for the development of BSR. BSR explicitly incorporates interaction terms in its model formulation, and the model fitting process assigns posterior inclusion probabilities for any \(m\)-dimensional interaction from the posterior means of the \(\boldsymbol\zeta\) matrix. Such probabilities can be used as a quantifiable measure of the strength of a potential interaction. We can also compare posterior inclusion probabilities for interactions with the posterior inclusion probabilities for their individual components, which can be used to compare predictors' interactive effects with their marginal effects.
+Providing formal inference on the presence of interactions was one of the primary motivations for the development of BSR. BSR explicitly incorporates interaction terms in its model formulation, and the model fitting process assigns PIPs for any \(m\)-dimensional interaction from the posterior means of the \(\boldsymbol\zeta\) matrix. Such probabilities can be used as a quantifiable measure of the strength of a potential interaction. We can also compare PIPs for interactions with the PIPs for their individual components, which can be used to compare exposures' interactive effects with their marginal effects.
 
-The visualization and summary statistics approaches available in BKMR are also possible in BSR. In particular, it is helpful to follow up the identification of a potential interaction with a visual assessment using the estimated predictor-response relationship at fixed quantiles of other predictors. The major benefit of BSR is that the posterior inclusion probabilities serve as a quantifiable uncertainty metric for the presence of interactions.
+The visualization and summary statistics approaches available in BKMR are also possible in BSR. In particular, it is helpful to follow up the identification of a potential interaction with a visual assessment using the estimated exposure-response relationship at fixed quantiles of other predictors. The major benefit of BSR is that the PIPs serve as a quantifiable uncertainty metric for the presence of interactions.
 
 \hypertarget{differences-between-bkmr-and-bsr}{%
 \subsection{Differences between BKMR and BSR}\label{differences-between-bkmr-and-bsr}}
 
 We have explained how the inferential framework of BSR improves upon the BKMR approach for the detection of complex interactions. We also briefly compare general features of their model formulations.
 
-While BKMR is a fully nonparametric approach, BSR is a semiparametric approach because it makes distributional assumptions about the data (i.e., that the relationship can be adequately captured by a \(d\)-dimensional natural spline basis expansion). As BKMR uses the kernel technique, its implementation can become computationally intensive for datasets with large \(n\), while BSR is able to scale with \(n\).
+While BKMR is a fully nonparametric approach, BSR is a semiparametric approach because it makes distributional assumptions about the data (i.e., that the relationship can be adequately captured by a \(d\)-dimensional natural spline basis expansion). As BKMR uses the kernel technique, its implementation can become computationally intensive for datasets with large \(n\), as it scales with \(n^2\), while BSR is able to scale with \(n\).
 
-BSR is highly sensitive to the choice of \(d\), the degrees of freedom. While it employs a WAIC approach to selecting the best \(d\), this parameter introduces an additional tuning step in the analysis. Both approaches can be highly sensitive to the specification of certain priors. BSR offers an empirical Bayes strategy for \(\sigma^2_{\boldsymbol\beta}\), the variance of a predictor's probability of inclusion. On the other hand, the choice of prior on the influential smoothing parameter, \(\rho\), in BKMR is up to the user.
+BSR is highly sensitive to the choice of \(d\), the degrees of freedom. While it employs a WAIC approach to selecting the best \(d\), this parameter introduces an additional tuning step in the analysis. Both approaches can be highly sensitive to the specification of certain priors. BSR offers an empirical Bayes strategy for \(\sigma^2_{\boldsymbol\beta}\), the variance of a exposure's probability of inclusion. On the other hand, the choice of prior on the influential smoothing parameter, \(\rho\), in BKMR is up to the user.
 
-We also note that BKMR offers a hierarchical variable selection approach to dealing with collinearity between predictors. While this is an additional decision that must be specified by the user, it offers a formal approach to dealing with collinear predictors. BSR does not explicitly account for collinearity in its model formulation, which can lead to erroneous interpretations of variable importance if unaccounted for.
+We also note that BKMR offers a hierarchical variable selection approach to dealing with collinearity between exposures While this is an additional decision that must be specified by the user, it offers a formal approach to dealing with collinear exposures. BSR does not explicitly account for collinearity in its model formulation, which can lead to erroneous interpretations of variable importance if unaccounted for.
+
+\hypertarget{exposure-covariate-interactions}{%
+\subsection{Exposure-covariate interactions}\label{exposure-covariate-interactions}}
+
+\emph{add exposure-covariate interaction challenges}
 
 \hypertarget{sims}{%
 \chapter{Simulations}\label{sims}}
@@ -830,7 +845,7 @@ We also note that BKMR offers a hierarchical variable selection approach to deal
 \hypertarget{past-simulation-studies}{%
 \section{Past simulation studies}\label{past-simulation-studies}}
 
-Taylor et al. (2016) conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Here, we preface our simulation study with a brief overview of examples in the literature which compare the efficacy of various methods using simulations. For each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest.
+Here, we preface our simulation study with a brief overview of examples in the literature which compare the efficacy of various methods using simulations. Taylor et al. (2016) conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Thus, for each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest.
 
 Lazarevic et al. (2020) compare the performance of a broad range of methods for accurate variable selection of important exposures. They simulated exposure data using a multivariate \(t\)-copula based on real-world data and the response by specifying a regression relationship with only a subset of truly significant exposures and a normal error term. Two correlation structures were considered --- one with the original Spearman correlation matrix and one with the values halved --- as well as two signal-to-noise ratios --- one with an \(R^2\) for the true model at 10\% and one at 30\%. They found that BKMR, along with three other flexible regression methods that allow for nonlinearity, provided more accurate variable selection results compared to two machine learning methods. Moreover, they observed that, in general, low signal-to-noise ratios had a stronger impact on performance than did increasing multicollinearity.
 
@@ -845,37 +860,61 @@ Finally, we briefly comment on studies by Sun et al. (2013) and Barrera-Gómez e
 
 The goal of our simulation study is to provide guidance on the choice between BSR and BKMR for characterizing a diverse range of complex interactions between predictors. In particular, we aim to extend findings from previous simulation studies by considering a more comprehensive range of interaction types, including different effect sizes, non-multiplicative interactions, and three-way interactions. We also explore interactions between exposures and categorical covariates, a previously understudied form of interaction in exposure mixture studies.
 
-\hypertarget{madres-data}{%
-\subsection{MADRES data}\label{madres-data}}
+\hypertarget{madres}{%
+\subsection{MADRES data}\label{madres}}
 
 In order to make our simulations comparable to real-world exposure mixture studies, we based our simulation data on the Maternal And Developmental Risks from Environmental and Social Stressors (MADRES) pregnancy cohort. The MADRES cohort is an ongoing, prospective pregnancy cohort of predominantly lower-income, Hispanic women in Los Angeles, California, which began in 2015 (Bastain et al., 2019). Urine samples were collected by participants at their first visit, and questionnaires were administered during their first visit, with follow-ups at the first, second, and third trimesters. See Bastain et al. (2019) for further details on study design.
 
 Howe et al. (2020) previously examined the effect of prenatal metal mixtures of birth weight (BW) for gestational age (GA) in this cohort. They used BKMR to identify associations between metal mixtures and BW for GA, as well as BSR to conduct inference on interactions between metals. Briefly, using BKMR, they found that, of the metals in the mixture, Hg and Ni were most strongly associated with BW for GA. Moreover, BKMR results suggested that a potential interaction between Hg and Ni; however, when run through BSR, the PIP for this interaction was extremely small, despite being the highest of all two-way interactions.
 
-Data from the study by Howe et al. (2020) were obtained from publicly available data in the Human Health Exposure Resource (HHEAR) Data Repository, which has been approved under Icahn School of Medicine at Mount Sinai IRB Protocol \#16-00947. The Digital Object Identifiers associated with the urinary trace element data and epidemiological data are 10.36043/1945\_159 and 10.36043/1945\_177, respectively.
+Data from the study by Howe et al. (2020) were obtained from publicly available data in the Human Health Exposure Resource (HHEAR) Data Repository, which has been approved under Icahn School of Medicine at Mount Sinai IRB Protocol \#16-00947. The Digital Object Identifiers associated with the urinary trace element data and epidemiological data are 10.36043/1945\_159 and 10.36043/1945\_177, respectively. All analyses were conducted in R v4.3.2 (R Core Team, 2013).
 
-We followed the approach by Howe et al. (2020) for preparing the data for analysis. This resulted in retaining 10 metals in analysis: arsenic (As), cadmium (Cd), cobalt (Co), mercury (Hg), nickel (Ni), molybdenum (Mo), lead (Pb), antimony (Sb), tin (Sn), and thallium (Tl). Howe et al. (2020) used speciated As, but this was not available in HHEAR, so we used total As. Among the full range of covariates considered by Howe et al. (2020), we used the subset that were available in HHEAR: any smoke exposure during pregnancy, study site, maternal prepregnancy body mass index (BMI), maternal age during firt trimester, and maternal race by ethnicity and birth place. Race by ethnicity and birth place was collapsed into the following categories: non-Hispanic white, non-Hispanic black, non-Hispanic other, Hispanic born in the US, and Hispanic born outside the US. We observed 8 missing values for BMI in the data from HHEAR, which was not reported by Howe et al. (2020). These missing values were mean imputed. Our final analytic dataset included 252 participants, which was 10 fewer than in Howe et al. (2020), likely due to small discrepancies in their dataset and the one made available in HHEAR.
+We followed the approach by Howe et al. (2020) for preparing the data for analysis. This resulted in retaining 10 metals in analysis: arsenic (As), cadmium (Cd), cobalt (Co), mercury (Hg), nickel (Ni), molybdenum (Mo), lead (Pb), antimony (Sb), tin (Sn), and thallium (Tl). Howe et al. (2020) used speciated As, but this was not available in HHEAR, so we used total As. Metals were expressed in \(\mu\)g/g and natural log transformed to reduce right-skewness and then standardized to keep values scale-free. Among the full range of covariates considered by Howe et al. (2020), we used the subset of 4 that were available in HHEAR: any smoke exposure during pregnancy, maternal prepregnancy body mass index (BMI), maternal age during firt trimester, and maternal race by ethnicity and birth place. We chose not to include study site, as there were certain study sites with only 1 or 2 participants. Race by ethnicity and birth place was collapsed into the following categories: non-Hispanic white, non-Hispanic black, non-Hispanic other, Hispanic born in the US, and Hispanic born outside the US. We observed 8 missing values for BMI in the data from HHEAR, which were not reported by Howe et al. (2020). We mean imputed these missing values. Our final analytic dataset included 252 participants, which was 10 fewer than in Howe et al. (2020), likely due to small discrepancies in their dataset and the one made available in HHEAR.
+
+\hypertarget{copula}{%
+\subsection{Using copulas to simulate predictor data}\label{copula}}
+
+We simulated exposure and covariate data (hereafter referred to collectively as predictors) using a multivariate Gaussian copula fit on the 252 participants in the MADRES cohort. We used copulas as they can preserve both the correlation structure and marginal distributions from the observed data, allowing us to replicate conditions in a real-world scenario.
+
+First, we briefly introduce copulas in the context of their use in this simulation, based on the presentation in Nelsen (2006). Copulas are joint cumulative distribution functions (CDFs) defined on the unit cube \([0,1]^n\) that capture the dependence between \(n\) uniformly distributed marginals. Sklar's theorem allows us to apply copulas to our observed data. Sklar's theorem states that, if \(H(x_1, \dots x_n)\) is a joint CDF of the marginal CDFs \(F_1(x_1), \dots, F_n(x_n)\), then there exists a copula \(C\) such that, for all \((x_1, \dots, x_n)\) in \((X_1, \dots, X_n)\),
+
+\[
+H(x_1, \dots x_n)=C(F_1(x_1), \dots, F_n(x_n)).
+\]
+
+\noindent Note that, by the probability integral transform, or the universality of the uniform, the CDFs \(F_1(x_1), \dots, F_n(x_n)\) are distributed uniformly.
+
+We used the \texttt{copula} package in R to fit copulas and generate random data (Hofert, Kojadinovic, Maechler, \& Yan, 2023). We transformed the observed continuous predictor values to uniform distributions based on their empirical marginal CDFs, a process called generating ``pseudo-random'' samples. We used the checkerboard copula approach for generating pseudo-random samples for smoke exposure, a binary variable (Genest \& Nešlehovà, 2007). We coded smoke exposure as 0's and 1's, generated a pseudo-random sample, and then ``jittered'' the values with uniform random noise. There is currently no widely accepted approach for generating pseudo-random samples from unordered categorical variables with more than two levels. Thus, we excluded race by ethnicity and birthplace from the copula model. While this ignores any potential correlation between race and exposure, Figure {[}\emph{figure of race by exposure}{]} suggests that there is little to no visible correlation between race and exposure in the observed dataset.
+
+Various families of copulas have been described, each of which specifies a different shape for the dependence structure. We fit the set of multivariate copulas used by Lazarevic et al. (2020) in their simulation study, which included the Gaussian, t, Gumbel, Frank, Clayton, and Joe copulas. We fit two t copulas with 4 and 10 degrees of freedom, which controls dependence at the tails of the distributions, as well as a t copula where the degrees of freedom was determined during the fitting process. The Gumbel, Frank, Clayton, and Joe copulas require a \(\theta\) parameter, which controls dependence between the distributions. We fit two versions of these copulas with \(\theta=\{2, 4\}\). Among these copulas, Gaussian copula minimized Akaike information criterion and maximized likelihood, so we proceeded with this model. The Gaussian copula assumes a bivariate normal dependence structure between the marginal CDFs.
+
+\emph{show correlation and marginal distribution of original and simulations}
 \begin{itemize}
 \tightlist
 \item
-  The data used for simulations in this thesis was supported by the National Institute of Environmental Health Sciences of the National Institutes of Health under Award Numbers U2CES026555 and U2CES026553. The content is solely the responsibility of the author and does not necessarily represent the official views of the National Institutes of Health.
+  univariate distribution
+\item
+  spearman's rho between continuous
+\item
+  bivariate boxplot between race/smoke and continuous
+\item
+  mosaic plot between race and smoke
 \end{itemize}
-\hypertarget{simulating-data}{%
-\subsection{Simulating data}\label{simulating-data}}
+\hypertarget{simresp}{%
+\subsection{Simulating predictor-response relationships}\label{simresp}}
+
+All cases:
+- 252 and 1000 sample sizes
+- multiplicative and polynomial interaction
+- small and large effect size
 \begin{itemize}
 \tightlist
 \item
-  use original predictor values in MADRES data. allows us to explore these methods on predictors with realistic correlation structure OR use original correlation structure + multivariate t-copula
+  two-way interactions between univariately significant, univariately insignificant, and highly correlated chemicals
 \item
-  simulate outcome using a formula w/ different types of interaction
+  three-way interaction
 \item
-  change effect size (three levels? --- NOTE, this is diff from signal:noise ratio)
-\item
-  change nature of interaction (mathematical formulation, two- or three-way, b/t just exposures or b/t exposures and covariates)
-\item
-  take into account collinear structure (interactions b/t correlated exposures or uncorrelated exposures?)
-\item
-  change sample size to inform study design
+  interaction between covariate and exposure
 \end{itemize}
 Base case:
 \begin{multline*}
@@ -884,9 +923,9 @@ Y_i = \textrm{Hg}_i + \frac{3}{1+\textrm{exp}(-4\textrm{Ni}_i)} + \frac{1.5}{1+\
 \end{multline*}
 \begin{table}
 
-\caption{\label{tab:unnamed-chunk-2}Specification of interaction terms in simulation.}
+\caption{\label{tab:unnamed-chunk-2}Specification of interaction terms in simulations.}
 \centering
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{10em}ll}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{10em}cc}
 \toprule
 \multicolumn{1}{c}{ } & \multicolumn{2}{c}{Effect size} \\
 \cmidrule(l{3pt}r{3pt}){2-3}
@@ -894,24 +933,24 @@ Y_i = \textrm{Hg}_i + \frac{3}{1+\textrm{exp}(-4\textrm{Ni}_i)} + \frac{1.5}{1+\
 \midrule
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{Univariately significant}}\\
-\hspace{1em}Multiplicative & 0.5Hg$*$Ni & Hg$*$Ni\\
-\hspace{1em}Polynomial & Hg$*($Ni$-1)^2$ & 2Hg$*($Ni$-1)^2$\\
+\hspace{1em}Multiplicative & 0.3Hg$*$Ni & 0.6Hg$*$Ni\\
+\hspace{1em}Polynomial & 0.1Hg$*($Ni$-1)^2$ & 0.2Hg$*($Ni$-1)^2$\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{Univariately insignificant}}\\
-\hspace{1em}Multiplicative & 0.5Cd$*$As & Cd$*$As\\
-\hspace{1em}Polynomial & Cd$*($As$-1)^2$ & 2Cd$*($As$-1)^2$\\
+\hspace{1em}Multiplicative & 0.3Cd$*$As & 0.6Cd$*$As\\
+\hspace{1em}Polynomial & 0.1Cd$*($As$-1)^2$ & 0.2Cd$*($As$-1)^2$\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{Highly correlated}}\\
-\hspace{1em}Multiplicative & 0.5Hg$*$Co & Hg$*$Co\\
-\hspace{1em}Polynomial & Hg$*($Co$-1)^2$ & 2Hg$*($Co$-1)^2$\\
+\hspace{1em}Multiplicative & 0.3Hg$*$Co & 0.6Hg$*$Co\\
+\hspace{1em}Polynomial & 0.1Hg$*($Co$-1)^2$ & 0.2Hg$*($Co$-1)^2$\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{Three-way interaction}}\\
-\hspace{1em}Multiplicative & 0.5Hg$*$Ni$*$Tl & Hg$*$Ni$*$Tl\\
-\hspace{1em}Polynomial & Hg$*($Ni$-1)^2*$Tl & 2Hg$*($Ni$-1)^2*$Tl\\
+\hspace{1em}Multiplicative & 0.3Hg$*$Ni$*$Tl & 0.6Hg$*$Ni$*$Tl\\
+\hspace{1em}Polynomial & 0.1Hg$*($Ni$-1)^2*$Tl & 0.2Hg$*($Ni$-1)^2*$Tl\\
 \bottomrule
 \end{tabular}
 \end{table}
-This resulted in a total of 39 scenarios.
+This resulted in a total of 42 scenarios.
 \begin{itemize}
 \tightlist
 \item
@@ -934,6 +973,10 @@ Models compared, specify the parameters for each (justify them!)
 \item
   BSR
 \end{itemize}
+BKMR:
+Howe ran 200,000 Markov chain Monte Carlo (MCMC) iterations using the default priors. The first half of iterations was used as burn-in. To reduce potential autocorrelation, we thinned the chains, selecting every 25th iteration.
+- bobb recommends 50,000 iterations at least
+
 check convergence with trace plots
 
 \hypertarget{model-assessment}{%
@@ -949,8 +992,6 @@ check convergence with trace plots
   \item
     sensitivity and false discovery rate
   \end{itemize}
-\item
-  testing MSE
 \item
   potentially explore mpower package
 \end{itemize}
@@ -974,6 +1015,9 @@ If we don't want the conclusion to have a chapter number next to it, we can add 
 And here's some other random info: the first paragraph after a chapter title or section head \emph{shouldn't be} indented, because indents are to tell the reader that you're starting a new paragraph. Since that's obvious after a chapter or section title, proper typesetting doesn't add an indent there.
 
 \appendix
+
+\hypertarget{supplemental-output}{%
+\chapter{Supplemental output}\label{supplemental-output}}
 
 \hypertarget{code}{%
 \chapter{Code}\label{code}}
@@ -1199,11 +1243,724 @@ The code for this chapter generates a toy example, used to demonstrate the kerne
        \AttributeTok{device =} \StringTok{"png"}\NormalTok{, }\AttributeTok{width =} \DecValTok{7}\NormalTok{, }\AttributeTok{height =} \DecValTok{3}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-\hypertarget{the-second-appendix}{%
-\chapter{The Second Appendix}\label{the-second-appendix}}
+\hypertarget{code-for-chapter-refsims}{%
+\section{Code for Chapter \ref{sims}:}\label{code-for-chapter-refsims}}
 
-R code
+The code for this chapter prepares the data from the MADRES study, generates simulated data, fits multiple linear regressions, BKMR, and BSR on the simulated data, and produces model output.
 
+\hypertarget{code-for-chapter-refmadres}{%
+\subsection{Code for Chapter @ref\{madres\}:}\label{code-for-chapter-refmadres}}
+
+First, we clean the data from the MADRES study.
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# load packages}
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# read in data}
+\NormalTok{target }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"madres\_data/1945\_TARGETED\_DATA.csv"}\NormalTok{)}
+\NormalTok{epi }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"madres\_data/1945\_EPI\_DATA.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+\CommentTok{\# clean target data}
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+
+\NormalTok{target\_small }\OtherTok{\textless{}{-}}\NormalTok{ target }\SpecialCharTok{|\textgreater{}} 
+  \CommentTok{\# if below LOD, use LOD / sqrt(2)}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{conc\_mod =} \FunctionTok{ifelse}\NormalTok{(Comment\_code }\SpecialCharTok{==} \DecValTok{37}\NormalTok{, }
+\NormalTok{                           LOD }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(}\DecValTok{2}\NormalTok{), }
+\NormalTok{                           Concentration)) }\SpecialCharTok{|\textgreater{}} 
+  \CommentTok{\# adjust for urine specific gravity: Ac = A × [(SGmean –1)/(SG–1)]}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{conc\_mod =}\NormalTok{ conc\_mod }\SpecialCharTok{*}\NormalTok{ ((}\FunctionTok{mean}\NormalTok{(target}\SpecialCharTok{$}\NormalTok{SG)}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{)}\SpecialCharTok{/}\NormalTok{(SG}\DecValTok{{-}1}\NormalTok{))) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{select}\NormalTok{(Project\_ID, SID, PID, child\_PID, Analyte\_Code, conc\_mod) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{group\_by}\NormalTok{(SID) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Project\_ID =} \FunctionTok{min}\NormalTok{(Project\_ID)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{pivot\_wider}\NormalTok{(}\AttributeTok{names\_from =}\NormalTok{ Analyte\_Code, }\AttributeTok{values\_from =}\NormalTok{ conc\_mod) }\SpecialCharTok{|\textgreater{}} 
+  \CommentTok{\# howe kept As, Cd, Co, Hg, Ni, Tl, and Pb in main, Mo, Sb, and Sn in supp}
+  \CommentTok{\# don\textquotesingle{}t have modified version of As used in their paper}
+  \FunctionTok{select}\NormalTok{(Project\_ID, SID, PID, child\_PID, }
+\NormalTok{         As, Cd, Co, Hg, Ni, Tl, Pb, Mo, Sb, Sn)}
+
+\CommentTok{\# save}
+\FunctionTok{write\_csv}\NormalTok{(target\_small, }\StringTok{"madres\_data/target\_small.csv"}\NormalTok{)}
+
+\CommentTok{\# only keep data from first trimester}
+\NormalTok{target\_first }\OtherTok{\textless{}{-}}\NormalTok{ target\_small }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{group\_by}\NormalTok{(child\_PID) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{filter}\NormalTok{(Project\_ID }\SpecialCharTok{==} \FunctionTok{min}\NormalTok{(Project\_ID)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{ungroup}\NormalTok{()}
+
+\CommentTok{\# save}
+\FunctionTok{write\_csv}\NormalTok{(target\_first, }\StringTok{"madres\_data/target\_first.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+\CommentTok{\# clean epi data}
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+
+\CommentTok{\# select relevant variables}
+\NormalTok{epi\_small }\OtherTok{\textless{}{-}}\NormalTok{ epi }\SpecialCharTok{|\textgreater{}} 
+  \CommentTok{\# make new categorical variables}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{mom\_site =} \FunctionTok{as.factor}\NormalTok{(mom\_site), }
+         \AttributeTok{race =} \FunctionTok{as.factor}\NormalTok{(}\FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{           t1\_demo\_hispanic }\SpecialCharTok{==} \DecValTok{0} \SpecialCharTok{\&}\NormalTok{ t1\_demo\_race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }\CommentTok{\#non{-}hisp white}
+\NormalTok{           t1\_demo\_hispanic }\SpecialCharTok{==} \DecValTok{0} \SpecialCharTok{\&}\NormalTok{ t1\_demo\_race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{2}\NormalTok{, }\CommentTok{\#non{-}hisp black}
+\NormalTok{           t1\_demo\_hispanic }\SpecialCharTok{==} \DecValTok{0} \SpecialCharTok{\textasciitilde{}} \DecValTok{3}\NormalTok{, }\CommentTok{\#other, non{-}hispanic}
+\NormalTok{           t1\_demo\_hispanic }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\&}\NormalTok{ t1\_demo\_usa }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{4}\NormalTok{, }\CommentTok{\#hispanic in US}
+\NormalTok{           t1\_demo\_hispanic }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\&}\NormalTok{ t1\_demo\_usa }\SpecialCharTok{==} \DecValTok{0} \SpecialCharTok{\textasciitilde{}} \DecValTok{5}\NormalTok{, }\CommentTok{\#hispanic NOT in US}
+           \AttributeTok{.default =} \ConstantTok{NA}
+\NormalTok{         )), }
+         \AttributeTok{smoke =} \FunctionTok{as.factor}\NormalTok{(}\FunctionTok{ifelse}\NormalTok{(}
+\NormalTok{           t1\_smoke\_preg }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{|}\NormalTok{ t2\_smoke\_preg }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{|}\NormalTok{ t3\_smoke\_preg }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{|}
+\NormalTok{             t1\_smoke }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{|}\NormalTok{ t2\_smoke }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{|}\NormalTok{ t3\_smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}
+\NormalTok{         ))) }\SpecialCharTok{|\textgreater{}} 
+  \CommentTok{\# replace {-}99 with NA}
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.numeric), }\SpecialCharTok{\textasciitilde{}}\FunctionTok{ifelse}\NormalTok{(. }\SpecialCharTok{==} \SpecialCharTok{{-}}\DecValTok{99}\NormalTok{, }\ConstantTok{NA}\NormalTok{, .)))  }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(child\_pid, mom\_site, }
+                \AttributeTok{age =}\NormalTok{ t1\_mat\_age, }\CommentTok{\# age, trimester 1}
+                \AttributeTok{bmi =}\NormalTok{ t1\_pre\_BMI, }\CommentTok{\# bmi}
+\NormalTok{                race, }\CommentTok{\# maternal r/e}
+\NormalTok{                smoke, }\CommentTok{\# ever{-}exposure to smoke}
+\NormalTok{                gender, birthweight, GA }\CommentTok{\# birthweight + gestational age}
+                \CommentTok{\# can\textquotesingle{}t find anemia measure or AsB}
+\NormalTok{  ) }
+
+\CommentTok{\# handle NA values}
+\NormalTok{epi\_imp }\OtherTok{\textless{}{-}}\NormalTok{ epi\_small }\SpecialCharTok{|\textgreater{}} 
+  \CommentTok{\# exclude birthweight (observed response)}
+  \CommentTok{\# exclude study sitebecause of small categories}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(gender, birthweight, GA, mom\_site)) }\SpecialCharTok{|\textgreater{}} 
+  \CommentTok{\# na\textquotesingle{}s for smoke during preg, set to 0}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{smoke =} \FunctionTok{as.factor}\NormalTok{(}\FunctionTok{ifelse}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(smoke), }\DecValTok{0}\NormalTok{, smoke))) }\SpecialCharTok{|\textgreater{}} 
+  \CommentTok{\# impute mean for BMI}
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.numeric), }
+                \SpecialCharTok{\textasciitilde{}}\FunctionTok{ifelse}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(.), }\FunctionTok{mean}\NormalTok{(.,}\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), .))) }
+\end{Highlighting}
+\end{Shaded}
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+\CommentTok{\# combine epi and target data}
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+\NormalTok{comb }\OtherTok{\textless{}{-}}\NormalTok{ epi\_imp }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{left\_join}\NormalTok{(target\_first, }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"child\_pid"} \OtherTok{=} \StringTok{"child\_PID"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{relocate}\NormalTok{(child\_pid, Project\_ID, SID, PID, mom\_site, race, smoke) }
+
+\CommentTok{\# remove outliers}
+\NormalTok{comb\_small }\OtherTok{\textless{}{-}}\NormalTok{ comb }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{filter}\NormalTok{(Mo }\SpecialCharTok{\textgreater{}=}\DecValTok{1}\NormalTok{, Sb }\SpecialCharTok{\textless{}=} \FloatTok{1.4}\NormalTok{)}
+
+\CommentTok{\# save}
+\FunctionTok{write\_csv}\NormalTok{(comb\_small, }\StringTok{"madres\_data/base\_data.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\hypertarget{code-for-chapter-refcopula}{%
+\subsection{Code for Chapter @ref\{copula\}:}\label{code-for-chapter-refcopula}}
+
+Next, we use copulas to simulate predictor data. We use the \texttt{copula} and \texttt{rslurm} packages in this section. This code was run on the Amherst HPC RStudio server.
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# load packages}
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(copula)}
+\FunctionTok{library}\NormalTok{(rslurm)}
+\end{Highlighting}
+\end{Shaded}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# read data back in}
+\NormalTok{comb\_small }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"madres\_data/base\_data.csv"}\NormalTok{)}
+
+\CommentTok{\# log{-}transform target data}
+\NormalTok{comb\_log }\OtherTok{\textless{}{-}}\NormalTok{ comb\_small }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\DecValTok{10}\SpecialCharTok{:}\DecValTok{19}\NormalTok{, log)) }\SpecialCharTok{|\textgreater{}} 
+  \CommentTok{\# factors back to numeric}
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.factor), as.numeric))}
+
+\CommentTok{\# check spearman\textquotesingle{}s rho}
+\FunctionTok{cor}\NormalTok{(comb\_log[, }\DecValTok{7}\SpecialCharTok{:}\DecValTok{19}\NormalTok{], }\AttributeTok{method =} \StringTok{"spearman"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+\CommentTok{\# fit copulas}
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+
+\CommentTok{\# create pseudo observations for continuous variables}
+\NormalTok{u }\OtherTok{\textless{}{-}} \FunctionTok{pobs}\NormalTok{(comb\_log[, }\DecValTok{7}\SpecialCharTok{:}\DecValTok{19}\NormalTok{])}
+
+\CommentTok{\# fit checkerboard copula on smoke}
+\NormalTok{prop\_smoke0 }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(comb\_log}\SpecialCharTok{$}\NormalTok{smoke)}
+\CommentTok{\# jitter 0\textquotesingle{}s and 1\textquotesingle{}s uniformly within quantile}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+\NormalTok{u\_smoke }\OtherTok{\textless{}{-}}\NormalTok{ comb\_log}\SpecialCharTok{$}\NormalTok{smoke }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{map\_dbl}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{ifelse}\NormalTok{(x }\SpecialCharTok{==} \DecValTok{0}\NormalTok{, }\FunctionTok{runif}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, prop\_smoke0), }\FunctionTok{runif}\NormalTok{(}\DecValTok{1}\NormalTok{, prop\_smoke0, }\DecValTok{1}\NormalTok{))}
+\NormalTok{  \})}
+\NormalTok{u[, }\DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}}\NormalTok{ u\_smoke}
+
+\CommentTok{\# fit copulas}
+\NormalTok{cfit\_gaus }\OtherTok{\textless{}{-}} \FunctionTok{fitCopula}\NormalTok{(}\FunctionTok{normalCopula}\NormalTok{(}\AttributeTok{dim =} \DecValTok{13}\NormalTok{, }\AttributeTok{dispstr =} \StringTok{"un"}\NormalTok{), u)}
+\NormalTok{cfit\_t1 }\OtherTok{\textless{}{-}} \FunctionTok{fitCopula}\NormalTok{(}\FunctionTok{tCopula}\NormalTok{(}\AttributeTok{dim =} \DecValTok{13}\NormalTok{, }\AttributeTok{dispstr =} \StringTok{"un"}\NormalTok{, }
+                             \AttributeTok{df.fixed =} \ConstantTok{FALSE}\NormalTok{), u)}
+\NormalTok{cfit\_t2 }\OtherTok{\textless{}{-}} \FunctionTok{fitCopula}\NormalTok{(}\FunctionTok{tCopula}\NormalTok{(}\AttributeTok{dim =} \DecValTok{13}\NormalTok{, }\AttributeTok{dispstr =} \StringTok{"un"}\NormalTok{, }
+                             \AttributeTok{df =} \DecValTok{4}\NormalTok{, }\AttributeTok{df.fixed =} \ConstantTok{TRUE}\NormalTok{), u)}
+\NormalTok{cfit\_t3 }\OtherTok{\textless{}{-}} \FunctionTok{fitCopula}\NormalTok{(}\FunctionTok{tCopula}\NormalTok{(}\AttributeTok{dim =} \DecValTok{13}\NormalTok{, }\AttributeTok{dispstr =} \StringTok{"un"}\NormalTok{, }
+                             \AttributeTok{df =} \DecValTok{10}\NormalTok{, }\AttributeTok{df.fixed =} \ConstantTok{TRUE}\NormalTok{), u)}
+\NormalTok{cfit\_gum1 }\OtherTok{\textless{}{-}} \FunctionTok{fitCopula}\NormalTok{(}\FunctionTok{gumbelCopula}\NormalTok{(}\DecValTok{4}\NormalTok{, }\AttributeTok{dim =} \DecValTok{13}\NormalTok{), u)}
+\NormalTok{cfit\_gum2 }\OtherTok{\textless{}{-}} \FunctionTok{fitCopula}\NormalTok{(}\FunctionTok{gumbelCopula}\NormalTok{(}\DecValTok{2}\NormalTok{, }\AttributeTok{dim =} \DecValTok{13}\NormalTok{), u)}
+\NormalTok{cfit\_frank1 }\OtherTok{\textless{}{-}} \FunctionTok{fitCopula}\NormalTok{(}\FunctionTok{frankCopula}\NormalTok{(}\DecValTok{4}\NormalTok{, }\AttributeTok{dim =} \DecValTok{13}\NormalTok{), u)}
+\NormalTok{cfit\_frank2 }\OtherTok{\textless{}{-}} \FunctionTok{fitCopula}\NormalTok{(}\FunctionTok{frankCopula}\NormalTok{(}\DecValTok{2}\NormalTok{, }\AttributeTok{dim =} \DecValTok{13}\NormalTok{), u)}
+\NormalTok{cfit\_clay1 }\OtherTok{\textless{}{-}} \FunctionTok{fitCopula}\NormalTok{(}\FunctionTok{claytonCopula}\NormalTok{(}\DecValTok{4}\NormalTok{, }\AttributeTok{dim =} \DecValTok{13}\NormalTok{), u)}
+\NormalTok{cfit\_clay2 }\OtherTok{\textless{}{-}} \FunctionTok{fitCopula}\NormalTok{(}\FunctionTok{claytonCopula}\NormalTok{(}\DecValTok{2}\NormalTok{, }\AttributeTok{dim =} \DecValTok{13}\NormalTok{), u)}
+\NormalTok{cfit\_joe1 }\OtherTok{\textless{}{-}} \FunctionTok{fitCopula}\NormalTok{(}\FunctionTok{joeCopula}\NormalTok{(}\DecValTok{4}\NormalTok{, }\AttributeTok{dim =} \DecValTok{13}\NormalTok{), u)}
+\NormalTok{cfit\_joe2 }\OtherTok{\textless{}{-}} \FunctionTok{fitCopula}\NormalTok{(}\FunctionTok{joeCopula}\NormalTok{(}\DecValTok{2}\NormalTok{, }\AttributeTok{dim =} \DecValTok{13}\NormalTok{), u)}
+
+\CommentTok{\# evaluate fit using AIC}
+\NormalTok{aic\_values }\OtherTok{\textless{}{-}} \FunctionTok{sapply}\NormalTok{(}\FunctionTok{list}\NormalTok{(cfit\_gaus, cfit\_t1, cfit\_t2, cfit\_t3, }
+\NormalTok{                          cfit\_gum1, cfit\_gum2, cfit\_frank1, cfit\_frank2, }
+\NormalTok{                          cfit\_clay1, cfit\_clay2, cfit\_joe1, cfit\_joe2}
+\NormalTok{                          ), AIC)}
+\FunctionTok{names}\NormalTok{(aic\_values) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"cfit\_gaus"}\NormalTok{, }\StringTok{"cfit\_t1"}\NormalTok{, }\StringTok{"cfit\_t2"}\NormalTok{, }\StringTok{"cfit\_t3"}\NormalTok{,}
+                       \StringTok{"cfit\_gum"}\NormalTok{, }\StringTok{"cfit\_gum2"}\NormalTok{, }\StringTok{"cfit\_frank1"}\NormalTok{, }\StringTok{"cfit\_frank2"}\NormalTok{, }
+                       \StringTok{"cfit\_clay1"}\NormalTok{, }\StringTok{"cfit\_clay2"}\NormalTok{, }\StringTok{"cfit\_joe1"}\NormalTok{, }\StringTok{"cfit\_joe2"}\NormalTok{)}
+\FunctionTok{sort}\NormalTok{(aic\_values)}
+
+\CommentTok{\# evaluate fit using likelihood}
+\NormalTok{aic\_values }\OtherTok{\textless{}{-}} \FunctionTok{sapply}\NormalTok{(}\FunctionTok{list}\NormalTok{(cfit\_gaus, cfit\_t1, cfit\_t2, cfit\_t3, }
+\NormalTok{                          cfit\_gum1, cfit\_gum2, cfit\_frank1, cfit\_frank2, }
+\NormalTok{                          cfit\_clay1, cfit\_clay2, cfit\_joe1, cfit\_joe2}
+\NormalTok{                          ), logLik)}
+\FunctionTok{names}\NormalTok{(lik\_values) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"cfit\_gaus"}\NormalTok{, }\StringTok{"cfit\_t1"}\NormalTok{, }\StringTok{"cfit\_t2"}\NormalTok{, }\StringTok{"cfit\_t3"}\NormalTok{,}
+                       \StringTok{"cfit\_gum"}\NormalTok{, }\StringTok{"cfit\_gum2"}\NormalTok{, }\StringTok{"cfit\_frank1"}\NormalTok{, }\StringTok{"cfit\_frank2"}\NormalTok{, }
+                       \StringTok{"cfit\_clay1"}\NormalTok{, }\StringTok{"cfit\_clay2"}\NormalTok{, }\StringTok{"cfit\_joe1"}\NormalTok{, }\StringTok{"cfit\_joe2"}\NormalTok{)}
+\FunctionTok{sort}\NormalTok{(lik\_values)}
+
+\CommentTok{\# guassian copula performs best, proceed with this}
+\FunctionTok{write\_rds}\NormalTok{(cfit\_gaus, }\StringTok{"sim/gauscop.RDS"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+\CommentTok{\# simulate predictor data}
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+
+\CommentTok{\# read copula back in }
+\NormalTok{cfit\_gaus }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/gauscop.RDS"}\NormalTok{)}
+
+\CommentTok{\# extract rho }
+\NormalTok{rho }\OtherTok{\textless{}{-}} \FunctionTok{coef}\NormalTok{(cfit\_gaus)}
+
+\CommentTok{\# create function for simulation}
+\NormalTok{simulate\_data }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(data, n, rho, prop\_smoke, prop\_race) \{}
+  \CommentTok{\#\textquotesingle{} data = original observed data}
+  \CommentTok{\#\textquotesingle{} n = sample size}
+  \CommentTok{\#\textquotesingle{} rho = rho values from normal copula}
+  \CommentTok{\#\textquotesingle{} prop\_smoke = proportion smoke from observed dataset}
+  \CommentTok{\#\textquotesingle{} prop\_race = table with race/eth values}
+  
+  \CommentTok{\# simulate pseudo{-}observations from copula}
+\NormalTok{  samp }\OtherTok{\textless{}{-}} \FunctionTok{rCopula}\NormalTok{(n, }\FunctionTok{normalCopula}\NormalTok{(rho, }\AttributeTok{dim =} \FunctionTok{ncol}\NormalTok{(data), }\AttributeTok{dispstr =} \StringTok{"un"}\NormalTok{))}
+  
+  \CommentTok{\# transform pseudo{-}observations to observed marginal distributions}
+\NormalTok{  sampt }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(data) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{    purrr}\SpecialCharTok{::}\FunctionTok{map\_dfc}\NormalTok{(}
+\NormalTok{      \textbackslash{}(x) \{}
+        \ControlFlowTok{if}\NormalTok{(}\FunctionTok{names}\NormalTok{(data)[x] }\SpecialCharTok{==} \StringTok{"smoke"}\NormalTok{) \{}
+          \CommentTok{\# use observed probability threshold for smoke}
+\NormalTok{          df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{ifelse}\NormalTok{(samp[,x] }\SpecialCharTok{\textless{}}\NormalTok{ prop\_smoke, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{), }
+                           \AttributeTok{row.names =} \ConstantTok{NULL}\NormalTok{)}
+\NormalTok{        \} }\ControlFlowTok{else}\NormalTok{ \{}
+          \CommentTok{\# use empirical marginal CDF\textquotesingle{}s for continuous}
+\NormalTok{          df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{quantile}\NormalTok{(data[[x]], }\AttributeTok{probs =}\NormalTok{ samp[,x]), }
+                           \AttributeTok{row.names =} \ConstantTok{NULL}\NormalTok{)}
+\NormalTok{        \}}
+        \FunctionTok{names}\NormalTok{(df) }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(data)[x]}
+        \FunctionTok{return}\NormalTok{(df)}
+\NormalTok{      \}}
+\NormalTok{    ) }\SpecialCharTok{|\textgreater{}} 
+    \CommentTok{\# randomly sample race}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{race =} \FunctionTok{sample}\NormalTok{(}\AttributeTok{x =} \FunctionTok{names}\NormalTok{(prop\_race), }\AttributeTok{prob =}\NormalTok{ prop\_race,}
+                         \AttributeTok{size =}\NormalTok{ n, }\AttributeTok{replace =}\NormalTok{ T)) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{relocate}\NormalTok{(race)}
+  \FunctionTok{return}\NormalTok{(sampt)}
+\NormalTok{\}}
+
+\CommentTok{\# create function to run size 252 samples on hpc}
+\NormalTok{run\_sim1 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+  \FunctionTok{set.seed}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+\NormalTok{  out }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{2100} \SpecialCharTok{|\textgreater{}} 
+\NormalTok{    purrr}\SpecialCharTok{::}\FunctionTok{map}\NormalTok{(\textbackslash{}(x) \{}
+      \FunctionTok{mutate}\NormalTok{(}\FunctionTok{simulate\_data}\NormalTok{(comb\_log\_clip, }\AttributeTok{n =} \FunctionTok{nrow}\NormalTok{(comb\_log\_clip), }\AttributeTok{rho =}\NormalTok{ rho, }
+                           \AttributeTok{prop\_smoke =} \DecValTok{1}\SpecialCharTok{{-}}\FunctionTok{mean}\NormalTok{(comb\_log\_clip}\SpecialCharTok{$}\NormalTok{smoke), }
+                           \AttributeTok{prop\_race =} \FunctionTok{table}\NormalTok{(comb\_log}\SpecialCharTok{$}\NormalTok{race)), }
+             \AttributeTok{race =} \FunctionTok{as.numeric}\NormalTok{(race), }
+             \AttributeTok{sim =}\NormalTok{ x) }
+\NormalTok{    \})}
+  \FunctionTok{return}\NormalTok{(out)}
+\NormalTok{\}}
+
+\CommentTok{\# send job to hpc for size 252 samples}
+\NormalTok{sjob1 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(run\_sim1, }
+                    \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}comb\_log\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}comb\_log\_clip\textquotesingle{}}\NormalTok{, }
+                                       \StringTok{\textquotesingle{}rho\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}simulate\_data\textquotesingle{}}\NormalTok{),}
+                    \AttributeTok{jobname =} \StringTok{\textquotesingle{}sim\_data1\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# get output}
+\NormalTok{out1 }\OtherTok{\textless{}{-}} \FunctionTok{get\_slurm\_out}\NormalTok{(sjob1)}
+\FunctionTok{write\_rds}\NormalTok{(out1, }\StringTok{"sim/sim\_preds\_sm.RDS"}\NormalTok{)}
+
+\CommentTok{\# create function to run size 1000 samples on hpc}
+\NormalTok{run\_sim2 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+  \FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{  out }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{2100} \SpecialCharTok{|\textgreater{}} 
+\NormalTok{    purrr}\SpecialCharTok{::}\FunctionTok{map}\NormalTok{(\textbackslash{}(x) \{}
+      \FunctionTok{mutate}\NormalTok{(}\FunctionTok{simulate\_data}\NormalTok{(comb\_log\_clip, }\AttributeTok{n =} \DecValTok{1000}\NormalTok{, }\AttributeTok{rho =}\NormalTok{ rho, }
+                           \AttributeTok{prop\_smoke =} \DecValTok{1}\SpecialCharTok{{-}}\FunctionTok{mean}\NormalTok{(comb\_log\_clip}\SpecialCharTok{$}\NormalTok{smoke), }
+                           \AttributeTok{prop\_race =} \FunctionTok{table}\NormalTok{(comb\_log}\SpecialCharTok{$}\NormalTok{race)), }
+             \AttributeTok{race =} \FunctionTok{as.numeric}\NormalTok{(race), }
+             \AttributeTok{sim =}\NormalTok{ x)}
+\NormalTok{    \})}
+  \FunctionTok{return}\NormalTok{(out)}
+\NormalTok{\}}
+
+\CommentTok{\# send job to hpc for size 1000 samples}
+\NormalTok{sjob2 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(run\_sim2, }
+                    \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}comb\_log\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}comb\_log\_clip\textquotesingle{}}\NormalTok{, }
+                                       \StringTok{\textquotesingle{}rho\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}simulate\_data\textquotesingle{}}\NormalTok{),}
+                    \AttributeTok{jobname =} \StringTok{\textquotesingle{}sim\_data2\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# get output}
+\NormalTok{out2 }\OtherTok{\textless{}{-}} \FunctionTok{get\_slurm\_out}\NormalTok{(sjob2)}
+\FunctionTok{write\_rds}\NormalTok{(out2, }\StringTok{"sim/sim\_preds\_lg.RDS"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\hypertarget{code-for-chapter-refsimresp}{%
+\subsection{Code for Chapter @ref\{simresp\}:}\label{code-for-chapter-refsimresp}}
+
+Next, we simulate the response data. We use the \texttt{rslurm} package in this section. This code was run on the Amherst HPC RStudio server.
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# load packages}
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(rslurm)}
+\end{Highlighting}
+\end{Shaded}
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
+\CommentTok{\# create functions for various response variables}
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
+
+\CommentTok{\# base case, no interactions}
+\NormalTok{base\_case }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{am1 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+           \FloatTok{0.35}\SpecialCharTok{*}\NormalTok{Hg}\SpecialCharTok{*}\NormalTok{Ni }\SpecialCharTok{+} 
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{am2 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+           \FloatTok{0.7}\SpecialCharTok{*}\NormalTok{Hg}\SpecialCharTok{*}\NormalTok{Ni }\SpecialCharTok{+} 
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{ap1 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+           \FloatTok{0.13}\SpecialCharTok{*}\NormalTok{Hg}\SpecialCharTok{*}\NormalTok{((Ni}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+}
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{ap2 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+           \FloatTok{0.26}\SpecialCharTok{*}\NormalTok{Hg}\SpecialCharTok{*}\NormalTok{((Ni}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+}
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{bm1 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+           \FloatTok{0.35}\SpecialCharTok{*}\NormalTok{Cd}\SpecialCharTok{*}\NormalTok{As }\SpecialCharTok{+} 
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{bm2 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+           \FloatTok{0.7}\SpecialCharTok{*}\NormalTok{Cd}\SpecialCharTok{*}\NormalTok{As }\SpecialCharTok{+} 
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{bp1 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+           \FloatTok{0.125}\SpecialCharTok{*}\NormalTok{Cd}\SpecialCharTok{*}\NormalTok{((As}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+}
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{bp2 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+           \FloatTok{0.25}\SpecialCharTok{*}\NormalTok{Cd}\SpecialCharTok{*}\NormalTok{((As}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+}
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{cm1 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+           \FloatTok{0.3}\SpecialCharTok{*}\NormalTok{Hg}\SpecialCharTok{*}\NormalTok{Co }\SpecialCharTok{+} 
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{cm2 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+           \FloatTok{0.6}\SpecialCharTok{*}\NormalTok{Hg}\SpecialCharTok{*}\NormalTok{Co }\SpecialCharTok{+} 
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{cp1 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+           \FloatTok{0.15}\SpecialCharTok{*}\NormalTok{Hg}\SpecialCharTok{*}\NormalTok{((Co}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+}
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{cp2 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+           \FloatTok{0.3}\SpecialCharTok{*}\NormalTok{Hg}\SpecialCharTok{*}\NormalTok{((Co}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+}
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{dm1 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+           \FloatTok{0.3}\SpecialCharTok{*}\NormalTok{Hg}\SpecialCharTok{*}\NormalTok{Ni}\SpecialCharTok{*}\NormalTok{Tl }\SpecialCharTok{+} 
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{dm2 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+           \FloatTok{0.6}\SpecialCharTok{*}\NormalTok{Hg}\SpecialCharTok{*}\NormalTok{Ni}\SpecialCharTok{*}\NormalTok{Tl }\SpecialCharTok{+} 
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{dp1 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+           \FloatTok{0.09}\SpecialCharTok{*}\NormalTok{Hg}\SpecialCharTok{*}\NormalTok{((Ni}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}\SpecialCharTok{*}\NormalTok{Tl }\SpecialCharTok{+}
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{dp2 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+           \FloatTok{0.18}\SpecialCharTok{*}\NormalTok{Hg}\SpecialCharTok{*}\NormalTok{((Ni}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}\SpecialCharTok{*}\NormalTok{Tl }\SpecialCharTok{+}
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#}
+\CommentTok{\# create response variables for exposure{-}exposure interxn}
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#}
+
+\CommentTok{\# read output back in, size 252}
+\NormalTok{out1 }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_preds\_sm.RDS"}\NormalTok{)}
+
+\CommentTok{\# create function for responses at size 252}
+\NormalTok{run\_resp1 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+  \FunctionTok{set.seed}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+\NormalTok{  out1\_resp1 }\OtherTok{\textless{}{-}}\NormalTok{ out1 }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{    purrr}\SpecialCharTok{::}\FunctionTok{map}\NormalTok{(\textbackslash{}(x) \{}
+      \CommentTok{\# get dataset number }
+\NormalTok{      no }\OtherTok{\textless{}{-}}\NormalTok{ x}\SpecialCharTok{$}\NormalTok{sim[}\DecValTok{1}\NormalTok{] }
+\NormalTok{      x }\OtherTok{\textless{}{-}}\NormalTok{ x }\SpecialCharTok{|\textgreater{}} 
+        \CommentTok{\# scale log{-}transformed exposures}
+        \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn, }\SpecialCharTok{\textasciitilde{}}\FunctionTok{c}\NormalTok{(}\FunctionTok{scale}\NormalTok{(.)))) }
+\NormalTok{      df }\OtherTok{\textless{}{-}} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{100} \SpecialCharTok{\textasciitilde{}} \FunctionTok{base\_case}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{200} \SpecialCharTok{\textasciitilde{}} \FunctionTok{am1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{300} \SpecialCharTok{\textasciitilde{}} \FunctionTok{am2}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{400} \SpecialCharTok{\textasciitilde{}} \FunctionTok{ap1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{500} \SpecialCharTok{\textasciitilde{}} \FunctionTok{ap2}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{600} \SpecialCharTok{\textasciitilde{}} \FunctionTok{bm1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{700} \SpecialCharTok{\textasciitilde{}} \FunctionTok{bm2}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{800} \SpecialCharTok{\textasciitilde{}} \FunctionTok{bp1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{900} \SpecialCharTok{\textasciitilde{}} \FunctionTok{bp2}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1000} \SpecialCharTok{\textasciitilde{}} \FunctionTok{cm1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1100} \SpecialCharTok{\textasciitilde{}} \FunctionTok{cm2}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1200} \SpecialCharTok{\textasciitilde{}} \FunctionTok{cp1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1300} \SpecialCharTok{\textasciitilde{}} \FunctionTok{cp2}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1400} \SpecialCharTok{\textasciitilde{}} \FunctionTok{dm1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1500} \SpecialCharTok{\textasciitilde{}} \FunctionTok{dm2}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1600} \SpecialCharTok{\textasciitilde{}} \FunctionTok{dp1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1700} \SpecialCharTok{\textasciitilde{}} \FunctionTok{dp2}\NormalTok{(x), }
+        \AttributeTok{.default =}\NormalTok{ x }\CommentTok{\#note 1701 {-} 2100 is for cov{-}exp interxn}
+\NormalTok{      ) }
+\NormalTok{    \}) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{    purrr}\SpecialCharTok{::}\FunctionTok{set\_names}\NormalTok{(}\AttributeTok{nm =} \FunctionTok{c}\NormalTok{(}
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"\_base"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"am1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"am2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"ap1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"ap2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"bm1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"bm2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"bp1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"bp2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"cm1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"cm2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"cp1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"cp2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"dm1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"dm2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"dp1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"dp2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"unset"}\NormalTok{, }\DecValTok{400}\NormalTok{)}
+\NormalTok{    )) }
+  \FunctionTok{return}\NormalTok{(out1\_resp1)}
+\NormalTok{\}}
+
+\CommentTok{\# run to hpc}
+\NormalTok{runrespsm }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_resp1, }
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}base\_case\textquotesingle{}}\NormalTok{, }
+                     \StringTok{\textquotesingle{}am1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}am2\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}ap1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}ap2\textquotesingle{}}\NormalTok{, }
+                     \StringTok{\textquotesingle{}bm1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}bm2\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}bp1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}bp2\textquotesingle{}}\NormalTok{, }
+                     \StringTok{\textquotesingle{}cm1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}cm2\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}cp1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}cp2\textquotesingle{}}\NormalTok{, }
+                     \StringTok{\textquotesingle{}dm1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}dm2\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}dp1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}dp2\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}sim\_resp1\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# get output}
+\NormalTok{out1\_resp1 }\OtherTok{\textless{}{-}} \FunctionTok{get\_slurm\_out}\NormalTok{(runrespsm)}
+\CommentTok{\# only save for exp{-}exp interxns}
+\NormalTok{out1\_resp1 }\OtherTok{\textless{}{-}}\NormalTok{ out1\_resp1[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{1700}\NormalTok{]}
+\FunctionTok{write\_rds}\NormalTok{(out1\_resp1, }\StringTok{"sim/sim\_resp\_sm\_a.RDS"}\NormalTok{)}
+
+\CommentTok{\# read output back in, size 1000}
+\NormalTok{out2 }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_preds\_lg.RDS"}\NormalTok{)}
+
+\CommentTok{\# create function for response at size 1000}
+\NormalTok{run\_resp2 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+  \FunctionTok{set.seed}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+\NormalTok{  out2\_resp1 }\OtherTok{\textless{}{-}}\NormalTok{ out2 }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{    purrr}\SpecialCharTok{::}\FunctionTok{map}\NormalTok{(\textbackslash{}(x) \{}
+      \CommentTok{\# get dataset number }
+\NormalTok{      no }\OtherTok{\textless{}{-}}\NormalTok{ x}\SpecialCharTok{$}\NormalTok{sim[}\DecValTok{1}\NormalTok{]}
+\NormalTok{      x }\OtherTok{\textless{}{-}}\NormalTok{ x }\SpecialCharTok{|\textgreater{}} 
+        \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn, }\SpecialCharTok{\textasciitilde{}}\FunctionTok{c}\NormalTok{(}\FunctionTok{scale}\NormalTok{(.)))) }
+\NormalTok{      df }\OtherTok{\textless{}{-}} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{100} \SpecialCharTok{\textasciitilde{}} \FunctionTok{base\_case}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{200} \SpecialCharTok{\textasciitilde{}} \FunctionTok{am1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{300} \SpecialCharTok{\textasciitilde{}} \FunctionTok{am2}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{400} \SpecialCharTok{\textasciitilde{}} \FunctionTok{ap1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{500} \SpecialCharTok{\textasciitilde{}} \FunctionTok{ap2}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{600} \SpecialCharTok{\textasciitilde{}} \FunctionTok{bm1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{700} \SpecialCharTok{\textasciitilde{}} \FunctionTok{bm2}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{800} \SpecialCharTok{\textasciitilde{}} \FunctionTok{bp1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{900} \SpecialCharTok{\textasciitilde{}} \FunctionTok{bp2}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1000} \SpecialCharTok{\textasciitilde{}} \FunctionTok{cm1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1100} \SpecialCharTok{\textasciitilde{}} \FunctionTok{cm2}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1200} \SpecialCharTok{\textasciitilde{}} \FunctionTok{cp1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1300} \SpecialCharTok{\textasciitilde{}} \FunctionTok{cp2}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1400} \SpecialCharTok{\textasciitilde{}} \FunctionTok{dm1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1500} \SpecialCharTok{\textasciitilde{}} \FunctionTok{dm2}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1600} \SpecialCharTok{\textasciitilde{}} \FunctionTok{dp1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1700} \SpecialCharTok{\textasciitilde{}} \FunctionTok{dp2}\NormalTok{(x), }
+        \AttributeTok{.default =}\NormalTok{ x }\CommentTok{\#note 1701 {-} 2100 is for cov{-}exp interxn}
+\NormalTok{      ) }
+\NormalTok{    \}) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{    purrr}\SpecialCharTok{::}\FunctionTok{set\_names}\NormalTok{(}\AttributeTok{nm =} \FunctionTok{c}\NormalTok{(}
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"\_base"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"am1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"am2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"ap1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"ap2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"bm1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"bm2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"bp1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"bp2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"cm1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"cm2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"cp1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"cp2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"dm1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"dm2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"dp1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"dp2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"unset"}\NormalTok{, }\DecValTok{400}\NormalTok{)}
+\NormalTok{    ))}
+  \FunctionTok{return}\NormalTok{(out2\_resp1)}
+\NormalTok{\}}
+
+\CommentTok{\# send to HPC}
+\NormalTok{runresplg }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_resp2, }
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out2\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}base\_case\textquotesingle{}}\NormalTok{, }
+                     \StringTok{\textquotesingle{}am1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}am2\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}ap1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}ap2\textquotesingle{}}\NormalTok{, }
+                     \StringTok{\textquotesingle{}bm1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}bm2\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}bp1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}bp2\textquotesingle{}}\NormalTok{, }
+                     \StringTok{\textquotesingle{}cm1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}cm2\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}cp1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}cp2\textquotesingle{}}\NormalTok{, }
+                     \StringTok{\textquotesingle{}dm1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}dm2\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}dp1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}dp2\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}sim\_resp2\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# get output}
+\NormalTok{out2\_resp1 }\OtherTok{\textless{}{-}} \FunctionTok{get\_slurm\_out}\NormalTok{(runresplg)}
+\CommentTok{\# only save output for exp{-}exp interxns for now}
+\NormalTok{out2\_resp1 }\OtherTok{\textless{}{-}}\NormalTok{ out2\_resp1[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{1700}\NormalTok{]}
+\FunctionTok{write\_rds}\NormalTok{(out2\_resp1, }\StringTok{"sim/sim\_resp\_lg\_a.RDS"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#}
+\CommentTok{\# create response variables for exposure{-}covariate interxn}
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#}
+\end{Highlighting}
+\end{Shaded}
 \hypertarget{corrections}{%
 \chapter*{Corrections}\label{corrections}}
 \addcontentsline{toc}{chapter}{Corrections}
@@ -1250,11 +2007,11 @@ Bobb, J. F., Claus Henn, B., Valeri, L., \& Coull, B. A. (2018). Statistical sof
 \leavevmode\vadjust pre{\hypertarget{ref-bobb_bayesian_2015}{}}%
 Bobb, J. F., Valeri, L., Claus Henn, B., Christiani, D. C., Wright, R. O., Mazumdar, M., \ldots{} Coull, B. A. (2015). Bayesian kernel machine regression for estimating the health effects of multi-pollutant mixtures. \emph{Biostatistics}, \emph{16}(3), 493--508. http://doi.org/\href{https://doi.org/10.1093/biostatistics/kxu058}{10.1093/biostatistics/kxu058}
 
-\leavevmode\vadjust pre{\hypertarget{ref-committee_on_incorporating_21st_century_science_into_risk-based_evaluations_using_2017}{}}%
-Committee on Incorporating 21st Century Science into Risk-Based Evaluations, Board on Environmental Studies and Toxicology, Division on Earth and Life Studies, \& National Academies of Sciences, Engineering, and Medicine. (2017). \emph{Using 21st {Century} {Science} to {Improve} {Risk}-{Related} {Evaluations}}. Washington, D.C.: National Academies Press. http://doi.org/\href{https://doi.org/10.17226/24635}{10.17226/24635}
-
 \leavevmode\vadjust pre{\hypertarget{ref-cribb_surviving_2016}{}}%
 Cribb, J. (2016). \emph{Surviving the 21st century: {Humanity}'s ten great challenges and how we can overcome them}. Springer.
+
+\leavevmode\vadjust pre{\hypertarget{ref-genest_primer_2007}{}}%
+Genest, C., \& Nešlehovà, J. (2007). A {Primer} on {Copulas} for {Count} {Data}. \emph{ASTIN Bulletin}, \emph{37}(2), 475--515. http://doi.org/\url{https://doi.org/10.2143/AST.37.2.2024077}
 
 \leavevmode\vadjust pre{\hypertarget{ref-gibson_overview_2019}{}}%
 Gibson, E. A., Nunez, Y., Abuawad, A., Zota, A. R., Renzetti, S., Devick, K. L., \ldots{} Kioumourtzoglou, M.-A. (2019). An overview of methods to address distinct research questions on environmental mixtures: An application to persistent organic pollutants and leukocyte telomere length. \emph{Environmental Health}, \emph{18}(1), 76. http://doi.org/\href{https://doi.org/10.1186/s12940-019-0515-1}{10.1186/s12940-019-0515-1}
@@ -1270,6 +2027,9 @@ Hernández, A. F., Parrón, T., Tsatsakis, A. M., Requena, M., Alarcón, R., \& 
 
 \leavevmode\vadjust pre{\hypertarget{ref-heys_risk_2016}{}}%
 Heys, K., Shore, R., Pereira, M., Jones, K., \& Martin, F. (2016). Risk assessment of environmental mixture effects. \emph{RSC Advances}, \emph{6}(53), 47844--47857. http://doi.org/\href{https://doi.org/10.1039/C6RA05406D}{10.1039/C6RA05406D}
+
+\leavevmode\vadjust pre{\hypertarget{ref-hofert_copula_2023}{}}%
+Hofert, M., Kojadinovic, I., Maechler, M., \& Yan, J. (2023). Copula: {Multivariate} {Dependence} with {Copulas}. Retrieved from \url{https://CRAN.R-project.org/package=copula}
 
 \leavevmode\vadjust pre{\hypertarget{ref-hoskovec_model_2021}{}}%
 Hoskovec, L., Benka-Coker, W., Severson, R., Magzamen, S., \& Wilson, A. (2021). Model choice for estimating the association between exposure to chemical mixtures and health outcomes: {A} simulation study. \emph{PLOS ONE}, \emph{16}(3), e0249236. http://doi.org/\href{https://doi.org/10.1371/journal.pone.0249236}{10.1371/journal.pone.0249236}
@@ -1297,6 +2057,12 @@ Nadaraya, E. A. (1964). On {Estimating} {Regression}. \emph{Theory of Probabilit
 
 \leavevmode\vadjust pre{\hypertarget{ref-naidu_chemical_2021}{}}%
 Naidu, R., Biswas, B., Willett, I. R., Cribb, J., Kumar Singh, B., Paul Nathanail, C., \ldots{} Aitken, R. J. (2021). Chemical pollution: {A} growing peril and potential catastrophic risk to humanity. \emph{Environment International}, \emph{156}, 106616. http://doi.org/\href{https://doi.org/10.1016/j.envint.2021.106616}{10.1016/j.envint.2021.106616}
+
+\leavevmode\vadjust pre{\hypertarget{ref-national_academies_of_sciences_engineering_and_medicine_using_2017}{}}%
+National Academies of Sciences, Engineering, and Medicine, Division on Earth and Life Studies, Board on Environmental Studies and Toxicology, \& Committee on Incorporating 21st Century Science into Risk-Based Evaluations. (2017). \emph{Using 21st {Century} {Science} to {Improve} {Risk}-{Related} {Evaluations}}. Washington, D.C.: National Academies Press. http://doi.org/\href{https://doi.org/10.17226/24635}{10.17226/24635}
+
+\leavevmode\vadjust pre{\hypertarget{ref-nelsen_introduction_2006}{}}%
+Nelsen, R. B. (2006). \emph{An introduction to copulas} (2nd ed). New York: Springer.
 
 \leavevmode\vadjust pre{\hypertarget{ref-persson_outside_2022}{}}%
 Persson, L., Carney Almroth, B. M., Collins, C. D., Cornell, S., De Wit, C. A., Diamond, M. L., \ldots{} Hauschild, M. Z. (2022). Outside the {Safe} {Operating} {Space} of the {Planetary} {Boundary} for {Novel} {Entities}. \emph{Environmental Science \& Technology}, \emph{56}(3), 1510--1521. http://doi.org/\href{https://doi.org/10.1021/acs.est.1c04158}{10.1021/acs.est.1c04158}

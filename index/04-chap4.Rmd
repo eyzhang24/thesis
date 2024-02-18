@@ -25,27 +25,23 @@ Finally, we briefly comment on studies by @sun_statistical_2013 and @barrera-gom
 
 ## Methods
 
-The goal of our simulation study is to provide guidance on the choice between BSR and BKMR for characterizing a diverse range of complex interactions between predictors. In particular, we aim to extend findings from previous simulation studies by considering a more comprehensive range of interaction types, including different effect sizes, non-multiplicative interactions, and three-way interactions. We also explore interactions between exposures and categorical covariates, a previously understudied form of interaction in exposure mixture studies.
+The goal of our simulation study is to provide guidance on the choice between BSR and BKMR for characterizing a diverse range of complex interactions between predictors. In particular, we aim to extend findings from previous simulation studies by considering a more comprehensive range of interaction types, including different effect sizes, non-multiplicative interactions, and three-way interactions. We also explore interactions between exposures and categorical covariates, a previously understudied form of interaction in exposure mixture studies. 
 
-### MADRES data
+### MADRES data {#madres}
 
 In order to make our simulations comparable to real-world exposure mixture studies, we based our simulation data on the Maternal And Developmental Risks from Environmental and Social Stressors (MADRES) pregnancy cohort. The MADRES cohort is an ongoing, prospective pregnancy cohort of predominantly lower-income, Hispanic women in Los Angeles, California, which began in 2015 [@bastain_study_2019]. Urine samples were collected by participants at their first visit, and questionnaires were administered during their first visit, with follow-ups at the first, second, and third trimesters. See @bastain_study_2019 for further details on study design. 
 
 @howe_prenatal_2020 previously examined the effect of prenatal metal mixtures of birth weight (BW) for gestational age (GA) in this cohort. They used BKMR to identify associations between metal mixtures and BW for GA, as well as BSR to conduct inference on interactions between metals. Briefly, using BKMR, they found that, of the metals in the mixture, Hg and Ni were most strongly associated with BW for GA. Moreover, BKMR results suggested that a potential interaction between Hg and Ni; however, when run through BSR, the PIP for this interaction was extremely small, despite being the highest of all two-way interactions. 
 
-Data from the study by @howe_prenatal_2020 were obtained from publicly available data in the Human Health Exposure Resource (HHEAR) Data Repository, which has been approved under Icahn School of Medicine at Mount Sinai IRB Protocol #16-00947. The Digital Object Identifiers associated with the urinary trace element data and epidemiological data are 10.36043/1945_159 and 10.36043/1945_177, respectively. 
+Data from the study by @howe_prenatal_2020 were obtained from publicly available data in the Human Health Exposure Resource (HHEAR) Data Repository, which has been approved under Icahn School of Medicine at Mount Sinai IRB Protocol #16-00947. The Digital Object Identifiers associated with the urinary trace element data and epidemiological data are 10.36043/1945_159 and 10.36043/1945_177, respectively. All analyses were conducted in R v4.3.2 [@r_core_team_r_2013].
 
-We followed the approach by @howe_prenatal_2020 for preparing the data for analysis. This resulted in retaining 10 metals in analysis: arsenic (As), cadmium (Cd), cobalt (Co), mercury (Hg), nickel (Ni), molybdenum (Mo), lead (Pb), antimony (Sb), tin (Sn), and thallium (Tl). @howe_prenatal_2020 used speciated As, but this was not available in HHEAR, so we used total As. Metals were expressed in $\mu$g/g and natural log transformed to reduce right-skewness and then standardized to keep values scale-free. Among the full range of covariates considered by @howe_prenatal_2020, we used the subset of 4 that were available in HHEAR: any smoke exposure during pregnancy, maternal prepregnancy body mass index (BMI), maternal age during firt trimester, and maternal race by ethnicity and birth place. Race by ethnicity and birth place was collapsed into the following categories: non-Hispanic white, non-Hispanic black, non-Hispanic other, Hispanic born in the US, and Hispanic born outside the US. We observed 8 missing values for BMI in the data from HHEAR, which were not reported by @howe_prenatal_2020. We mean imputed these missing values. Our final analytic dataset included 252 participants, which was 10 fewer than in @howe_prenatal_2020, likely due to small discrepancies in their dataset and the one made available in HHEAR. 
+We followed the approach by @howe_prenatal_2020 for preparing the data for analysis. This resulted in retaining 10 metals in analysis: arsenic (As), cadmium (Cd), cobalt (Co), mercury (Hg), nickel (Ni), molybdenum (Mo), lead (Pb), antimony (Sb), tin (Sn), and thallium (Tl). @howe_prenatal_2020 used speciated As, but this was not available in HHEAR, so we used total As. Metals were expressed in $\mu$g/g and natural log transformed to reduce right-skewness and then standardized to keep values scale-free. Among the full range of covariates considered by @howe_prenatal_2020, we used the subset of 4 that were available in HHEAR: any smoke exposure during pregnancy, maternal prepregnancy body mass index (BMI), maternal age during firt trimester, and maternal race by ethnicity and birth place. We chose not to include study site, as there were certain study sites with only 1 or 2 participants. Race by ethnicity and birth place was collapsed into the following categories: non-Hispanic white, non-Hispanic black, non-Hispanic other, Hispanic born in the US, and Hispanic born outside the US. We observed 8 missing values for BMI in the data from HHEAR, which were not reported by @howe_prenatal_2020. We mean imputed these missing values. Our final analytic dataset included 252 participants, which was 10 fewer than in @howe_prenatal_2020, likely due to small discrepancies in their dataset and the one made available in HHEAR. 
 
 <!-- include study site??? -->
 
-- 
+### Using copulas to simulate predictor data {#copula}
 
-### Simulating predictor data
-
-*define predictor = both exposure and covariate*
-
-We simulated exposure and covariate data using a multivariate $t$-copula fit on the 252 participants in the MADRES cohort. We used copulas as they can preserve both the correlation structure and marginal distributions from the observed data, allowing us to replicate conditions in a real-world scenario. 
+We simulated exposure and covariate data (hereafter referred to collectively as predictors) using a multivariate Gaussian copula fit on the 252 participants in the MADRES cohort. We used copulas as they can preserve both the correlation structure and marginal distributions from the observed data, allowing us to replicate conditions in a real-world scenario. 
 
 First, we briefly introduce copulas in the context of their use in this simulation, based on the presentation in @nelsen_introduction_2006. Copulas are joint cumulative distribution functions (CDFs) defined on the unit cube $[0,1]^n$ that capture the dependence between $n$ uniformly distributed marginals. Sklar's theorem allows us to apply copulas to our observed data. Sklar's theorem states that, if $H(x_1, \dots x_n)$ is a joint CDF of the marginal CDFs $F_1(x_1), \dots, F_n(x_n)$, then there exists a copula $C$ such that, for all $(x_1, \dots, x_n)$ in $(X_1, \dots, X_n)$, 
 
@@ -55,25 +51,30 @@ $$
 
 \noindent Note that, by the probability integral transform, or the universality of the uniform, the CDFs $F_1(x_1), \dots, F_n(x_n)$ are distributed uniformly. 
 
-We have two categorical covariates in our data: smoke exposure and race by ethnicity and birthplace. 
+We used the `copula` package in R to fit copulas and generate random data [@hofert_copula_2023]. We transformed the observed continuous predictor values to uniform distributions based on their empirical marginal CDFs, a process called generating "pseudo-random" samples. We used the checkerboard copula approach for generating pseudo-random samples for smoke exposure, a binary variable [@genest_primer_2007]. We coded smoke exposure as 0's and 1's, generated a pseudo-random sample, and then "jittered" the values with uniform random noise. There is currently no widely accepted approach for generating pseudo-random samples from unordered categorical variables with more than two levels. Thus, we excluded race by ethnicity and birthplace from the copula model. While this ignores any potential correlation between race and exposure, Figure [*figure of race by exposure*] suggests that there is little to no visible correlation between race and exposure in the observed dataset. 
 
-In our case, we transformed the observed predictor values to the uniform distribution based on their empirical marginal CDFs, a process called generating "pseudo-random" samples. Then, we fit the copula and back-transformed the data to its original marginal structure using the empirical marginal CDFs. The Spearman's rho correlation structure remains consistent through these transformations, as the ranking of the data is not affected. 
+Various families of copulas have been described, each of which specifies a different shape for the dependence structure. We fit the set of multivariate copulas used by @lazarevic_performance_2020 in their simulation study, which included the Gaussian, t, Gumbel, Frank, Clayton, and Joe copulas. We fit two t copulas with 4 and 10 degrees of freedom, which controls dependence at the tails of the distributions, as well as a t copula where the degrees of freedom was determined during the fitting process. The Gumbel, Frank, Clayton, and Joe copulas require a $\theta$ parameter, which controls dependence between the distributions. We fit two versions of these copulas with $\theta=\{2, 4\}$. Among these, the Gaussian copula minimized Akaike information criterion and maximized likelihood, so we proceeded with this model. The Gaussian copula assumes a bivariate normal dependence structure between the marginal CDFs. 
 
-Various families of copulas have been described, each of which specifies a different shape for the dependence structure. We fit the set of multivariate copulas used by @lazarevic_performance_2020 in their simulation study, which included the Gaussian, t, Gumbel, Frank, Clayton, and Joe copulas. We selected the __ copula based on ___. 
+We simulated predictor data by randomly sampling from the fitted multivariate Gaussian copula distribution. All pseudo-random samples were then back-transformed to their original distributions using empirical marginal CDFs. We simulated the race by ethnicity and birthplace variable by randomly assigning observations to each of the five categories based on proportions in the observed dataset. 
 
 *show correlation and marginal distribution of original and simulations*
 
-*to do: figure out models for 1000, write methods*
+- univariate distribution
+- spearman's rho between continuous
+- bivariate boxplot between race/smoke and continuous
+- mosaic plot between race and smoke
 
-*run bsr 5 times and see if there is consensus on # df's*
 
-### Simulation predictor-response relationships
+### Simulating predictor-response relationships {#simresp}
 
-- simulate outcome using a formula w/ different types of interaction
-- change effect size (three levels? — NOTE, this is diff from signal:noise ratio)
-- change nature of interaction (mathematical formulation, two- or three-way, b/t just exposures or b/t exposures and covariates)
-- take into account collinear structure (interactions b/t correlated exposures or uncorrelated exposures?)
-- change sample size to inform study design
+All cases:
+- 252 and 1000 sample sizes
+- multiplicative and polynomial interaction
+- small and large effect size
+
+- two-way interactions between univariately significant, univariately insignificant, and highly correlated chemicals
+- three-way interaction
+- interaction between covariate and exposure
 
 Base case:
 
@@ -117,7 +118,7 @@ This resulted in a total of 42 scenarios.
 - see appendix for surfaces
 
 
-### Models
+### Models {#models}
 
 Software: @bobb_statistical_2018 on CRAN, @antonelli_estimating_2020 on GitHub
 
@@ -134,15 +135,14 @@ Howe ran 200,000 Markov chain Monte Carlo (MCMC) iterations using the default pr
 
 check convergence with trace plots
 
-### Model assessment
+### Model assessment 
 
 - use median probability model threshold — marginal PIP of at least 0.5
 - how many times is interaction picked up? 
   - sensitivity and false discovery rate
-- testing MSE
 - potentially explore mpower package
 
-## Results
+## Results {#results}
 
 - example output from representative model 
 - figures + tables w/ model performance
