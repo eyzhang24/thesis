@@ -296,9 +296,9 @@ This work was performed in part using high-performance computing equipment at Am
 
 Rapid industrial development has created conditions of cumulative chronic toxicity which pose an acute risk to the wellbeing of humans and our living environment. In fact, it has been estimated that, globally, human activity releases chemicals at a rate of 220 billion tons per annum (Cribb, 2016). These staggering levels of pollution have led scholars to formally declare that humanity has surpassed the safe operating space of the planetary boundary for novel entities (Persson et al., 2022). As a result, exposure to low levels of pollutants has become an inevitable peril of daily life (Naidu et al., 2021; Vineis, 2018). In this new era of pervasive toxicity, understanding the nature and severity of health effects associated with chemical exposures is especially timely.
 
-For this, we turn to epidemiological studies. The broad field of preventive epidemiology involves the identification of potentially modifiable risk factors that contribute to the burden of disease within human populations. Environmental epidemiology, in particular, considers the effect of environmental exposures --- chemical or otherwise. However, studies concerning chemical pollutants in environmental epidemiology have historically focused on elucidating the effect and mechanisms of exposures to a single pollutant. In reality, humans are invariably exposed to numerous complex chemical mixtures which together contribute to the progression of adverse health outcomes. Therefore, risk assessments of single pollutants likely fail to capture the true consequences of these complex exposures (Heys, Shore, Pereira, Jones, \& Martin, 2016). Assessing mixtures of chemicals can also have more direct implications for public health interventions. The United States Environmental Protection Agency (U.S. EPA) currently passes regulations for individual pollutants. In practice, though, regulation occurs by controlling the source of pollution, which is responsible for the production of a whole mixture of chemicals with specific joint effects on human health. As a result, the National Academies of Science has advocated for a multipollutant regulatory approach, which is likely to be more protective of human health (National Academies of Sciences, Engineering, and Medicine, Division on Earth and Life Studies, Board on Environmental Studies and Toxicology, \& Committee on Incorporating 21st Century Science into Risk-Based Evaluations, 2017).
+For this, we turn to epidemiological studies. The broad field of preventive epidemiology involves the identification of potentially modifiable risk factors that contribute to the burden of disease within human populations. Environmental epidemiology, in particular, considers the effect of environmental exposures --- chemical or otherwise. However, studies concerning chemical pollutants in environmental epidemiology have historically focused on elucidating the effect and mechanisms of exposures to a single pollutant. In reality, humans are invariably exposed to numerous complex exposure mixtures which together contribute to the progression of adverse health outcomes. Therefore, risk assessments of single pollutants likely fail to capture the true consequences of these complex exposures (Heys, Shore, Pereira, Jones, \& Martin, 2016). Assessing mixtures of chemicals can also have more direct implications for public health interventions. The United States Environmental Protection Agency (U.S. EPA) currently passes regulations for individual pollutants. In practice, though, regulation occurs by controlling the source of pollution, which is responsible for the production of a whole mixture of chemicals with specific joint effects on human health. As a result, the National Academies of Science has advocated for a multipollutant regulatory approach, which is likely to be more protective of human health (National Academies of Sciences, Engineering, and Medicine, Division on Earth and Life Studies, Board on Environmental Studies and Toxicology, \& Committee on Incorporating 21st Century Science into Risk-Based Evaluations, 2017).
 
-There are clear practical motivations for studies that examine the health effects of exposure to co-occurring chemical mixtures, hereafter referred to as exposure mixtures. However, expanding the focus of analysis from one exposure to multiple exposures introduces unique statistical challenges. In addition to a common issue of small effect sizes and small sample sizes present in most exposure analyses, multiple exposure analyses must also contend with high-dimensionality, collinearity, non-linear effects, and non-additive interactions (Yu et al., 2022). In particular, data with numerous pollutants, or predictors, require exponentially greater levels of complexity and time cost in analysis. Collinearity between exposures is common when analyzing pollutants from a single source and can lead to unstable estimates in a generalized linear model if left unaccounted for. Finally, exposures can have both non-linear single effects and non-additive interaction effects, which are difficult to capture unless explicitly specified in the model.
+There are clear practical motivations for studies that examine the health effects of exposure to co-occurring mixtures of chemicals, hereafter referred to as exposure mixtures. However, expanding the focus of analysis from one exposure to multiple exposures introduces unique statistical challenges. In addition to a common issue of small effect sizes and small sample sizes present in most exposure analyses, multiple exposure analyses must also contend with high-dimensionality, collinearity, non-linear effects, and non-additive interactions (Yu et al., 2022). In particular, data with numerous pollutants, or predictors, require exponentially greater levels of complexity and time cost in analysis. Collinearity between exposures is common when analyzing pollutants from a single source and can lead to unstable estimates in a generalized linear model if left unaccounted for. Finally, exposures can have both non-linear single effects and non-additive interaction effects, which are difficult to capture unless explicitly specified in the model.
 
 The classic multiple linear regression framework often fails to capture the true effects in this setting. In the past few years, a wide variety of statistical methods have been developed to overcome these challenges (see reviews at Gibson et al., 2019; Yu et al., 2022), which have been accompanied by a host of comparative simulation studies for general mixture scenarios (e.g., Hoskovec, Benka-Coker, Severson, Magzamen, \& Wilson, 2021; Lazarevic, Knibbs, Sly, \& Barnett, 2020; Pesenti et al., 2023). However, to our knowledge, there has yet to be a simulation study which provides conclusive guidance about the ability of recently developed methods to conduct inference on non-additive interactions between exposures when the nature and effect sizes of these interactions vary.
 
@@ -832,7 +832,7 @@ While BKMR is a fully nonparametric approach, BSR is a semiparametric approach b
 
 BSR is highly sensitive to the choice of \(d\), the degrees of freedom. While it employs a WAIC approach to selecting the best \(d\), this parameter introduces an additional tuning step in the analysis. Both approaches can be highly sensitive to the specification of certain priors. BSR offers an empirical Bayes strategy for \(\sigma^2_{\boldsymbol\beta}\), the variance of a exposure's probability of inclusion. On the other hand, the choice of prior on the influential smoothing parameter, \(\rho\), in BKMR is up to the user.
 
-We also note that BKMR offers a hierarchical variable selection approach to dealing with collinearity between exposures While this is an additional decision that must be specified by the user, it offers a formal approach to dealing with collinear exposures. BSR does not explicitly account for collinearity in its model formulation, which can lead to erroneous interpretations of variable importance if unaccounted for.
+We also note that BKMR offers a hierarchical variable selection approach to dealing with collinearity between exposures. While this is an additional decision that must be specified by the user, it offers a formal approach to dealing with collinear exposures. BSR does not explicitly account for collinearity in its model formulation, which can lead to erroneous interpretations of variable importance if unaccounted for.
 
 \hypertarget{exposure-covariate-interactions}{%
 \subsection{Exposure-covariate interactions}\label{exposure-covariate-interactions}}
@@ -845,9 +845,9 @@ We also note that BKMR offers a hierarchical variable selection approach to deal
 \hypertarget{past-simulation-studies}{%
 \section{Past simulation studies}\label{past-simulation-studies}}
 
-Here, we preface our simulation study with a brief overview of examples in the literature which compare the efficacy of various methods using simulations. Taylor et al. (2016) conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Thus, for each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest.
+Here, we preface our simulation study with a brief overview of examples in the literature which compare various methods for exposure mixtures using simulations. Taylor et al. (2016) conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Thus, for each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest.
 
-Lazarevic et al. (2020) compare the performance of a broad range of methods for accurate variable selection of important exposures. They simulated exposure data using a multivariate \(t\)-copula based on real-world data and the response by specifying a regression relationship with only a subset of truly significant exposures and a normal error term. Two correlation structures were considered --- one with the original Spearman correlation matrix and one with the values halved --- as well as two signal-to-noise ratios --- one with an \(R^2\) for the true model at 10\% and one at 30\%. They found that BKMR, along with three other flexible regression methods that allow for nonlinearity, provided more accurate variable selection results compared to two machine learning methods. Moreover, they observed that, in general, low signal-to-noise ratios had a stronger impact on performance than did increasing multicollinearity.
+Lazarevic et al. (2020) compare the performance of a broad range of methods for accurate variable selection of important exposures. They simulated exposure data using a multivariate copula based on real-world data and the response by specifying a regression relationship with only a subset of truly significant exposures and a normal error term. Two correlation structures were considered --- one with the original Spearman correlation matrix and one with the values halved --- as well as two signal-to-noise ratios --- one with an \(R^2\) for the true model at 10\% and one at 30\%. They found that BKMR, along with three other flexible regression methods that allow for nonlinearity, provided more accurate variable selection results compared to two machine learning methods. Moreover, they observed that, in general, low signal-to-noise ratios had a stronger impact on performance than did increasing multicollinearity.
 
 Hoskovec et al. (2021) compare Bayesian methods, including BKMR, while considering 4 research questions: accurate estimation, selection of important exposures, exclusion of unimportant exposures, and identification of interactions. They use observed exposure and covariate data to simulate response data using regression relationships; they considered three exposure-response scenarios of varying complexity and included two-way multiplicative interaction terms. For each simulated dataset, they randomly assigned exposures to be active components of the mixture to incorporate variability in the data. Overall, they found that Bayesian methods outperformed traditional linear regressions, and that BKMR performed best when the exposure-response function takes on a complex form.
 
@@ -868,9 +868,23 @@ In order to make our simulations comparable to real-world exposure mixture studi
 Howe et al. (2020) previously examined the effect of prenatal metal mixtures of birth weight (BW) for gestational age (GA) in this cohort. They used BKMR to identify associations between metal mixtures and BW for GA, as well as BSR to conduct inference on interactions between metals. Briefly, using BKMR, they found that, of the metals in the mixture, Hg and Ni were most strongly associated with BW for GA. Moreover, BKMR results suggested that a potential interaction between Hg and Ni; however, when run through BSR, the PIP for this interaction was extremely small, despite being the highest of all two-way interactions.
 
 Data from the study by Howe et al. (2020) were obtained from publicly available data in the Human Health Exposure Resource (HHEAR) Data Repository, which has been approved under Icahn School of Medicine at Mount Sinai IRB Protocol \#16-00947. The Digital Object Identifiers associated with the urinary trace element data and epidemiological data are 10.36043/1945\_159 and 10.36043/1945\_177, respectively. All analyses were conducted in R v4.3.2 (R Core Team, 2013).
+\begin{figure}
 
-We followed the approach by Howe et al. (2020) for preparing the data for analysis. This resulted in retaining 10 metals in analysis: arsenic (As), cadmium (Cd), cobalt (Co), mercury (Hg), nickel (Ni), molybdenum (Mo), lead (Pb), antimony (Sb), tin (Sn), and thallium (Tl). Howe et al. (2020) used speciated As, but this was not available in HHEAR, so we used total As. Metals were expressed in \(\mu\)g/g and natural log transformed to reduce right-skewness and then standardized to keep values scale-free. Among the full range of covariates considered by Howe et al. (2020), we used the subset of 4 that were available in HHEAR: any smoke exposure during pregnancy, maternal prepregnancy body mass index (BMI), maternal age during firt trimester, and maternal race by ethnicity and birth place. We chose not to include study site, as there were certain study sites with only 1 or 2 participants. Race by ethnicity and birth place was collapsed into the following categories: non-Hispanic white, non-Hispanic black, non-Hispanic other, Hispanic born in the US, and Hispanic born outside the US. We observed 8 missing values for BMI in the data from HHEAR, which were not reported by Howe et al. (2020). We mean imputed these missing values. Our final analytic dataset included 252 participants, which was 10 fewer than in Howe et al. (2020), likely due to small discrepancies in their dataset and the one made available in HHEAR.
+{\centering \includegraphics[width=0.9\linewidth]{figures/ch4_univlog} 
 
+}
+
+\caption{Distributions of original (a) and natural log transformed (b) concentrations of metals in MADRES cohort (n=252).}\label{fig:logtransf}
+\end{figure}
+We followed the approach by Howe et al. (2020) for preparing the data for analysis. This resulted in retaining 10 metals in analysis: arsenic (As), cadmium (Cd), cobalt (Co), mercury (Hg), nickel (Ni), molybdenum (Mo), lead (Pb), antimony (Sb), tin (Sn), and thallium (Tl). Howe et al. (2020) used speciated As, but this was not available in HHEAR, so we used total As. Metals were expressed in nanograms per milliliter (ng/mL) and natural log transformed to reduce right-skewness (Figure \ref{fig:logtransf}). Among the full range of covariates considered by Howe et al. (2020), we used the subset of 4 that were available in HHEAR: any smoke exposure during pregnancy, maternal prepregnancy body mass index (BMI), maternal age during firt trimester, and maternal race by ethnicity and birth place. We chose not to include study site, as there was a study site with only 1 participant. Race by ethnicity and birth place was collapsed into the following categories: non-Hispanic white, non-Hispanic black, non-Hispanic other, Hispanic born in the US, and Hispanic born outside the US. We observed 8 missing values for BMI in the data from HHEAR, which were not reported by Howe et al. (2020). We mean imputed these missing values. Distributions of covariates are shown in Figure \ref{fig:covdist}. Our final analytic dataset included 252 participants, which was 10 fewer than in Howe et al. (2020), likely due to small discrepancies in their dataset and the one made available in HHEAR.
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_covdist} 
+
+}
+
+\caption{Distributions of continuous (a) and categorical (b) covariates in the MADRES cohort (n=252).}\label{fig:covdist}
+\end{figure}
 \hypertarget{copula}{%
 \subsection{Using copulas to simulate predictor data}\label{copula}}
 
@@ -883,11 +897,54 @@ H(x_1, \dots x_n)=C(F_1(x_1), \dots, F_n(x_n)).
 \]
 
 \noindent Note that, by the probability integral transform, or the universality of the uniform, the CDFs \(F_1(x_1), \dots, F_n(x_n)\) are distributed uniformly.
+\begin{figure}
 
-We used the \texttt{copula} package in R to fit copulas and generate random data (Hofert, Kojadinovic, Maechler, \& Yan, 2023). We transformed the observed continuous predictor values to uniform distributions based on their empirical marginal CDFs, a process called generating ``pseudo-random'' samples. We used the checkerboard copula approach for generating pseudo-random samples for smoke exposure, a binary variable (Genest \& Nešlehovà, 2007). We coded smoke exposure as 0's and 1's, generated a pseudo-random sample, and then ``jittered'' the values with uniform random noise. There is currently no widely accepted approach for generating pseudo-random samples from unordered categorical variables with more than two levels. Thus, we excluded race by ethnicity and birthplace from the copula model. While this ignores any potential correlation between race and exposure, Figure {[}\emph{figure of race by exposure}{]} suggests that there is little to no visible correlation between race and exposure in the observed dataset.
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_race_exp} 
 
-Various families of copulas have been described, each of which specifies a different shape for the dependence structure. We fit the set of multivariate copulas used by Lazarevic et al. (2020) in their simulation study, which included the Gaussian, t, Gumbel, Frank, Clayton, and Joe copulas. We fit two t copulas with 4 and 10 degrees of freedom, which controls dependence at the tails of the distributions, as well as a t copula where the degrees of freedom was determined during the fitting process. The Gumbel, Frank, Clayton, and Joe copulas require a \(\theta\) parameter, which controls dependence between the distributions. We fit two versions of these copulas with \(\theta=\{2, 4\}\). Among these copulas, Gaussian copula minimized Akaike information criterion and maximized likelihood, so we proceeded with this model. The Gaussian copula assumes a bivariate normal dependence structure between the marginal CDFs.
+}
 
+\caption{Association between race by ethnicity and birth place and metal exposures in the MADRES cohort (n=252).}\label{fig:raceexp}
+\end{figure}
+We used the \texttt{copula} package in R to fit copulas and generate random data (Hofert, Kojadinovic, Maechler, \& Yan, 2023). We transformed the observed continuous predictor values to uniform distributions based on their empirical marginal CDFs, a process called generating ``pseudo-random'' samples. We used the checkerboard copula approach for generating pseudo-random samples for smoke exposure, a binary variable (Genest \& Nešlehovà, 2007). We coded smoke exposure as 0's and 1's, generated a pseudo-random sample, and then ``jittered'' the values with uniform random noise. There is currently no widely accepted approach for generating pseudo-random samples from unordered categorical variables with more than two levels. Thus, we excluded race by ethnicity and birthplace from the copula model. While this means that our simulated datasets did not preserve any potential association between race and exposures, Figure \ref{fig:raceexp} suggests that there is little to no visible association between race and exposures in the observed dataset.
+
+Various families of copulas have been described, each of which specifies a different shape for the dependence structure. We performed model selection to identify the copula that best approximates the dependence structure of our data. We fit the set of multivariate copulas used by Lazarevic et al. (2020) in their simulation study, which included the Gaussian, \(t\), Gumbel, Frank, Clayton, and Joe copulas. We fit two \(t\) copulas with 4 and 10 degrees of freedom, which controls dependence at the tails of the distributions, as well as a \(t\) copula where the degrees of freedom was determined during the fitting process. The Gumbel, Frank, Clayton, and Joe copulas require a \(\theta\) parameter, which controls dependence between the distributions. We fit two versions of these copulas with \(\theta=\{2, 4\}\). Among these, the Gaussian copula minimized Akaike information criterion and maximized likelihood, so we proceeded with this model. The Gaussian copula assumes a bivariate normal dependence structure between the marginal CDFs.
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_univ_exp_sim} 
+
+}
+
+\caption{Exposure distributions from simulation.}\label{fig:univexpsim}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_univ_cov_sim} 
+
+}
+
+\caption{Covariate distributions from simulation.}\label{fig:univcovsim}
+\end{figure}
+Figure \ref{fig:univexpsim}, Figure \ref{fig:univcovsim}
+
+We simulated predictor data by randomly sampling from the fitted multivariate Gaussian copula distribution. All pseudo-random samples were then back-transformed to their original distributions using empirical marginal CDFs. We simulated the race by ethnicity and birthplace variable by randomly assigning observations to each of the five categories based on proportions in the observed dataset.
+
+Figure \ref{fig:corheatmap}, Figure \ref{fig:cordens}
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{figures/ch4_corr_sim+orig} 
+
+}
+
+\caption{Correlation heatmaps from original and simulation.}\label{fig:corheatmap}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{figures/ch4_corr_sim} 
+
+}
+
+\caption{Density of correlations from simulation.}\label{fig:cordens}
+\end{figure}
 \emph{show correlation and marginal distribution of original and simulations}
 \begin{itemize}
 \tightlist
@@ -961,7 +1018,9 @@ This resulted in a total of 42 scenarios.
 
 Software: Bobb et al. (2018) on CRAN, Antonelli et al. (2020) on GitHub
 
-Models compared, specify the parameters for each (justify them!)
+Models compared, specify the parameters for each (justify them!).
+
+All metal concentrations were standardized to keep values scale-free.
 \begin{itemize}
 \tightlist
 \item
@@ -1019,10 +1078,35 @@ And here's some other random info: the first paragraph after a chapter title or 
 \hypertarget{supplemental-output}{%
 \chapter{Supplemental output}\label{supplemental-output}}
 
+\hypertarget{methods-1}{%
+\section{Methods}\label{methods-1}}
+
+3d surfaces of interactions.
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# load packages}
+\FunctionTok{library}\NormalTok{(plotly)}
+\ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{require}\NormalTok{(reticulate)) \{}
+  \FunctionTok{install.packages}\NormalTok{(}\StringTok{\textquotesingle{}reticulate\textquotesingle{}}\NormalTok{)}
+\NormalTok{  reticulate}\SpecialCharTok{::}\FunctionTok{install\_miniconda}\NormalTok{()}
+\NormalTok{  reticulate}\SpecialCharTok{::}\FunctionTok{conda\_install}\NormalTok{(}\StringTok{\textquotesingle{}r{-}reticulate\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}python{-}kaleido\textquotesingle{}}\NormalTok{)}
+\NormalTok{  reticulate}\SpecialCharTok{::}\FunctionTok{conda\_install}\NormalTok{(}\StringTok{\textquotesingle{}r{-}reticulate\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}plotly\textquotesingle{}}\NormalTok{, }\AttributeTok{channel =} \StringTok{\textquotesingle{}plotly\textquotesingle{}}\NormalTok{)}
+  \FunctionTok{Sys.setenv}\NormalTok{(}\AttributeTok{RETICULATE\_PYTHON =} 
+               \StringTok{\textquotesingle{}/Users/elizabethzhang/Library/r{-}miniconda{-}arm64/envs/r{-}reticulate/bin/python\textquotesingle{}}\NormalTok{)}
+\NormalTok{  reticulate}\SpecialCharTok{::}\FunctionTok{use\_miniconda}\NormalTok{(}\StringTok{\textquotesingle{}r{-}reticulate\textquotesingle{}}\NormalTok{)}
+  \FunctionTok{library}\NormalTok{(reticulate)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\hypertarget{results-1}{%
+\section{Results}\label{results-1}}
+
+Examples of trace plots for BKMR and BSR
+
 \hypertarget{code}{%
 \chapter{Code}\label{code}}
 
-This first appendix includes all of the R chunks of code that were hidden throughout the document.
+This second appendix includes all of the R chunks of code that were hidden throughout the document.
 
 \hypertarget{code-for-chapter-refbayes}{%
 \section{Code for Chapter \ref{bayes}:}\label{code-for-chapter-refbayes}}
@@ -1249,7 +1333,7 @@ The code for this chapter generates a toy example, used to demonstrate the kerne
 The code for this chapter prepares the data from the MADRES study, generates simulated data, fits multiple linear regressions, BKMR, and BSR on the simulated data, and produces model output.
 
 \hypertarget{code-for-chapter-refmadres}{%
-\subsection{Code for Chapter @ref\{madres\}:}\label{code-for-chapter-refmadres}}
+\subsection{Code for Chapter \ref{madres}:}\label{code-for-chapter-refmadres}}
 
 First, we clean the data from the MADRES study.
 \begin{Shaded}
@@ -1337,7 +1421,7 @@ First, we clean the data from the MADRES study.
 \CommentTok{\# handle NA values}
 \NormalTok{epi\_imp }\OtherTok{\textless{}{-}}\NormalTok{ epi\_small }\SpecialCharTok{|\textgreater{}} 
   \CommentTok{\# exclude birthweight (observed response)}
-  \CommentTok{\# exclude study sitebecause of small categories}
+  \CommentTok{\# exclude study site because of small categories}
   \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(gender, birthweight, GA, mom\_site)) }\SpecialCharTok{|\textgreater{}} 
   \CommentTok{\# na\textquotesingle{}s for smoke during preg, set to 0}
   \FunctionTok{mutate}\NormalTok{(}\AttributeTok{smoke =} \FunctionTok{as.factor}\NormalTok{(}\FunctionTok{ifelse}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(smoke), }\DecValTok{0}\NormalTok{, smoke))) }\SpecialCharTok{|\textgreater{}} 
@@ -1364,7 +1448,7 @@ First, we clean the data from the MADRES study.
 \end{Highlighting}
 \end{Shaded}
 \hypertarget{code-for-chapter-refcopula}{%
-\subsection{Code for Chapter @ref\{copula\}:}\label{code-for-chapter-refcopula}}
+\subsection{Code for Chapter \ref{copula}:}\label{code-for-chapter-refcopula}}
 
 Next, we use copulas to simulate predictor data. We use the \texttt{copula} and \texttt{rslurm} packages in this section. This code was run on the Amherst HPC RStudio server.
 \begin{Shaded}
@@ -1547,7 +1631,7 @@ Next, we use copulas to simulate predictor data. We use the \texttt{copula} and 
 \end{Highlighting}
 \end{Shaded}
 \hypertarget{code-for-chapter-refsimresp}{%
-\subsection{Code for Chapter @ref\{simresp\}:}\label{code-for-chapter-refsimresp}}
+\subsection{Code for Chapter \ref{simresp}:}\label{code-for-chapter-refsimresp}}
 
 Next, we simulate the response data. We use the \texttt{rslurm} package in this section. This code was run on the Amherst HPC RStudio server.
 \begin{Shaded}
@@ -1961,6 +2045,16 @@ Next, we simulate the response data. We use the \texttt{rslurm} package in this 
 \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#}
 \end{Highlighting}
 \end{Shaded}
+\hypertarget{code-for-chapter-refmodels}{%
+\subsection{Code for Chapter \ref{models}:}\label{code-for-chapter-refmodels}}
+
+Here, we fit the models to our simulated data. We use the \texttt{rslurm}, \texttt{bkmr}, and \texttt{NLinteraction} packages in this section. This code was run on the Amherst HPC RStudio server.
+
+\hypertarget{code-for-chapter-refresults}{%
+\subsection{Code for Chapter \ref{results}:}\label{code-for-chapter-refresults}}
+
+Here, we extract results from our simulation. We use the \texttt{rslurm}, \texttt{bkmr}, and \texttt{NLinteraction} packages in this section. This code was run on the Amherst HPC RStudio server.
+
 \hypertarget{corrections}{%
 \chapter*{Corrections}\label{corrections}}
 \addcontentsline{toc}{chapter}{Corrections}

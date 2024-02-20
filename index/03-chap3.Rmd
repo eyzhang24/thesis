@@ -455,7 +455,7 @@ While BKMR is a fully nonparametric approach, BSR is a semiparametric approach b
 
 BSR is highly sensitive to the choice of $d$, the degrees of freedom. While it employs a WAIC approach to selecting the best $d$, this parameter introduces an additional tuning step in the analysis. Both approaches can be highly sensitive to the specification of certain priors. BSR offers an empirical Bayes strategy for $\sigma^2_{\boldsymbol\beta}$, the variance of a exposure's probability of inclusion. On the other hand, the choice of prior on the influential smoothing parameter, $\rho$, in BKMR is up to the user. 
 
-We also note that BKMR offers a hierarchical variable selection approach to dealing with collinearity between exposures While this is an additional decision that must be specified by the user, it offers a formal approach to dealing with collinear exposures. BSR does not explicitly account for collinearity in its model formulation, which can lead to erroneous interpretations of variable importance if unaccounted for. 
+We also note that BKMR offers a hierarchical variable selection approach to dealing with collinearity between exposures. While this is an additional decision that must be specified by the user, it offers a formal approach to dealing with collinear exposures. BSR does not explicitly account for collinearity in its model formulation, which can lead to erroneous interpretations of variable importance if unaccounted for. 
 
 ### Exposure-covariate interactions
 

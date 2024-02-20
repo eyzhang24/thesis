@@ -131,6 +131,8 @@ epi_small <- epi |>
                 #can't find anemia measure or AsB
   ) 
 
+table(epi_small$mom_site)
+
 #count number of NA values
 apply(is.na(epi_small), 2, sum)
 

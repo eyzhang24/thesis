@@ -13,9 +13,9 @@ library(tidyverse)
 
 ## Past simulation studies
 
-Here, we preface our simulation study with a brief overview of examples in the literature which compare the efficacy of various methods using simulations. @taylor_statistical_2016 conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Thus, for each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest. 
+Here, we preface our simulation study with a brief overview of examples in the literature which compare various methods for exposure mixtures using simulations. @taylor_statistical_2016 conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Thus, for each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest. 
 
-@lazarevic_performance_2020 compare the performance of a broad range of methods for accurate variable selection of important exposures. They simulated exposure data using a multivariate $t$-copula based on real-world data and the response by specifying a regression relationship with only a subset of truly significant exposures and a normal error term. Two correlation structures were considered — one with the original Spearman correlation matrix and one with the values halved — as well as two signal-to-noise ratios — one with an $R^2$ for the true model at 10\% and one at 30\%. They found that BKMR, along with three other flexible regression methods that allow for nonlinearity, provided more accurate variable selection results compared to two machine learning methods. Moreover, they observed that, in general, low signal-to-noise ratios had a stronger impact on performance than did increasing multicollinearity. 
+@lazarevic_performance_2020 compare the performance of a broad range of methods for accurate variable selection of important exposures. They simulated exposure data using a multivariate copula based on real-world data and the response by specifying a regression relationship with only a subset of truly significant exposures and a normal error term. Two correlation structures were considered — one with the original Spearman correlation matrix and one with the values halved — as well as two signal-to-noise ratios — one with an $R^2$ for the true model at 10\% and one at 30\%. They found that BKMR, along with three other flexible regression methods that allow for nonlinearity, provided more accurate variable selection results compared to two machine learning methods. Moreover, they observed that, in general, low signal-to-noise ratios had a stronger impact on performance than did increasing multicollinearity. 
 
 @hoskovec_model_2021 compare Bayesian methods, including BKMR, while considering 4 research questions: accurate estimation, selection of important exposures, exclusion of unimportant exposures, and identification of interactions. They use observed exposure and covariate data to simulate response data using regression relationships; they considered three exposure-response scenarios of varying complexity and included two-way multiplicative interaction terms. For each simulated dataset, they randomly assigned exposures to be active components of the mixture to incorporate variability in the data. Overall, they found that Bayesian methods outperformed traditional linear regressions, and that BKMR performed best when the exposure-response function takes on a complex form. 
 
@@ -35,7 +35,16 @@ In order to make our simulations comparable to real-world exposure mixture studi
 
 Data from the study by @howe_prenatal_2020 were obtained from publicly available data in the Human Health Exposure Resource (HHEAR) Data Repository, which has been approved under Icahn School of Medicine at Mount Sinai IRB Protocol #16-00947. The Digital Object Identifiers associated with the urinary trace element data and epidemiological data are 10.36043/1945_159 and 10.36043/1945_177, respectively. All analyses were conducted in R v4.3.2 [@r_core_team_r_2013].
 
-We followed the approach by @howe_prenatal_2020 for preparing the data for analysis. This resulted in retaining 10 metals in analysis: arsenic (As), cadmium (Cd), cobalt (Co), mercury (Hg), nickel (Ni), molybdenum (Mo), lead (Pb), antimony (Sb), tin (Sn), and thallium (Tl). @howe_prenatal_2020 used speciated As, but this was not available in HHEAR, so we used total As. Metals were expressed in $\mu$g/g and natural log transformed to reduce right-skewness and then standardized to keep values scale-free. Among the full range of covariates considered by @howe_prenatal_2020, we used the subset of 4 that were available in HHEAR: any smoke exposure during pregnancy, maternal prepregnancy body mass index (BMI), maternal age during firt trimester, and maternal race by ethnicity and birth place. We chose not to include study site, as there were certain study sites with only 1 or 2 participants. Race by ethnicity and birth place was collapsed into the following categories: non-Hispanic white, non-Hispanic black, non-Hispanic other, Hispanic born in the US, and Hispanic born outside the US. We observed 8 missing values for BMI in the data from HHEAR, which were not reported by @howe_prenatal_2020. We mean imputed these missing values. Our final analytic dataset included 252 participants, which was 10 fewer than in @howe_prenatal_2020, likely due to small discrepancies in their dataset and the one made available in HHEAR. 
+```{r logtransf, fig.cap="Distributions of original (a) and natural log transformed (b) concentrations of metals in MADRES cohort (n=252).", out.width = '90%', echo = FALSE}
+include_graphics(path = "figures/ch4_univlog.png")
+```
+
+
+We followed the approach by @howe_prenatal_2020 for preparing the data for analysis. This resulted in retaining 10 metals in analysis: arsenic (As), cadmium (Cd), cobalt (Co), mercury (Hg), nickel (Ni), molybdenum (Mo), lead (Pb), antimony (Sb), tin (Sn), and thallium (Tl). @howe_prenatal_2020 used speciated As, but this was not available in HHEAR, so we used total As. Metals were expressed in nanograms per milliliter (ng/mL) and natural log transformed to reduce right-skewness (Figure \@ref(fig:logtransf)). Among the full range of covariates considered by @howe_prenatal_2020, we used the subset of 4 that were available in HHEAR: any smoke exposure during pregnancy, maternal prepregnancy body mass index (BMI), maternal age during firt trimester, and maternal race by ethnicity and birth place. We chose not to include study site, as there was a study site with only 1 participant. Race by ethnicity and birth place was collapsed into the following categories: non-Hispanic white, non-Hispanic black, non-Hispanic other, Hispanic born in the US, and Hispanic born outside the US. We observed 8 missing values for BMI in the data from HHEAR, which were not reported by @howe_prenatal_2020. We mean imputed these missing values. Distributions of covariates are shown in Figure \@ref(fig:covdist). Our final analytic dataset included 252 participants, which was 10 fewer than in @howe_prenatal_2020, likely due to small discrepancies in their dataset and the one made available in HHEAR. 
+
+```{r covdist, fig.cap="Distributions of continuous (a) and categorical (b) covariates in the MADRES cohort (n=252).", out.width = '75%', echo = FALSE}
+include_graphics(path = "figures/ch4_covdist.png")
+```
 
 <!-- include study site??? -->
 
@@ -51,11 +60,35 @@ $$
 
 \noindent Note that, by the probability integral transform, or the universality of the uniform, the CDFs $F_1(x_1), \dots, F_n(x_n)$ are distributed uniformly. 
 
-We used the `copula` package in R to fit copulas and generate random data [@hofert_copula_2023]. We transformed the observed continuous predictor values to uniform distributions based on their empirical marginal CDFs, a process called generating "pseudo-random" samples. We used the checkerboard copula approach for generating pseudo-random samples for smoke exposure, a binary variable [@genest_primer_2007]. We coded smoke exposure as 0's and 1's, generated a pseudo-random sample, and then "jittered" the values with uniform random noise. There is currently no widely accepted approach for generating pseudo-random samples from unordered categorical variables with more than two levels. Thus, we excluded race by ethnicity and birthplace from the copula model. While this ignores any potential correlation between race and exposure, Figure [*figure of race by exposure*] suggests that there is little to no visible correlation between race and exposure in the observed dataset. 
+```{r raceexp, fig.cap="Association between race by ethnicity and birth place and metal exposures in the MADRES cohort (n=252).", out.width = '75%', echo = FALSE}
+include_graphics(path = "figures/ch4_race_exp.png")
+```
 
-Various families of copulas have been described, each of which specifies a different shape for the dependence structure. We fit the set of multivariate copulas used by @lazarevic_performance_2020 in their simulation study, which included the Gaussian, t, Gumbel, Frank, Clayton, and Joe copulas. We fit two t copulas with 4 and 10 degrees of freedom, which controls dependence at the tails of the distributions, as well as a t copula where the degrees of freedom was determined during the fitting process. The Gumbel, Frank, Clayton, and Joe copulas require a $\theta$ parameter, which controls dependence between the distributions. We fit two versions of these copulas with $\theta=\{2, 4\}$. Among these, the Gaussian copula minimized Akaike information criterion and maximized likelihood, so we proceeded with this model. The Gaussian copula assumes a bivariate normal dependence structure between the marginal CDFs. 
+We used the `copula` package in R to fit copulas and generate random data [@hofert_copula_2023]. We transformed the observed continuous predictor values to uniform distributions based on their empirical marginal CDFs, a process called generating "pseudo-random" samples. We used the checkerboard copula approach for generating pseudo-random samples for smoke exposure, a binary variable [@genest_primer_2007]. We coded smoke exposure as 0's and 1's, generated a pseudo-random sample, and then "jittered" the values with uniform random noise. There is currently no widely accepted approach for generating pseudo-random samples from unordered categorical variables with more than two levels. Thus, we excluded race by ethnicity and birthplace from the copula model. While this means that our simulated datasets did not preserve any potential association between race and exposures, Figure \@ref(fig:raceexp) suggests that there is little to no visible association between race and exposures in the observed dataset. 
+
+Various families of copulas have been described, each of which specifies a different shape for the dependence structure. We performed model selection to identify the copula that best approximates the dependence structure of our data. We fit the set of multivariate copulas used by @lazarevic_performance_2020 in their simulation study, which included the Gaussian, $t$, Gumbel, Frank, Clayton, and Joe copulas. We fit two $t$ copulas with 4 and 10 degrees of freedom, which controls dependence at the tails of the distributions, as well as a $t$ copula where the degrees of freedom was determined during the fitting process. The Gumbel, Frank, Clayton, and Joe copulas require a $\theta$ parameter, which controls dependence between the distributions. We fit two versions of these copulas with $\theta=\{2, 4\}$. Among these, the Gaussian copula minimized Akaike information criterion and maximized likelihood, so we proceeded with this model. The Gaussian copula assumes a bivariate normal dependence structure between the marginal CDFs. 
+
+```{r univexpsim, fig.cap="Exposure distributions from simulation.", out.width = '75%', echo = FALSE}
+include_graphics(path = "figures/ch4_univ_exp_sim.png")
+```
+
+```{r univcovsim, fig.cap = "Covariate distributions from simulation.", out.width = '75%', echo = FALSE}
+include_graphics(path = "figures/ch4_univ_cov_sim.png")
+```
+
+Figure \@ref(fig:univexpsim), Figure \@ref(fig:univcovsim)
 
 We simulated predictor data by randomly sampling from the fitted multivariate Gaussian copula distribution. All pseudo-random samples were then back-transformed to their original distributions using empirical marginal CDFs. We simulated the race by ethnicity and birthplace variable by randomly assigning observations to each of the five categories based on proportions in the observed dataset. 
+
+Figure \@ref(fig:corheatmap), Figure \@ref(fig:cordens)
+
+```{r corheatmap, fig.cap = "Correlation heatmaps from original and simulation.", out.width = '100%', echo = FALSE}
+include_graphics(path = "figures/ch4_corr_sim+orig.png")
+```
+
+```{r cordens, fig.cap = "Density of correlations from simulation.", out.width = '100%', echo = FALSE}
+include_graphics(path = "figures/ch4_corr_sim.png")
+```
 
 *show correlation and marginal distribution of original and simulations*
 
@@ -122,7 +155,9 @@ This resulted in a total of 42 scenarios.
 
 Software: @bobb_statistical_2018 on CRAN, @antonelli_estimating_2020 on GitHub
 
-Models compared, specify the parameters for each (justify them!)
+Models compared, specify the parameters for each (justify them!). 
+
+All metal concentrations were standardized to keep values scale-free. 
 
 - MLR
 - MLR with known form of interactions specified (oracle method)

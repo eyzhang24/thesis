@@ -310,7 +310,7 @@ epi_small <- epi |>
 # handle NA values
 epi_imp <- epi_small |> 
   # exclude birthweight (observed response)
-  # exclude study sitebecause of small categories
+  # exclude study site because of small categories
   select(-c(gender, birthweight, GA, mom_site)) |> 
   # na's for smoke during preg, set to 0
   mutate(smoke = as.factor(ifelse(is.na(smoke), 0, smoke))) |> 
@@ -935,4 +935,4 @@ Here, we fit the models to our simulated data. We use the `rslurm`, `bkmr`, and 
 
 ### Code for Chapter \@ref(results):
 
-Here, we extract results from our simulation. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. 
+Here, we extract results from our simulation. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. This code was run on the Amherst HPC RStudio server. 
