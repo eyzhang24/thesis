@@ -8,6 +8,7 @@ if(!require(reticulate)) {
                '/Users/elizabethzhang/Library/r-miniconda-arm64/envs/r-reticulate/bin/python')
   reticulate::use_miniconda('r-reticulate')
 }
+library(tidyverse)
 
 # load in observed data
 comb_small <- read_csv("madres_data/base_data.csv")
@@ -30,7 +31,7 @@ x1 <- data$x1
 x2 <- data$x2
 
 # function to create plot
-create_plot <- function(xax, yax, Y) {
+create_plot <- function(xax, yax, Y, xname = NA, yname = NA) {
   plot_ly(x = ~xax, y = ~yax, z = ~Y, intensity = ~Y) |> 
     add_trace(type = "mesh3d") |> 
     layout(scene = list(
@@ -39,13 +40,13 @@ create_plot <- function(xax, yax, Y) {
                    showline = TRUE, 
                    mirror = TRUE, 
                    ticks = "outside", 
-                   title = "x1"), 
+                   title = xname), 
       yaxis = list(rangemode = "normal", 
                    showgrid = FALSE,
                    showline = TRUE, 
                    mirror = TRUE, 
                    ticks = "outside", 
-                   title = "x2"), 
+                   title = yname), 
       zaxis = list(rangemode = "normal", 
                    showgrid = FALSE,
                    showline = TRUE, 
@@ -62,51 +63,42 @@ create_plot <- function(xax, yax, Y) {
 
 # no interaction
 y00 <- with(data, x1 + 3/(1+exp(-4*x2))) 
-fig00 <- create_plot(x1, x2, y00)
+fig00 <- create_plot(x1, x2, y00, "Hg", "Ni")  |> 
+  layout(scene = list(camera = list(eye = list(x = 1.5, y = 1.5, z = 0.1))))
 fig00
 save_image(fig00, "index/figures/surfaces/p00.png", 
            width = 720, height = 480, scale = 3)
 
 # multiplicative interaction, smaller effect size
-y01 <- with(data, x1 + 3/(1+exp(-4*x2)) + 0.3*x1*x2) 
-fig01 <- create_plot(x1, x2, y01)
-fig01
-save_image(fig01, "index/figures/surfaces/p01.png", 
+yam1 <- with(data, x1 + 3/(1+exp(-4*x2)) + 0.35*x1*x2) 
+figam1 <- create_plot(x1, x2, yam1, "Hg", "Ni") |> 
+  layout(scene = list(camera = list(eye = list(x = 1.5, y = 1.5, z = .1))))
+figam1
+save_image(figam1, "index/figures/surfaces/am1.png", 
            width = 720, height = 480, scale = 3)
 
 # multiplicative interaction, larger effect size
-y02 <- with(data, x1 + 3/(1+exp(-4*x2)) + 0.6*x1*x2) 
-fig02 <- create_plot(x1, x2, y02)
-fig02
-save_image(fig02, "index/figures/surfaces/p02.png", 
+yam2 <- with(data, x1 + 3/(1+exp(-4*x2)) + 0.75*x1*x2) 
+figam2 <- create_plot(x1, x2, yam2, "Hg", "Ni") |> 
+  layout(scene = list(camera = list(eye = list(x = 1.5, y = 1.5, z = .1))))
+figam2
+save_image(figam2, "index/figures/surfaces/am2.png", 
            width = 720, height = 480, scale = 3)
 
 # polynomial interaction, smaller effect size
-y03 <- with(data, x1 + 3/(1+exp(-4*x2)) + 0.1*x1*((x2-1)^2))
-fig03 <- create_plot(x1, x2, y03)
-fig03
-save_image(fig03, "index/figures/surfaces/p03.png", 
+yap1 <- with(data, x1 + 3/(1+exp(-4*x2)) + 0.13*x1*((x2-1)^2))
+figap1 <- create_plot(x1, x2, yap1, "Hg", "Ni")|> 
+  layout(scene = list(camera = list(eye = list(x = 1.5, y = 1.5, z = .1))))
+figap1
+save_image(figap1, "index/figures/surfaces/ap1.png", 
            width = 720, height = 480, scale = 3)
 
 # polynomial interaction, larger effect size
-y04 <- with(data, x1 + 3/(1+exp(-4*x2)) + 0.2*x1*((x2-1)^2))
-fig04 <- create_plot(x1, x2, y04)
-fig04
-save_image(fig04, "index/figures/surfaces/p04.png", 
-           width = 720, height = 480, scale = 3)
-
-# sinusoidal interaction, smaller effect size
-y05 <- with(data, x1 + 3/(1+exp(-4*x2)) + sin(0.25*pi*x1*x2))
-fig05 <- create_plot(x1, x2, y05)
-fig05
-save_image(fig05, "index/figures/surfaces/p05.png", 
-           width = 720, height = 480, scale = 3)
-
-# sinusoidal interaction, larger effect size
-y06 <- with(data, x1 + 3/(1+exp(-4*x2)) + 2*sin(0.25*pi*x1*x2))
-fig06 <- create_plot(x1, x2, y06)
-fig06
-save_image(fig06, "index/figures/surfaces/p06.png", 
+yap2 <- with(data, x1 + 3/(1+exp(-4*x2)) + 0.26*x1*((x2-1)^2))
+figap2 <- create_plot(x1, x2, yap2, "Hg", "Ni") |> 
+  layout(scene = list(camera = list(eye = list(x = 1.5, y = 1.5, z = .1))))
+figap2
+save_image(figap2, "index/figures/surfaces/ap2.png", 
            width = 720, height = 480, scale = 3)
 
 ##########
@@ -114,45 +106,35 @@ save_image(fig06, "index/figures/surfaces/p06.png",
 ##########
 
 # multiplicative interaction, smaller effect size
-y11 <- with(data, 0.5*x1*x2) 
-fig11 <- create_plot(x1, x2, y11)
-fig11
-save_image(fig11, "index/figures/surfaces/p11.png", 
+ybm1 <- with(data, 0.35*x1*x2) 
+figbm1 <- create_plot(x1, x2, ybm1, "Cd", "As") |> 
+  layout(scene = list(camera = list(eye = list(x = 1.4, y = 1.4, z = 1.2))))
+figbm1
+save_image(figbm1, "index/figures/surfaces/bm1.png", 
            width = 720, height = 480, scale = 3)
 
 # multiplicative interaction, larger effect size
-y12 <- with(data, x1*x2) 
-fig12 <- create_plot(x1, x2, y12)
-fig12
-save_image(fig12, "index/figures/surfaces/p12.png", 
+ybm2 <- with(data, 0.7*x1*x2) 
+figbm2 <- create_plot(x1, x2, ybm2, "Cd", "As") |> 
+  layout(scene = list(camera = list(eye = list(x = 1.4, y = 1.4, z = 1.2))))
+figbm2
+save_image(figbm2, "index/figures/surfaces/bm2.png", 
            width = 720, height = 480, scale = 3)
 
 # polynomial interaction, smaller effect size
-y13 <- with(data, 0.1*x1*((x2-1)^2))
-fig13 <- create_plot(x1, x2, y13)
-fig13
-save_image(fig13, "index/figures/surfaces/p13.png", 
+ybp1 <- with(data, 0.125*x1*((x2-1)^2)) 
+figbp1 <- create_plot(x1, x2, ybp1, "Cd", "As") |> 
+  layout(scene = list(camera = list(eye = list(x = 1.4, y = 1.4, z = 1.2))))
+figbp1
+save_image(figbp1, "index/figures/surfaces/bp1.png", 
            width = 720, height = 480, scale = 3)
 
 # polynomial interaction, larger effect size
-y14 <- with(data, 0.2*x1*((x2-1)^2))
-fig14 <- create_plot(x1, x2, y14)
-fig14
-save_image(fig14, "index/figures/surfaces/p14.png", 
-           width = 720, height = 480, scale = 3)
-
-# sinusoidal interaction, smaller effect size
-y15 <- with(data, sin(0.25*pi*x1*x2))
-fig15 <- create_plot(x1, x2, y15)
-fig15
-save_image(fig15, "index/figures/surfaces/p15.png", 
-           width = 720, height = 480, scale = 3)
-
-# sinusoidal interaction, larger effect size
-y16 <- with(data, 2*sin(0.25*pi*x1*x2))
-fig16 <- create_plot(x1, x2, y16)
-fig16
-save_image(fig16, "index/figures/surfaces/p16.png", 
+ybp2 <- with(data, 0.25*x1*((x2-1)^2))
+figbp2 <- create_plot(x1, x2, ybp2, "Cd", "As") |> 
+  layout(scene = list(camera = list(eye = list(x = 1.4, y = 1.4, z = 1.2))))
+figbp2
+save_image(figbp2, "index/figures/surfaces/bp2.png", 
            width = 720, height = 480, scale = 3)
 
 ##########
@@ -160,44 +142,36 @@ save_image(fig16, "index/figures/surfaces/p16.png",
 ##########
 
 # multiplicative interaction, smaller effect size
-y21 <- with(data, 3/(1+exp(-4*x2)) + 0.3*x1*x2) 
-fig21 <- create_plot(x1, x2, y21)
-fig21
-save_image(fig21, "index/figures/surfaces/p21.png", 
+ycm1 <- with(data, 3/(1+exp(-4*x2)) + 0.3*x1*x2) 
+figcm1 <- create_plot(x1, x2, ycm1, "Ni", "Co") |> 
+  layout(scene = list(camera = list(eye = list(x = 1.2, y = 1.2, z = 1.5))))
+figcm1
+save_image(figcm1, "index/figures/surfaces/cm1.png", 
            width = 720, height = 480, scale = 3)
 
 # multiplicative interaction, larger effect size
-y22 <- with(data, 3/(1+exp(-4*x2)) + 0.6*x1*x2) 
-fig22 <- create_plot(x1, x2, y22)
-fig22
-save_image(fig22, "index/figures/surfaces/p22.png", 
+ycm2 <- with(data, 3/(1+exp(-4*x2)) + 0.6*x1*x2) 
+figcm2 <- create_plot(x1, x2, ycm2, "Ni", "Co") |> 
+  layout(scene = list(camera = list(eye = list(x = 1.2, y = 1.2, z = 1.5))))
+figcm2
+save_image(figcm2, "index/figures/surfaces/cm2.png", 
            width = 720, height = 480, scale = 3)
 
 # polynomial interaction, smaller effect size
-y23 <- with(data, 3/(1+exp(-4*x2)) + 0.1*x1*((x2-1)^2))
-fig23 <- create_plot(x1, x2, y23)
-fig23
-save_image(fig23, "index/figures/surfaces/p23.png", 
+ycp1 <- with(data, 3/(1+exp(-4*x2)) + 0.1*x1*((x2-1)^2))
+figcp1 <- create_plot(x1, x2, ycp1, "Ni", "Co") |> 
+  layout(scene = list(camera = list(eye = list(x = 1.5, y = 1.5, z = .1))))
+figcp1
+save_image(figcp1, "index/figures/surfaces/cp1.png", 
            width = 720, height = 480, scale = 3)
 
 # polynomial interaction, larger effect size
-y24 <- with(data, 3/(1+exp(-4*x2)) + 0.2*x1*((x2-1)^2))
-fig24 <- create_plot(x1, x2, y24)
-fig24
-save_image(fig24, "index/figures/surfaces/p24.png", 
+ycp2 <- with(data, 3/(1+exp(-4*x2)) + 0.2*x1*((x2-1)^2))
+figcp2 <- create_plot(x1, x2, ycp2, "Ni", "Co") |> 
+  layout(scene = list(camera = list(eye = list(x = 1.5, y = 1.5, z = .1))))
+figcp2
+save_image(figcp2, "index/figures/surfaces/cp2.png", 
            width = 720, height = 480, scale = 3)
 
-# sinusoidal interaction, smaller effect size
-y25 <- with(data, 3/(1+exp(-4*x2)) + sin(0.25*pi*x1*x2))
-fig25 <- create_plot(x1, x2, y25)
-fig25
-save_image(fig25, "index/figures/surfaces/p25.png", 
-           width = 720, height = 480, scale = 3)
 
-# sinusoidal interaction, larger effect size
-y26 <- with(data, 3/(1+exp(-4*x2)) + 2*sin(0.25*pi*x1*x2))
-fig26 <- create_plot(x1, x2, y26)
-fig26
-save_image(fig26, "index/figures/surfaces/p26.png", 
-           width = 720, height = 480, scale = 3)
 

@@ -82,13 +82,11 @@ We simulated predictor data by randomly sampling from the fitted multivariate Ga
 
 Figure \@ref(fig:corheatmap), Figure \@ref(fig:cordens)
 
-```{r corheatmap, fig.cap = "Correlation heatmaps from original and simulation.", out.width = '100%', echo = FALSE}
-include_graphics(path = "figures/ch4_corr_sim+orig.png")
+```{r corsims, fig.cap = "Correlation heatmaps from original and simulation. Density of correlations from simulation.", out.width = '100%', echo = FALSE}
+include_graphics(path = "figures/ch4_corr_simorigdens.png")
 ```
 
-```{r cordens, fig.cap = "Density of correlations from simulation.", out.width = '100%', echo = FALSE}
-include_graphics(path = "figures/ch4_corr_sim.png")
-```
+
 
 *show correlation and marginal distribution of original and simulations*
 
