@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2024.2.20)  20 FEB 2024 19:47
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2024.2.20)  20 FEB 2024 22:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -697,18 +697,18 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [13] [14]
-<figures/ch3_toy1.png, id=456, 361.35pt x 216.81pt>
+<figures/ch3_toy1.png, id=486, 361.35pt x 216.81pt>
 File: figures/ch3_toy1.png Graphic file (type png)
 <use figures/ch3_toy1.png>
 Package pdftex.def Info: figures/ch3_toy1.png  used on input line 519.
 (pdftex.def)             Requested size: 325.215pt x 195.1305pt.
-<figures/ch3_toy2.png, id=458, 361.35pt x 289.08pt>
+<figures/ch3_toy2.png, id=488, 361.35pt x 289.08pt>
 File: figures/ch3_toy2.png Graphic file (type png)
 <use figures/ch3_toy2.png>
 Package pdftex.def Info: figures/ch3_toy2.png  used on input line 528.
 (pdftex.def)             Requested size: 325.215pt x 260.174pt.
 [15 <./figures/ch3_toy1.png>]
-<figures/ch3_toy3.png, id=469, 361.35pt x 216.81pt>
+<figures/ch3_toy3.png, id=498, 361.35pt x 216.81pt>
 File: figures/ch3_toy3.png Graphic file (type png)
 <use figures/ch3_toy3.png>
 Package pdftex.def Info: figures/ch3_toy3.png  used on input line 537.
@@ -721,7 +721,7 @@ LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 54
 (/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-<figures/ch3_toyrho.png, id=476, 505.89pt x 216.81pt>
+<figures/ch3_toyrho.png, id=505, 505.89pt x 216.81pt>
 File: figures/ch3_toyrho.png Graphic file (type png)
 <use figures/ch3_toyrho.png>
 Package pdftex.def Info: figures/ch3_toyrho.png  used on input line 546.
@@ -739,12 +739,12 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [25]
-<figures/ch3_toy4.png, id=528, 361.35pt x 216.81pt>
+<figures/ch3_toy4.png, id=557, 361.35pt x 216.81pt>
 File: figures/ch3_toy4.png Graphic file (type png)
 <use figures/ch3_toy4.png>
 Package pdftex.def Info: figures/ch3_toy4.png  used on input line 709.
 (pdftex.def)             Requested size: 325.215pt x 195.1305pt.
-<figures/ch3_toy5.png, id=530, 361.35pt x 216.81pt>
+<figures/ch3_toy5.png, id=559, 361.35pt x 216.81pt>
 File: figures/ch3_toy5.png Graphic file (type png)
 <use figures/ch3_toy5.png>
 Package pdftex.def Info: figures/ch3_toy5.png  used on input line 718.
@@ -753,7 +753,7 @@ Package pdftex.def Info: figures/ch3_toy5.png  used on input line 718.
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [26 <./figures/ch3_toy4.png>]
-<figures/ch3_toy6.png, id=536, 361.35pt x 216.81pt>
+<figures/ch3_toy6.png, id=565, 361.35pt x 216.81pt>
 File: figures/ch3_toy6.png Graphic file (type png)
 <use figures/ch3_toy6.png>
 Package pdftex.def Info: figures/ch3_toy6.png  used on input line 727.
@@ -762,7 +762,7 @@ Package pdftex.def Info: figures/ch3_toy6.png  used on input line 727.
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [27 <./figures/ch3_toy5.png>]
-<figures/ch3_toybounds.png, id=543, 505.89pt x 216.81pt>
+<figures/ch3_toybounds.png, id=572, 505.89pt x 216.81pt>
 File: figures/ch3_toybounds.png Graphic file (type png)
 <use figures/ch3_toybounds.png>
 Package pdftex.def Info: figures/ch3_toybounds.png  used on input line 736.
@@ -787,18 +787,18 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [38] [39]
-<figures/ch4_univlog.png, id=613, 542.025pt x 361.35pt>
+<figures/ch4_univlog.png, id=642, 542.025pt x 361.35pt>
 File: figures/ch4_univlog.png Graphic file (type png)
 <use figures/ch4_univlog.png>
 Package pdftex.def Info: figures/ch4_univlog.png  used on input line 873.
 (pdftex.def)             Requested size: 390.25534pt x 260.1773pt.
-<figures/ch4_covdist.png, id=616, 433.62pt x 289.08pt>
+<figures/ch4_covdist.png, id=645, 433.62pt x 289.08pt>
 File: figures/ch4_covdist.png Graphic file (type png)
 <use figures/ch4_covdist.png>
 Package pdftex.def Info: figures/ch4_covdist.png  used on input line 882.
 (pdftex.def)             Requested size: 325.215pt x 216.81828pt.
 [40 <./figures/ch4_univlog.png>] [41 <./figures/ch4_covdist.png>]
-<figures/ch4_race_exp.png, id=629, 433.62pt x 289.08pt>
+<figures/ch4_race_exp.png, id=658, 433.62pt x 289.08pt>
 File: figures/ch4_race_exp.png Graphic file (type png)
 <use figures/ch4_race_exp.png>
 Package pdftex.def Info: figures/ch4_race_exp.png  used on input line 902.
@@ -807,7 +807,7 @@ Package pdftex.def Info: figures/ch4_race_exp.png  used on input line 902.
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [42]
-<figures/ch4_univ_exp_sim.png, id=635, 433.62pt x 289.08pt>
+<figures/ch4_univ_exp_sim.png, id=664, 433.62pt x 289.08pt>
 File: figures/ch4_univ_exp_sim.png Graphic file (type png)
 <use figures/ch4_univ_exp_sim.png>
 Package pdftex.def Info: figures/ch4_univ_exp_sim.png  used on input line 913.
@@ -816,7 +816,7 @@ Package pdftex.def Info: figures/ch4_univ_exp_sim.png  used on input line 913.
 Underfull \vbox (badness 4765) has occurred while \output is active []
 
 [43 <./figures/ch4_race_exp.png>]
-<figures/ch4_univ_cov_sim.png, id=640, 433.62pt x 289.08pt>
+<figures/ch4_univ_cov_sim.png, id=669, 433.62pt x 289.08pt>
 File: figures/ch4_univ_cov_sim.png Graphic file (type png)
 <use figures/ch4_univ_cov_sim.png>
 Package pdftex.def Info: figures/ch4_univ_cov_sim.png  used on input line 921.
@@ -825,226 +825,304 @@ Package pdftex.def Info: figures/ch4_univ_cov_sim.png  used on input line 921.
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [44 <./figures/ch4_univ_exp_sim.png>]
-Underfull \hbox (badness 1062) in paragraph at lines 929--930
+<figures/ch4_corr_simorigdens.png, id=676, 722.7pt x 867.24pt>
+File: figures/ch4_corr_simorigdens.png Graphic file (type png)
+<use figures/ch4_corr_simorigdens.png>
+Package pdftex.def Info: figures/ch4_corr_simorigdens.png  used on input line 930.
+(pdftex.def)             Requested size: 433.62pt x 520.34802pt.
+
+Underfull \hbox (badness 1062) in paragraph at lines 927--935
 \T1/lmr/m/n/12 vari-ate Gaus-sian cop-ula dis-tri-bu-tion. All pseudo-random sam-ples were then
  []
 
 
-LaTeX Warning: Reference `fig:corheatmap' on page 45 undefined on input line 931.
-
-
-LaTeX Warning: Reference `fig:cordens' on page 45 undefined on input line 931.
-
-<figures/ch4_corr_simorigdens.png, id=647, 722.7pt x 867.24pt>
-File: figures/ch4_corr_simorigdens.png Graphic file (type png)
-<use figures/ch4_corr_simorigdens.png>
-Package pdftex.def Info: figures/ch4_corr_simorigdens.png  used on input line 934.
-(pdftex.def)             Requested size: 433.62pt x 520.34802pt.
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[45 <./figures/ch4_univ_cov_sim.png>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-[46 <./figures/ch4_corr_simorigdens.png>] [47] [48] [49] [50
+[45 <./figures/ch4_univ_cov_sim.png>] [46 <./figures/ch4_corr_simorigdens.png>] [47] [48] [49] [50
 
 ] [51] [52
 
 ]
 Appendix A.
-LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 1080.
-LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 1082.
-(/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
-File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [53] [54
+<figures/surfaces/p00.png, id=719, 2168.1pt x 1445.4pt>
+File: figures/surfaces/p00.png Graphic file (type png)
+<use figures/surfaces/p00.png>
+Package pdftex.def Info: figures/surfaces/p00.png  used on input line 1072.
+(pdftex.def)             Requested size: 325.215pt x 216.80064pt.
+<figures/surfaces/am1.png, id=720, 2168.1pt x 1445.4pt>
+File: figures/surfaces/am1.png Graphic file (type png)
+<use figures/surfaces/am1.png>
+Package pdftex.def Info: figures/surfaces/am1.png  used on input line 1080.
+(pdftex.def)             Requested size: 325.215pt x 216.80064pt.
+<figures/surfaces/am2.png, id=721, 2168.1pt x 1445.4pt>
+File: figures/surfaces/am2.png Graphic file (type png)
+<use figures/surfaces/am2.png>
+Package pdftex.def Info: figures/surfaces/am2.png  used on input line 1088.
+(pdftex.def)             Requested size: 325.215pt x 216.80064pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[53 <./figures/surfaces/p00.png>]
+<figures/surfaces/ap1.png, id=729, 2168.1pt x 1445.4pt>
+File: figures/surfaces/ap1.png Graphic file (type png)
+<use figures/surfaces/ap1.png>
+Package pdftex.def Info: figures/surfaces/ap1.png  used on input line 1096.
+(pdftex.def)             Requested size: 325.215pt x 216.80064pt.
+<figures/surfaces/ap2.png, id=730, 2168.1pt x 1445.4pt>
+File: figures/surfaces/ap2.png Graphic file (type png)
+<use figures/surfaces/ap2.png>
+Package pdftex.def Info: figures/surfaces/ap2.png  used on input line 1104.
+(pdftex.def)             Requested size: 325.215pt x 216.80064pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[54 <./figures/surfaces/am1.png> <./figures/surfaces/am2.png>]
+<figures/surfaces/bm1.png, id=737, 2168.1pt x 1445.4pt>
+File: figures/surfaces/bm1.png Graphic file (type png)
+<use figures/surfaces/bm1.png>
+Package pdftex.def Info: figures/surfaces/bm1.png  used on input line 1112.
+(pdftex.def)             Requested size: 325.215pt x 216.80064pt.
+<figures/surfaces/bm2.png, id=738, 2168.1pt x 1445.4pt>
+File: figures/surfaces/bm2.png Graphic file (type png)
+<use figures/surfaces/bm2.png>
+Package pdftex.def Info: figures/surfaces/bm2.png  used on input line 1120.
+(pdftex.def)             Requested size: 325.215pt x 216.80064pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[55 <./figures/surfaces/ap1.png> <./figures/surfaces/ap2.png>]
+<figures/surfaces/bp1.png, id=745, 2168.1pt x 1445.4pt>
+File: figures/surfaces/bp1.png Graphic file (type png)
+<use figures/surfaces/bp1.png>
+Package pdftex.def Info: figures/surfaces/bp1.png  used on input line 1128.
+(pdftex.def)             Requested size: 325.215pt x 216.80064pt.
+<figures/surfaces/bp2.png, id=746, 2168.1pt x 1445.4pt>
+File: figures/surfaces/bp2.png Graphic file (type png)
+<use figures/surfaces/bp2.png>
+Package pdftex.def Info: figures/surfaces/bp2.png  used on input line 1136.
+(pdftex.def)             Requested size: 325.215pt x 216.80064pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[56 <./figures/surfaces/bm1.png> <./figures/surfaces/bm2.png>]
+<figures/surfaces/cm1.png, id=753, 2168.1pt x 1445.4pt>
+File: figures/surfaces/cm1.png Graphic file (type png)
+<use figures/surfaces/cm1.png>
+Package pdftex.def Info: figures/surfaces/cm1.png  used on input line 1144.
+(pdftex.def)             Requested size: 325.215pt x 216.80064pt.
+<figures/surfaces/cm2.png, id=754, 2168.1pt x 1445.4pt>
+File: figures/surfaces/cm2.png Graphic file (type png)
+<use figures/surfaces/cm2.png>
+Package pdftex.def Info: figures/surfaces/cm2.png  used on input line 1152.
+(pdftex.def)             Requested size: 325.215pt x 216.80064pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[57 <./figures/surfaces/bp1.png> <./figures/surfaces/bp2.png>]
+<figures/surfaces/cp1.png, id=761, 2168.1pt x 1445.4pt>
+File: figures/surfaces/cp1.png Graphic file (type png)
+<use figures/surfaces/cp1.png>
+Package pdftex.def Info: figures/surfaces/cp1.png  used on input line 1160.
+(pdftex.def)             Requested size: 325.215pt x 216.80064pt.
+<figures/surfaces/cp2.png, id=762, 2168.1pt x 1445.4pt>
+File: figures/surfaces/cp2.png Graphic file (type png)
+<use figures/surfaces/cp2.png>
+Package pdftex.def Info: figures/surfaces/cp2.png  used on input line 1168.
+(pdftex.def)             Requested size: 325.215pt x 216.80064pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[58 <./figures/surfaces/cm1.png> <./figures/surfaces/cm2.png>] [59 <./figures/surfaces/cp1.png> <./figures/surfaces/cp2.png>] [60
 
 ]
 Appendix B.
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 1191.
 
 LaTeX Font Warning: Font shape `T1/lmtt/bx/it' in size <12> not available
-(Font)              Font shape `T1/lmtt/b/sl' tried instead on input line 1129.
+(Font)              Font shape `T1/lmtt/b/sl' tried instead on input line 1210.
 
-[55] [56]
-Underfull \vbox (badness 10000) detected at line 1233
+[61] [62]
+Underfull \vbox (badness 10000) detected at line 1314
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1233
+Underfull \vbox (badness 10000) detected at line 1314
  []
 
-[57] [58]
-Underfull \vbox (badness 10000) detected at line 1321
- []
-
-
-Underfull \vbox (badness 10000) detected at line 1321
- []
-
-[59] [60] [61] [62] [63]
-Underfull \vbox (badness 10000) detected at line 1528
+[63] [64]
+Underfull \vbox (badness 10000) detected at line 1402
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1528
+Underfull \vbox (badness 10000) detected at line 1402
  []
 
-[64] [65]
-Underfull \vbox (badness 10000) detected at line 1624
- []
-
-
-Underfull \vbox (badness 10000) detected at line 1624
- []
-
-[66] [67]
-Underfull \vbox (badness 10000) detected at line 1880
+[65]
+LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 1436.
+(/Users/elizabethzhang/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
+File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) [66] [67] [68] [69]
+Underfull \vbox (badness 10000) detected at line 1609
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1880
+Underfull \vbox (badness 10000) detected at line 1609
  []
 
-[68]
-Underfull \vbox (badness 10000) detected at line 1880
- []
-
-
-Underfull \vbox (badness 10000) detected at line 1880
- []
-
-[69]
-Underfull \vbox (badness 10000) detected at line 1880
+[70] [71]
+Underfull \vbox (badness 10000) detected at line 1705
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1880
- []
-
-[70]
-Underfull \vbox (badness 10000) detected at line 1880
- []
-
-
-Underfull \vbox (badness 10000) detected at line 1880
- []
-
-[71]
-Underfull \vbox (badness 10000) detected at line 1880
- []
-
-
-Underfull \vbox (badness 10000) detected at line 1880
+Underfull \vbox (badness 10000) detected at line 1705
  []
 
 [72] [73]
-Underfull \vbox (badness 10000) detected at line 2032
+Underfull \vbox (badness 10000) detected at line 1961
  []
 
 
-Underfull \vbox (badness 10000) detected at line 2032
+Underfull \vbox (badness 10000) detected at line 1961
  []
 
 [74]
-Underfull \vbox (badness 10000) detected at line 2032
+Underfull \vbox (badness 10000) detected at line 1961
  []
 
 
-Underfull \vbox (badness 10000) detected at line 2032
+Underfull \vbox (badness 10000) detected at line 1961
  []
 
-[75] [76] [77] [78
+[75]
+Underfull \vbox (badness 10000) detected at line 1961
+ []
 
-] [79] [80
+
+Underfull \vbox (badness 10000) detected at line 1961
+ []
+
+[76]
+Underfull \vbox (badness 10000) detected at line 1961
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1961
+ []
+
+[77]
+Underfull \vbox (badness 10000) detected at line 1961
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1961
+ []
+
+[78] [79]
+Underfull \vbox (badness 10000) detected at line 2113
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 2113
+ []
+
+[80]
+Underfull \vbox (badness 10000) detected at line 2113
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 2113
+ []
+
+[81] [82] [83] [84
+
+] [85] [86
 
 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[81
+[87
 
 ]
-Underfull \hbox (badness 1472) in paragraph at lines 2090--2092
+Underfull \hbox (badness 1472) in paragraph at lines 2171--2173
  \T1/lmr/m/n/12 soft-ware for an-a-lyz-ing the health ef-fects of mul-ti-ple con-cur-rent ex-po-sures
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[82]
-Underfull \hbox (badness 1320) in paragraph at lines 2111--2113
+[88]
+Underfull \hbox (badness 1320) in paragraph at lines 2192--2194
  \T1/lmr/m/n/12 u-lar level: Their rel-e-vance to hu-man health. \T1/lmr/m/it/12 Tox-i-col-ogy\T1/lmr/m/n/12 , \T1/lmr/m/it/12 307\T1/lmr/m/n/12 , 136--145.
  []
 
 
-Underfull \hbox (badness 1077) in paragraph at lines 2123--2125
+Underfull \hbox (badness 1077) in paragraph at lines 2204--2206
  \T1/lmr/m/n/12 for Ges-ta-tional Age in a Pre-dom-i-nately Lower-Income His-panic Preg-nancy
  []
 
 
-Underfull \hbox (badness 2237) in paragraph at lines 2126--2128
+Underfull \hbox (badness 2237) in paragraph at lines 2207--2209
  \T1/lmr/m/n/12 Plau-si-ble Mech-a-nis-tic Frame-work for Ex-plor-ing Po-ten-tial Ef-fect Mod-i-fi-ca-
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[83]
-Underfull \hbox (badness 2608) in paragraph at lines 2129--2131
+[89]
+Underfull \hbox (badness 2608) in paragraph at lines 2210--2212
  []\T1/lmr/m/n/12 Kordas, K., Lön-nerdal, B., & Stoltz-fus, R. J. (2007). In-ter-ac-tions be-
  []
 
 
-Underfull \hbox (badness 1205) in paragraph at lines 2129--2131
+Underfull \hbox (badness 1205) in paragraph at lines 2210--2212
  \T1/lmr/m/n/12 tween nu-tri-tion and en-vi-ron-men-tal ex-po-sures: Ef-fects on health out-comes
  []
 
 
-Underfull \hbox (badness 1484) in paragraph at lines 2129--2131
+Underfull \hbox (badness 1484) in paragraph at lines 2210--2212
  \T1/lmr/m/n/12 in women and chil-dren. \T1/lmr/m/it/12 The Jour-nal of Nu-tri-tion\T1/lmr/m/n/12 , \T1/lmr/m/it/12 137\T1/lmr/m/n/12 (12), 2794--2797.
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[84]
+[90]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[85]
-Underfull \hbox (badness 1259) in paragraph at lines 2180--2182
+[91]
+Underfull \hbox (badness 1259) in paragraph at lines 2261--2263
  \T1/lmr/m/n/12 men-tal epi-demi-ol-ogy. \T1/lmr/m/it/12 Eu-ro-pean Jour-nal of Epi-demi-ol-ogy\T1/lmr/m/n/12 , \T1/lmr/m/it/12 33\T1/lmr/m/n/12 (4), 355--363.
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[86] [87] (./Elizabeth-Zhang_StatThesis.aux)
+[92] [93] (./Elizabeth-Zhang_StatThesis.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-18>
  ***********
-
-LaTeX Warning: There were undefined references.
-
 Package rerunfilecheck Info: File `Elizabeth-Zhang_StatThesis.out' has not changed.
-(rerunfilecheck)             Checksum: 3DA9D896C4164AC952509EBEB39403B9;8508.
+(rerunfilecheck)             Checksum: 8FB493572D855EF1B7DE6AACA9504AFE;8508.
  )
 (\end occurred inside a group at level 1)
 
 ### semi simple group (level 1) entered at line 263 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 15282 strings out of 476109
- 247262 string characters out of 5792729
+ 15455 strings out of 476109
+ 251886 string characters out of 5792729
  1972991 words of memory out of 5000000
- 36792 multiletter control sequences out of 15000+600000
+ 36946 multiletter control sequences out of 15000+600000
  624925 words of font info for 87 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,12n,79p,1699b,808s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,1699b,806s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtko10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt12.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtti10.pfb></Users/elizabethzhang/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Elizabeth-Zhang_StatThesis.pdf (101 pages, 2621717 bytes).
+Output written on Elizabeth-Zhang_StatThesis.pdf (107 pages, 3976664 bytes).
 PDF statistics:
- 1114 PDF objects out of 1200 (max. 8388607)
- 934 compressed objects within 10 object streams
- 258 named destinations out of 1000 (max. 500000)
- 487 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1198 PDF objects out of 1200 (max. 8388607)
+ 986 compressed objects within 10 object streams
+ 277 named destinations out of 1000 (max. 500000)
+ 552 words of extra memory for PDF output out of 10000 (max. 10000000)
 

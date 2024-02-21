@@ -13,6 +13,8 @@ library(tidyverse)
 
 ## Past simulation studies
 
+*cut this section down??*
+
 Here, we preface our simulation study with a brief overview of examples in the literature which compare various methods for exposure mixtures using simulations. @taylor_statistical_2016 conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Thus, for each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest. 
 
 @lazarevic_performance_2020 compare the performance of a broad range of methods for accurate variable selection of important exposures. They simulated exposure data using a multivariate copula based on real-world data and the response by specifying a regression relationship with only a subset of truly significant exposures and a normal error term. Two correlation structures were considered — one with the original Spearman correlation matrix and one with the values halved — as well as two signal-to-noise ratios — one with an $R^2$ for the true model at 10\% and one at 30\%. They found that BKMR, along with three other flexible regression methods that allow for nonlinearity, provided more accurate variable selection results compared to two machine learning methods. Moreover, they observed that, in general, low signal-to-noise ratios had a stronger impact on performance than did increasing multicollinearity. 
@@ -68,64 +70,50 @@ We used the `copula` package in R to fit copulas and generate random data [@hofe
 
 Various families of copulas have been described, each of which specifies a different shape for the dependence structure. We performed model selection to identify the copula that best approximates the dependence structure of our data. We fit the set of multivariate copulas used by @lazarevic_performance_2020 in their simulation study, which included the Gaussian, $t$, Gumbel, Frank, Clayton, and Joe copulas. We fit two $t$ copulas with 4 and 10 degrees of freedom, which controls dependence at the tails of the distributions, as well as a $t$ copula where the degrees of freedom was determined during the fitting process. The Gumbel, Frank, Clayton, and Joe copulas require a $\theta$ parameter, which controls dependence between the distributions. We fit two versions of these copulas with $\theta=\{2, 4\}$. Among these, the Gaussian copula minimized Akaike information criterion and maximized likelihood, so we proceeded with this model. The Gaussian copula assumes a bivariate normal dependence structure between the marginal CDFs. 
 
-```{r univexpsim, fig.cap="Exposure distributions from simulation.", out.width = '75%', echo = FALSE}
+```{r univexpsim, fig.cap="Distributions of exposures from observed data (blue) and simulated data (gray).", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch4_univ_exp_sim.png")
 ```
 
-```{r univcovsim, fig.cap = "Covariate distributions from simulation.", out.width = '75%', echo = FALSE}
+```{r univcovsim, fig.cap = "Distributions of covariates from observed data (blue) and simulated data (gray).", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch4_univ_cov_sim.png")
 ```
 
-Figure \@ref(fig:univexpsim), Figure \@ref(fig:univcovsim)
+We simulated predictor data by randomly sampling from the fitted multivariate Gaussian copula distribution. All pseudo-random samples were then back-transformed to their original distributions using empirical marginal CDFs. We simulated the race by ethnicity and birthplace variable by randomly assigning observations to each of the five categories based on proportions in the observed dataset. We verified that the original structure of the observed dataset were preserved by visually comparing univariate distributions of exposures (Figure \@ref(fig:univexpsim)) and covariates (Figure \@(ref:univcovsim)), as well as the correlation structure using Spearman's $\rho$ (Figure \@ref(fig:corsims)). 
 
-We simulated predictor data by randomly sampling from the fitted multivariate Gaussian copula distribution. All pseudo-random samples were then back-transformed to their original distributions using empirical marginal CDFs. We simulated the race by ethnicity and birthplace variable by randomly assigning observations to each of the five categories based on proportions in the observed dataset. 
-
-Figure \@ref(fig:corheatmap), Figure \@ref(fig:cordens)
-
-```{r corsims, fig.cap = "Correlation heatmaps from original and simulation. Density of correlations from simulation.", out.width = '100%', echo = FALSE}
+```{r corsims, fig.cap = "Correlation heat maps of exposures from observed data (a) and averaged from simulated data (b), as well as distribution of correlations from simulated data (c).", out.width = '100%', echo = FALSE}
 include_graphics(path = "figures/ch4_corr_simorigdens.png")
 ```
 
+We generated one set of simulated datasets with the same sample size as the observed dataset (n=252), which is typical in many cohort studies. We also generated another set of simulated datasets with a larger sample size (n=1000), which has become increasingly common with the rise of larger-scale studies and big data. The goal of this choice is to inform sample size considerations in study design. 
 
-
-*show correlation and marginal distribution of original and simulations*
-
-- univariate distribution
-- spearman's rho between continuous
-- bivariate boxplot between race/smoke and continuous
-- mosaic plot between race and smoke
-
+*include similar plots for larger dataset?*
 
 ### Simulating predictor-response relationships {#simresp}
 
-All cases:
-- 252 and 1000 sample sizes
-- multiplicative and polynomial interaction
-- small and large effect size
-
-- two-way interactions between univariately significant, univariately insignificant, and highly correlated chemicals
-- three-way interaction
-- interaction between covariate and exposure
-
-Base case:
+Health outcome responses were simulated under several different scenarios, each of which included different effect sizes and functional forms for the interactions, as well as different sample sizes. In the first scenario, we specified a "base case" model:
 
 \begin{multline*}
 Y_i = \textrm{Hg}_i + \frac{3}{1+\textrm{exp}(-4\textrm{Ni}_i)} + \frac{1.5}{1+\textrm{exp}(-4\textrm{Sn}_i)} - \textrm{Sb}_i^2 + 0.5\textrm{Sb}_i\\
-+ \textrm{age} + 0.5\textrm{bmi} - \textrm{race}_{\textrm{oth}} - \textrm{race}_{\textrm{hisp.us}} - 1.5\textrm{race}_{\textrm{hisp.non}} -\textrm{smoke} + \varepsilon_i,
++ \textrm{age}_i + 0.5\textrm{bmi}_i + 0.5\textrm{race}_{\textrm{black}i} + 0.5\textrm{race}_{\textrm{hisp.non}i} + 1.5\textrm{smoke}_i + \varepsilon_i,
 \end{multline*}
 
+\noindent where $\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0,5)$. This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb. Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an $R^2$ of around 0.2-0.3 in a multiple linear regression including only the true functional form of the chemicals, which approximates realistic signal-to-noise ratios in exposure mixture studies (@lazarevic_performance_2020). 
+
+In subsequent scenarios, we added an additional interaction term to the base case model. 
+
+The larger effect sizes were selected in order to achieve a power of approximately 0.5 at $\alpha=0.05$ in a multiple linear regression with the true functional form of the chemicals specified, as well as with the covariate terms included.
 
 ```{r, echo = FALSE}
 equations <- data.frame(
   type = rep(c("Multiplicative", "Polynomial"), 4), 
-  small = c("0.3Hg$*$Ni", "0.1Hg$*($Ni$-1)^2$", 
-            "0.3Cd$*$As", "0.1Cd$*($As$-1)^2$", 
-            "0.3Hg$*$Co", "0.1Hg$*($Co$-1)^2$", 
+  small = c("0.35Hg$*$Ni", "0.3Hg$*($Ni$-1)^2$", 
+            "0.35Cd$*$As", "0.125Cd$*($As$-1)^2$", 
+            "0.3Hg$*$Co", "0.09Hg$*($Co$-1)^2$", 
             "0.3Hg$*$Ni$*$Tl", "0.1Hg$*($Ni$-1)^2*$Tl"), 
-  large = c("0.6Hg$*$Ni", "0.2Hg$*($Ni$-1)^2$", 
-            "0.6Cd$*$As", "0.2Cd$*($As$-1)^2$", 
+  large = c("0.7Hg$*$Ni", "0.26Hg$*($Ni$-1)^2$", 
+            "0.7Cd$*$As", "0.25Cd$*($As$-1)^2$", 
             "0.6Hg$*$Co", "0.2Hg$*($Co$-1)^2$", 
-            "0.6Hg$*$Ni$*$Tl", "0.2Hg$*($Ni$-1)^2*$Tl")
+            "0.6Hg$*$Ni$*$Tl", "0.18Hg$*($Ni$-1)^2*$Tl")
 )
 labels <- c(
   "Univariately significant" = 2, 
@@ -144,9 +132,20 @@ equations |>
   pack_rows(index = labels) 
 ```
 
-This resulted in a total of 42 scenarios. 
+All cases:
+
+- 252 and 1000 sample sizes
+- multiplicative and polynomial interaction
+- small and large effect size
+
+- two-way interactions between univariately significant, univariately insignificant, and highly correlated chemicals
+- three-way interaction
+- interaction between covariate and exposure
 
 - see appendix for surfaces
+
+This resulted in a total of 42 scenarios. For each scenario, we generated 100 simulated datasets, resulting in 4200 datasets. 
+
 
 
 ### Models {#models}

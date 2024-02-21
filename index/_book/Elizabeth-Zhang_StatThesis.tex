@@ -914,7 +914,7 @@ Various families of copulas have been described, each of which specifies a diffe
 
 }
 
-\caption{Exposure distributions from simulation.}\label{fig:univexpsim}
+\caption{Distributions of exposures from observed data (blue) and simulated data (gray).}\label{fig:univexpsim}
 \end{figure}
 \begin{figure}
 
@@ -922,54 +922,34 @@ Various families of copulas have been described, each of which specifies a diffe
 
 }
 
-\caption{Covariate distributions from simulation.}\label{fig:univcovsim}
+\caption{Distributions of covariates from observed data (blue) and simulated data (gray).}\label{fig:univcovsim}
 \end{figure}
-Figure \ref{fig:univexpsim}, Figure \ref{fig:univcovsim}
-
-We simulated predictor data by randomly sampling from the fitted multivariate Gaussian copula distribution. All pseudo-random samples were then back-transformed to their original distributions using empirical marginal CDFs. We simulated the race by ethnicity and birthplace variable by randomly assigning observations to each of the five categories based on proportions in the observed dataset.
-
-Figure \ref{fig:corheatmap}, Figure \ref{fig:cordens}
+We simulated predictor data by randomly sampling from the fitted multivariate Gaussian copula distribution. All pseudo-random samples were then back-transformed to their original distributions using empirical marginal CDFs. We simulated the race by ethnicity and birthplace variable by randomly assigning observations to each of the five categories based on proportions in the observed dataset. We verified that the original structure of the observed dataset were preserved by visually comparing univariate distributions of exposures (Figure \ref{fig:univexpsim}) and covariates (Figure @(ref:univcovsim)), as well as the correlation structure using Spearman's \(\rho\) (Figure \ref{fig:corsims}).
 \begin{figure}
 
 {\centering \includegraphics[width=1\linewidth]{figures/ch4_corr_simorigdens} 
 
 }
 
-\caption{Correlation heatmaps from original and simulation. Density of correlations from simulation.}\label{fig:corsims}
+\caption{Correlation heat maps of exposures from observed data (a) and averaged from simulated data (b), as well as distribution of correlations from simulated data (c).}\label{fig:corsims}
 \end{figure}
-\emph{show correlation and marginal distribution of original and simulations}
-\begin{itemize}
-\tightlist
-\item
-  univariate distribution
-\item
-  spearman's rho between continuous
-\item
-  bivariate boxplot between race/smoke and continuous
-\item
-  mosaic plot between race and smoke
-\end{itemize}
+We generated one set of simulated datasets with the same sample size as the observed dataset (n=252), which is typical in many cohort studies. We also generated another set of simulated datasets with a larger sample size (n=1000), which has become increasingly common with the rise of larger-scale studies and big data. The goal of this choice is to inform sample size considerations in study design.
+
+\emph{include similar plots for larger dataset?}
+
 \hypertarget{simresp}{%
 \subsection{Simulating predictor-response relationships}\label{simresp}}
 
-All cases:
-- 252 and 1000 sample sizes
-- multiplicative and polynomial interaction
-- small and large effect size
-\begin{itemize}
-\tightlist
-\item
-  two-way interactions between univariately significant, univariately insignificant, and highly correlated chemicals
-\item
-  three-way interaction
-\item
-  interaction between covariate and exposure
-\end{itemize}
-Base case:
+Health outcome responses were simulated under several different scenarios, each of which included different effect sizes and functional forms for the interactions, as well as different sample sizes. In the first scenario, we specified a ``base case'' model:
 \begin{multline*}
 Y_i = \textrm{Hg}_i + \frac{3}{1+\textrm{exp}(-4\textrm{Ni}_i)} + \frac{1.5}{1+\textrm{exp}(-4\textrm{Sn}_i)} - \textrm{Sb}_i^2 + 0.5\textrm{Sb}_i\\
-+ \textrm{age} + 0.5\textrm{bmi} - \textrm{race}_{\textrm{oth}} - \textrm{race}_{\textrm{hisp.us}} - 1.5\textrm{race}_{\textrm{hisp.non}} -\textrm{smoke} + \varepsilon_i,
++ \textrm{age} + 0.5\textrm{bmi} + 0.5\textrm{race}_{\textrm{black}} + 0.5\textrm{race}_{\textrm{hisp.non}} + 1.5\textrm{smoke} + \varepsilon_i,
 \end{multline*}
+\noindent where \(\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0,5)\). This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb. Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an \(R^2\) of around 0.2-0.3 in a multiple linear regression including only the true functional form of the chemicals, which approximates realistic signal-to-noise ratios in exposure mixture studies (Lazarevic et al. (2020)).
+
+In subsequent scenarios, we added an additional interaction term to the base case model.
+
+The larger effect sizes were selected in order to achieve a power of approximately 0.5 at \(\alpha=0.05\) in a multiple linear regression with the true functional form of the chemicals specified, as well as with the covariate terms included.
 \begin{table}
 
 \caption{\label{tab:unnamed-chunk-2}Specification of interaction terms in simulations.}
@@ -982,29 +962,42 @@ Y_i = \textrm{Hg}_i + \frac{3}{1+\textrm{exp}(-4\textrm{Ni}_i)} + \frac{1.5}{1+\
 \midrule
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{Univariately significant}}\\
-\hspace{1em}Multiplicative & 0.3Hg$*$Ni & 0.6Hg$*$Ni\\
-\hspace{1em}Polynomial & 0.1Hg$*($Ni$-1)^2$ & 0.2Hg$*($Ni$-1)^2$\\
+\hspace{1em}Multiplicative & 0.35Hg$*$Ni & 0.7Hg$*$Ni\\
+\hspace{1em}Polynomial & 0.3Hg$*($Ni$-1)^2$ & 0.26Hg$*($Ni$-1)^2$\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{Univariately insignificant}}\\
-\hspace{1em}Multiplicative & 0.3Cd$*$As & 0.6Cd$*$As\\
-\hspace{1em}Polynomial & 0.1Cd$*($As$-1)^2$ & 0.2Cd$*($As$-1)^2$\\
+\hspace{1em}Multiplicative & 0.35Cd$*$As & 0.7Cd$*$As\\
+\hspace{1em}Polynomial & 0.125Cd$*($As$-1)^2$ & 0.25Cd$*($As$-1)^2$\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{Highly correlated}}\\
 \hspace{1em}Multiplicative & 0.3Hg$*$Co & 0.6Hg$*$Co\\
-\hspace{1em}Polynomial & 0.1Hg$*($Co$-1)^2$ & 0.2Hg$*($Co$-1)^2$\\
+\hspace{1em}Polynomial & 0.09Hg$*($Co$-1)^2$ & 0.2Hg$*($Co$-1)^2$\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{Three-way interaction}}\\
 \hspace{1em}Multiplicative & 0.3Hg$*$Ni$*$Tl & 0.6Hg$*$Ni$*$Tl\\
-\hspace{1em}Polynomial & 0.1Hg$*($Ni$-1)^2*$Tl & 0.2Hg$*($Ni$-1)^2*$Tl\\
+\hspace{1em}Polynomial & 0.1Hg$*($Ni$-1)^2*$Tl & 0.18Hg$*($Ni$-1)^2*$Tl\\
 \bottomrule
 \end{tabular}
 \end{table}
-This resulted in a total of 42 scenarios.
+All cases:
 \begin{itemize}
-\tightlist
+\item
+  252 and 1000 sample sizes
+\item
+  multiplicative and polynomial interaction
+\item
+  small and large effect size
+\item
+  two-way interactions between univariately significant, univariately insignificant, and highly correlated chemicals
+\item
+  three-way interaction
+\item
+  interaction between covariate and exposure
 \item
   see appendix for surfaces
 \end{itemize}
+This resulted in a total of 42 scenarios. For each scenario, we generated 100 simulated datasets, resulting in 4200 datasets.
+
 \hypertarget{models}{%
 \subsection{Models}\label{models}}
 
@@ -1070,26 +1063,114 @@ And here's some other random info: the first paragraph after a chapter title or 
 \hypertarget{supplemental-output}{%
 \chapter{Supplemental output}\label{supplemental-output}}
 
-\hypertarget{methods-1}{%
-\section{Methods}\label{methods-1}}
+\hypertarget{suppmethods}{%
+\section{Methods}\label{suppmethods}}
 
 3d surfaces of interactions.
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# load packages}
-\FunctionTok{library}\NormalTok{(plotly)}
-\ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{require}\NormalTok{(reticulate)) \{}
-  \FunctionTok{install.packages}\NormalTok{(}\StringTok{\textquotesingle{}reticulate\textquotesingle{}}\NormalTok{)}
-\NormalTok{  reticulate}\SpecialCharTok{::}\FunctionTok{install\_miniconda}\NormalTok{()}
-\NormalTok{  reticulate}\SpecialCharTok{::}\FunctionTok{conda\_install}\NormalTok{(}\StringTok{\textquotesingle{}r{-}reticulate\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}python{-}kaleido\textquotesingle{}}\NormalTok{)}
-\NormalTok{  reticulate}\SpecialCharTok{::}\FunctionTok{conda\_install}\NormalTok{(}\StringTok{\textquotesingle{}r{-}reticulate\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}plotly\textquotesingle{}}\NormalTok{, }\AttributeTok{channel =} \StringTok{\textquotesingle{}plotly\textquotesingle{}}\NormalTok{)}
-  \FunctionTok{Sys.setenv}\NormalTok{(}\AttributeTok{RETICULATE\_PYTHON =} 
-               \StringTok{\textquotesingle{}/Users/elizabethzhang/Library/r{-}miniconda{-}arm64/envs/r{-}reticulate/bin/python\textquotesingle{}}\NormalTok{)}
-\NormalTok{  reticulate}\SpecialCharTok{::}\FunctionTok{use\_miniconda}\NormalTok{(}\StringTok{\textquotesingle{}r{-}reticulate\textquotesingle{}}\NormalTok{)}
-  \FunctionTok{library}\NormalTok{(reticulate)}
-\NormalTok{\}}
-\end{Highlighting}
-\end{Shaded}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/p00} 
+
+}
+
+\caption{Surface for base case.}\label{fig:basesurf}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/am1} 
+
+}
+
+\caption{Surface for Hg, Ni, mult low eff.}\label{fig:am1}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/am2} 
+
+}
+
+\caption{Surface for Hg, Ni, mult high eff.}\label{fig:am2}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/ap1} 
+
+}
+
+\caption{Surface for Hg, Ni, poly low eff.}\label{fig:ap1}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/ap2} 
+
+}
+
+\caption{Surface for Hg, Ni, poly high eff.}\label{fig:ap2}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/bm1} 
+
+}
+
+\caption{Surface for Cd, As, mult low eff.}\label{fig:bm1}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/bm2} 
+
+}
+
+\caption{Surface for Cd, As, mult high eff.}\label{fig:bm2}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/bp1} 
+
+}
+
+\caption{Surface for Cd, As, poly low eff.}\label{fig:bp1}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/bp2} 
+
+}
+
+\caption{Surface for Cd, As, poly high eff.}\label{fig:bp2}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/cm1} 
+
+}
+
+\caption{Surface for Ni, Co, mult low eff.}\label{fig:cm1}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/cm2} 
+
+}
+
+\caption{Surface for Ni, Co, mult high eff.}\label{fig:cm2}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/cp1} 
+
+}
+
+\caption{Surface for Ni, Co, poly low eff.}\label{fig:cp1}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/cp2} 
+
+}
+
+\caption{Surface for Ni, Co, poly low eff.}\label{fig:cp2}
+\end{figure}
 \hypertarget{results-1}{%
 \section{Results}\label{results-1}}
 

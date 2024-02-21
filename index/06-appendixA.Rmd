@@ -6,28 +6,66 @@ The first appendix must start with the above text. Do not remove!
 -->
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+# knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+library(knitr)
 ```
 
 # Supplemental output
 
-## Methods
+## Methods {#suppmethods}
 
 3d surfaces of interactions. 
 
-```{r}
-# load packages
-library(plotly)
-if(!require(reticulate)) {
-  install.packages('reticulate')
-  reticulate::install_miniconda()
-  reticulate::conda_install('r-reticulate', 'python-kaleido')
-  reticulate::conda_install('r-reticulate', 'plotly', channel = 'plotly')
-  Sys.setenv(RETICULATE_PYTHON = 
-               '/Users/elizabethzhang/Library/r-miniconda-arm64/envs/r-reticulate/bin/python')
-  reticulate::use_miniconda('r-reticulate')
-  library(reticulate)
-}
+```{r basesurf, fig.cap = "Surface for base case.", out.width = '65%', echo = F}
+include_graphics("figures/surfaces/p00.png")
+```
+
+```{r am1, fig.cap = "Surface for Hg, Ni, mult low eff.", out.width = '65%', echo = F}
+include_graphics("figures/surfaces/am1.png")
+```
+
+```{r am2, fig.cap = "Surface for Hg, Ni, mult high eff.", out.width = '65%', echo = F}
+include_graphics("figures/surfaces/am2.png")
+```
+
+```{r ap1, fig.cap = "Surface for Hg, Ni, poly low eff.", out.width = '65%', echo = F}
+include_graphics("figures/surfaces/ap1.png")
+```
+
+```{r ap2, fig.cap = "Surface for Hg, Ni, poly high eff.", out.width = '65%', echo = F}
+include_graphics("figures/surfaces/ap2.png")
+```
+
+```{r bm1, fig.cap = "Surface for Cd, As, mult low eff.", out.width = '65%', echo = F}
+include_graphics("figures/surfaces/bm1.png")
+```
+
+```{r bm2, fig.cap = "Surface for Cd, As, mult high eff.", out.width = '65%', echo = F}
+include_graphics("figures/surfaces/bm2.png")
+```
+
+```{r bp1, fig.cap = "Surface for Cd, As, poly low eff.", out.width = '65%', echo = F}
+include_graphics("figures/surfaces/bp1.png")
+```
+
+```{r bp2, fig.cap = "Surface for Cd, As, poly high eff.", out.width = '65%', echo = F}
+include_graphics("figures/surfaces/bp2.png")
+```
+
+```{r cm1, fig.cap = "Surface for Ni, Co, mult low eff.", out.width = '65%', echo = F}
+include_graphics("figures/surfaces/cm1.png")
+```
+
+```{r cm2, fig.cap = "Surface for Ni, Co, mult high eff.", out.width = '65%', echo = F}
+include_graphics("figures/surfaces/cm2.png")
+```
+
+```{r cp1, fig.cap = "Surface for Ni, Co, poly low eff.", out.width = '65%', echo = F}
+include_graphics("figures/surfaces/cp1.png")
+```
+
+```{r cp2, fig.cap = "Surface for Ni, Co, poly low eff.", out.width = '65%', echo = F}
+include_graphics("figures/surfaces/cp2.png")
 ```
 
 

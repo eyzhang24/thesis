@@ -7,6 +7,10 @@ This second appendix includes all of the R chunks of code that were hidden throu
 <!-- ```{r ref.label = 'include_packages', results = 'hide', echo = TRUE} -->
 <!-- ``` -->
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
 ## Code for Chapter \@ref(bayes):
 
 The code for this chapter generates a toy example, used to demonstrate the kernel machine regression and spline regression techniques. 
