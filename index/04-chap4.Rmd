@@ -70,49 +70,45 @@ We used the `copula` package in R to fit copulas and generate random data [@hofe
 
 Various families of copulas have been described, each of which specifies a different shape for the dependence structure. We performed model selection to identify the copula that best approximates the dependence structure of our data. We fit the set of multivariate copulas used by @lazarevic_performance_2020 in their simulation study, which included the Gaussian, $t$, Gumbel, Frank, Clayton, and Joe copulas. We fit two $t$ copulas with 4 and 10 degrees of freedom, which controls dependence at the tails of the distributions, as well as a $t$ copula where the degrees of freedom was determined during the fitting process. The Gumbel, Frank, Clayton, and Joe copulas require a $\theta$ parameter, which controls dependence between the distributions. We fit two versions of these copulas with $\theta=\{2, 4\}$. Among these, the Gaussian copula minimized Akaike information criterion and maximized likelihood, so we proceeded with this model. The Gaussian copula assumes a bivariate normal dependence structure between the marginal CDFs. 
 
-```{r univexpsim, fig.cap="Distributions of exposures from observed data (blue) and simulated data (gray).", out.width = '75%', echo = FALSE}
+```{r univexpsim, fig.cap="Distributions of exposures from observed data (blue) and 2100 simulated smaller size (n=252) datasets (gray).", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch4_univ_exp_sim.png")
 ```
 
-```{r univcovsim, fig.cap = "Distributions of covariates from observed data (blue) and simulated data (gray).", out.width = '75%', echo = FALSE}
+```{r univcovsim, fig.cap = "Distributions of covariates from observed data (blue) and 2100 simulated smaller size (n=252) datasets (gray).", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch4_univ_cov_sim.png")
 ```
 
-We simulated predictor data by randomly sampling from the fitted multivariate Gaussian copula distribution. All pseudo-random samples were then back-transformed to their original distributions using empirical marginal CDFs. We simulated the race by ethnicity and birthplace variable by randomly assigning observations to each of the five categories based on proportions in the observed dataset. We verified that the original structure of the observed dataset were preserved by visually comparing univariate distributions of exposures (Figure \@ref(fig:univexpsim)) and covariates (Figure \@(ref:univcovsim)), as well as the correlation structure using Spearman's $\rho$ (Figure \@ref(fig:corsims)). 
+We simulated predictor data by randomly sampling from the fitted multivariate Gaussian copula distribution. All pseudo-random samples were then back-transformed to their original distributions using empirical marginal CDFs. We simulated the race by ethnicity and birthplace variable by randomly assigning observations to each of the five categories based on proportions in the observed dataset. 
 
-```{r corsims, fig.cap = "Correlation heat maps of exposures from observed data (a) and averaged from simulated data (b), as well as distribution of correlations from simulated data (c).", out.width = '100%', echo = FALSE}
+```{r corsimssm, fig.cap = "Correlation heat maps of exposures from observed data (a) and averaged from 2100 smaller size (n=252) simulated datasets (b), as well as distribution of correlations from smaller size simulated datasets (c).", out.width = '100%', echo = FALSE}
 include_graphics(path = "figures/ch4_corr_simorigdens.png")
 ```
 
-We generated one set of simulated datasets with the same sample size as the observed dataset (n=252), which is typical in many cohort studies. We also generated another set of simulated datasets with a larger sample size (n=1000), which has become increasingly common with the rise of larger-scale studies and big data. The goal of this choice is to inform sample size considerations in study design. 
-
-*include similar plots for larger dataset?*
+We generated one set of simulated datasets with the same sample size as the observed dataset (n=252), which is typical in many cohort studies. We also generated another set of simulated datasets with a larger sample size (n=1000), which has become increasingly common with the rise of larger-scale studies and big data. The goal of this choice was to inform sample size considerations in study design. We verified that the original structure of the observed dataset were preserved by visually comparing univariate distributions of exposures (Figure \@ref(fig:univexpsim)) and covariates (Figure \@(ref:univcovsim)), as well as the correlation structure using Spearman's $\rho$ (Figure \@ref(fig:corsimss)). Plots for the larger size simulated datasets were similar and are included in Appendix \@ref(suppmethods) (Figures \@(ref:univexplg), \@(ref:univcovlg), and \@(ref:corsimslg)). 
 
 ### Simulating predictor-response relationships {#simresp}
 
-Health outcome responses were simulated under several different scenarios, each of which included different effect sizes and functional forms for the interactions, as well as different sample sizes. In the first scenario, we specified a "base case" model:
+Health outcome responses were simulated under several different scenarios, each of which included different effect sizes and functional forms for the interactions. All scenarios were run for both the smaller (n=252) and larger (n=1000) sample sizes. In the first scenario, we specified a "base case" model:
 
 \begin{multline*}
 Y_i = \textrm{Hg}_i + \frac{3}{1+\textrm{exp}(-4\textrm{Ni}_i)} + \frac{1.5}{1+\textrm{exp}(-4\textrm{Sn}_i)} - \textrm{Sb}_i^2 + 0.5\textrm{Sb}_i\\
 + \textrm{age}_i + 0.5\textrm{bmi}_i + 0.5\textrm{race}_{\textrm{black}i} + 0.5\textrm{race}_{\textrm{hisp.non}i} + 1.5\textrm{smoke}_i + \varepsilon_i,
 \end{multline*}
 
-\noindent where $\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0,5)$. This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb. Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an $R^2$ of around 0.2-0.3 in a multiple linear regression including only the true functional form of the chemicals, which approximates realistic signal-to-noise ratios in exposure mixture studies (@lazarevic_performance_2020). 
+\noindent where $\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0,5)$. This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb. Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an $R^2$ of around 0.2-0.3 in a multiple linear regression that included only the true functional form of the chemicals in the size 252 datasets. This $R^2$ range approximates realistic signal-to-noise ratios in exposure mixture studies (@lazarevic_performance_2020). 
 
-In subsequent scenarios, we added an additional interaction term to the base case model. 
+In subsequent scenarios, we added an additional interaction term to the base case model. First, we considered interactions between two exposures. We defined four cases of interest: a two-way interaction between exposures that are univariately significant, a two-way interaction between exposures that are univariately insignificant, a two-way interaction between exposures that are moderately collinear, and a three-way interaction. For each case, we considered two functional forms — multiplicative and polynomial — and a smaller and larger effect size, which we set by defining the weight on the interaction term in the model. The larger effect sizes were selected in order to achieve a power of approximately 0.5 at $\alpha=0.05$ in the smaller sample size (n=252) case, using a multiple linear regression with the true functional form of the chemicals specified andthe covariate terms included. The smaller effect sizes were set equal to half of the larger effect size. Table \@ref(tab:scenarios) shows the specification of interaction terms. See Appendix \@ref(suppmethods), Figures \@ref(fig:basesurf)—\@ref(fig:cp2), for 3D surfaces of the two-way interaction terms. 
 
-The larger effect sizes were selected in order to achieve a power of approximately 0.5 at $\alpha=0.05$ in a multiple linear regression with the true functional form of the chemicals specified, as well as with the covariate terms included.
-
-```{r, echo = FALSE}
+```{r scenarios, echo = FALSE}
 equations <- data.frame(
   type = rep(c("Multiplicative", "Polynomial"), 4), 
   small = c("0.35Hg$*$Ni", "0.3Hg$*($Ni$-1)^2$", 
             "0.35Cd$*$As", "0.125Cd$*($As$-1)^2$", 
-            "0.3Hg$*$Co", "0.09Hg$*($Co$-1)^2$", 
+            "0.3Ni$*$Co", "0.09Ni$*($Co$-1)^2$", 
             "0.3Hg$*$Ni$*$Tl", "0.1Hg$*($Ni$-1)^2*$Tl"), 
   large = c("0.7Hg$*$Ni", "0.26Hg$*($Ni$-1)^2$", 
             "0.7Cd$*$As", "0.25Cd$*($As$-1)^2$", 
-            "0.6Hg$*$Co", "0.2Hg$*($Co$-1)^2$", 
+            "0.6Ni$*$Co", "0.2Ni$*($Co$-1)^2$", 
             "0.6Hg$*$Ni$*$Tl", "0.18Hg$*($Ni$-1)^2*$Tl")
 )
 labels <- c(
@@ -132,47 +128,40 @@ equations |>
   pack_rows(index = labels) 
 ```
 
-All cases:
+Next, we considered interactions between a covariate and an exposure. *write up in detail later after finalizing parameters:*
 
-- 252 and 1000 sample sizes
-- multiplicative and polynomial interaction
-- small and large effect size
+- Take one or two of the race/ethnicity categories and make the effect of mercury higher
+- Excess amounts of social stress due to racism
+- Simulate larger effect in a smaller group --> more compelling public health story
+- Simulate larger effect in a larger group as a contrast --> evidence for oversampling minority group
 
-- two-way interactions between univariately significant, univariately insignificant, and highly correlated chemicals
-- three-way interaction
-- interaction between covariate and exposure
-
-- see appendix for surfaces
-
-This resulted in a total of 42 scenarios. For each scenario, we generated 100 simulated datasets, resulting in 4200 datasets. 
-
-
+This resulted in a total of 42 scenarios ([1 base case + 5 interaction cases $\times$ 2 effect sizes $\times$ 2 functional forms] $\times$ 2 sample sizes = 42). For each scenario, we generated 100 simulated datasets, resulting in a total of 4200 datasets. 
 
 ### Models {#models}
 
-Software: @bobb_statistical_2018 on CRAN, @antonelli_estimating_2020 on GitHub
+We ran four methods on our simulated datasets. All metal concentrations were standardized in analysis to keep values scale-free. 
 
-Models compared, specify the parameters for each (justify them!). 
+To get a baseline, we ran a multiple linear regression, including all exposures and covariates as linear, additive terms in the model. We refer to this model as the naive MLR. Then, we ran a multiple linear regression with the true model explicitly specified: we excluded non-significant exposures and specified the known form of non-linear terms and non-additive interactions. We refer to this model as the oracle MLR. 
 
-All metal concentrations were standardized to keep values scale-free. 
+Next, we ran BKMR using the `bkmr` package in R [@bobb_statistical_2018, @bobb_bkmr_2022]. Following the approach by @howe_prenatal_2020, we 
 
-- MLR
-- MLR with known form of interactions specified (oracle method)
-- BKMR with component-wise
-- BSR
+- component-wise selection
+- default priors
+- 50,000, first half removed for burn-in
 
-BKMR: 
-Howe ran 200,000 Markov chain Monte Carlo (MCMC) iterations using the default priors. The first half of iterations was used as burn-in. To reduce potential autocorrelation, we thinned the chains, selecting every 25th iteration. 
-- bobb recommends 50,000 iterations at least 
+Finally, we ran 
 
-check convergence with trace plots
+- default priors
+- 5,000 to select degrees of freedom using WAIC approach 
+- 50,000 each for empirical bayes and then actual model fitting, first half removed for burn-in
+
+For both BKMR and BSR, we checked convergence for one randomly selected model in each scenario using trace plots. 
 
 ### Model assessment 
 
 - use median probability model threshold — marginal PIP of at least 0.5
 - how many times is interaction picked up? 
   - sensitivity and false discovery rate
-- potentially explore mpower package
 
 ## Results {#results}
 

@@ -365,7 +365,7 @@ Y = \beta_0+\beta_1x_1+\beta_2x_2 + \beta_{12}f(x_1, x_2),
 
 \noindent where the \(\beta\)'s represent the effect sizes. We can see that the form of the interaction must be explicitly specified in the formulation of the model. Most commonly, a multiplicative interaction is assessed, where \(f(x_1, x_2) = x_1*x_2\). However, a non-additive interaction can take on many different forms, the true nature of which is difficult to determine analytically.
 
-We used a two-predictor case above, but interactions can also exist between more variables (i.e., two-way by \(f(x_1, x_2)\), three-way by \(f(x_1, x_2, x_3)\), etc.). So, if we wanted to assess all possible interactions, the number to consider quickly becomes intractable in high-dimensional settings. For instance, consider modelling 10 predictors in the above linear regression setting. In order to be assessed, each interaction must be explicitly specified as a new term in the model. Even if we only considered one form for each interaction, including all possible two-way interactions would involve adding \({10 \choose 2} = 45\) additional terms to the model, and all possible three-way interactions would add \({10 \choose 3} = 120\) additional terms.
+We used a two-predictor case above, but interactions can also exist between more variables (i.e., two-way by \(f(x_1, x_2)\), three-way by \(f(x_1, x_2, x_3)\), etc.). So, if we wanted to assess all possible interactions, the number to consider quickly becomes intractable in high-dimensional settings. For instance, consider modelling 10 predictors in the above linear regression setting. In order to be assessed, each interaction must be explicitly specified as a new term in the model. Even if we only considered one form for each interaction, including all possible two-way interactions would involve adding \(\binom{10}{2} = 45\) additional terms to the model, and all possible three-way interactions would add \(\binom{10}{3} = 120\) additional terms.
 
 It is important also to acknowledge, here, that there is a limit to how many variables can be included in an interaction before it becomes incomprehensible to most humans. For instance, Halford, Baker, McCredden, \& Bain (2005) suggest that there is a steep decline in interpretability from three- to four-way interactions, and that five-way interactions are only interpreted correctly at chance level (Halford et al., 2005). Hence, for practical purposes, we will limit our exploration to two- and three-way interactions.
 
@@ -845,6 +845,8 @@ We also note that BKMR offers a hierarchical variable selection approach to deal
 \hypertarget{past-simulation-studies}{%
 \section{Past simulation studies}\label{past-simulation-studies}}
 
+\emph{cut this section down??}
+
 Here, we preface our simulation study with a brief overview of examples in the literature which compare various methods for exposure mixtures using simulations. Taylor et al. (2016) conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Thus, for each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest.
 
 Lazarevic et al. (2020) compare the performance of a broad range of methods for accurate variable selection of important exposures. They simulated exposure data using a multivariate copula based on real-world data and the response by specifying a regression relationship with only a subset of truly significant exposures and a normal error term. Two correlation structures were considered --- one with the original Spearman correlation matrix and one with the values halved --- as well as two signal-to-noise ratios --- one with an \(R^2\) for the true model at 10\% and one at 30\%. They found that BKMR, along with three other flexible regression methods that allow for nonlinearity, provided more accurate variable selection results compared to two machine learning methods. Moreover, they observed that, in general, low signal-to-noise ratios had a stronger impact on performance than did increasing multicollinearity.
@@ -925,17 +927,17 @@ Various families of copulas have been described, each of which specifies a diffe
 \caption{Distributions of covariates from observed data (blue) and simulated data (gray).}\label{fig:univcovsim}
 \end{figure}
 We simulated predictor data by randomly sampling from the fitted multivariate Gaussian copula distribution. All pseudo-random samples were then back-transformed to their original distributions using empirical marginal CDFs. We simulated the race by ethnicity and birthplace variable by randomly assigning observations to each of the five categories based on proportions in the observed dataset. We verified that the original structure of the observed dataset were preserved by visually comparing univariate distributions of exposures (Figure \ref{fig:univexpsim}) and covariates (Figure @(ref:univcovsim)), as well as the correlation structure using Spearman's \(\rho\) (Figure \ref{fig:corsims}).
+
+\emph{note all these plots were only produced for datasets of size 252. would it make sense to include the size 1000 datasets here? or in appendix?}
 \begin{figure}
 
 {\centering \includegraphics[width=1\linewidth]{figures/ch4_corr_simorigdens} 
 
 }
 
-\caption{Correlation heat maps of exposures from observed data (a) and averaged from simulated data (b), as well as distribution of correlations from simulated data (c).}\label{fig:corsims}
+\caption{Correlation heat maps of exposures from observed data (a) and averaged from simulated data (b), as well as distribution of correlations from simulated data (c).}\label{fig:corsimslg}
 \end{figure}
 We generated one set of simulated datasets with the same sample size as the observed dataset (n=252), which is typical in many cohort studies. We also generated another set of simulated datasets with a larger sample size (n=1000), which has become increasingly common with the rise of larger-scale studies and big data. The goal of this choice is to inform sample size considerations in study design.
-
-\emph{include similar plots for larger dataset?}
 
 \hypertarget{simresp}{%
 \subsection{Simulating predictor-response relationships}\label{simresp}}
@@ -943,7 +945,7 @@ We generated one set of simulated datasets with the same sample size as the obse
 Health outcome responses were simulated under several different scenarios, each of which included different effect sizes and functional forms for the interactions, as well as different sample sizes. In the first scenario, we specified a ``base case'' model:
 \begin{multline*}
 Y_i = \textrm{Hg}_i + \frac{3}{1+\textrm{exp}(-4\textrm{Ni}_i)} + \frac{1.5}{1+\textrm{exp}(-4\textrm{Sn}_i)} - \textrm{Sb}_i^2 + 0.5\textrm{Sb}_i\\
-+ \textrm{age} + 0.5\textrm{bmi} + 0.5\textrm{race}_{\textrm{black}} + 0.5\textrm{race}_{\textrm{hisp.non}} + 1.5\textrm{smoke} + \varepsilon_i,
++ \textrm{age}_i + 0.5\textrm{bmi}_i + 0.5\textrm{race}_{\textrm{black}i} + 0.5\textrm{race}_{\textrm{hisp.non}i} + 1.5\textrm{smoke}_i + \varepsilon_i,
 \end{multline*}
 \noindent where \(\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0,5)\). This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb. Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an \(R^2\) of around 0.2-0.3 in a multiple linear regression including only the true functional form of the chemicals, which approximates realistic signal-to-noise ratios in exposure mixture studies (Lazarevic et al. (2020)).
 
@@ -1069,7 +1071,7 @@ And here's some other random info: the first paragraph after a chapter title or 
 3d surfaces of interactions.
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/p00} 
+{\centering \includegraphics[width=0.5\linewidth]{figures/surfaces/p00} 
 
 }
 
@@ -1077,7 +1079,7 @@ And here's some other random info: the first paragraph after a chapter title or 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/am1} 
+{\centering \includegraphics[width=0.5\linewidth]{figures/surfaces/am1} 
 
 }
 
@@ -1085,7 +1087,7 @@ And here's some other random info: the first paragraph after a chapter title or 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/am2} 
+{\centering \includegraphics[width=0.5\linewidth]{figures/surfaces/am2} 
 
 }
 
@@ -1093,7 +1095,7 @@ And here's some other random info: the first paragraph after a chapter title or 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/ap1} 
+{\centering \includegraphics[width=0.5\linewidth]{figures/surfaces/ap1} 
 
 }
 
@@ -1101,7 +1103,7 @@ And here's some other random info: the first paragraph after a chapter title or 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/ap2} 
+{\centering \includegraphics[width=0.5\linewidth]{figures/surfaces/ap2} 
 
 }
 
@@ -1109,7 +1111,7 @@ And here's some other random info: the first paragraph after a chapter title or 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/bm1} 
+{\centering \includegraphics[width=0.5\linewidth]{figures/surfaces/bm1} 
 
 }
 
@@ -1117,7 +1119,7 @@ And here's some other random info: the first paragraph after a chapter title or 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/bm2} 
+{\centering \includegraphics[width=0.5\linewidth]{figures/surfaces/bm2} 
 
 }
 
@@ -1125,7 +1127,7 @@ And here's some other random info: the first paragraph after a chapter title or 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/bp1} 
+{\centering \includegraphics[width=0.5\linewidth]{figures/surfaces/bp1} 
 
 }
 
@@ -1133,7 +1135,7 @@ And here's some other random info: the first paragraph after a chapter title or 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/bp2} 
+{\centering \includegraphics[width=0.5\linewidth]{figures/surfaces/bp2} 
 
 }
 
@@ -1141,7 +1143,7 @@ And here's some other random info: the first paragraph after a chapter title or 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/cm1} 
+{\centering \includegraphics[width=0.5\linewidth]{figures/surfaces/cm1} 
 
 }
 
@@ -1149,7 +1151,7 @@ And here's some other random info: the first paragraph after a chapter title or 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/cm2} 
+{\centering \includegraphics[width=0.5\linewidth]{figures/surfaces/cm2} 
 
 }
 
@@ -1157,7 +1159,7 @@ And here's some other random info: the first paragraph after a chapter title or 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/cp1} 
+{\centering \includegraphics[width=0.5\linewidth]{figures/surfaces/cp1} 
 
 }
 
@@ -1165,11 +1167,36 @@ And here's some other random info: the first paragraph after a chapter title or 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{figures/surfaces/cp2} 
+{\centering \includegraphics[width=0.5\linewidth]{figures/surfaces/cp2} 
 
 }
 
 \caption{Surface for Ni, Co, poly low eff.}\label{fig:cp2}
+\end{figure}
+Marginal distributions and dependence structure of simulated datasets.
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_univ_exp_sim_lg} 
+
+}
+
+\caption{Distributions of exposures from observed data (blue) and simulated larger size datasets (n=1000) (gray).}\label{fig:univexplg}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_univ_cov_sim_lg} 
+
+}
+
+\caption{Distributions of covariates from observed data (blue) and simulated larger size datasets (n=1000) (gray).}\label{fig:univcovlg}
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{figures/ch4_corr_lg_simorigdens} 
+
+}
+
+\caption{Correlation heat maps of exposures from observed data (a) and averaged from simulated data (b), as well as distribution of correlations from simulated data (c).}\label{fig:corsims}
 \end{figure}
 \hypertarget{results-1}{%
 \section{Results}\label{results-1}}
@@ -1185,6 +1212,8 @@ This second appendix includes all of the R chunks of code that were hidden throu
 \section{Code for Chapter \ref{bayes}:}\label{code-for-chapter-refbayes}}
 
 The code for this chapter generates a toy example, used to demonstrate the kernel machine regression and spline regression techniques.
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\#load packages}
@@ -1193,6 +1222,9 @@ The code for this chapter generates a toy example, used to demonstrate the kerne
 \FunctionTok{library}\NormalTok{(splines)}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# set theme for plots}
@@ -1205,6 +1237,9 @@ The code for this chapter generates a toy example, used to demonstrate the kerne
 \NormalTok{  )}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \DocumentationTok{\#\#\#\#\#\#\#\#}
@@ -1231,6 +1266,9 @@ The code for this chapter generates a toy example, used to demonstrate the kerne
        \AttributeTok{width =} \DecValTok{5}\NormalTok{, }\AttributeTok{height =} \DecValTok{3}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \DocumentationTok{\#\#\#\#\#\#\#\#}
@@ -1312,6 +1350,9 @@ The code for this chapter generates a toy example, used to demonstrate the kerne
        \AttributeTok{width =} \DecValTok{7}\NormalTok{, }\AttributeTok{height =} \DecValTok{3}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \DocumentationTok{\#\#\#\#\#\#\#\#}
@@ -1400,6 +1441,8 @@ The code for this chapter generates a toy example, used to demonstrate the kerne
        \AttributeTok{device =} \StringTok{"png"}\NormalTok{, }\AttributeTok{width =} \DecValTok{7}\NormalTok{, }\AttributeTok{height =} \DecValTok{3}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
 \hypertarget{code-for-chapter-refsims}{%
 \section{Code for Chapter \ref{sims}:}\label{code-for-chapter-refsims}}
 
@@ -1409,12 +1452,17 @@ The code for this chapter prepares the data from the MADRES study, generates sim
 \subsection{Code for Chapter \ref{madres}:}\label{code-for-chapter-refmadres}}
 
 First, we clean the data from the MADRES study.
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# load packages}
 \FunctionTok{library}\NormalTok{(tidyverse)}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# read in data}
@@ -1422,6 +1470,9 @@ First, we clean the data from the MADRES study.
 \NormalTok{epi }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"madres\_data/1945\_EPI\_DATA.csv"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \DocumentationTok{\#\#\#\#\#\#\#\#}
@@ -1458,6 +1509,9 @@ First, we clean the data from the MADRES study.
 \FunctionTok{write\_csv}\NormalTok{(target\_first, }\StringTok{"madres\_data/target\_first.csv"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \DocumentationTok{\#\#\#\#\#\#\#\#}
@@ -1503,6 +1557,9 @@ First, we clean the data from the MADRES study.
                 \SpecialCharTok{\textasciitilde{}}\FunctionTok{ifelse}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(.), }\FunctionTok{mean}\NormalTok{(.,}\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), .))) }
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \DocumentationTok{\#\#\#\#\#\#\#\#}
@@ -1520,10 +1577,14 @@ First, we clean the data from the MADRES study.
 \FunctionTok{write\_csv}\NormalTok{(comb\_small, }\StringTok{"madres\_data/base\_data.csv"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
 \hypertarget{code-for-chapter-refcopula}{%
 \subsection{Code for Chapter \ref{copula}:}\label{code-for-chapter-refcopula}}
 
 Next, we use copulas to simulate predictor data. We use the \texttt{copula} and \texttt{rslurm} packages in this section. This code was run on the Amherst HPC RStudio server.
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# load packages}
@@ -1532,6 +1593,9 @@ Next, we use copulas to simulate predictor data. We use the \texttt{copula} and 
 \FunctionTok{library}\NormalTok{(rslurm)}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# read data back in}
@@ -1547,6 +1611,9 @@ Next, we use copulas to simulate predictor data. We use the \texttt{copula} and 
 \FunctionTok{cor}\NormalTok{(comb\_log[, }\DecValTok{7}\SpecialCharTok{:}\DecValTok{19}\NormalTok{], }\AttributeTok{method =} \StringTok{"spearman"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \DocumentationTok{\#\#\#\#\#\#\#\#}
@@ -1607,6 +1674,9 @@ Next, we use copulas to simulate predictor data. We use the \texttt{copula} and 
 \FunctionTok{write\_rds}\NormalTok{(cfit\_gaus, }\StringTok{"sim/gauscop.RDS"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \DocumentationTok{\#\#\#\#\#\#\#\#}
@@ -1703,10 +1773,14 @@ Next, we use copulas to simulate predictor data. We use the \texttt{copula} and 
 \FunctionTok{write\_rds}\NormalTok{(out2, }\StringTok{"sim/sim\_preds\_lg.RDS"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
 \hypertarget{code-for-chapter-refsimresp}{%
 \subsection{Code for Chapter \ref{simresp}:}\label{code-for-chapter-refsimresp}}
 
 Next, we simulate the response data. We use the \texttt{rslurm} package in this section. This code was run on the Amherst HPC RStudio server.
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# load packages}
@@ -1714,6 +1788,9 @@ Next, we simulate the response data. We use the \texttt{rslurm} package in this 
 \FunctionTok{library}\NormalTok{(rslurm)}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
@@ -1959,6 +2036,9 @@ Next, we simulate the response data. We use the \texttt{rslurm} package in this 
 \NormalTok{\}}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#}
@@ -2111,6 +2191,9 @@ Next, we simulate the response data. We use the \texttt{rslurm} package in this 
 \FunctionTok{write\_rds}\NormalTok{(out2\_resp1, }\StringTok{"sim/sim\_resp\_lg\_a.RDS"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
+\scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
 \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#}
@@ -2118,6 +2201,8 @@ Next, we simulate the response data. We use the \texttt{rslurm} package in this 
 \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#}
 \end{Highlighting}
 \end{Shaded}
+\normalsize
+
 \hypertarget{code-for-chapter-refmodels}{%
 \subsection{Code for Chapter \ref{models}:}\label{code-for-chapter-refmodels}}
 

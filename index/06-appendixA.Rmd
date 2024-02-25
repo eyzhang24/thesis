@@ -10,65 +10,84 @@ The first appendix must start with the above text. Do not remove!
 library(knitr)
 ```
 
-# Supplemental output
+# Supplemental output {#appa} 
+
+This first appendix includes supplemental output for Chapter \@ref(sims). 
 
 ## Methods {#suppmethods}
 
-3d surfaces of interactions. 
+Figures \@ref(fig:basesurf)—\@ref(fig:cp2) depict the exposure-response relationship for all two-way interactions specified in the simulation study. 
 
-```{r basesurf, fig.cap = "Surface for base case.", out.width = '65%', echo = F}
+```{r basesurf, fig.cap = "Exposure-response surface for base case: $Y=$ Hg $+\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/p00.png")
 ```
 
-```{r am1, fig.cap = "Surface for Hg, Ni, mult low eff.", out.width = '65%', echo = F}
+```{r am1, fig.cap = "Exposure-response surface for a multiplicative interaction between Hg and Ni at the lower effect size: $Y=$ Hg $+\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.35Hg$*$Ni.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/am1.png")
 ```
 
-```{r am2, fig.cap = "Surface for Hg, Ni, mult high eff.", out.width = '65%', echo = F}
+```{r am2, fig.cap = "Exposure-response surface for a multiplicative interaction between Hg and Ni at the higher effect size: $Y=$ Hg $+\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.7Hg$*$Ni.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/am2.png")
 ```
 
-```{r ap1, fig.cap = "Surface for Hg, Ni, poly low eff.", out.width = '65%', echo = F}
+```{r ap1, fig.cap = "Exposure-response surface for a polynomial interaction between Hg and Ni at the lower effect size: $Y=$ Hg $+\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.3Hg$*($Ni$-1)^2$.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/ap1.png")
 ```
 
-```{r ap2, fig.cap = "Surface for Hg, Ni, poly high eff.", out.width = '65%', echo = F}
+```{r ap2, fig.cap = "Exposure-response surface for a polynomial interaction between Hg and Ni at the higher effect size: $Y=$ Hg $+\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.6Hg$*($Ni$-1)^2$.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/ap2.png")
 ```
 
-```{r bm1, fig.cap = "Surface for Cd, As, mult low eff.", out.width = '65%', echo = F}
+```{r bm1, fig.cap = "Exposure-response surface for a multiplicative interaction between Cd and As at the lower effect size: $Y=$ 0.35Cd$*$As.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/bm1.png")
 ```
 
-```{r bm2, fig.cap = "Surface for Cd, As, mult high eff.", out.width = '65%', echo = F}
+```{r bm2, fig.cap = "Exposure-response surface for a multiplicative interaction between Cd and As at the higher effect size: $Y=$ 0.7Cd$*$As.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/bm2.png")
 ```
 
-```{r bp1, fig.cap = "Surface for Cd, As, poly low eff.", out.width = '65%', echo = F}
+```{r bp1, fig.cap = "Exposure-response surface for a polynomial interaction between Cd and As at the lower effect size: 0.125Cd$*($As$-1)^2$.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/bp1.png")
 ```
 
-```{r bp2, fig.cap = "Surface for Cd, As, poly high eff.", out.width = '65%', echo = F}
+```{r bp2, fig.cap = "Exposure-response surface for a polynomial interaction between Cd and As at the higher effect size: 0.25Cd$*($As$-1)^2$.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/bp2.png")
 ```
 
-```{r cm1, fig.cap = "Surface for Ni, Co, mult low eff.", out.width = '65%', echo = F}
+```{r cm1, fig.cap = "Exposure-response surface for a multiplicative interaction between Ni and Co at the lower effect size: $Y=$ $\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.3Ni$*$Co.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/cm1.png")
 ```
 
-```{r cm2, fig.cap = "Surface for Ni, Co, mult high eff.", out.width = '65%', echo = F}
+```{r cm2, fig.cap = "Exposure-response surface for a multiplicative interaction between Ni and Co at the higher effect size: $Y=$ $\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.6Ni$*$Co.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/cm2.png")
 ```
 
-```{r cp1, fig.cap = "Surface for Ni, Co, poly low eff.", out.width = '65%', echo = F}
+```{r cp1, fig.cap = "Exposure-response surface for a polynomial interaction between Ni and Co at the lower effect size: $Y=$ $\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.09Ni$*($Co$-1)^2$.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/cp1.png")
 ```
 
-```{r cp2, fig.cap = "Surface for Ni, Co, poly low eff.", out.width = '65%', echo = F}
+```{r cp2, fig.cap = "Exposure-response surface for a polynomial interaction between Ni and Co at the lower effect size: $Y=$ $\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.18Ni$*($Co$-1)^2$.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/cp2.png")
 ```
 
+Figures \@ref(fig:univexplg), \@ref(fig:univcovlg), and \@ref(fig:corsimslg) compare the marginal distributions of predictors and dependence structure between exposures of the observed dataset and simulated datasets of larger size (n=1000). 
+
+```{r univexplg, fig.cap = "Distributions of exposures from observed data (blue) and simulated larger size (n=1000) datasets (gray).", out.width = '75%', echo = FALSE}
+include_graphics("figures/ch4_univ_exp_sim_lg.png")
+```
+
+```{r univcovlg, fig.cap = "Distributions of covariates from observed data (blue) and simulated larger size (n=1000) datasets (gray).", out.width = '75%', echo = FALSE}
+include_graphics(path = "figures/ch4_univ_cov_sim_lg.png")
+```
+
+```{r corsimslg, fig.cap = "Correlation heat maps of exposures from observed data (a) and averaged from 2100 larger size (n=1000) simulated datasets (b), as well as distribution of correlations from larger size simulated datasets (c).", out.width = '100%', echo = FALSE}
+include_graphics(path = "figures/ch4_corr_lg_simorigdens.png")
+```
 
 ## Results
 
-Examples of trace plots for BKMR and BSR
+Full output from a representative base-case model, two-way interaction model, and race$\times$exp interaction model. 
+
+Potentially also include line plots of h() and f() function fits. 
+
+Examples of trace plots for BKMR and BSR. 
