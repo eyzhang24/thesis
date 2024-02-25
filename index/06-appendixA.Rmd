@@ -84,7 +84,9 @@ include_graphics(path = "figures/ch4_univ_cov_sim_lg.png")
 include_graphics(path = "figures/ch4_corr_lg_simorigdens.png")
 ```
 
-## Results
+*include degrees of freedom test*
+
+## Results {#suppresults}
 
 Full output from a representative base-case model, two-way interaction model, and race$\times$exp interaction model. 
 

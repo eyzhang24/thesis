@@ -137,23 +137,17 @@ Next, we considered interactions between a covariate and an exposure. *write up 
 
 This resulted in a total of 42 scenarios ([1 base case + 5 interaction cases $\times$ 2 effect sizes $\times$ 2 functional forms] $\times$ 2 sample sizes = 42). For each scenario, we generated 100 simulated datasets, resulting in a total of 4200 datasets. 
 
+We hypothesize that...
+
 ### Models {#models}
 
 We ran four methods on our simulated datasets. All metal concentrations were standardized in analysis to keep values scale-free. 
 
 To get a baseline, we ran a multiple linear regression, including all exposures and covariates as linear, additive terms in the model. We refer to this model as the naive MLR. Then, we ran a multiple linear regression with the true model explicitly specified: we excluded non-significant exposures and specified the known form of non-linear terms and non-additive interactions. We refer to this model as the oracle MLR. 
 
-Next, we ran BKMR using the `bkmr` package in R [@bobb_statistical_2018, @bobb_bkmr_2022]. Following the approach by @howe_prenatal_2020, we 
+Next, we ran BKMR using the `bkmr` package in R [@bobb_statistical_2018, @bobb_bkmr_2022]. We chose to implement component-wise variable selection rather than hierarchical selection to make simulation results more interpretable, and because there was only moderate multicollinearity in the observed and simulated data. We specified the default priors [@bobb_bayesian_2015, and listed in Chapter \@ref(bkmrprior)], which is common in the literature for BKMR [e.g., @lazarevic_statistical_2019, @howe_prenatal_2020, @pesenti_comparative_2023]. We ran the MCMC sampler for 50,000 iterations, as recommended by @bobb_statistical_2018, and discarded the first 25,000 iterations for burn-in. We checked convergence for one randomly selected model in each scenario using trace plots (Appendix \@ref(suppresults)). 
 
-- component-wise selection
-- default priors
-- 50,000, first half removed for burn-in
-
-Finally, we ran 
-
-- default priors
-- 5,000 to select degrees of freedom using WAIC approach 
-- 50,000 each for empirical bayes and then actual model fitting, first half removed for burn-in
+Finally, we ran BSR using the `NLinteraction` package in R [@antonelli_nlinteraction_2018]. We specified the default priors [@antonelli_estimating_2020, and as listed in \@ref(bsrprior)], which is common in the literature for BSR [e.g., @howe_prenatal_2020, @pesenti_comparative_2023]. @antonelli_estimating_2020 suggests separately fitting models for degrees of freedom $d=\{1, 2, 3, 4\}$ and selecting the value for $d$ which minimizes WAIC. Due to time constraints in this thesis, we first fit BSR on the grid of values for $d$ using 5,000 MCMC iterations to obtain the empirical Bayes estimate for $\sigma^2_{\boldsymbol\beta}$ and then another 5,000 MCMC iterations to obtain the posterior distributions, discarding the first 2,500 iterations for burn-in each time. Then, we selected $d$ based on the WAIC criterion and fit BSR using 50,000 MCMC iterations to obtain the empirical Bayes estimate and then another 50,000 MCMC iterations to obtain the posterior distributions, discarding the first 25,000 iterations for burn-in each time. In a small test run on five smaller size datasets of each scenario containing interactions between exposures and the base case, we found that this approach selected the 
 
 For both BKMR and BSR, we checked convergence for one randomly selected model in each scenario using trace plots. 
 

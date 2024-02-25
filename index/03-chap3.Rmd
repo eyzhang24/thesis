@@ -224,7 +224,7 @@ While hierarchical variable selection resolves the issue of multicollinearity, i
 
 Note also that the posterior means of $\delta_m$ generated from these variable selection procedures represent the posterior probability of inclusion of $\textbf{x}_m$. We can interpret these posterior inclusion probabilities (PIPs) as measures of the relative importance of each exposure These measures can be used to understand the contribution of each exposure to the health outcome of interest in the model.
 
-### Prior specification
+### Prior specification {#bkmrprior}
 
 In this section, we specify the default prior distributions and parameters used by the BKMR algorithm [@bobb_bayesian_2015].
 
@@ -406,7 +406,7 @@ P(\boldsymbol\beta_S^{(h)}|\boldsymbol\zeta) &= \bigg(1-\prod_{m\in S}\zeta_{mh}
 
 \noindent Here, $P_{\textbf{0}}$ denotes the density with point mass at $\textbf0$, and $\psi_1()$ is a multivariate normal distribution with mean $\textbf0$ and covariance $\boldsymbol\Sigma_{\boldsymbol\beta}$, a diagonal matrix with $\sigma^2\sigma_{\boldsymbol\beta}^2$ on the diagonals. 
 
-### Prior specification
+### Prior specification {#bsrprior}
 
 In this section, we discuss the priors and their default specifications in BSR [@antonelli_estimating_2020]. 
 
