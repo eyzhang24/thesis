@@ -113,17 +113,39 @@ waic_comb <- waic |>
 
 waic_comb |> 
   filter(trial <= 5) |> 
-  mutate(df = as.factor(df)) |> 
+  mutate(df = as.factor(df), 
+         iter = factor(ifelse(iter == 1, "F", "P"), levels = c("P", "F"))) |> 
   ggplot(aes(x = iter, y = waic, color = df)) +
   geom_point() +
-  geom_line() + 
-  scale_x_continuous(breaks = c(1, 2)) +
-  facet_wrap(~interaction(str_pad(case, 2, pad = "0"), trial), 
-             scales = "free_y", ncol = 17) +
+  geom_line(aes(group = df)) + 
+  ggh4x::facet_grid2(paste0("Trial ", trial) ~ case, 
+                     scales = "free_y", independent = "y") +
   theme(axis.text.y=element_blank(),
-        axis.ticks.y=element_blank() 
-  )
+        axis.ticks.y=element_blank(), 
+        plot.caption = element_text(hjust = 0, size = 7)) +
+  labs(y = "WAIC", x = "# MCMC iterations (F = 50,000, P = 5,000)", 
+       color = "Degrees\nfreedom",
+       caption = paste0(
+         "Scenarios are labelled in the top strip as follows:\n", 
+         "1 = base case; 2 = HgNi mult. small; 3 = HgNi mult. large; ", 
+         "4 = HgNi poly. small; 5 = HgNi poly. large; ", 
+         "6 = CdAs mult. small; 7 = CdAs mult. large;", 
+         "8 = CdAs poly. small; 9 = CdAs poly. large;\n", 
+         "10 = NiCo mult. small; 11 = NiCo mult. large; ", 
+         "12 = NiCo poly. small; 13 = NiCo poly. large; ", 
+         "14 = HgNiTl mult. small; 15 = HgNiTl mult. large; ", 
+         "16 = HgNiTl poly. small; 17 = HgNiTl poly. large"))
 
-ggsave("sim/figs/test_waic2.png", height = 7.5, width = 11)
+ggsave("index/figures/test_waic2.png", height = 6, width = 9)
 
-  
+waic_min <- waic_comb |> 
+  mutate(iter = ifelse(iter == 1, "full", "partial")) |> 
+  arrange(iter, case, trial) |> 
+  filter(trial <= 5) |> 
+  group_by(iter, trial, case) |> 
+  filter(waic == min(waic)) |> 
+  ungroup() |> 
+  pivot_wider(id_cols = c(trial, case), 
+              names_from = iter, values_from = df) |> 
+  mutate(equal = (full == partial))
+mean(waic_min$equal)  

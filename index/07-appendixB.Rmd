@@ -16,9 +16,9 @@ knitr::knit_hooks$set(chunk = function(x, options) {
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE, size = 'scriptsize')
 ```
 
-## Code for Chapter \@ref(bayes):
+## Code for Section \@ref(bayes):
 
-The code for this chapter generates a toy example, used to demonstrate the kernel machine regression and spline regression techniques. 
+The code for this section generates a toy example, used to demonstrate the kernel machine regression and spline regression techniques. 
 
 ```{r}
 #load packages
@@ -230,11 +230,11 @@ ggsave("index/figures/ch3_toybounds.png", plot = qbounds,
        device = "png", width = 7, height = 3)
 ```
 
-## Code for Chapter \@ref(sims):
+## Code for Section \@ref(sims):
 
-The code for this chapter prepares the data from the MADRES study, generates simulated data, fits multiple linear regressions, BKMR, and BSR on the simulated data, and produces model output. 
+The code for this section prepares the data from the MADRES study, generates simulated data, fits multiple linear regressions, BKMR, and BSR on the simulated data, and produces model output. 
 
-### Code for Chapter \@ref(madres):
+### Code for Section \@ref(madres):
 
 First, we clean the data from the MADRES study. 
 
@@ -345,7 +345,7 @@ write_csv(comb_small, "madres_data/base_data.csv")
 ```
 
 
-### Code for Chapter \@ref(copula):
+### Code for Section \@ref(copula):
 
 Next, we use copulas to simulate predictor data. We use the `copula` and `rslurm` packages in this section. This code was run on the Amherst HPC RStudio server. 
 
@@ -860,7 +860,7 @@ ggsave("index/figures/ch4_corr_simorigdens.png", width = 10, height = 12)
 
 
 
-### Code for Chapter \@ref(simresp):
+### Code for Section \@ref(simresp):
 
 Next, we simulate the response data. We use the `rslurm` package in this section. This code was run on the Amherst HPC RStudio server. 
 
@@ -1290,11 +1290,11 @@ write_rds(out2_resp1, "sim/sim_resp_lg_a.RDS")
 
 ```
 
-### Code for Chapter \@ref(models):
+### Code for Section \@ref(models):
 
 Here, we fit the models to our simulated data. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. This code was run on the Amherst HPC RStudio server. 
 
-### Code for Chapter \@ref(results):
+### Code for Section \@ref(results):
 
 Here, we extract results from our simulation. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. This code was run on the Amherst HPC RStudio server. 
 
@@ -1457,4 +1457,6 @@ cowplot::plot_grid(top_row2, cors_dens2, labels = c("", "c"), label_size = 16,
                    nrow = 2, rel_heights = c(5, 7), scale = c(1, 0.95))
 ggsave("index/figures/ch4_corr_lg_simorigdens.png", width = 10, height = 12)
 ```
+
+[*include code for WAIC comparison*]
 

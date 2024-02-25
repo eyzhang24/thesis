@@ -16,25 +16,25 @@ This first appendix includes supplemental output for Chapter \@ref(sims).
 
 ## Methods {#suppmethods}
 
-Figures \@ref(fig:basesurf)—\@ref(fig:cp2) depict the exposure-response relationship for all two-way interactions specified in the simulation study. 
+Figures \@ref(fig:basesurf)-\@ref(fig:cp2) depict the exposure-response relationship for all two-way interactions specified in the simulation study. 
 
-```{r basesurf, fig.cap = "Exposure-response surface for base case: $Y=$ Hg $+\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$.", out.width = '50%', echo = F}
+```{r basesurf, fig.cap = "Exposure-response surface for base case: $Y=$ Hg $+\\frac{3}{1+\\textrm{exp}(-4\\textrm{Ni})}$.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/p00.png")
 ```
 
-```{r am1, fig.cap = "Exposure-response surface for a multiplicative interaction between Hg and Ni at the lower effect size: $Y=$ Hg $+\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.35Hg$*$Ni.", out.width = '50%', echo = F}
+```{r am1, fig.cap = "Exposure-response surface for a multiplicative interaction between Hg and Ni at the lower effect size: $Y=$ Hg $+\\frac{3}{1+\\textrm{exp}(-4\\textrm{Ni})}$ + 0.35Hg$*$Ni.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/am1.png")
 ```
 
-```{r am2, fig.cap = "Exposure-response surface for a multiplicative interaction between Hg and Ni at the higher effect size: $Y=$ Hg $+\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.7Hg$*$Ni.", out.width = '50%', echo = F}
+```{r am2, fig.cap = "Exposure-response surface for a multiplicative interaction between Hg and Ni at the higher effect size: $Y=$ Hg $+\\frac{3}{1+\\textrm{exp}(-4\\textrm{Ni})}$ + 0.7Hg$*$Ni.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/am2.png")
 ```
 
-```{r ap1, fig.cap = "Exposure-response surface for a polynomial interaction between Hg and Ni at the lower effect size: $Y=$ Hg $+\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.3Hg$*($Ni$-1)^2$.", out.width = '50%', echo = F}
+```{r ap1, fig.cap = "Exposure-response surface for a polynomial interaction between Hg and Ni at the lower effect size: $Y=$ Hg $+\\frac{3}{1+\\textrm{exp}(-4\\textrm{Ni})}$ + 0.3Hg$*($Ni$-1)^2$.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/ap1.png")
 ```
 
-```{r ap2, fig.cap = "Exposure-response surface for a polynomial interaction between Hg and Ni at the higher effect size: $Y=$ Hg $+\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.6Hg$*($Ni$-1)^2$.", out.width = '50%', echo = F}
+```{r ap2, fig.cap = "Exposure-response surface for a polynomial interaction between Hg and Ni at the higher effect size: $Y=$ Hg $+\\frac{3}{1+\\textrm{exp}(-4\\textrm{Ni})}$ + 0.6Hg$*($Ni$-1)^2$.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/ap2.png")
 ```
 
@@ -54,19 +54,19 @@ include_graphics("figures/surfaces/bp1.png")
 include_graphics("figures/surfaces/bp2.png")
 ```
 
-```{r cm1, fig.cap = "Exposure-response surface for a multiplicative interaction between Ni and Co at the lower effect size: $Y=$ $\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.3Ni$*$Co.", out.width = '50%', echo = F}
+```{r cm1, fig.cap = "Exposure-response surface for a multiplicative interaction between Ni and Co at the lower effect size: $Y=$ $\\frac{3}{1+\\textrm{exp}(-4\\textrm{Ni})}$ + 0.3Ni$*$Co.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/cm1.png")
 ```
 
-```{r cm2, fig.cap = "Exposure-response surface for a multiplicative interaction between Ni and Co at the higher effect size: $Y=$ $\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.6Ni$*$Co.", out.width = '50%', echo = F}
+```{r cm2, fig.cap = "Exposure-response surface for a multiplicative interaction between Ni and Co at the higher effect size: $Y=$ $\\frac{3}{1+\\textrm{exp}(-4\\textrm{Ni})}$ + 0.6Ni$*$Co.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/cm2.png")
 ```
 
-```{r cp1, fig.cap = "Exposure-response surface for a polynomial interaction between Ni and Co at the lower effect size: $Y=$ $\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.09Ni$*($Co$-1)^2$.", out.width = '50%', echo = F}
+```{r cp1, fig.cap = "Exposure-response surface for a polynomial interaction between Ni and Co at the lower effect size: $Y=$ $\\frac{3}{1+\\textrm{exp}(-4\\textrm{Ni})}$ + 0.09Ni$*($Co$-1)^2$.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/cp1.png")
 ```
 
-```{r cp2, fig.cap = "Exposure-response surface for a polynomial interaction between Ni and Co at the lower effect size: $Y=$ $\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.18Ni$*($Co$-1)^2$.", out.width = '50%', echo = F}
+```{r cp2, fig.cap = "Exposure-response surface for a polynomial interaction between Ni and Co at the lower effect size: $Y=$ $\\frac{3}{1+\\textrm{exp}(-4\\textrm{Ni})}$ + 0.18Ni$*($Co$-1)^2$.", out.width = '50%', echo = F}
 include_graphics("figures/surfaces/cp2.png")
 ```
 
@@ -84,7 +84,13 @@ include_graphics(path = "figures/ch4_univ_cov_sim_lg.png")
 include_graphics(path = "figures/ch4_corr_lg_simorigdens.png")
 ```
 
-*include degrees of freedom test*
+Figure \@ref(fig:comparedf) compares the degrees of freedom selected using the WAIC criterion when fitting BSR using 5,000 MCMC iterations to 50,000 MCMC iterations. We ran this test on five smaller size datasets from the 16 scenarios containing interactions between exposures, as well as from the base case. 
+
+
+```{r comparedf, fig.cap = "compare df.", out.width = '100%', echo = FALSE}
+include_graphics(path = "figures/test_waic2.png")
+```
+
 
 ## Results {#suppresults}
 
