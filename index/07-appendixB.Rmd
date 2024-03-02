@@ -829,7 +829,7 @@ cor_sim <- cors |>
     low = "deepskyblue3", mid = "white", high = "darkorange", 
     na.value = NA) +
   coord_fixed() +
-  labs(x = NULL, y = NULL, fill = TeX(r"( Spearman's $\rho$ )")) +
+  labs(x = NULL, y = NULL, fill = TeX(r"( Mean Spearman's $\rho$ )")) +
   theme(
     panel.grid.major.x = element_line(color = "grey85",
                                       linewidth = 0.25,
@@ -1437,7 +1437,7 @@ cor_sim2 <- corl |>
     low = "deepskyblue3", mid = "white", high = "darkorange", 
     na.value = NA) +
   coord_fixed() +
-  labs(x = NULL, y = NULL, fill = TeX(r"( Spearman's $\rho$ )")) +
+  labs(x = NULL, y = NULL, fill = TeX(r"( Mean Spearman's $\rho$ )")) +
   theme(
     panel.grid.major.x = element_line(color = "grey85",
                                       linewidth = 0.25,

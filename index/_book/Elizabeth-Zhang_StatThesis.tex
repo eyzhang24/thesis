@@ -928,13 +928,15 @@ Various families of copulas have been described, each of which specifies a diffe
 We simulated predictor data by randomly sampling from the fitted multivariate Gaussian copula distribution. All pseudo-random samples were then back-transformed to their original distributions using empirical marginal CDFs. We simulated the race by ethnicity and birthplace variable by randomly assigning observations to each of the five categories based on proportions in the observed dataset.
 \begin{figure}
 
-{\centering \includegraphics[width=1\linewidth]{figures/ch4_corr_simorigdens} 
+{\centering \includegraphics[width=1\linewidth]{figures/ch4_corr_sim+orig} 
 
 }
 
-\caption{Correlation heat maps of exposures from observed data (a) and averaged from 2100 smaller size (n=252) simulated datasets (b), as well as distribution of correlations from smaller size simulated datasets (c).}\label{fig:corsimssm}
+\caption{Spearman's correlation heat maps of exposures from observed data (a) and averaged from 2100 smaller size (n=252) simulated datasets (b).}\label{fig:corsimssm}
 \end{figure}
-We generated one set of simulated datasets with the same sample size as the observed dataset (n=252), which is typical in many cohort studies. We also generated another set of simulated datasets with a larger sample size (n=1000), which has become increasingly common with the rise of larger-scale studies and big data. The goal of this choice was to inform sample size considerations in study design. We verified that the original structure of the observed dataset were preserved by visually comparing univariate distributions of exposures (Figure \ref{fig:univexpsim}) and covariates (Figure @(ref:univcovsim)), as well as the correlation structure using Spearman's \(\rho\) (Figure \ref{fig:corsimssm}). Plots for the larger size simulated datasets were similar and are included in Appendix \ref{suppmethods} (Figures @(ref:univexplg), @(ref:univcovlg), and @(ref:corsimslg)).
+We generated one set of simulated datasets with the same sample size as the observed dataset (n=252), which is typical in many cohort studies. We also generated another set of simulated datasets with a larger sample size (n=1000), which has become increasingly common with the rise of larger-scale studies and big data. The goal of this choice was to inform sample size considerations in study design. We verified that the original structure of the observed dataset were preserved by visually comparing univariate distributions of exposures (Figure \ref{fig:univexpsim}) and covariates (Figure @(ref:univcovsim)), as well as the correlation structure using Spearman's \(\rho\) (Figure \ref{fig:corsimssm}). Distributions of Spearman's correlation were approximately normal (Figure \ref{fig:cordistsm}). Plots for the larger size simulated datasets were similar (Figures \ref{fig:univexplg}, \ref{fig:univcovlg}, and \ref{fig:corsimslg}).
+
+{[}\emph{move correlation densities to appendix? also, change label to mean!}{]}
 
 \hypertarget{simresp}{%
 \subsection{Simulating predictor-response relationships}\label{simresp}}
@@ -944,7 +946,7 @@ Health outcome responses were simulated under several different scenarios, each 
 Y_i = \textrm{Hg}_i + \frac{3}{1+\textrm{exp}(-4\textrm{Ni}_i)} + \frac{1.5}{1+\textrm{exp}(-4\textrm{Sn}_i)} - \textrm{Sb}_i^2 + 0.5\textrm{Sb}_i\\
 + \textrm{age}_i + 0.5\textrm{bmi}_i + 0.5\textrm{race}_{\textrm{black}i} + 0.5\textrm{race}_{\textrm{hisp.non}i} + 1.5\textrm{smoke}_i + \varepsilon_i,
 \end{multline*}
-\noindent where \(\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0,5)\). This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb. Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an \(R^2\) of around 0.2-0.3 in a multiple linear regression that included only the true functional form of the chemicals in the size 252 datasets {[}\emph{include a figure with distributions of R2, maybe put in appendix}{]}. This \(R^2\) range approximates realistic signal-to-noise ratios in exposure mixture studies (Lazarevic et al. (2020)).
+\noindent where \(\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0,5)\). This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb {[}\emph{include graph in appendix?}{]}. Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an \(R^2\) of around 0.2-0.3 in a multiple linear regression that included only the true functional form of the chemicals in the size 252 datasets {[}\emph{include a figure with distributions of R2, maybe put in appendix}{]}. This \(R^2\) range approximates realistic signal-to-noise ratios in exposure mixture studies (Lazarevic et al. (2020)).
 
 In subsequent scenarios, we added an additional interaction term to the base case model. First, we considered interactions between two exposures. We defined four cases of interest: a two-way interaction between exposures that are univariately significant, a two-way interaction between exposures that are univariately insignificant, a two-way interaction between exposures that are moderately collinear, and a three-way interaction. For each case, we considered two functional forms --- multiplicative and polynomial --- and a smaller and larger effect size, which we set by defining the weight on the interaction term in the model. The larger effect sizes were selected in order to achieve a power of approximately 0.5 at \(\alpha=0.05\) in the smaller sample size (n=252) case, using a multiple linear regression with the true functional form of the chemicals specified andthe covariate terms included. The smaller effect sizes were set equal to half of the larger effect size. Table \ref{tab:scenarios} shows the specification of interaction terms. See Appendix \ref{suppmethods}, Figures \ref{fig:basesurf}-\ref{fig:cp2}, for 3D surfaces of the two-way interaction terms.
 \begin{table}
@@ -990,7 +992,7 @@ Next, we considered interactions between a covariate and an exposure. {[}\emph{w
 \end{itemize}
 This resulted in a total of 42 scenarios ({[}1 base case + 5 interaction cases \(\times\) 2 effect sizes \(\times\) 2 functional forms{]} \(\times\) 2 sample sizes = 42). For each scenario, we generated 100 simulated datasets, resulting in a total of 4200 datasets.
 
-We hypothesize that\ldots{}
+We hypothesize that\ldots{} {[}\emph{add hypothesis}{]}
 
 \hypertarget{models}{%
 \subsection{Models}\label{models}}
@@ -1209,6 +1211,15 @@ Figures \ref{fig:basesurf}-\ref{fig:cp2} depict the exposure-response relationsh
 
 \caption{Exposure-response surface for a polynomial interaction between Ni and Co at the lower effect size: $Y=$ $\frac{3}{1+\textrm{exp}(-4\textrm{Ni})}$ + 0.18Ni$*($Co$-1)^2$.}\label{fig:cp2}
 \end{figure}
+Figure \ref{fig:cordistsm} shows the detailed distribution of correlations in smaller size simulated datasets.
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{figures/ch4_corr_sim} 
+
+}
+
+\caption{Distributions of Spearman's correlation from 2100 smaller size (n=252) simulated datasets.}\label{fig:cordistsm}
+\end{figure}
 Figures \ref{fig:univexplg}, \ref{fig:univcovlg}, and \ref{fig:corsimslg} compare the marginal distributions of predictors and dependence structure between exposures of the observed dataset and simulated datasets of larger size (n=1000).
 \begin{figure}
 
@@ -1232,7 +1243,7 @@ Figures \ref{fig:univexplg}, \ref{fig:univcovlg}, and \ref{fig:corsimslg} compar
 
 }
 
-\caption{Correlation heat maps of exposures from observed data (a) and averaged from 2100 larger size (n=1000) simulated datasets (b), as well as distribution of correlations from larger size simulated datasets (c).}\label{fig:corsimslg}
+\caption{Spearman's correlation heat maps of exposures from observed data (a) and averaged from 2100 larger size (n=1000) simulated datasets (b), as well as distributions of correlations from larger size simulated datasets (c).}\label{fig:corsimslg}
 \end{figure}
 Figure \ref{fig:comparedf} compares the degrees of freedom selected using the WAIC criterion when fitting BSR using 5,000 MCMC iterations to 50,000 MCMC iterations. We ran this test on five smaller size datasets from the 16 scenarios containing interactions between exposures, as well as from the base case.
 \begin{figure}
@@ -2156,7 +2167,7 @@ Here, we visualize the observed and simulated predictor data.
     \AttributeTok{low =} \StringTok{"deepskyblue3"}\NormalTok{, }\AttributeTok{mid =} \StringTok{"white"}\NormalTok{, }\AttributeTok{high =} \StringTok{"darkorange"}\NormalTok{, }
     \AttributeTok{na.value =} \ConstantTok{NA}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{coord\_fixed}\NormalTok{() }\SpecialCharTok{+}
-  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{fill =} \FunctionTok{TeX}\NormalTok{(r}\StringTok{"( Spearman\textquotesingle{}s $}\SpecialCharTok{\textbackslash{}r}\StringTok{ho$ )"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{fill =} \FunctionTok{TeX}\NormalTok{(r}\StringTok{"( Mean Spearman\textquotesingle{}s $}\SpecialCharTok{\textbackslash{}r}\StringTok{ho$ )"}\NormalTok{)) }\SpecialCharTok{+}
   \FunctionTok{theme}\NormalTok{(}
     \AttributeTok{panel.grid.major.x =} \FunctionTok{element\_line}\NormalTok{(}\AttributeTok{color =} \StringTok{"grey85"}\NormalTok{,}
                                       \AttributeTok{linewidth =} \FloatTok{0.25}\NormalTok{,}
@@ -2791,7 +2802,7 @@ Here, we create the supplemental output that is included in Appendix \ref{appa}.
     \AttributeTok{low =} \StringTok{"deepskyblue3"}\NormalTok{, }\AttributeTok{mid =} \StringTok{"white"}\NormalTok{, }\AttributeTok{high =} \StringTok{"darkorange"}\NormalTok{, }
     \AttributeTok{na.value =} \ConstantTok{NA}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{coord\_fixed}\NormalTok{() }\SpecialCharTok{+}
-  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{fill =} \FunctionTok{TeX}\NormalTok{(r}\StringTok{"( Spearman\textquotesingle{}s $}\SpecialCharTok{\textbackslash{}r}\StringTok{ho$ )"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{fill =} \FunctionTok{TeX}\NormalTok{(r}\StringTok{"( Mean Spearman\textquotesingle{}s $}\SpecialCharTok{\textbackslash{}r}\StringTok{ho$ )"}\NormalTok{)) }\SpecialCharTok{+}
   \FunctionTok{theme}\NormalTok{(}
     \AttributeTok{panel.grid.major.x =} \FunctionTok{element\_line}\NormalTok{(}\AttributeTok{color =} \StringTok{"grey85"}\NormalTok{,}
                                       \AttributeTok{linewidth =} \FloatTok{0.25}\NormalTok{,}

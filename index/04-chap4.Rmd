@@ -8,7 +8,6 @@ output:
 ```{r include_packages2, include = FALSE}
 library(knitr)
 library(kableExtra)
-library(tidyverse)
 ```
 
 ## Past simulation studies
@@ -74,17 +73,20 @@ Various families of copulas have been described, each of which specifies a diffe
 include_graphics(path = "figures/ch4_univ_exp_sim.png")
 ```
 
+
 ```{r univcovsim, fig.cap = "Distributions of covariates from observed data (blue) and 2100 simulated smaller size (n=252) datasets (gray).", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch4_univ_cov_sim.png")
 ```
 
 We simulated predictor data by randomly sampling from the fitted multivariate Gaussian copula distribution. All pseudo-random samples were then back-transformed to their original distributions using empirical marginal CDFs. We simulated the race by ethnicity and birthplace variable by randomly assigning observations to each of the five categories based on proportions in the observed dataset. 
 
-```{r corsimssm, fig.cap = "Correlation heat maps of exposures from observed data (a) and averaged from 2100 smaller size (n=252) simulated datasets (b), as well as distribution of correlations from smaller size simulated datasets (c).", out.width = '100%', echo = FALSE}
-include_graphics(path = "figures/ch4_corr_simorigdens.png")
+```{r corsimssm, fig.cap = "Spearman's correlation heat maps of exposures from observed data (a) and averaged from 2100 smaller size (n=252) simulated datasets (b).", out.width = '100%', echo = FALSE}
+include_graphics(path = "figures/ch4_corr_sim+orig.png")
+
+# , as well as distribution of correlations from smaller size simulated datasets (c)
 ```
 
-We generated one set of simulated datasets with the same sample size as the observed dataset (n=252), which is typical in many cohort studies. We also generated another set of simulated datasets with a larger sample size (n=1000), which has become increasingly common with the rise of larger-scale studies and big data. The goal of this choice was to inform sample size considerations in study design. We verified that the original structure of the observed dataset were preserved by visually comparing univariate distributions of exposures (Figure \@ref(fig:univexpsim)) and covariates (Figure \@(ref:univcovsim)), as well as the correlation structure using Spearman's $\rho$ (Figure \@ref(fig:corsimssm)). Plots for the larger size simulated datasets were similar and are included in Appendix \@ref(suppmethods) (Figures \@ref(fig:univexplg), \@ref(fig:univcovlg), and \@ref(fig:corsimslg)). 
+We generated one set of simulated datasets with the same sample size as the observed dataset (n=252), which is typical in many cohort studies. We also generated another set of simulated datasets with a larger sample size (n=1000), which has become increasingly common with the rise of larger-scale studies and big data. The goal of this choice was to inform sample size considerations in study design. We verified that the original structure of the observed dataset were preserved by visually comparing univariate distributions of exposures (Figure \@ref(fig:univexpsim)) and covariates (Figure \@(ref:univcovsim)), as well as the correlation structure using Spearman's $\rho$ (Figure \@ref(fig:corsimssm)). Distributions of Spearman's correlation were approximately normal (Figure \@ref(fig:cordistsm)). Plots for the larger size simulated datasets were similar (Figures \@ref(fig:univexplg), \@ref(fig:univcovlg), and \@ref(fig:corsimslg)). 
 
 [*move correlation densities to appendix? also, change label to mean!*]
 
@@ -97,7 +99,7 @@ Y_i = \textrm{Hg}_i + \frac{3}{1+\textrm{exp}(-4\textrm{Ni}_i)} + \frac{1.5}{1+\
 + \textrm{age}_i + 0.5\textrm{bmi}_i + 0.5\textrm{race}_{\textrm{black}i} + 0.5\textrm{race}_{\textrm{hisp.non}i} + 1.5\textrm{smoke}_i + \varepsilon_i,
 \end{multline*}
 
-\noindent where $\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0,5)$. This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb. Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an $R^2$ of around 0.2-0.3 in a multiple linear regression that included only the true functional form of the chemicals in the size 252 datasets [*include a figure with distributions of R2, maybe put in appendix*]. This $R^2$ range approximates realistic signal-to-noise ratios in exposure mixture studies (@lazarevic_performance_2020). 
+\noindent where $\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0,5)$. This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb [*include graph in appendix?*]. Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an $R^2$ of around 0.2-0.3 in a multiple linear regression that included only the true functional form of the chemicals in the size 252 datasets [*include a figure with distributions of R2, maybe put in appendix*]. This $R^2$ range approximates realistic signal-to-noise ratios in exposure mixture studies (@lazarevic_performance_2020). 
 
 In subsequent scenarios, we added an additional interaction term to the base case model. First, we considered interactions between two exposures. We defined four cases of interest: a two-way interaction between exposures that are univariately significant, a two-way interaction between exposures that are univariately insignificant, a two-way interaction between exposures that are moderately collinear, and a three-way interaction. For each case, we considered two functional forms — multiplicative and polynomial — and a smaller and larger effect size, which we set by defining the weight on the interaction term in the model. The larger effect sizes were selected in order to achieve a power of approximately 0.5 at $\alpha=0.05$ in the smaller sample size (n=252) case, using a multiple linear regression with the true functional form of the chemicals specified andthe covariate terms included. The smaller effect sizes were set equal to half of the larger effect size. Table \@ref(tab:scenarios) shows the specification of interaction terms. See Appendix \@ref(suppmethods), Figures \@ref(fig:basesurf)-\@ref(fig:cp2), for 3D surfaces of the two-way interaction terms. 
 

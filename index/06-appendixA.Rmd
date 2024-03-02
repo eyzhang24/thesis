@@ -70,6 +70,12 @@ include_graphics("figures/surfaces/cp1.png")
 include_graphics("figures/surfaces/cp2.png")
 ```
 
+Figure \@ref(fig:cordistsm) shows the detailed distribution of correlations in smaller size simulated datasets. 
+
+```{r cordistsm, fig.cap = "Distributions of Spearman's correlation from 2100 smaller size (n=252) simulated datasets.", out.width = '100%', echo = FALSE}
+include_graphics("figures/ch4_corr_sim.png")
+```
+
 Figures \@ref(fig:univexplg), \@ref(fig:univcovlg), and \@ref(fig:corsimslg) compare the marginal distributions of predictors and dependence structure between exposures of the observed dataset and simulated datasets of larger size (n=1000). 
 
 ```{r univexplg, fig.cap = "Distributions of exposures from observed data (blue) and simulated larger size (n=1000) datasets (gray).", out.width = '75%', echo = FALSE}
@@ -80,7 +86,7 @@ include_graphics("figures/ch4_univ_exp_sim_lg.png")
 include_graphics(path = "figures/ch4_univ_cov_sim_lg.png")
 ```
 
-```{r corsimslg, fig.cap = "Correlation heat maps of exposures from observed data (a) and averaged from 2100 larger size (n=1000) simulated datasets (b), as well as distribution of correlations from larger size simulated datasets (c).", out.width = '100%', echo = FALSE}
+```{r corsimslg, fig.cap = "Spearman's correlation heat maps of exposures from observed data (a) and averaged from 2100 larger size (n=1000) simulated datasets (b), as well as distributions of correlations from larger size simulated datasets (c).", out.width = '100%', echo = FALSE}
 include_graphics(path = "figures/ch4_corr_lg_simorigdens.png")
 ```
 
