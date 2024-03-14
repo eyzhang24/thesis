@@ -45,7 +45,6 @@ We followed the approach by @howe_prenatal_2020 for preparing the data for analy
 include_graphics(path = "figures/ch4_covdist.png")
 ```
 
-<!-- include study site??? -->
 
 ### Using copulas to simulate predictor data {#copula}
 
@@ -72,7 +71,7 @@ include_graphics(path = "figures/ch4_univ_exp_sim.png")
 ```
 
 
-```{r univcovsim, fig.cap = "Distributions of covariates from observed data (blue) and 2100 simulated smaller size (n=252) datasets (gray).", out.width = '75%', echo = FALSE}
+```{r univcovsim, fig.cap = "Distributions of continuous (a) and categorical (b) covariates from observed data (blue) and 2100 simulated smaller size (n=252) datasets (gray).", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch4_univ_cov_sim.png")
 ```
 
@@ -95,9 +94,9 @@ Y_i = \textrm{Hg}_i + \frac{3}{1+\textrm{exp}(-4\textrm{Ni}_i)} + \frac{1.5}{1+\
 + \textrm{age}_i + 0.5\textrm{bmi}_i + 0.5\textrm{race}_{\textrm{black}i} + 0.5\textrm{race}_{\textrm{hisp.non}i} + 1.5\textrm{smoke}_i + \varepsilon_i,
 \end{multline*}
 
-\noindent where $\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0,5)$. This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb [*include graph in appendix?*]. Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an $R^2$ of around 0.2-0.3 in a multiple linear regression that included only the true functional form of the chemicals in the size 252 datasets [*include a figure with distributions of R2, maybe put in appendix*]. This $R^2$ range approximates realistic signal-to-noise ratios in exposure mixture studies (@lazarevic_performance_2020). 
+\noindent where $\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0,5)$. This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb (Figure \@ref(fig:univlines)). Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an $R^2$ of around 0.1-0.3 in a multiple linear regression that included only the true functional form of the significant chemicals (Figure \@ref(fig:rsqcheck)). This $R^2$ range approximates realistic signal-to-noise ratios in exposure mixture studies (@lazarevic_performance_2020). 
 
-In subsequent scenarios, we added an additional interaction term to the base case model. First, we considered interactions between two exposures. We defined four cases of interest: a two-way interaction between exposures that are univariately significant, a two-way interaction between exposures that are univariately insignificant, a two-way interaction between exposures that are moderately collinear, and a three-way interaction. For each case, we considered two functional forms — multiplicative and polynomial — and a smaller and larger effect size, which we set by defining the weight on the interaction term in the model. The larger effect sizes were selected in order to achieve a power of approximately 0.5 at $\alpha=0.05$ in the smaller sample size (n=252) case, using a multiple linear regression with the true functional form of the chemicals specified andthe covariate terms included. The smaller effect sizes were set equal to half of the larger effect size. Table \@ref(tab:scenarios) shows the specification of interaction terms. See Appendix \@ref(suppmethods), Figures \@ref(fig:basesurf)-\@ref(fig:cp2), for 3D surfaces of the two-way interaction terms. 
+In subsequent scenarios, we added an additional interaction term to the base case model. First, we considered interactions between two exposures. We defined four cases of interest: a two-way interaction between exposures that are univariately significant, a two-way interaction between exposures that are univariately insignificant, a two-way interaction between exposures that are moderately collinear, and a three-way interaction. For each case, we considered two functional forms — multiplicative and polynomial — and a smaller and larger effect size, which we set by defining the weight on the interaction term in the model. The larger effect sizes were selected in order to achieve a power of approximately 0.5 at $\alpha=0.05$ in the smaller sample size (n=252) case, using a multiple linear regression with the true functional form of the chemicals specified and the covariate terms included. The smaller effect sizes were set equal to half of the larger effect size. Table \@ref(tab:scenarios) shows the specification of interaction terms. See Appendix \@ref(suppmethods), Figures \@ref(fig:basesurf)-\@ref(fig:cp2), for 3D surfaces of the two-way interaction terms. 
 
 ```{r scenarios, echo = FALSE}
 equations <- data.frame(
@@ -128,16 +127,11 @@ equations |>
   pack_rows(index = labels) 
 ```
 
-Next, we considered interactions between a covariate and an exposure. [*write up in detail later after finalizing parameters:*]
-
-- Take one or two of the race/ethnicity categories and make the effect of mercury higher
-- Excess amounts of social stress due to racism
-- Simulate larger effect in a smaller group --> more compelling public health story
-- Simulate larger effect in a larger group as a contrast --> evidence for oversampling minority group
+Next, we considered interactions between the race by ethnicity and birthplace covariate (hereafter referred to as race for concision) and an exposure. We are interested in cases where the health effects of an exposure are higher in one group compared to the rest. In a real-world scenario, such interactions can arise from excess amounts of social stress experienced by a group due to racism. To model this, we increased the coefficient Hg in Non-Hispanic Black individuals (n=27 in the original MADRES cohort) for the first scenario, and in Hispanic individuals born outside the US (n=109 in the original MADRES cohort) for the second scenario. The goal of this choice was to assess the impact of group size on detectability of an interaction, and to quantify the potential value of oversampling the minority group. For each scenario, we specified a smaller effect size by increasing the coefficient on Hg by $1.5\times$ (i.e. from $1*Hg$ to $1.5*Hg$) in the target group, and a larger effect size by increasing the coefficient on Hg by $2\times$ (i.e. from $1*Hg$ to $2*Hg$). 
 
 This resulted in a total of 42 scenarios ([1 base case + 5 interaction cases $\times$ 2 effect sizes $\times$ 2 functional forms] $\times$ 2 sample sizes = 42). For each scenario, we generated 100 simulated datasets, resulting in a total of 4200 datasets. 
 
-We hypothesize that... [*add hypothesis*]
+<!-- We hypothesize that... [*add hypothesis*] -->
 
 ### Models {#models}
 
@@ -147,11 +141,16 @@ To get a baseline, we ran a multiple linear regression, including all exposures 
 
 Next, we ran BKMR using the `bkmr` package in R [@bobb_statistical_2018, @bobb_bkmr_2022]. We chose to implement component-wise variable selection rather than hierarchical selection to make simulation results more interpretable, and because there was only moderate multicollinearity in the observed and simulated data. We specified the default priors [@bobb_bayesian_2015, and listed in Section \@ref(bkmrprior)], which is common in the literature for BKMR [e.g., @lazarevic_statistical_2019, @howe_prenatal_2020, @pesenti_comparative_2023]. We ran the MCMC sampler for 50,000 iterations, as recommended by @bobb_statistical_2018, and discarded the first 25,000 iterations for burn-in. 
 
-Finally, we ran BSR using the `NLinteraction` package in R [@antonelli_nlinteraction_2018]. We specified the default priors [@antonelli_estimating_2020, and as listed in \@ref(bsrprior)], which is common in the literature for BSR [e.g., @howe_prenatal_2020, @pesenti_comparative_2023]. @antonelli_estimating_2020 suggests separately fitting models for degrees of freedom $d=\{1, 2, 3, 4\}$ and selecting the value for $d$ which minimizes WAIC. Due to time constraints in this thesis, we first fit BSR on the grid of values for $d$ using 5,000 MCMC iterations to obtain the empirical Bayes estimate for $\sigma^2_{\boldsymbol\beta}$ and then another 5,000 MCMC iterations to obtain the posterior distributions, discarding the first 2,500 iterations for burn-in each time. We selected $d$ based on the WAIC criterion on these preliminary models. Then, we fit the full BSR model using 50,000 MCMC iterations to obtain the empirical Bayes estimate and then another 50,000 MCMC iterations to obtain the posterior distributions, discarding the first 25,000 iterations for burn-in each time. In a small test run on five smaller size datasets for each scenario containing interactions between exposures, as well as the base case, we found that using 5,000 iterations selected the same degrees of freedom as using 50,000 iterations 86\% of the time (see Appendix \@ref(suppmethods), Figure \@ref(fig:comparedf)). 
+We ran BSR using the `NLinteraction` package in R [@antonelli_nlinteraction_2018]. We specified the default priors [@antonelli_estimating_2020, and as listed in \@ref(bsrprior)], which is common in the literature for BSR [e.g., @howe_prenatal_2020, @pesenti_comparative_2023]. @antonelli_estimating_2020 suggests separately fitting models for degrees of freedom $d=\{1, 2, 3, 4\}$ and selecting the value for $d$ which minimizes WAIC. Due to time constraints in this thesis, we first fit BSR on the grid of values for $d$ using 5,000 MCMC iterations to obtain the empirical Bayes estimate for $\sigma^2_{\boldsymbol\beta}$ and then another 5,000 MCMC iterations to obtain the posterior distributions, discarding the first 2,500 iterations for burn-in each time. We selected $d$ based on the WAIC criterion on these preliminary models. Then, we fit the full BSR model using 50,000 MCMC iterations to obtain the empirical Bayes estimate and then another 50,000 MCMC iterations to obtain the posterior distributions, discarding the first 25,000 iterations for burn-in each time. In a small test run on five smaller size datasets for each scenario containing interactions between exposures, as well as the base case, we found that using 5,000 iterations selected the same degrees of freedom as using 50,000 iterations 86\% of the time (see Appendix \@ref(suppmethods), Figure \@ref(fig:comparedf)). 
+
+Finally, we 
 
 We checked convergence for a selection of BKMR and BSR models using trace plots (Appendix \@ref(suppresults), [*add figure labels*]). 
 
 [*include details on stratified models*]
+
+- collapse cat's 1-3 in smaller size models to determine effect of collapsing r/e variable
+- expect that there will be less power to detect these interactions, especially in smaller size datasets
 
 ### Model assessment 
 
@@ -179,6 +178,10 @@ bsr:
   - median probability model: sensitivity/power
   - *figure out if we can generate confidence intervals??*
   - look at plots of chem at diff. quantiles of another chem
+  
+stratified models:
+
+- x
 
 to do:
 

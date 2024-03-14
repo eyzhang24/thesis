@@ -16,6 +16,13 @@ This first appendix includes supplemental output for Chapter \@ref(sims).
 
 ## Methods {#suppmethods}
 
+Figure \@ref(fig:univlines) depicts the exposure-response relationship for univariate exposures included in all models in simulation. 
+
+```{r univlines, fig.cap = "Exposure-response relationship for univariate exposures in all models. Exposure values are log-scaled and then standardized.", out.width = '75%', echo = F}
+include_graphics("figures/univariatelines.png")
+```
+
+
 Figures \@ref(fig:basesurf)-\@ref(fig:cp2) depict the exposure-response relationship for all two-way interactions specified in the simulation study. 
 
 ```{r basesurf, fig.cap = "Exposure-response surface for base case: $Y=$ Hg $+\\frac{3}{1+\\textrm{exp}(-4\\textrm{Ni})}$.", out.width = '50%', echo = F}
@@ -89,6 +96,13 @@ include_graphics(path = "figures/ch4_univ_cov_sim_lg.png")
 ```{r corsimslg, fig.cap = "Spearman's correlation heat maps of exposures from observed data (a) and averaged from 2100 larger size (n=1000) simulated datasets (b), as well as distributions of correlations from larger size simulated datasets (c).", out.width = '100%', echo = FALSE}
 include_graphics(path = "figures/ch4_corr_lg_simorigdens.png")
 ```
+
+Figure \@ref(fig:rsqcheck) visualizes the distribution of $R^2$ values in smaller and larger size simulated datasets.
+
+```{r rsqcheck, fig.cap = "R$^2$ values from multiple linear regressions with only the true functional form of significant exposures in smaller size (a) and larger size (b) simulated datasets.", out.width = '100%', echo = FALSE}
+include_graphics(path = "figures/chem_rsq.png")
+```
+
 
 Figure \@ref(fig:comparedf) compares the degrees of freedom selected using the WAIC criterion when fitting BSR using 5,000 MCMC iterations to 50,000 MCMC iterations. We ran this test on five smaller size datasets from the 16 scenarios containing interactions between exposures, as well as from the base case. 
 

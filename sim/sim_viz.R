@@ -545,7 +545,7 @@ ggsave("sim/figs/mlr_lg_rsq.png", width = 7.5, height = 5)
 ##############
 
 #chem model output small
-chem_mods <- read_rds("sim/mlr/chem_mods_sm.RDS")
+chem_mods <- read_rds("sim/mlr/chem_oracle_sm.RDS")
 rsq_chem <- chem_mods |> 
   purrr::map_df(\(x) {
     data.frame(
@@ -554,18 +554,19 @@ rsq_chem <- chem_mods |>
   }) |> 
   mutate(name = names(chem_mods))
 
-rsq_chem |> 
+rsqsmplot <- rsq_chem |> 
   ggplot(aes(x = rsq)) +
   geom_density() + 
-  facet_wrap(~name, scales = "free_y", 
+  facet_wrap(~name, 
              labeller = as_labeller(appender1, 
                                     default = label_parsed), 
              ncol = 4) +
-  labs(y = "Density", x = TeX("R$^2$"))
-ggsave("sim/figs/chem_sm_rsq.png", width = 7.5, height = 5)
+  labs(y = "Density", x = latex2exp::TeX("R$^2$"))
+rsqsmplot
+ggsave("sim/figs/chem_sm_rsq.png", width = 7, height = 5)
 
 #chem model output large
-chem_modl <- read_rds("sim/mlr/chem_mods_lg.RDS")
+chem_modl <- read_rds("sim/mlr/chem_oracle_lg.RDS")
 rsq_cheml <- chem_modl |> 
   purrr::map_df(\(x) {
     data.frame(
@@ -574,112 +575,113 @@ rsq_cheml <- chem_modl |>
   }) |> 
   mutate(name = names(chem_modl))
 
-rsq_cheml |> 
+rsqlgplot <- rsq_cheml |> 
   ggplot(aes(x = rsq)) +
   geom_density() + 
-  facet_wrap(~name, scales = "free_y", 
+  facet_wrap(~name, 
              labeller = as_labeller(appender1, 
                                     default = label_parsed), 
              ncol = 4) +
-  labs(y = "Density", x = TeX("R$^2$"))
-ggsave("sim/figs/chem_lg_rsq.png", width = 7.5, height = 5)
+  labs(y = "Density", x = latex2exp::TeX("R$^2$"))
+cowplot::plot_grid(rsqsmplot, rsqlgplot, labels = "auto", nrow = 1)
+ggsave("index/figures/chem_rsq.png", width = 12, height = 6)
 
 ###############
 #oracle models
 ##############
 
-#small models
-oracle_mods <- read_rds("sim/oracle/oracle_mods_sm.RDS")
-
-#extract r squared
-rsquared2 <- oracle_mods |> 
-  purrr::map_df(\(x) {
-    data.frame(
-      rsq = summary(x)$r.squared
-    )
-  }) |> 
-  mutate(name = names(oracle_mods))
-
-rsquared2 |> 
-  ggplot(aes(x = rsq)) +
-  geom_density() + 
-  facet_wrap(~name, scales = "free_y", 
-             labeller = as_labeller(appender1, 
-                                    default = label_parsed), 
-             ncol = 4) +
-  labs(y = "Density", x = TeX("R$^2$"))
-ggsave("sim/figs/oracle_sm_rsq.png", width = 7.5, height = 5)
-
-#extract p values
-keepnames <- c('(Intercept)', 'Hg', 'Sb', 'I(1/(1 + exp(-4 * Ni)))', 'Ni', 
-               'I(Sb^2)', 'I(1/(1 + exp(-4 * Sn)))', 'age', 'bmi', 
-               'race2', 'race3', 'race4', 'race5', 'smoke1', 'Cd', 'As', 'Co')
-pval <- oracle_mods |> 
-  purrr::map_df(\(x) {
-    x <- summary(x)$coefficients[,4]
-    return(data.frame(pval = x[!(names(x) %in% keepnames)]))
-  }) |> 
-  mutate(name = names(oracle_mods)[101:1700])
-
-pval |> 
-  ggplot(aes(x = pval)) +
-  geom_density() + 
-  facet_wrap(~name, scales = "free_y", 
-             labeller = as_labeller(appender, 
-                                    default = label_parsed)) +
-  labs(y = "Density", x = "p-value")
-ggsave("sim/figs/oracle_sm_pval_dist.png", width = 7.5, height = 5)
-
-#extract power at alpha = 0.05
-oracle_sm_power <- pval |> 
-  group_by(name) |> 
-  summarize(power = sum(pval < 0.05)/n())
-
-
-write_csv(oracle_sm_power, "sim/tables/oracle_sm_power.csv")
-
-#large models
-oracle_modl <- read_rds("sim/oracle/oracle_mods_lg.RDS")
-
-#extract r squared
-rsquared2l <- oracle_modl |> 
-  purrr::map_df(\(x) {
-    data.frame(
-      rsq = summary(x)$r.squared
-    )
-  }) |> 
-  mutate(name = names(oracle_modl))
-
-rsquared2l |> 
-  ggplot(aes(x = rsq)) +
-  geom_density() + 
-  facet_wrap(~name, scales = "free_y", 
-             labeller = as_labeller(appender1, 
-                                    default = label_parsed), 
-             ncol = 4) +
-  labs(y = "Density", x = TeX("R$^2$"))
-ggsave("sim/figs/oracle_sm_rsq.png", width = 7.5, height = 5)
-
-#p-value
-pval_large <- oracle_modl |> 
-  purrr::map_df(\(x) {
-    x <- summary(x)$coefficients[,4]
-    return(data.frame(pval = x[!(names(x) %in% keepnames)]))
-  }) |> 
-  mutate(name = names(oracle_modl)[101:1700]) 
-
-pval_large |> 
-  ggplot(aes(x = pval)) +
-  geom_density() + 
-  facet_wrap(~name, scales = "free_y", 
-             labeller = as_labeller(appender, 
-                                    default = label_parsed)) +
-  labs(y = "Density", x = "p-value")
-ggsave("sim/figs/oracle_lg_pval_dist.png", width = 7.5, height = 5)
-
-#extract power at alpha = 0.05
-oracle_lg_power <- pval_large |> 
-  group_by(name) |> 
-  summarize(power = sum(pval < 0.05)/n())
-
-write_csv(oracle_lg_power, "sim/tables/oracle_lg_power.csv")
+# #small models
+# oracle_mods <- read_rds("sim/oracle/oracle_mods_sm.RDS")
+# 
+# #extract r squared
+# rsquared2 <- oracle_mods |> 
+#   purrr::map_df(\(x) {
+#     data.frame(
+#       rsq = summary(x)$r.squared
+#     )
+#   }) |> 
+#   mutate(name = names(oracle_mods))
+# 
+# rsquared2 |> 
+#   ggplot(aes(x = rsq)) +
+#   geom_density() + 
+#   facet_wrap(~name, scales = "free_y", 
+#              labeller = as_labeller(appender1, 
+#                                     default = label_parsed), 
+#              ncol = 4) +
+#   labs(y = "Density", x = TeX("R$^2$"))
+# ggsave("sim/figs/oracle_sm_rsq.png", width = 7.5, height = 5)
+# 
+# #extract p values
+# keepnames <- c('(Intercept)', 'Hg', 'Sb', 'I(1/(1 + exp(-4 * Ni)))', 'Ni', 
+#                'I(Sb^2)', 'I(1/(1 + exp(-4 * Sn)))', 'age', 'bmi', 
+#                'race2', 'race3', 'race4', 'race5', 'smoke1', 'Cd', 'As', 'Co')
+# pval <- oracle_mods |> 
+#   purrr::map_df(\(x) {
+#     x <- summary(x)$coefficients[,4]
+#     return(data.frame(pval = x[!(names(x) %in% keepnames)]))
+#   }) |> 
+#   mutate(name = names(oracle_mods)[101:1700])
+# 
+# pval |> 
+#   ggplot(aes(x = pval)) +
+#   geom_density() + 
+#   facet_wrap(~name, scales = "free_y", 
+#              labeller = as_labeller(appender, 
+#                                     default = label_parsed)) +
+#   labs(y = "Density", x = "p-value")
+# ggsave("sim/figs/oracle_sm_pval_dist.png", width = 7.5, height = 5)
+# 
+# #extract power at alpha = 0.05
+# oracle_sm_power <- pval |> 
+#   group_by(name) |> 
+#   summarize(power = sum(pval < 0.05)/n())
+# 
+# 
+# write_csv(oracle_sm_power, "sim/tables/oracle_sm_power.csv")
+# 
+# #large models
+# oracle_modl <- read_rds("sim/oracle/oracle_mods_lg.RDS")
+# 
+# #extract r squared
+# rsquared2l <- oracle_modl |> 
+#   purrr::map_df(\(x) {
+#     data.frame(
+#       rsq = summary(x)$r.squared
+#     )
+#   }) |> 
+#   mutate(name = names(oracle_modl))
+# 
+# rsquared2l |> 
+#   ggplot(aes(x = rsq)) +
+#   geom_density() + 
+#   facet_wrap(~name, scales = "free_y", 
+#              labeller = as_labeller(appender1, 
+#                                     default = label_parsed), 
+#              ncol = 4) +
+#   labs(y = "Density", x = TeX("R$^2$"))
+# ggsave("sim/figs/oracle_sm_rsq.png", width = 7.5, height = 5)
+# 
+# #p-value
+# pval_large <- oracle_modl |> 
+#   purrr::map_df(\(x) {
+#     x <- summary(x)$coefficients[,4]
+#     return(data.frame(pval = x[!(names(x) %in% keepnames)]))
+#   }) |> 
+#   mutate(name = names(oracle_modl)[101:1700]) 
+# 
+# pval_large |> 
+#   ggplot(aes(x = pval)) +
+#   geom_density() + 
+#   facet_wrap(~name, scales = "free_y", 
+#              labeller = as_labeller(appender, 
+#                                     default = label_parsed)) +
+#   labs(y = "Density", x = "p-value")
+# ggsave("sim/figs/oracle_lg_pval_dist.png", width = 7.5, height = 5)
+# 
+# #extract power at alpha = 0.05
+# oracle_lg_power <- pval_large |> 
+#   group_by(name) |> 
+#   summarize(power = sum(pval < 0.05)/n())
+# 
+# write_csv(oracle_lg_power, "sim/tables/oracle_lg_power.csv")
