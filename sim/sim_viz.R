@@ -131,8 +131,8 @@ comb_log |>
   theme(legend.spacing.y = unit(0.25, 'cm')) +
   guides(color = guide_legend(byrow = TRUE)) +
   labs(x = "Race, coded", y = "Log concentration") +
-  facet_wrap(~key, scales = "free_y")
-ggsave("index/figures/ch4_race_exp.png", width = 6, height = 4)
+  facet_wrap(~key, scales = "free_y", nrow = 2)
+ggsave("index/figures/ch4_race_exp.png", width = 7, height = 3.5)
 
 
 ########

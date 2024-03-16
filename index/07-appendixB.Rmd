@@ -682,7 +682,7 @@ comb_log |>
   facet_wrap(~key, scales = "free_y")
 
 # save
-ggsave("index/figures/ch4_race_exp.png", width = 6, height = 4)
+ggsave("index/figures/ch4_race_exp.png", width = 7, height = 3.5)
 ```
 
 

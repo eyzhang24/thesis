@@ -58,11 +58,11 @@ $$
 
 \noindent Note that, by the probability integral transform, or the universality of the uniform, the CDFs $F_1(x_1), \dots, F_n(x_n)$ are distributed uniformly. 
 
+We used the `copula` package in R to fit copulas and generate random data [@hofert_copula_2023]. We transformed the observed continuous predictor values to uniform distributions based on their empirical marginal CDFs, a process called generating "pseudo-random" samples. We used the checkerboard copula approach for generating pseudo-random samples for smoke exposure, a binary variable [@genest_primer_2007]. We coded smoke exposure as 0's and 1's, generated a pseudo-random sample, and then "jittered" the values with uniform random noise. There is currently no widely accepted approach for generating pseudo-random samples from unordered categorical variables with more than two levels. Thus, we excluded race by ethnicity and birthplace from the copula model. While this means that our simulated datasets did not preserve any potential association between race and exposures, Figure \@ref(fig:raceexp) suggests that there is little to no visible association between race and exposures in the observed dataset. 
+
 ```{r raceexp, fig.cap="Association between race by ethnicity and birth place and metal exposures in the MADRES cohort (n=252).", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch4_race_exp.png")
 ```
-
-We used the `copula` package in R to fit copulas and generate random data [@hofert_copula_2023]. We transformed the observed continuous predictor values to uniform distributions based on their empirical marginal CDFs, a process called generating "pseudo-random" samples. We used the checkerboard copula approach for generating pseudo-random samples for smoke exposure, a binary variable [@genest_primer_2007]. We coded smoke exposure as 0's and 1's, generated a pseudo-random sample, and then "jittered" the values with uniform random noise. There is currently no widely accepted approach for generating pseudo-random samples from unordered categorical variables with more than two levels. Thus, we excluded race by ethnicity and birthplace from the copula model. While this means that our simulated datasets did not preserve any potential association between race and exposures, Figure \@ref(fig:raceexp) suggests that there is little to no visible association between race and exposures in the observed dataset. 
 
 Various families of copulas have been described, each of which specifies a different shape for the dependence structure. We performed model selection to identify the copula that best approximates the dependence structure of our data. We fit the set of multivariate copulas used by @lazarevic_performance_2020 in their simulation study, which included the Gaussian, $t$, Gumbel, Frank, Clayton, and Joe copulas. We fit two $t$ copulas with 4 and 10 degrees of freedom, which controls dependence at the tails of the distributions, as well as a $t$ copula where the degrees of freedom was determined during the fitting process. The Gumbel, Frank, Clayton, and Joe copulas require a $\theta$ parameter, which controls dependence between the distributions. We fit two versions of these copulas with $\theta=\{2, 4\}$. Among these, the Gaussian copula minimized the Akaike information criterion and maximized the likelihood, so we proceeded with this model. The Gaussian copula assumes a bivariate normal dependence structure between the marginal CDFs. 
 
@@ -101,10 +101,10 @@ In subsequent scenarios, we added an additional interaction term to the base cas
 ```{r scenarios, echo = FALSE}
 equations <- data.frame(
   type = rep(c("Multiplicative", "Polynomial"), 4), 
-  small = c("0.35Hg$*$Ni", "0.3Hg$*($Ni$-1)^2$", 
+  small = c("0.35Hg$*$Ni", "0.13Hg$*($Ni$-1)^2$", 
             "0.35Cd$*$As", "0.125Cd$*($As$-1)^2$", 
-            "0.3Ni$*$Co", "0.09Ni$*($Co$-1)^2$", 
-            "0.3Hg$*$Ni$*$Tl", "0.1Hg$*($Ni$-1)^2*$Tl"), 
+            "0.3Ni$*$Co", "0.1Ni$*($Co$-1)^2$", 
+            "0.3Hg$*$Ni$*$Tl", "0.09Hg$*($Ni$-1)^2*$Tl"), 
   large = c("0.7Hg$*$Ni", "0.26Hg$*($Ni$-1)^2$", 
             "0.7Cd$*$As", "0.25Cd$*($As$-1)^2$", 
             "0.6Ni$*$Co", "0.2Ni$*($Co$-1)^2$", 
@@ -145,12 +145,12 @@ We ran BSR using the `NLinteraction` package in R [@antonelli_nlinteraction_2018
 
 Finally, we 
 
-We checked convergence for a selection of BKMR and BSR models using trace plots (Appendix \@ref(suppresults), [*add figure labels*]). 
-
 [*include details on stratified models*]
 
 - collapse cat's 1-3 in smaller size models to determine effect of collapsing r/e variable
 - expect that there will be less power to detect these interactions, especially in smaller size datasets
+
+We checked convergence for a selection of BKMR and BSR models using trace plots (Appendix \@ref(suppresults), [*add figure labels*]). 
 
 ### Model assessment 
 
@@ -192,3 +192,12 @@ to do:
 
 - example output from representative model 
 - figures + tables w/ model performance
+
+### One-way sensitivity
+
+- naive and oracle do p-values
+- bsr and bkmr do pips
+
+### Two-way sensitivity
+
+

@@ -720,7 +720,6 @@ Figure \ref{fig:toy4} illustrates the fit proposed by a linear spline regression
 
 \caption{Cubic spline regression (blue) with four knots (dotted lines) compared to the true relationship (orange).}\label{fig:toy5}
 \end{figure}
-However, this linear spline regression is still unable to fully estimate the nonlinearity in our example. Increasing the order to \(P=4\) with a cubic spline regression offers additional flexibility. Figure \ref{fig:toy5} illustrates the fit proposed by this model. Here, we can see the benefits of using a cubic polynomial relationship in a nonlinear setting: the estimated relationship is continuous at the knots, and the nonlinear relationship has been flexibly captured.
 \begin{figure}
 
 {\centering \includegraphics[width=0.75\linewidth]{figures/ch3_toy6} 
@@ -729,6 +728,8 @@ However, this linear spline regression is still unable to fully estimate the non
 
 \caption{Natural spline regression (blue) with four knots (dotted lines) compared to the true relationship (orange).}\label{fig:toy6}
 \end{figure}
+However, this linear spline regression is still unable to fully estimate the nonlinearity in our example. Increasing the order to \(P=4\) with a cubic spline regression offers additional flexibility. Figure \ref{fig:toy5} illustrates the fit proposed by this model. Here, we can see the benefits of using a cubic polynomial relationship in a nonlinear setting: the estimated relationship is continuous at the knots, and the nonlinear relationship has been flexibly captured.
+
 Our final modification involves imposing linearity constraints on the boundaries of \(x\) to implement a natural spline regression. Figure \ref{fig:toy6} shows that the fit estimated using a natural spline regression. The fitted line is only slightly different than that proposed by a cubic spline regression in Figure \ref{fig:toy5}. The most noticeable difference is that the slopes of the tails of the natural spline regression are less extreme than for the cubic spline regression.
 \begin{figure}
 
@@ -844,15 +845,13 @@ We also note that BKMR offers a hierarchical variable selection approach to deal
 \hypertarget{past-simulation-studies}{%
 \section{Past simulation studies}\label{past-simulation-studies}}
 
-{[}\emph{cut this section down??}{]}
-
-Here, we preface our simulation study with a brief overview of examples in the literature which compare various methods for exposure mixtures using simulations. Taylor et al. (2016) conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Thus, for each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest.
+Here, we preface our simulation with an overview of examples in the literature which compare various methods for exposure mixture studies using simulations. Taylor et al. (2016) conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Thus, for each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest.
 
 Lazarevic et al. (2020) compare the performance of a broad range of methods for accurate variable selection of important exposures. They simulated exposure data using a multivariate copula based on real-world data and the response by specifying a regression model with only a subset of truly significant exposures and a normal error term. Two correlation structures were considered --- one with the original Spearman correlation matrix and one with the values halved --- as well as two signal-to-noise ratios --- one with an \(R^2\) for the true model at 10\% and one at 30\%. They found that BKMR, along with three other flexible regression methods that allow for nonlinearity, provided more accurate variable selection results compared to two machine learning methods. Moreover, they observed that, in general, low signal-to-noise ratios had a stronger impact on performance than did increasing multicollinearity.
 
 Hoskovec et al. (2021) compare Bayesian methods, including BKMR, while considering 4 research questions: accurate estimation, selection of important exposures, exclusion of unimportant exposures, and identification of interactions. They use observed exposure and covariate data to simulate response data using regression relationships; they considered three exposure-response scenarios of varying complexity and included two-way multiplicative interaction terms. For each simulated dataset, they randomly assigned exposures to be active components of the mixture to incorporate variability in the data. Overall, they found that Bayesian methods outperformed traditional linear regressions, and that BKMR performed best when the exposure-response function takes on a complex form.
 
-Most recently, Pesenti et al. (2023) compare BKMR, BSR, and the Bayesian Least Absolute Shrinkage and Selection Operator (LASSO) for variable selection. Data were generated using a multivariate normal with moderate and strong correlation structures specified manually by the researchers. They found that, in situations with additivity and linearity, Bayesian LASSO was appropriate. Across the other scenarios, BKMR generally performed best, while BSR selected exposures with high heterogeneity when the sample size was smaller due to the influence of the degrees of freedom, \(d\), tuning parameter. Notably, multicollinearity did not generally lead to spurious variable selection.
+Most recently, Pesenti et al. (2023) compare BKMR, BSR, and the Bayesian Least Absolute Shrinkage and Selection Operator (LASSO) for variable selection. Data were generated using a multivariate normal with moderate and strong correlation structures specified manually by the researchers. They found that, in situations with additive and linear exposure-response relationships, Bayesian LASSO was appropriate. Across the other scenarios, BKMR generally performed best, while BSR selected exposures with high heterogeneity when the sample size was smaller due to the influence of the degrees of freedom, \(d\), tuning parameter. Notably, multicollinearity did not generally lead to spurious variable selection.
 
 Finally, we briefly comment on studies by Sun et al. (2013) and Barrera-Gómez et al. (2017), whose explicit goal is to compare methods for identifying interactions. Both studies generate exposure data using the correlation structure from an existing dataset; Sun et al. (2013) uses a multivariate lognormal, while Barrera-Gómez et al. (2017) uses a multivariate normal. Both only consider two-way, multiplicative interactions. While neither of these studies consider the methods used in this thesis, they find that, in general, models that formally allow for interaction effects perform better than models that only allow for univariate additive effects.
 
@@ -866,7 +865,7 @@ The goal of our simulation study is to provide guidance on the choice between BS
 
 In order to make our simulations comparable to real-world exposure mixture studies, we based our simulation data on the Maternal And Developmental Risks from Environmental and Social Stressors (MADRES) pregnancy cohort. The MADRES cohort is an ongoing, prospective pregnancy cohort of predominantly lower-income, Hispanic women in Los Angeles, California, which began in 2015 (Bastain et al., 2019). Urine samples were collected by participants at their first visit, and questionnaires were administered during their first visit, with follow-ups at the first, second, and third trimesters. See Bastain et al. (2019) for further details on study design.
 
-Howe et al. (2020) previously examined the effect of prenatal metal mixtures of birth weight (BW) for gestational age (GA) in this cohort. They used BKMR to identify associations between metal mixtures and BW for GA, as well as BSR to conduct inference on interactions between metals. Briefly, using BKMR, they found that, of the metals in the mixture, Hg and Ni were most strongly associated with BW for GA. Moreover, BKMR results suggested that a potential interaction between Hg and Ni; however, when run through BSR, the PIP for this interaction was extremely small, despite being the highest of all two-way interactions.
+Howe et al. (2020) previously examined the effect of prenatal metal mixtures of birth weight (BW) for gestational age (GA) in this cohort. They used BKMR to identify associations between metal mixtures and BW for GA, as well as BSR to conduct inference on interactions between metals. Briefly, using BKMR, they found that, of the metals in the mixture, mercury and nickel were most strongly associated with BW for GA. Moreover, BKMR results suggested that a potential interaction between mercury and nickel exists; however, when run through BSR, the PIP for this interaction was extremely small, despite being the highest of all two-way interactions.
 
 Data from the study by Howe et al. (2020) were obtained from publicly available data in the Human Health Exposure Resource (HHEAR) Data Repository, which has been approved under Icahn School of Medicine at Mount Sinai IRB Protocol \#16-00947. The Digital Object Identifiers associated with the urinary trace element data and epidemiological data are 10.36043/1945\_159 and 10.36043/1945\_177, respectively. All analyses were conducted in R v4.3.2 (R Core Team, 2013).
 \begin{figure}
@@ -898,6 +897,8 @@ H(x_1, \dots x_n)=C(F_1(x_1), \dots, F_n(x_n)).
 \]
 
 \noindent Note that, by the probability integral transform, or the universality of the uniform, the CDFs \(F_1(x_1), \dots, F_n(x_n)\) are distributed uniformly.
+
+We used the \texttt{copula} package in R to fit copulas and generate random data (Hofert, Kojadinovic, Maechler, \& Yan, 2023). We transformed the observed continuous predictor values to uniform distributions based on their empirical marginal CDFs, a process called generating ``pseudo-random'' samples. We used the checkerboard copula approach for generating pseudo-random samples for smoke exposure, a binary variable (Genest \& Nešlehovà, 2007). We coded smoke exposure as 0's and 1's, generated a pseudo-random sample, and then ``jittered'' the values with uniform random noise. There is currently no widely accepted approach for generating pseudo-random samples from unordered categorical variables with more than two levels. Thus, we excluded race by ethnicity and birthplace from the copula model. While this means that our simulated datasets did not preserve any potential association between race and exposures, Figure \ref{fig:raceexp} suggests that there is little to no visible association between race and exposures in the observed dataset.
 \begin{figure}
 
 {\centering \includegraphics[width=0.75\linewidth]{figures/ch4_race_exp} 
@@ -906,9 +907,7 @@ H(x_1, \dots x_n)=C(F_1(x_1), \dots, F_n(x_n)).
 
 \caption{Association between race by ethnicity and birth place and metal exposures in the MADRES cohort (n=252).}\label{fig:raceexp}
 \end{figure}
-We used the \texttt{copula} package in R to fit copulas and generate random data (Hofert, Kojadinovic, Maechler, \& Yan, 2023). We transformed the observed continuous predictor values to uniform distributions based on their empirical marginal CDFs, a process called generating ``pseudo-random'' samples. We used the checkerboard copula approach for generating pseudo-random samples for smoke exposure, a binary variable (Genest \& Nešlehovà, 2007). We coded smoke exposure as 0's and 1's, generated a pseudo-random sample, and then ``jittered'' the values with uniform random noise. There is currently no widely accepted approach for generating pseudo-random samples from unordered categorical variables with more than two levels. Thus, we excluded race by ethnicity and birthplace from the copula model. While this means that our simulated datasets did not preserve any potential association between race and exposures, Figure \ref{fig:raceexp} suggests that there is little to no visible association between race and exposures in the observed dataset.
-
-Various families of copulas have been described, each of which specifies a different shape for the dependence structure. We performed model selection to identify the copula that best approximates the dependence structure of our data. We fit the set of multivariate copulas used by Lazarevic et al. (2020) in their simulation study, which included the Gaussian, \(t\), Gumbel, Frank, Clayton, and Joe copulas. We fit two \(t\) copulas with 4 and 10 degrees of freedom, which controls dependence at the tails of the distributions, as well as a \(t\) copula where the degrees of freedom was determined during the fitting process. The Gumbel, Frank, Clayton, and Joe copulas require a \(\theta\) parameter, which controls dependence between the distributions. We fit two versions of these copulas with \(\theta=\{2, 4\}\). Among these, the Gaussian copula minimized Akaike information criterion and maximized likelihood, so we proceeded with this model. The Gaussian copula assumes a bivariate normal dependence structure between the marginal CDFs.
+Various families of copulas have been described, each of which specifies a different shape for the dependence structure. We performed model selection to identify the copula that best approximates the dependence structure of our data. We fit the set of multivariate copulas used by Lazarevic et al. (2020) in their simulation study, which included the Gaussian, \(t\), Gumbel, Frank, Clayton, and Joe copulas. We fit two \(t\) copulas with 4 and 10 degrees of freedom, which controls dependence at the tails of the distributions, as well as a \(t\) copula where the degrees of freedom was determined during the fitting process. The Gumbel, Frank, Clayton, and Joe copulas require a \(\theta\) parameter, which controls dependence between the distributions. We fit two versions of these copulas with \(\theta=\{2, 4\}\). Among these, the Gaussian copula minimized the Akaike information criterion and maximized the likelihood, so we proceeded with this model. The Gaussian copula assumes a bivariate normal dependence structure between the marginal CDFs.
 \begin{figure}
 
 {\centering \includegraphics[width=0.75\linewidth]{figures/ch4_univ_exp_sim} 
@@ -923,7 +922,7 @@ Various families of copulas have been described, each of which specifies a diffe
 
 }
 
-\caption{Distributions of covariates from observed data (blue) and 2100 simulated smaller size (n=252) datasets (gray).}\label{fig:univcovsim}
+\caption{Distributions of continuous (a) and categorical (b) covariates from observed data (blue) and 2100 simulated smaller size (n=252) datasets (gray).}\label{fig:univcovsim}
 \end{figure}
 We simulated predictor data by randomly sampling from the fitted multivariate Gaussian copula distribution. All pseudo-random samples were then back-transformed to their original distributions using empirical marginal CDFs. We simulated the race by ethnicity and birthplace variable by randomly assigning observations to each of the five categories based on proportions in the observed dataset.
 \begin{figure}
@@ -936,8 +935,6 @@ We simulated predictor data by randomly sampling from the fitted multivariate Ga
 \end{figure}
 We generated one set of simulated datasets with the same sample size as the observed dataset (n=252), which is typical in many cohort studies. We also generated another set of simulated datasets with a larger sample size (n=1000), which has become increasingly common with the rise of larger-scale studies and big data. The goal of this choice was to inform sample size considerations in study design. We verified that the original structure of the observed dataset were preserved by visually comparing univariate distributions of exposures (Figure \ref{fig:univexpsim}) and covariates (Figure @(ref:univcovsim)), as well as the correlation structure using Spearman's \(\rho\) (Figure \ref{fig:corsimssm}). Distributions of Spearman's correlation were approximately normal (Figure \ref{fig:cordistsm}). Plots for the larger size simulated datasets were similar (Figures \ref{fig:univexplg}, \ref{fig:univcovlg}, and \ref{fig:corsimslg}).
 
-{[}\emph{move correlation densities to appendix? also, change label to mean!}{]}
-
 \hypertarget{simresp}{%
 \subsection{Simulating predictor-response relationships}\label{simresp}}
 
@@ -946,9 +943,9 @@ Health outcome responses were simulated under several different scenarios, each 
 Y_i = \textrm{Hg}_i + \frac{3}{1+\textrm{exp}(-4\textrm{Ni}_i)} + \frac{1.5}{1+\textrm{exp}(-4\textrm{Sn}_i)} - \textrm{Sb}_i^2 + 0.5\textrm{Sb}_i\\
 + \textrm{age}_i + 0.5\textrm{bmi}_i + 0.5\textrm{race}_{\textrm{black}i} + 0.5\textrm{race}_{\textrm{hisp.non}i} + 1.5\textrm{smoke}_i + \varepsilon_i,
 \end{multline*}
-\noindent where \(\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0,5)\). This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb {[}\emph{include graph in appendix?}{]}. Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an \(R^2\) of around 0.2-0.3 in a multiple linear regression that included only the true functional form of the chemicals in the size 252 datasets {[}\emph{include a figure with distributions of R2, maybe put in appendix}{]}. This \(R^2\) range approximates realistic signal-to-noise ratios in exposure mixture studies (Lazarevic et al. (2020)).
+\noindent where \(\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0,5)\). This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb (Figure \ref{fig:univlines}). Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an \(R^2\) of around 0.1-0.3 in a multiple linear regression that included only the true functional form of the significant chemicals (Figure \ref{fig:rsqcheck}). This \(R^2\) range approximates realistic signal-to-noise ratios in exposure mixture studies (Lazarevic et al. (2020)).
 
-In subsequent scenarios, we added an additional interaction term to the base case model. First, we considered interactions between two exposures. We defined four cases of interest: a two-way interaction between exposures that are univariately significant, a two-way interaction between exposures that are univariately insignificant, a two-way interaction between exposures that are moderately collinear, and a three-way interaction. For each case, we considered two functional forms --- multiplicative and polynomial --- and a smaller and larger effect size, which we set by defining the weight on the interaction term in the model. The larger effect sizes were selected in order to achieve a power of approximately 0.5 at \(\alpha=0.05\) in the smaller sample size (n=252) case, using a multiple linear regression with the true functional form of the chemicals specified andthe covariate terms included. The smaller effect sizes were set equal to half of the larger effect size. Table \ref{tab:scenarios} shows the specification of interaction terms. See Appendix \ref{suppmethods}, Figures \ref{fig:basesurf}-\ref{fig:cp2}, for 3D surfaces of the two-way interaction terms.
+In subsequent scenarios, we added an additional interaction term to the base case model. First, we considered interactions between two exposures. We defined four cases of interest: a two-way interaction between exposures that are univariately significant, a two-way interaction between exposures that are univariately insignificant, a two-way interaction between exposures that are moderately collinear, and a three-way interaction. For each case, we considered two functional forms --- multiplicative and polynomial --- and a smaller and larger effect size, which we set by defining the weight on the interaction term in the model. The larger effect sizes were selected in order to achieve a power of approximately 0.5 at \(\alpha=0.05\) in the smaller sample size (n=252) case, using a multiple linear regression with the true functional form of the chemicals specified and the covariate terms included. The smaller effect sizes were set equal to half of the larger effect size. Table \ref{tab:scenarios} shows the specification of interaction terms. See Appendix \ref{suppmethods}, Figures \ref{fig:basesurf}-\ref{fig:cp2}, for 3D surfaces of the two-way interaction terms.
 \begin{table}
 
 \caption{\label{tab:scenarios}Specification of interaction terms in simulations.}
@@ -962,7 +959,7 @@ In subsequent scenarios, we added an additional interaction term to the base cas
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{Univariately significant}}\\
 \hspace{1em}Multiplicative & 0.35Hg$*$Ni & 0.7Hg$*$Ni\\
-\hspace{1em}Polynomial & 0.3Hg$*($Ni$-1)^2$ & 0.26Hg$*($Ni$-1)^2$\\
+\hspace{1em}Polynomial & 0.13Hg$*($Ni$-1)^2$ & 0.26Hg$*($Ni$-1)^2$\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{Univariately insignificant}}\\
 \hspace{1em}Multiplicative & 0.35Cd$*$As & 0.7Cd$*$As\\
@@ -970,29 +967,17 @@ In subsequent scenarios, we added an additional interaction term to the base cas
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{Highly correlated}}\\
 \hspace{1em}Multiplicative & 0.3Ni$*$Co & 0.6Ni$*$Co\\
-\hspace{1em}Polynomial & 0.09Ni$*($Co$-1)^2$ & 0.2Ni$*($Co$-1)^2$\\
+\hspace{1em}Polynomial & 0.1Ni$*($Co$-1)^2$ & 0.2Ni$*($Co$-1)^2$\\
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{Three-way interaction}}\\
 \hspace{1em}Multiplicative & 0.3Hg$*$Ni$*$Tl & 0.6Hg$*$Ni$*$Tl\\
-\hspace{1em}Polynomial & 0.1Hg$*($Ni$-1)^2*$Tl & 0.18Hg$*($Ni$-1)^2*$Tl\\
+\hspace{1em}Polynomial & 0.09Hg$*($Ni$-1)^2*$Tl & 0.18Hg$*($Ni$-1)^2*$Tl\\
 \bottomrule
 \end{tabular}
 \end{table}
-Next, we considered interactions between a covariate and an exposure. {[}\emph{write up in detail later after finalizing parameters:}{]}
-\begin{itemize}
-\tightlist
-\item
-  Take one or two of the race/ethnicity categories and make the effect of mercury higher
-\item
-  Excess amounts of social stress due to racism
-\item
-  Simulate larger effect in a smaller group --\textgreater{} more compelling public health story
-\item
-  Simulate larger effect in a larger group as a contrast --\textgreater{} evidence for oversampling minority group
-\end{itemize}
-This resulted in a total of 42 scenarios ({[}1 base case + 5 interaction cases \(\times\) 2 effect sizes \(\times\) 2 functional forms{]} \(\times\) 2 sample sizes = 42). For each scenario, we generated 100 simulated datasets, resulting in a total of 4200 datasets.
+Next, we considered interactions between the race by ethnicity and birthplace covariate (hereafter referred to as race for concision) and an exposure. We are interested in cases where the health effects of an exposure are higher in one group compared to the rest. In a real-world scenario, such interactions can arise from excess amounts of social stress experienced by a group due to racism. To model this, we increased the coefficient Hg in Non-Hispanic Black individuals (n=27 in the original MADRES cohort) for the first scenario, and in Hispanic individuals born outside the US (n=109 in the original MADRES cohort) for the second scenario. The goal of this choice was to assess the impact of group size on detectability of an interaction, and to quantify the potential value of oversampling the minority group. For each scenario, we specified a smaller effect size by increasing the coefficient on Hg by \(1.5\times\) (i.e.~from \(1*Hg\) to \(1.5*Hg\)) in the target group, and a larger effect size by increasing the coefficient on Hg by \(2\times\) (i.e.~from \(1*Hg\) to \(2*Hg\)).
 
-We hypothesize that\ldots{} {[}\emph{add hypothesis}{]}
+This resulted in a total of 42 scenarios ({[}1 base case + 5 interaction cases \(\times\) 2 effect sizes \(\times\) 2 functional forms{]} \(\times\) 2 sample sizes = 42). For each scenario, we generated 100 simulated datasets, resulting in a total of 4200 datasets.
 
 \hypertarget{models}{%
 \subsection{Models}\label{models}}
@@ -1003,12 +988,20 @@ To get a baseline, we ran a multiple linear regression, including all exposures 
 
 Next, we ran BKMR using the \texttt{bkmr} package in R Bobb (2022). We chose to implement component-wise variable selection rather than hierarchical selection to make simulation results more interpretable, and because there was only moderate multicollinearity in the observed and simulated data. We specified the default priors (Bobb et al., 2015, and listed in Section \ref{bkmrprior}), which is common in the literature for BKMR Pesenti et al. (2023). We ran the MCMC sampler for 50,000 iterations, as recommended by Bobb et al. (2018), and discarded the first 25,000 iterations for burn-in.
 
-Finally, we ran BSR using the \texttt{NLinteraction} package in R (Antonelli, 2018). We specified the default priors (Antonelli et al., 2020, and as listed in \ref{bsrprior}), which is common in the literature for BSR Pesenti et al. (2023). Antonelli et al. (2020) suggests separately fitting models for degrees of freedom \(d=\{1, 2, 3, 4\}\) and selecting the value for \(d\) which minimizes WAIC. Due to time constraints in this thesis, we first fit BSR on the grid of values for \(d\) using 5,000 MCMC iterations to obtain the empirical Bayes estimate for \(\sigma^2_{\boldsymbol\beta}\) and then another 5,000 MCMC iterations to obtain the posterior distributions, discarding the first 2,500 iterations for burn-in each time. We selected \(d\) based on the WAIC criterion on these preliminary models. Then, we fit the full BSR model using 50,000 MCMC iterations to obtain the empirical Bayes estimate and then another 50,000 MCMC iterations to obtain the posterior distributions, discarding the first 25,000 iterations for burn-in each time. In a small test run on five smaller size datasets for each scenario containing interactions between exposures, as well as the base case, we found that using 5,000 iterations selected the same degrees of freedom as using 50,000 iterations 86\% of the time (see Appendix \ref{suppmethods}, Figure \ref{fig:comparedf}).
+We ran BSR using the \texttt{NLinteraction} package in R (Antonelli, 2018). We specified the default priors (Antonelli et al., 2020, and as listed in \ref{bsrprior}), which is common in the literature for BSR Pesenti et al. (2023). Antonelli et al. (2020) suggests separately fitting models for degrees of freedom \(d=\{1, 2, 3, 4\}\) and selecting the value for \(d\) which minimizes WAIC. Due to time constraints in this thesis, we first fit BSR on the grid of values for \(d\) using 5,000 MCMC iterations to obtain the empirical Bayes estimate for \(\sigma^2_{\boldsymbol\beta}\) and then another 5,000 MCMC iterations to obtain the posterior distributions, discarding the first 2,500 iterations for burn-in each time. We selected \(d\) based on the WAIC criterion on these preliminary models. Then, we fit the full BSR model using 50,000 MCMC iterations to obtain the empirical Bayes estimate and then another 50,000 MCMC iterations to obtain the posterior distributions, discarding the first 25,000 iterations for burn-in each time. In a small test run on five smaller size datasets for each scenario containing interactions between exposures, as well as the base case, we found that using 5,000 iterations selected the same degrees of freedom as using 50,000 iterations 86\% of the time (see Appendix \ref{suppmethods}, Figure \ref{fig:comparedf}).
+
+Finally, we
 
 We checked convergence for a selection of BKMR and BSR models using trace plots (Appendix \ref{suppresults}, {[}\emph{add figure labels}{]}).
 
 {[}\emph{include details on stratified models}{]}
-
+\begin{itemize}
+\tightlist
+\item
+  collapse cat's 1-3 in smaller size models to determine effect of collapsing r/e variable
+\item
+  expect that there will be less power to detect these interactions, especially in smaller size datasets
+\end{itemize}
 \hypertarget{model-assessment}{%
 \subsection{Model assessment}\label{model-assessment}}
 
@@ -1069,6 +1062,12 @@ bsr:
     look at plots of chem at diff. quantiles of another chem
   \end{itemize}
 \end{itemize}
+stratified models:
+\begin{itemize}
+\tightlist
+\item
+  x
+\end{itemize}
 to do:
 \begin{itemize}
 \tightlist
@@ -1106,6 +1105,15 @@ This first appendix includes supplemental output for Chapter \ref{sims}.
 \hypertarget{suppmethods}{%
 \section{Methods}\label{suppmethods}}
 
+Figure \ref{fig:univlines} depicts the exposure-response relationship for univariate exposures included in all models in simulation.
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/univariatelines} 
+
+}
+
+\caption{Exposure-response relationship for univariate exposures in all models. Exposure values are log-scaled and then standardized.}\label{fig:univlines}
+\end{figure}
 Figures \ref{fig:basesurf}-\ref{fig:cp2} depict the exposure-response relationship for all two-way interactions specified in the simulation study.
 \begin{figure}
 
@@ -1244,6 +1252,15 @@ Figures \ref{fig:univexplg}, \ref{fig:univcovlg}, and \ref{fig:corsimslg} compar
 }
 
 \caption{Spearman's correlation heat maps of exposures from observed data (a) and averaged from 2100 larger size (n=1000) simulated datasets (b), as well as distributions of correlations from larger size simulated datasets (c).}\label{fig:corsimslg}
+\end{figure}
+Figure \ref{fig:rsqcheck} visualizes the distribution of \(R^2\) values in smaller and larger size simulated datasets.
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{figures/chem_rsq} 
+
+}
+
+\caption{R$^2$ values from multiple linear regressions with only the true functional form of significant exposures in smaller size (a) and larger size (b) simulated datasets.}\label{fig:rsqcheck}
 \end{figure}
 Figure \ref{fig:comparedf} compares the degrees of freedom selected using the WAIC criterion when fitting BSR using 5,000 MCMC iterations to 50,000 MCMC iterations. We ran this test on five smaller size datasets from the 16 scenarios containing interactions between exposures, as well as from the base case.
 \begin{figure}
@@ -2009,7 +2026,7 @@ Here, we visualize the observed and simulated predictor data.
   \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{key, }\AttributeTok{scales =} \StringTok{"free\_y"}\NormalTok{)}
 
 \CommentTok{\# save}
-\FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/ch4\_race\_exp.png"}\NormalTok{, }\AttributeTok{width =} \DecValTok{6}\NormalTok{, }\AttributeTok{height =} \DecValTok{4}\NormalTok{)}
+\FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/ch4\_race\_exp.png"}\NormalTok{, }\AttributeTok{width =} \DecValTok{7}\NormalTok{, }\AttributeTok{height =} \FloatTok{3.5}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 \normalsize
@@ -2119,40 +2136,40 @@ Here, we visualize the observed and simulated predictor data.
     \FunctionTok{return}\NormalTok{(melt\_cor)}
 \NormalTok{  \})}
 
-\CommentTok{\# create function for breaks on density plot grid}
-\NormalTok{newbreaks }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(lims) \{}
-\NormalTok{  range }\OtherTok{\textless{}{-}} \FunctionTok{diff}\NormalTok{(lims)}
-  \FunctionTok{return}\NormalTok{(}\FunctionTok{c}\NormalTok{(lims[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{+}\NormalTok{ range}\SpecialCharTok{/}\DecValTok{5}\NormalTok{, }\FunctionTok{mean}\NormalTok{(lims), lims[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ range}\SpecialCharTok{/}\DecValTok{5}\NormalTok{))}
-\NormalTok{\}}
-
-\CommentTok{\# density plot grid of spearman\textquotesingle{}s correlation in simulated data}
-\NormalTok{cors\_dens }\OtherTok{\textless{}{-}}\NormalTok{ cors }\SpecialCharTok{|\textgreater{}} 
-  \FunctionTok{group\_by}\NormalTok{(Var1, Var2) }\SpecialCharTok{|\textgreater{}} 
-  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{mean =} \FunctionTok{mean}\NormalTok{(value)) }\SpecialCharTok{|\textgreater{}} 
-  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{|\textgreater{}} 
-  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ value, }\AttributeTok{fill =}\NormalTok{ mean)) }\SpecialCharTok{+}
-  \FunctionTok{geom\_density}\NormalTok{() }\SpecialCharTok{+} 
-  \FunctionTok{scale\_x\_continuous}\NormalTok{(}\AttributeTok{breaks =}\NormalTok{ newbreaks, }
-                     \AttributeTok{labels =} \SpecialCharTok{\textasciitilde{}}\FunctionTok{round}\NormalTok{(.x, }\DecValTok{2}\NormalTok{)) }\SpecialCharTok{+}
-  \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{position =} \StringTok{"right"}\NormalTok{) }\SpecialCharTok{+}
-  \FunctionTok{scale\_fill\_gradient2}\NormalTok{(}
-    \AttributeTok{limit =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\FloatTok{0.6}\NormalTok{, }\FloatTok{0.6}\NormalTok{), }\AttributeTok{breaks =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\FloatTok{0.6}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{0.3}\NormalTok{, }\DecValTok{0}\NormalTok{, }\FloatTok{0.3}\NormalTok{, }\FloatTok{0.6}\NormalTok{),}
-    \AttributeTok{low =} \StringTok{"deepskyblue3"}\NormalTok{, }\AttributeTok{mid =} \StringTok{"white"}\NormalTok{, }\AttributeTok{high =} \StringTok{"darkorange"}\NormalTok{, }
-    \AttributeTok{na.value =} \ConstantTok{NA}\NormalTok{) }\SpecialCharTok{+}
-\NormalTok{  ggh4x}\SpecialCharTok{::}\FunctionTok{facet\_grid2}\NormalTok{(}\FunctionTok{fct\_rev}\NormalTok{(Var2) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Var1, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{, }\AttributeTok{independent =} \StringTok{"x"}\NormalTok{, }
-                     \AttributeTok{render\_empty =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{switch =} \StringTok{"both"}\NormalTok{) }\SpecialCharTok{+}
-  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \FunctionTok{TeX}\NormalTok{(r}\StringTok{"( Spearman\textquotesingle{}s $}\SpecialCharTok{\textbackslash{}r}\StringTok{ho$ )"}\NormalTok{)) }\SpecialCharTok{+}
-  \FunctionTok{theme}\NormalTok{(}\AttributeTok{strip.placement =} \StringTok{"outside"}\NormalTok{, }
-        \AttributeTok{strip.text.y.left =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{angle =} \DecValTok{0}\NormalTok{), }
-        \AttributeTok{legend.justification =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
-        \AttributeTok{legend.position =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.9}\NormalTok{, }\FloatTok{0.1}\NormalTok{),}
-        \AttributeTok{legend.direction =} \StringTok{"horizontal"}\NormalTok{) }\SpecialCharTok{+}
-  \FunctionTok{guides}\NormalTok{(}\AttributeTok{fill =} \FunctionTok{guide\_colorbar}\NormalTok{(}\AttributeTok{barwidth =} \DecValTok{7}\NormalTok{, }\AttributeTok{barheight =} \DecValTok{1}\NormalTok{,}
-                               \AttributeTok{title.position =} \StringTok{"top"}\NormalTok{, }\AttributeTok{title.hjust =} \FloatTok{0.5}\NormalTok{))}
-
-\CommentTok{\# plot and save}
-\NormalTok{cors\_dens}
-\FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/ch4\_corr\_sim.png"}\NormalTok{, }\AttributeTok{width =} \DecValTok{10}\NormalTok{, }\AttributeTok{height =} \DecValTok{7}\NormalTok{)}
+\CommentTok{\# \# create function for breaks on density plot grid}
+\CommentTok{\# newbreaks \textless{}{-} function(lims) \{}
+\CommentTok{\#   range \textless{}{-} diff(lims)}
+\CommentTok{\#   return(c(lims[1] + range/5, mean(lims), lims[2] {-} range/5))}
+\CommentTok{\# \}}
+\CommentTok{\# }
+\CommentTok{\# \# density plot grid of spearman\textquotesingle{}s correlation in simulated data}
+\CommentTok{\# cors\_dens \textless{}{-} cors |\textgreater{} }
+\CommentTok{\#   group\_by(Var1, Var2) |\textgreater{} }
+\CommentTok{\#   mutate(mean = mean(value)) |\textgreater{} }
+\CommentTok{\#   ungroup() |\textgreater{} }
+\CommentTok{\#   ggplot(aes(x = value, fill = mean)) +}
+\CommentTok{\#   geom\_density() + }
+\CommentTok{\#   scale\_x\_continuous(breaks = newbreaks, }
+\CommentTok{\#                      labels = \textasciitilde{}round(.x, 2)) +}
+\CommentTok{\#   scale\_y\_continuous(position = "right") +}
+\CommentTok{\#   scale\_fill\_gradient2(}
+\CommentTok{\#     limit = c({-}0.6, 0.6), breaks = c({-}0.6, {-}0.3, 0, 0.3, 0.6),}
+\CommentTok{\#     low = "deepskyblue3", mid = "white", high = "darkorange", }
+\CommentTok{\#     na.value = NA) +}
+\CommentTok{\#   ggh4x::facet\_grid2(fct\_rev(Var2) \textasciitilde{} Var1, scales = "free", independent = "x", }
+\CommentTok{\#                      render\_empty = FALSE, switch = "both") +}
+\CommentTok{\#   labs(x = TeX(r"( Spearman\textquotesingle{}s $\textbackslash{}rho$ )")) +}
+\CommentTok{\#   theme(strip.placement = "outside", }
+\CommentTok{\#         strip.text.y.left = element\_text(angle = 0), }
+\CommentTok{\#         legend.justification = c(1, 0),}
+\CommentTok{\#         legend.position = c(0.9, 0.1),}
+\CommentTok{\#         legend.direction = "horizontal") +}
+\CommentTok{\#   guides(fill = guide\_colorbar(barwidth = 7, barheight = 1,}
+\CommentTok{\#                                title.position = "top", title.hjust = 0.5))}
+\CommentTok{\# }
+\CommentTok{\# \# plot and save}
+\CommentTok{\# cors\_dens}
+\CommentTok{\# ggsave("index/figures/ch4\_corr\_sim.png", width = 10, height = 7)}
 
 \CommentTok{\# correlation heatmap of average correlation in simulated data}
 \NormalTok{cor\_sim }\OtherTok{\textless{}{-}}\NormalTok{ cors }\SpecialCharTok{|\textgreater{}} 
@@ -2189,10 +2206,10 @@ Here, we visualize the observed and simulated predictor data.
 \NormalTok{top\_row}
 \FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/ch4\_corr\_sim+orig.png"}\NormalTok{, }\AttributeTok{width =} \DecValTok{10}\NormalTok{, }\AttributeTok{height =} \DecValTok{5}\NormalTok{)}
 
-\CommentTok{\# put original, simulated, and density plots of correlation together}
-\NormalTok{cowplot}\SpecialCharTok{::}\FunctionTok{plot\_grid}\NormalTok{(top\_row, cors\_dens, }\AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{""}\NormalTok{, }\StringTok{"c"}\NormalTok{), }\AttributeTok{label\_size =} \DecValTok{16}\NormalTok{, }
-                   \AttributeTok{nrow =} \DecValTok{2}\NormalTok{, }\AttributeTok{rel\_heights =} \FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{7}\NormalTok{), }\AttributeTok{scale =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FloatTok{0.95}\NormalTok{))}
-\FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/ch4\_corr\_simorigdens.png"}\NormalTok{, }\AttributeTok{width =} \DecValTok{10}\NormalTok{, }\AttributeTok{height =} \DecValTok{12}\NormalTok{)}
+\CommentTok{\# \# put original, simulated, and density plots of correlation together}
+\CommentTok{\# cowplot::plot\_grid(top\_row, cors\_dens, labels = c("", "c"), label\_size = 16, }
+\CommentTok{\#                    nrow = 2, rel\_heights = c(5, 7), scale = c(1, 0.95))}
+\CommentTok{\# ggsave("index/figures/ch4\_corr\_simorigdens.png", width = 10, height = 12)}
 \end{Highlighting}
 \end{Shaded}
 \normalsize
@@ -2494,8 +2511,8 @@ Next, we simulate the response data. We use the \texttt{rslurm} package in this 
       \CommentTok{\# get dataset number }
 \NormalTok{      no }\OtherTok{\textless{}{-}}\NormalTok{ x}\SpecialCharTok{$}\NormalTok{sim[}\DecValTok{1}\NormalTok{] }
 \NormalTok{      x }\OtherTok{\textless{}{-}}\NormalTok{ x }\SpecialCharTok{|\textgreater{}} 
-        \CommentTok{\# scale log{-}transformed exposures}
-        \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn, }\SpecialCharTok{\textasciitilde{}}\FunctionTok{c}\NormalTok{(}\FunctionTok{scale}\NormalTok{(.)))) }
+        \CommentTok{\# scale log{-}transformed exposures and covariates}
+        \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(age}\SpecialCharTok{:}\NormalTok{Sn, }\SpecialCharTok{\textasciitilde{}}\FunctionTok{c}\NormalTok{(}\FunctionTok{scale}\NormalTok{(.)))) }
 \NormalTok{      df }\OtherTok{\textless{}{-}} \FunctionTok{case\_when}\NormalTok{(}
 \NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{100} \SpecialCharTok{\textasciitilde{}} \FunctionTok{base\_case}\NormalTok{(x), }
 \NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{200} \SpecialCharTok{\textasciitilde{}} \FunctionTok{am1}\NormalTok{(x), }
@@ -2567,7 +2584,7 @@ Next, we simulate the response data. We use the \texttt{rslurm} package in this 
       \CommentTok{\# get dataset number }
 \NormalTok{      no }\OtherTok{\textless{}{-}}\NormalTok{ x}\SpecialCharTok{$}\NormalTok{sim[}\DecValTok{1}\NormalTok{]}
 \NormalTok{      x }\OtherTok{\textless{}{-}}\NormalTok{ x }\SpecialCharTok{|\textgreater{}} 
-        \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn, }\SpecialCharTok{\textasciitilde{}}\FunctionTok{c}\NormalTok{(}\FunctionTok{scale}\NormalTok{(.)))) }
+        \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(age}\SpecialCharTok{:}\NormalTok{Sn, }\SpecialCharTok{\textasciitilde{}}\FunctionTok{c}\NormalTok{(}\FunctionTok{scale}\NormalTok{(.)))) }
 \NormalTok{      df }\OtherTok{\textless{}{-}} \FunctionTok{case\_when}\NormalTok{(}
 \NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{100} \SpecialCharTok{\textasciitilde{}} \FunctionTok{base\_case}\NormalTok{(x), }
 \NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{200} \SpecialCharTok{\textasciitilde{}} \FunctionTok{am1}\NormalTok{(x), }
@@ -2637,6 +2654,149 @@ Next, we simulate the response data. We use the \texttt{rslurm} package in this 
 \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#}
 \CommentTok{\# create response variables for exposure{-}covariate interxn}
 \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#}
+
+\CommentTok{\# functions for creating response}
+\CommentTok{\# interxn in smaller group, smaller effect size}
+\NormalTok{em1 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5} \SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Hg, }\CommentTok{\# 1.5x in group 2}
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\CommentTok{\# interxn in smaller group, larger effect size}
+\NormalTok{em2 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5} \SpecialCharTok{+}\NormalTok{ Hg, }\CommentTok{\# double in group 2}
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\CommentTok{\# interxn in larger group, smaller effect size}
+\NormalTok{ep1 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5} \SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Hg) }\SpecialCharTok{+} \CommentTok{\# 1.5x in group 5}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\CommentTok{\# interxn in larger group, larger effect size}
+\NormalTok{ep2 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{y =} 
+\NormalTok{           Hg }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni)) }\SpecialCharTok{{-}}\NormalTok{ (Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{Sb }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn)) }\SpecialCharTok{+} 
+\NormalTok{           age }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{bmi }\SpecialCharTok{+} 
+           \FunctionTok{case\_when}\NormalTok{(race }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+\NormalTok{                     race }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FloatTok{1.5} \SpecialCharTok{+}\NormalTok{ Hg) }\SpecialCharTok{+} \CommentTok{\# double in group 5}
+           \FunctionTok{ifelse}\NormalTok{(smoke }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+           \FunctionTok{rnorm}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\CommentTok{\# read output back in, size 252}
+\NormalTok{out1 }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_preds\_sm.RDS"}\NormalTok{)}
+
+\CommentTok{\# create function to simulate response for smaller size}
+\NormalTok{run\_resp1\_re }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+  \FunctionTok{set.seed}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+\NormalTok{  out1\_resp1 }\OtherTok{\textless{}{-}}\NormalTok{ out1 }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{    purrr}\SpecialCharTok{::}\FunctionTok{map}\NormalTok{(\textbackslash{}(x) \{}
+      \CommentTok{\# get dataset number }
+\NormalTok{      no }\OtherTok{\textless{}{-}}\NormalTok{ x}\SpecialCharTok{$}\NormalTok{sim[}\DecValTok{1}\NormalTok{] }
+\NormalTok{      x }\OtherTok{\textless{}{-}}\NormalTok{ x }\SpecialCharTok{|\textgreater{}} 
+        \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(age}\SpecialCharTok{:}\NormalTok{Sn, }\SpecialCharTok{\textasciitilde{}}\FunctionTok{c}\NormalTok{(}\FunctionTok{scale}\NormalTok{(.)))) }
+\NormalTok{      df }\OtherTok{\textless{}{-}} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1700} \SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\CommentTok{\#note 1 {-} 1700 are chemxchem}
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1800} \SpecialCharTok{\textasciitilde{}} \FunctionTok{em1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1900} \SpecialCharTok{\textasciitilde{}} \FunctionTok{em2}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{2000} \SpecialCharTok{\textasciitilde{}} \FunctionTok{ep1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{2100} \SpecialCharTok{\textasciitilde{}} \FunctionTok{ep2}\NormalTok{(x), }
+        \AttributeTok{.default =}\NormalTok{ x }
+\NormalTok{      ) }
+\NormalTok{    \}) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{    purrr}\SpecialCharTok{::}\FunctionTok{set\_names}\NormalTok{(}\AttributeTok{nm =} \FunctionTok{c}\NormalTok{(}
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"unset"}\NormalTok{, }\DecValTok{1700}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"em1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"em2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"ep1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"ep2"}\NormalTok{, }\DecValTok{100}\NormalTok{)}
+\NormalTok{    )) }
+  \FunctionTok{return}\NormalTok{(out1\_resp1)}
+\NormalTok{\}}
+
+\CommentTok{\# send to HPC}
+\NormalTok{runrespsm\_re }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_resp1\_re, }
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out1\textquotesingle{}}\NormalTok{, }
+                     \StringTok{\textquotesingle{}em1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}em2\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}ep1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}ep2\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}sim\_resp1\_re\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# get output}
+\NormalTok{out1\_resp1\_re }\OtherTok{\textless{}{-}} \FunctionTok{get\_slurm\_out}\NormalTok{(runrespsm\_re)}
+\NormalTok{out1\_resp1\_re }\OtherTok{\textless{}{-}}\NormalTok{ out1\_resp1\_re[}\DecValTok{1701}\SpecialCharTok{:}\DecValTok{2100}\NormalTok{]}
+\FunctionTok{write\_rds}\NormalTok{(out1\_resp1\_re, }\StringTok{"sim/sim\_resp\_sm\_re.RDS"}\NormalTok{)}
+
+\CommentTok{\# read output back in, size 1000}
+\NormalTok{out2 }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_preds\_lg.RDS"}\NormalTok{)}
+
+\CommentTok{\# create function to simulate response for larger size}
+\NormalTok{run\_resp2\_re }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+  \FunctionTok{set.seed}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+\NormalTok{  out2\_resp1 }\OtherTok{\textless{}{-}}\NormalTok{ out2 }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{    purrr}\SpecialCharTok{::}\FunctionTok{map}\NormalTok{(\textbackslash{}(x) \{}
+      \CommentTok{\# get dataset number }
+\NormalTok{      no }\OtherTok{\textless{}{-}}\NormalTok{ x}\SpecialCharTok{$}\NormalTok{sim[}\DecValTok{1}\NormalTok{] }
+\NormalTok{      x }\OtherTok{\textless{}{-}}\NormalTok{ x }\SpecialCharTok{|\textgreater{}} 
+        \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(age}\SpecialCharTok{:}\NormalTok{Sn, }\SpecialCharTok{\textasciitilde{}}\FunctionTok{c}\NormalTok{(}\FunctionTok{scale}\NormalTok{(.)))) }
+\NormalTok{      df }\OtherTok{\textless{}{-}} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1700} \SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\CommentTok{\#note 1 {-} 1700 are chemxchem}
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1800} \SpecialCharTok{\textasciitilde{}} \FunctionTok{em1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{1900} \SpecialCharTok{\textasciitilde{}} \FunctionTok{em2}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{2000} \SpecialCharTok{\textasciitilde{}} \FunctionTok{ep1}\NormalTok{(x), }
+\NormalTok{        no }\SpecialCharTok{\textless{}=} \DecValTok{2100} \SpecialCharTok{\textasciitilde{}} \FunctionTok{ep2}\NormalTok{(x), }
+        \AttributeTok{.default =}\NormalTok{ x }
+\NormalTok{      ) }
+\NormalTok{    \}) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{    purrr}\SpecialCharTok{::}\FunctionTok{set\_names}\NormalTok{(}\AttributeTok{nm =} \FunctionTok{c}\NormalTok{(}
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"unset"}\NormalTok{, }\DecValTok{1700}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"em1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"em2"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"ep1"}\NormalTok{, }\DecValTok{100}\NormalTok{), }
+      \FunctionTok{rep}\NormalTok{(}\StringTok{"ep2"}\NormalTok{, }\DecValTok{100}\NormalTok{)}
+\NormalTok{    )) }
+  \FunctionTok{return}\NormalTok{(out2\_resp1)}
+\NormalTok{\}}
+
+\CommentTok{\# send to HPC}
+\NormalTok{runresplg\_re }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_resp2\_re, }
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out2\textquotesingle{}}\NormalTok{, }
+                     \StringTok{\textquotesingle{}em1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}em2\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}ep1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}ep2\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}sim\_resp2\_re\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# get output}
+\NormalTok{out2\_resp1\_re }\OtherTok{\textless{}{-}} \FunctionTok{get\_slurm\_out}\NormalTok{(runresplg\_re)}
+\NormalTok{out2\_resp1\_re }\OtherTok{\textless{}{-}}\NormalTok{ out2\_resp1\_re[}\DecValTok{1701}\SpecialCharTok{:}\DecValTok{2100}\NormalTok{]}
+\FunctionTok{write\_rds}\NormalTok{(out2\_resp1\_re, }\StringTok{"sim/sim\_resp\_lg\_b.RDS"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 \normalsize
@@ -2655,6 +2815,292 @@ Here, we extract results from our simulation. We use the \texttt{rslurm}, \textt
 \subsection{Code for Appendix \ref{appa}:}\label{code-for-appendix-refappa}}
 
 Here, we create the supplemental output that is included in Appendix \ref{appa}.
+
+First, we visualize relationships between significant univariate exposures and the response.
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+
+\NormalTok{p1 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_function}\NormalTok{(}\AttributeTok{fun =} \ControlFlowTok{function}\NormalTok{(x) x, }
+                \AttributeTok{color =} \StringTok{"darkorchid1"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{xlim}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Hg"}\NormalTok{)}
+
+\NormalTok{p2 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_function}\NormalTok{(}\AttributeTok{fun =} \ControlFlowTok{function}\NormalTok{(x) }\DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{x)), }
+                \AttributeTok{color =} \StringTok{"deepskyblue3"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{xlim}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Ni"}\NormalTok{)}
+
+\NormalTok{p3 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_function}\NormalTok{(}\AttributeTok{fun =} \ControlFlowTok{function}\NormalTok{(x) }\FloatTok{1.5}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{x)), }
+                \AttributeTok{color =} \StringTok{"darkorange"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{xlim}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Sn"}\NormalTok{)}
+
+\NormalTok{p4 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_function}\NormalTok{(}\AttributeTok{fun =} \ControlFlowTok{function}\NormalTok{(x) (x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{x, }
+                \AttributeTok{color =} \StringTok{"coral1"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{xlim}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Sb"}\NormalTok{)}
+
+\NormalTok{cowplot}\SpecialCharTok{::}\FunctionTok{plot\_grid}\NormalTok{(p1, p2, p3, p4)}
+\FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/univariatelines.png"}\NormalTok{, }\AttributeTok{width =} \DecValTok{6}\NormalTok{, }\AttributeTok{height =} \DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+Next, we visualize 3D surfaces for pair-wise interactions between exposures.
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# load packages}
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(plotly)}
+\CommentTok{\# use reticulate to save plotly 3d plots}
+\ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{require}\NormalTok{(reticulate)) \{}
+  \FunctionTok{install.packages}\NormalTok{(}\StringTok{\textquotesingle{}reticulate\textquotesingle{}}\NormalTok{)}
+\NormalTok{  reticulate}\SpecialCharTok{::}\FunctionTok{install\_miniconda}\NormalTok{()}
+\NormalTok{  reticulate}\SpecialCharTok{::}\FunctionTok{conda\_install}\NormalTok{(}\StringTok{\textquotesingle{}r{-}reticulate\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}python{-}kaleido\textquotesingle{}}\NormalTok{)}
+\NormalTok{  reticulate}\SpecialCharTok{::}\FunctionTok{conda\_install}\NormalTok{(}\StringTok{\textquotesingle{}r{-}reticulate\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}plotly\textquotesingle{}}\NormalTok{, }\AttributeTok{channel =} \StringTok{\textquotesingle{}plotly\textquotesingle{}}\NormalTok{)}
+  \FunctionTok{Sys.setenv}\NormalTok{(}\AttributeTok{RETICULATE\_PYTHON =} 
+               \StringTok{\textquotesingle{}/Users/elizabethzhang/Library/r{-}miniconda{-}arm64/envs/r{-}reticulate/bin/python\textquotesingle{}}\NormalTok{)}
+\NormalTok{  reticulate}\SpecialCharTok{::}\FunctionTok{use\_miniconda}\NormalTok{(}\StringTok{\textquotesingle{}r{-}reticulate\textquotesingle{}}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# load in observed data}
+\NormalTok{comb\_small }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"madres\_data/base\_data.csv"}\NormalTok{)}
+
+\CommentTok{\# log{-}transform and scale target data}
+\NormalTok{comb\_scale }\OtherTok{\textless{}{-}}\NormalTok{ comb\_small }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\DecValTok{10}\SpecialCharTok{:}\DecValTok{19}\NormalTok{, }\SpecialCharTok{\textasciitilde{}}\FunctionTok{scale}\NormalTok{(}\FunctionTok{log}\NormalTok{(.)))) }
+
+\CommentTok{\# check ranges of scaled predictors}
+\FunctionTok{range}\NormalTok{(comb\_scale}\SpecialCharTok{$}\NormalTok{Hg)}
+\FunctionTok{range}\NormalTok{(comb\_scale}\SpecialCharTok{$}\NormalTok{Ni)}
+\FunctionTok{range}\NormalTok{(comb\_scale}\SpecialCharTok{$}\NormalTok{Cd)}
+\FunctionTok{range}\NormalTok{(comb\_scale}\SpecialCharTok{$}\NormalTok{As)}
+\FunctionTok{range}\NormalTok{(comb\_scale}\SpecialCharTok{$}\NormalTok{Co)}
+
+\CommentTok{\# generate data covering 2d predictor surface}
+\NormalTok{data }\OtherTok{\textless{}{-}} \FunctionTok{expand.grid}\NormalTok{(}\AttributeTok{x1 =} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.1}\NormalTok{), }
+                    \AttributeTok{x2 =} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.1}\NormalTok{))}
+\NormalTok{x1 }\OtherTok{\textless{}{-}}\NormalTok{ data}\SpecialCharTok{$}\NormalTok{x1}
+\NormalTok{x2 }\OtherTok{\textless{}{-}}\NormalTok{ data}\SpecialCharTok{$}\NormalTok{x2}
+
+\CommentTok{\# function to create plot}
+\NormalTok{create\_plot }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(xax, yax, Y, }\AttributeTok{xname =} \ConstantTok{NA}\NormalTok{, }\AttributeTok{yname =} \ConstantTok{NA}\NormalTok{) \{}
+  \FunctionTok{plot\_ly}\NormalTok{(}\AttributeTok{x =} \SpecialCharTok{\textasciitilde{}}\NormalTok{xax, }\AttributeTok{y =} \SpecialCharTok{\textasciitilde{}}\NormalTok{yax, }\AttributeTok{z =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Y, }\AttributeTok{intensity =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Y) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{add\_trace}\NormalTok{(}\AttributeTok{type =} \StringTok{"mesh3d"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{layout}\NormalTok{(}\AttributeTok{scene =} \FunctionTok{list}\NormalTok{(}
+      \AttributeTok{xaxis =} \FunctionTok{list}\NormalTok{(}\AttributeTok{rangemode =} \StringTok{"normal"}\NormalTok{,}
+                   \AttributeTok{showgrid =} \ConstantTok{FALSE}\NormalTok{,}
+                   \AttributeTok{showline =} \ConstantTok{TRUE}\NormalTok{, }
+                   \AttributeTok{mirror =} \ConstantTok{TRUE}\NormalTok{, }
+                   \AttributeTok{ticks =} \StringTok{"outside"}\NormalTok{, }
+                   \AttributeTok{title =}\NormalTok{ xname), }
+      \AttributeTok{yaxis =} \FunctionTok{list}\NormalTok{(}\AttributeTok{rangemode =} \StringTok{"normal"}\NormalTok{, }
+                   \AttributeTok{showgrid =} \ConstantTok{FALSE}\NormalTok{,}
+                   \AttributeTok{showline =} \ConstantTok{TRUE}\NormalTok{, }
+                   \AttributeTok{mirror =} \ConstantTok{TRUE}\NormalTok{, }
+                   \AttributeTok{ticks =} \StringTok{"outside"}\NormalTok{, }
+                   \AttributeTok{title =}\NormalTok{ yname), }
+      \AttributeTok{zaxis =} \FunctionTok{list}\NormalTok{(}\AttributeTok{rangemode =} \StringTok{"normal"}\NormalTok{, }
+                   \AttributeTok{showgrid =} \ConstantTok{FALSE}\NormalTok{,}
+                   \AttributeTok{showline =} \ConstantTok{TRUE}\NormalTok{, }
+                   \AttributeTok{mirror =} \ConstantTok{TRUE}\NormalTok{, }
+                   \AttributeTok{ticks =} \StringTok{"outside"}\NormalTok{, }
+                   \AttributeTok{title =} \StringTok{"Y"}\NormalTok{), }
+      \AttributeTok{aspectmode =} \StringTok{"cube"}
+\NormalTok{    ))}
+\NormalTok{\}}
+
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#}
+\CommentTok{\# marginally significant (Hg and Ni)}
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#}
+
+\CommentTok{\# no interaction}
+\NormalTok{y00 }\OtherTok{\textless{}{-}} \FunctionTok{with}\NormalTok{(data, x1 }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{x2))) }
+\NormalTok{fig00 }\OtherTok{\textless{}{-}} \FunctionTok{create\_plot}\NormalTok{(x1, x2, y00, }\StringTok{"Hg"}\NormalTok{, }\StringTok{"Ni"}\NormalTok{)  }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{layout}\NormalTok{(}\AttributeTok{scene =} \FunctionTok{list}\NormalTok{(}\AttributeTok{camera =} \FunctionTok{list}\NormalTok{(}\AttributeTok{eye =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \FloatTok{1.5}\NormalTok{, }\AttributeTok{y =} \FloatTok{1.5}\NormalTok{, }\AttributeTok{z =} \FloatTok{0.1}\NormalTok{))))}
+\NormalTok{fig00}
+\FunctionTok{save\_image}\NormalTok{(fig00, }\StringTok{"index/figures/surfaces/p00.png"}\NormalTok{, }
+           \AttributeTok{width =} \DecValTok{720}\NormalTok{, }\AttributeTok{height =} \DecValTok{480}\NormalTok{, }\AttributeTok{scale =} \DecValTok{3}\NormalTok{)}
+
+\CommentTok{\# multiplicative interaction, smaller effect size}
+\NormalTok{yam1 }\OtherTok{\textless{}{-}} \FunctionTok{with}\NormalTok{(data, x1 }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{x2)) }\SpecialCharTok{+} \FloatTok{0.35}\SpecialCharTok{*}\NormalTok{x1}\SpecialCharTok{*}\NormalTok{x2) }
+\NormalTok{figam1 }\OtherTok{\textless{}{-}} \FunctionTok{create\_plot}\NormalTok{(x1, x2, yam1, }\StringTok{"Hg"}\NormalTok{, }\StringTok{"Ni"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{layout}\NormalTok{(}\AttributeTok{scene =} \FunctionTok{list}\NormalTok{(}\AttributeTok{camera =} \FunctionTok{list}\NormalTok{(}\AttributeTok{eye =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \FloatTok{1.5}\NormalTok{, }\AttributeTok{y =} \FloatTok{1.5}\NormalTok{, }\AttributeTok{z =}\NormalTok{ .}\DecValTok{1}\NormalTok{))))}
+\NormalTok{figam1}
+\FunctionTok{save\_image}\NormalTok{(figam1, }\StringTok{"index/figures/surfaces/am1.png"}\NormalTok{, }
+           \AttributeTok{width =} \DecValTok{720}\NormalTok{, }\AttributeTok{height =} \DecValTok{480}\NormalTok{, }\AttributeTok{scale =} \DecValTok{3}\NormalTok{)}
+
+\CommentTok{\# multiplicative interaction, larger effect size}
+\NormalTok{yam2 }\OtherTok{\textless{}{-}} \FunctionTok{with}\NormalTok{(data, x1 }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{x2)) }\SpecialCharTok{+} \FloatTok{0.75}\SpecialCharTok{*}\NormalTok{x1}\SpecialCharTok{*}\NormalTok{x2) }
+\NormalTok{figam2 }\OtherTok{\textless{}{-}} \FunctionTok{create\_plot}\NormalTok{(x1, x2, yam2, }\StringTok{"Hg"}\NormalTok{, }\StringTok{"Ni"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{layout}\NormalTok{(}\AttributeTok{scene =} \FunctionTok{list}\NormalTok{(}\AttributeTok{camera =} \FunctionTok{list}\NormalTok{(}\AttributeTok{eye =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \FloatTok{1.5}\NormalTok{, }\AttributeTok{y =} \FloatTok{1.5}\NormalTok{, }\AttributeTok{z =}\NormalTok{ .}\DecValTok{1}\NormalTok{))))}
+\NormalTok{figam2}
+\FunctionTok{save\_image}\NormalTok{(figam2, }\StringTok{"index/figures/surfaces/am2.png"}\NormalTok{, }
+           \AttributeTok{width =} \DecValTok{720}\NormalTok{, }\AttributeTok{height =} \DecValTok{480}\NormalTok{, }\AttributeTok{scale =} \DecValTok{3}\NormalTok{)}
+
+\CommentTok{\# polynomial interaction, smaller effect size}
+\NormalTok{yap1 }\OtherTok{\textless{}{-}} \FunctionTok{with}\NormalTok{(data, x1 }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{x2)) }\SpecialCharTok{+} \FloatTok{0.13}\SpecialCharTok{*}\NormalTok{x1}\SpecialCharTok{*}\NormalTok{((x2}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{figap1 }\OtherTok{\textless{}{-}} \FunctionTok{create\_plot}\NormalTok{(x1, x2, yap1, }\StringTok{"Hg"}\NormalTok{, }\StringTok{"Ni"}\NormalTok{)}\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{layout}\NormalTok{(}\AttributeTok{scene =} \FunctionTok{list}\NormalTok{(}\AttributeTok{camera =} \FunctionTok{list}\NormalTok{(}\AttributeTok{eye =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \FloatTok{1.5}\NormalTok{, }\AttributeTok{y =} \FloatTok{1.5}\NormalTok{, }\AttributeTok{z =}\NormalTok{ .}\DecValTok{1}\NormalTok{))))}
+\NormalTok{figap1}
+\FunctionTok{save\_image}\NormalTok{(figap1, }\StringTok{"index/figures/surfaces/ap1.png"}\NormalTok{, }
+           \AttributeTok{width =} \DecValTok{720}\NormalTok{, }\AttributeTok{height =} \DecValTok{480}\NormalTok{, }\AttributeTok{scale =} \DecValTok{3}\NormalTok{)}
+
+\CommentTok{\# polynomial interaction, larger effect size}
+\NormalTok{yap2 }\OtherTok{\textless{}{-}} \FunctionTok{with}\NormalTok{(data, x1 }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{x2)) }\SpecialCharTok{+} \FloatTok{0.26}\SpecialCharTok{*}\NormalTok{x1}\SpecialCharTok{*}\NormalTok{((x2}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{figap2 }\OtherTok{\textless{}{-}} \FunctionTok{create\_plot}\NormalTok{(x1, x2, yap2, }\StringTok{"Hg"}\NormalTok{, }\StringTok{"Ni"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{layout}\NormalTok{(}\AttributeTok{scene =} \FunctionTok{list}\NormalTok{(}\AttributeTok{camera =} \FunctionTok{list}\NormalTok{(}\AttributeTok{eye =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \FloatTok{1.5}\NormalTok{, }\AttributeTok{y =} \FloatTok{1.5}\NormalTok{, }\AttributeTok{z =}\NormalTok{ .}\DecValTok{1}\NormalTok{))))}
+\NormalTok{figap2}
+\FunctionTok{save\_image}\NormalTok{(figap2, }\StringTok{"index/figures/surfaces/ap2.png"}\NormalTok{, }
+           \AttributeTok{width =} \DecValTok{720}\NormalTok{, }\AttributeTok{height =} \DecValTok{480}\NormalTok{, }\AttributeTok{scale =} \DecValTok{3}\NormalTok{)}
+
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#}
+\CommentTok{\# marginally insignificant (Cd and As)}
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#}
+
+\CommentTok{\# multiplicative interaction, smaller effect size}
+\NormalTok{ybm1 }\OtherTok{\textless{}{-}} \FunctionTok{with}\NormalTok{(data, }\FloatTok{0.35}\SpecialCharTok{*}\NormalTok{x1}\SpecialCharTok{*}\NormalTok{x2) }
+\NormalTok{figbm1 }\OtherTok{\textless{}{-}} \FunctionTok{create\_plot}\NormalTok{(x1, x2, ybm1, }\StringTok{"Cd"}\NormalTok{, }\StringTok{"As"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{layout}\NormalTok{(}\AttributeTok{scene =} \FunctionTok{list}\NormalTok{(}\AttributeTok{camera =} \FunctionTok{list}\NormalTok{(}\AttributeTok{eye =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \FloatTok{1.4}\NormalTok{, }\AttributeTok{y =} \FloatTok{1.4}\NormalTok{, }\AttributeTok{z =} \FloatTok{1.2}\NormalTok{))))}
+\NormalTok{figbm1}
+\FunctionTok{save\_image}\NormalTok{(figbm1, }\StringTok{"index/figures/surfaces/bm1.png"}\NormalTok{, }
+           \AttributeTok{width =} \DecValTok{720}\NormalTok{, }\AttributeTok{height =} \DecValTok{480}\NormalTok{, }\AttributeTok{scale =} \DecValTok{3}\NormalTok{)}
+
+\CommentTok{\# multiplicative interaction, larger effect size}
+\NormalTok{ybm2 }\OtherTok{\textless{}{-}} \FunctionTok{with}\NormalTok{(data, }\FloatTok{0.7}\SpecialCharTok{*}\NormalTok{x1}\SpecialCharTok{*}\NormalTok{x2) }
+\NormalTok{figbm2 }\OtherTok{\textless{}{-}} \FunctionTok{create\_plot}\NormalTok{(x1, x2, ybm2, }\StringTok{"Cd"}\NormalTok{, }\StringTok{"As"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{layout}\NormalTok{(}\AttributeTok{scene =} \FunctionTok{list}\NormalTok{(}\AttributeTok{camera =} \FunctionTok{list}\NormalTok{(}\AttributeTok{eye =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \FloatTok{1.4}\NormalTok{, }\AttributeTok{y =} \FloatTok{1.4}\NormalTok{, }\AttributeTok{z =} \FloatTok{1.2}\NormalTok{))))}
+\NormalTok{figbm2}
+\FunctionTok{save\_image}\NormalTok{(figbm2, }\StringTok{"index/figures/surfaces/bm2.png"}\NormalTok{, }
+           \AttributeTok{width =} \DecValTok{720}\NormalTok{, }\AttributeTok{height =} \DecValTok{480}\NormalTok{, }\AttributeTok{scale =} \DecValTok{3}\NormalTok{)}
+
+\CommentTok{\# polynomial interaction, smaller effect size}
+\NormalTok{ybp1 }\OtherTok{\textless{}{-}} \FunctionTok{with}\NormalTok{(data, }\FloatTok{0.125}\SpecialCharTok{*}\NormalTok{x1}\SpecialCharTok{*}\NormalTok{((x2}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)) }
+\NormalTok{figbp1 }\OtherTok{\textless{}{-}} \FunctionTok{create\_plot}\NormalTok{(x1, x2, ybp1, }\StringTok{"Cd"}\NormalTok{, }\StringTok{"As"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{layout}\NormalTok{(}\AttributeTok{scene =} \FunctionTok{list}\NormalTok{(}\AttributeTok{camera =} \FunctionTok{list}\NormalTok{(}\AttributeTok{eye =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \FloatTok{1.4}\NormalTok{, }\AttributeTok{y =} \FloatTok{1.4}\NormalTok{, }\AttributeTok{z =} \FloatTok{1.2}\NormalTok{))))}
+\NormalTok{figbp1}
+\FunctionTok{save\_image}\NormalTok{(figbp1, }\StringTok{"index/figures/surfaces/bp1.png"}\NormalTok{, }
+           \AttributeTok{width =} \DecValTok{720}\NormalTok{, }\AttributeTok{height =} \DecValTok{480}\NormalTok{, }\AttributeTok{scale =} \DecValTok{3}\NormalTok{)}
+
+\CommentTok{\# polynomial interaction, larger effect size}
+\NormalTok{ybp2 }\OtherTok{\textless{}{-}} \FunctionTok{with}\NormalTok{(data, }\FloatTok{0.25}\SpecialCharTok{*}\NormalTok{x1}\SpecialCharTok{*}\NormalTok{((x2}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{figbp2 }\OtherTok{\textless{}{-}} \FunctionTok{create\_plot}\NormalTok{(x1, x2, ybp2, }\StringTok{"Cd"}\NormalTok{, }\StringTok{"As"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{layout}\NormalTok{(}\AttributeTok{scene =} \FunctionTok{list}\NormalTok{(}\AttributeTok{camera =} \FunctionTok{list}\NormalTok{(}\AttributeTok{eye =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \FloatTok{1.4}\NormalTok{, }\AttributeTok{y =} \FloatTok{1.4}\NormalTok{, }\AttributeTok{z =} \FloatTok{1.2}\NormalTok{))))}
+\NormalTok{figbp2}
+\FunctionTok{save\_image}\NormalTok{(figbp2, }\StringTok{"index/figures/surfaces/bp2.png"}\NormalTok{, }
+           \AttributeTok{width =} \DecValTok{720}\NormalTok{, }\AttributeTok{height =} \DecValTok{480}\NormalTok{, }\AttributeTok{scale =} \DecValTok{3}\NormalTok{)}
+
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#}
+\CommentTok{\# highly correlated (Ni and Co)}
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#}
+
+\CommentTok{\# multiplicative interaction, smaller effect size}
+\NormalTok{ycm1 }\OtherTok{\textless{}{-}} \FunctionTok{with}\NormalTok{(data, }\DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{x2)) }\SpecialCharTok{+} \FloatTok{0.3}\SpecialCharTok{*}\NormalTok{x1}\SpecialCharTok{*}\NormalTok{x2) }
+\NormalTok{figcm1 }\OtherTok{\textless{}{-}} \FunctionTok{create\_plot}\NormalTok{(x1, x2, ycm1, }\StringTok{"Ni"}\NormalTok{, }\StringTok{"Co"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{layout}\NormalTok{(}\AttributeTok{scene =} \FunctionTok{list}\NormalTok{(}\AttributeTok{camera =} \FunctionTok{list}\NormalTok{(}\AttributeTok{eye =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \FloatTok{1.2}\NormalTok{, }\AttributeTok{y =} \FloatTok{1.2}\NormalTok{, }\AttributeTok{z =} \FloatTok{1.5}\NormalTok{))))}
+\NormalTok{figcm1}
+\FunctionTok{save\_image}\NormalTok{(figcm1, }\StringTok{"index/figures/surfaces/cm1.png"}\NormalTok{, }
+           \AttributeTok{width =} \DecValTok{720}\NormalTok{, }\AttributeTok{height =} \DecValTok{480}\NormalTok{, }\AttributeTok{scale =} \DecValTok{3}\NormalTok{)}
+
+\CommentTok{\# multiplicative interaction, larger effect size}
+\NormalTok{ycm2 }\OtherTok{\textless{}{-}} \FunctionTok{with}\NormalTok{(data, }\DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{x2)) }\SpecialCharTok{+} \FloatTok{0.6}\SpecialCharTok{*}\NormalTok{x1}\SpecialCharTok{*}\NormalTok{x2) }
+\NormalTok{figcm2 }\OtherTok{\textless{}{-}} \FunctionTok{create\_plot}\NormalTok{(x1, x2, ycm2, }\StringTok{"Ni"}\NormalTok{, }\StringTok{"Co"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{layout}\NormalTok{(}\AttributeTok{scene =} \FunctionTok{list}\NormalTok{(}\AttributeTok{camera =} \FunctionTok{list}\NormalTok{(}\AttributeTok{eye =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \FloatTok{1.2}\NormalTok{, }\AttributeTok{y =} \FloatTok{1.2}\NormalTok{, }\AttributeTok{z =} \FloatTok{1.5}\NormalTok{))))}
+\NormalTok{figcm2}
+\FunctionTok{save\_image}\NormalTok{(figcm2, }\StringTok{"index/figures/surfaces/cm2.png"}\NormalTok{, }
+           \AttributeTok{width =} \DecValTok{720}\NormalTok{, }\AttributeTok{height =} \DecValTok{480}\NormalTok{, }\AttributeTok{scale =} \DecValTok{3}\NormalTok{)}
+
+\CommentTok{\# polynomial interaction, smaller effect size}
+\NormalTok{ycp1 }\OtherTok{\textless{}{-}} \FunctionTok{with}\NormalTok{(data, }\DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{x2)) }\SpecialCharTok{+} \FloatTok{0.1}\SpecialCharTok{*}\NormalTok{x1}\SpecialCharTok{*}\NormalTok{((x2}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{figcp1 }\OtherTok{\textless{}{-}} \FunctionTok{create\_plot}\NormalTok{(x1, x2, ycp1, }\StringTok{"Ni"}\NormalTok{, }\StringTok{"Co"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{layout}\NormalTok{(}\AttributeTok{scene =} \FunctionTok{list}\NormalTok{(}\AttributeTok{camera =} \FunctionTok{list}\NormalTok{(}\AttributeTok{eye =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \FloatTok{1.5}\NormalTok{, }\AttributeTok{y =} \FloatTok{1.5}\NormalTok{, }\AttributeTok{z =}\NormalTok{ .}\DecValTok{1}\NormalTok{))))}
+\NormalTok{figcp1}
+\FunctionTok{save\_image}\NormalTok{(figcp1, }\StringTok{"index/figures/surfaces/cp1.png"}\NormalTok{, }
+           \AttributeTok{width =} \DecValTok{720}\NormalTok{, }\AttributeTok{height =} \DecValTok{480}\NormalTok{, }\AttributeTok{scale =} \DecValTok{3}\NormalTok{)}
+
+\CommentTok{\# polynomial interaction, larger effect size}
+\NormalTok{ycp2 }\OtherTok{\textless{}{-}} \FunctionTok{with}\NormalTok{(data, }\DecValTok{3}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{x2)) }\SpecialCharTok{+} \FloatTok{0.2}\SpecialCharTok{*}\NormalTok{x1}\SpecialCharTok{*}\NormalTok{((x2}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{figcp2 }\OtherTok{\textless{}{-}} \FunctionTok{create\_plot}\NormalTok{(x1, x2, ycp2, }\StringTok{"Ni"}\NormalTok{, }\StringTok{"Co"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{layout}\NormalTok{(}\AttributeTok{scene =} \FunctionTok{list}\NormalTok{(}\AttributeTok{camera =} \FunctionTok{list}\NormalTok{(}\AttributeTok{eye =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \FloatTok{1.5}\NormalTok{, }\AttributeTok{y =} \FloatTok{1.5}\NormalTok{, }\AttributeTok{z =}\NormalTok{ .}\DecValTok{1}\NormalTok{))))}
+\NormalTok{figcp2}
+\FunctionTok{save\_image}\NormalTok{(figcp2, }\StringTok{"index/figures/surfaces/cp2.png"}\NormalTok{, }
+           \AttributeTok{width =} \DecValTok{720}\NormalTok{, }\AttributeTok{height =} \DecValTok{480}\NormalTok{, }\AttributeTok{scale =} \DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+Next, we look at simulated exposure and covariate data for the larger size dataset. We also create the grid of density plots for Spearman's correlation values between exposures in the simulated smaller size datasets.
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# create density plot of correlation for smaller size dataset}
+\CommentTok{\# read small size back in}
+\NormalTok{out1 }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_preds\_sm.RDS"}\NormalTok{)}
+
+\CommentTok{\# extract correlation}
+\NormalTok{cors }\OtherTok{\textless{}{-}}\NormalTok{ out1 }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+\NormalTok{    cor\_mat }\OtherTok{\textless{}{-}} \FunctionTok{cor}\NormalTok{(x[, }\DecValTok{5}\SpecialCharTok{:}\DecValTok{14}\NormalTok{], }\AttributeTok{method =} \StringTok{"spearman"}\NormalTok{)}
+\NormalTok{    cor\_mat[}\FunctionTok{lower.tri}\NormalTok{(cor\_mat)] }\OtherTok{\textless{}{-}} \ConstantTok{NA}
+\NormalTok{    melt\_cor }\OtherTok{\textless{}{-}}\NormalTok{ reshape2}\SpecialCharTok{::}\FunctionTok{melt}\NormalTok{(cor\_mat) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{value =} \FunctionTok{ifelse}\NormalTok{(value }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\ConstantTok{NA}\NormalTok{, value)) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{na.omit}\NormalTok{() }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sim =}\NormalTok{ x}\SpecialCharTok{$}\NormalTok{sim[}\DecValTok{1}\NormalTok{])}
+    \FunctionTok{return}\NormalTok{(melt\_cor)}
+\NormalTok{  \})}
+
+\CommentTok{\# function for plotting x{-}axis}
+\NormalTok{newbreaks }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(lims) \{}
+\NormalTok{  range }\OtherTok{\textless{}{-}} \FunctionTok{diff}\NormalTok{(lims)}
+  \FunctionTok{return}\NormalTok{(}\FunctionTok{c}\NormalTok{(lims[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{+}\NormalTok{ range}\SpecialCharTok{/}\DecValTok{5}\NormalTok{, }\FunctionTok{mean}\NormalTok{(lims), lims[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ range}\SpecialCharTok{/}\DecValTok{5}\NormalTok{))}
+\NormalTok{\}}
+
+\CommentTok{\# create grid of density plots}
+\NormalTok{cors\_dens }\OtherTok{\textless{}{-}}\NormalTok{ cors }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{group\_by}\NormalTok{(Var1, Var2) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{mean =} \FunctionTok{mean}\NormalTok{(value)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ value, }\AttributeTok{fill =}\NormalTok{ mean)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{scale\_x\_continuous}\NormalTok{(}\AttributeTok{breaks =}\NormalTok{ newbreaks, }
+                     \AttributeTok{labels =} \SpecialCharTok{\textasciitilde{}}\FunctionTok{round}\NormalTok{(.x, }\DecValTok{2}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{position =} \StringTok{"right"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_gradient2}\NormalTok{(}
+    \AttributeTok{limit =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\FloatTok{0.6}\NormalTok{, }\FloatTok{0.6}\NormalTok{), }\AttributeTok{breaks =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\FloatTok{0.6}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{0.3}\NormalTok{, }\DecValTok{0}\NormalTok{, }\FloatTok{0.3}\NormalTok{, }\FloatTok{0.6}\NormalTok{),}
+    \AttributeTok{low =} \StringTok{"deepskyblue3"}\NormalTok{, }\AttributeTok{mid =} \StringTok{"white"}\NormalTok{, }\AttributeTok{high =} \StringTok{"darkorange"}\NormalTok{, }
+    \AttributeTok{na.value =} \ConstantTok{NA}\NormalTok{) }\SpecialCharTok{+}
+\NormalTok{  ggh4x}\SpecialCharTok{::}\FunctionTok{facet\_grid2}\NormalTok{(}\FunctionTok{fct\_rev}\NormalTok{(Var2) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Var1, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{, }\AttributeTok{independent =} \StringTok{"x"}\NormalTok{, }
+                     \AttributeTok{render\_empty =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{switch =} \StringTok{"both"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \FunctionTok{TeX}\NormalTok{(r}\StringTok{"( Spearman\textquotesingle{}s $}\SpecialCharTok{\textbackslash{}r}\StringTok{ho$ )"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{strip.placement =} \StringTok{"outside"}\NormalTok{, }
+        \AttributeTok{strip.text.y.left =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{angle =} \DecValTok{0}\NormalTok{), }
+        \AttributeTok{legend.justification =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
+        \AttributeTok{legend.position =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.9}\NormalTok{, }\FloatTok{0.1}\NormalTok{),}
+        \AttributeTok{legend.direction =} \StringTok{"horizontal"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{guides}\NormalTok{(}\AttributeTok{fill =} \FunctionTok{guide\_colorbar}\NormalTok{(}\AttributeTok{barwidth =} \DecValTok{7}\NormalTok{, }\AttributeTok{barheight =} \DecValTok{1}\NormalTok{,}
+                               \AttributeTok{title.position =} \StringTok{"top"}\NormalTok{, }\AttributeTok{title.hjust =} \FloatTok{0.5}\NormalTok{))}
+\NormalTok{cors\_dens}
+
+\FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/ch4\_corr\_sim.png"}\NormalTok{, }\AttributeTok{width =} \DecValTok{10}\NormalTok{, }\AttributeTok{height =} \DecValTok{7}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
 
 \scriptsize
 \begin{Shaded}
@@ -2825,7 +3271,194 @@ Here, we create the supplemental output that is included in Appendix \ref{appa}.
 \end{Shaded}
 \normalsize
 
-{[}\emph{include code for WAIC comparison}{]}
+Here, we create the visualization of \(R^2\) values in multiple linear regressions with the true functional form of the chemicals specified, in order to ensure we are achieving a realistic signal-to-noise ratio.
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# extract rsq from smaller size datasets}
+\NormalTok{chem\_mods }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/mlr/chem\_oracle\_sm.RDS"}\NormalTok{)}
+\NormalTok{rsq\_chem }\OtherTok{\textless{}{-}}\NormalTok{ chem\_mods }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{data.frame}\NormalTok{(}
+      \AttributeTok{rsq =} \FunctionTok{summary}\NormalTok{(x)}\SpecialCharTok{$}\NormalTok{r.squared}
+\NormalTok{    )}
+\NormalTok{  \}) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{name =} \FunctionTok{names}\NormalTok{(chem\_mods))}
+
+\CommentTok{\# plot for smaller size}
+\NormalTok{rsqsmplot }\OtherTok{\textless{}{-}}\NormalTok{ rsq\_chem }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ rsq)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{name, }
+             \AttributeTok{labeller =} \FunctionTok{as\_labeller}\NormalTok{(appender1, }
+                                    \AttributeTok{default =}\NormalTok{ label\_parsed), }
+             \AttributeTok{ncol =} \DecValTok{4}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{y =} \StringTok{"Density"}\NormalTok{, }\AttributeTok{x =}\NormalTok{ latex2exp}\SpecialCharTok{::}\FunctionTok{TeX}\NormalTok{(}\StringTok{"R$\^{}2$"}\NormalTok{))}
+
+\CommentTok{\# extract rsq from larger size datasets}
+\NormalTok{chem\_modl }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/mlr/chem\_oracle\_lg.RDS"}\NormalTok{)}
+\NormalTok{rsq\_cheml }\OtherTok{\textless{}{-}}\NormalTok{ chem\_modl }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{data.frame}\NormalTok{(}
+      \AttributeTok{rsq =} \FunctionTok{summary}\NormalTok{(x)}\SpecialCharTok{$}\NormalTok{r.squared}
+\NormalTok{    )}
+\NormalTok{  \}) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{name =} \FunctionTok{names}\NormalTok{(chem\_modl))}
+
+\CommentTok{\# plot for larger size}
+\NormalTok{rsqlgplot }\OtherTok{\textless{}{-}}\NormalTok{ rsq\_cheml }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ rsq)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{name, }
+             \AttributeTok{labeller =} \FunctionTok{as\_labeller}\NormalTok{(appender1, }
+                                    \AttributeTok{default =}\NormalTok{ label\_parsed), }
+             \AttributeTok{ncol =} \DecValTok{4}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{y =} \StringTok{"Density"}\NormalTok{, }\AttributeTok{x =}\NormalTok{ latex2exp}\SpecialCharTok{::}\FunctionTok{TeX}\NormalTok{(}\StringTok{"R$\^{}2$"}\NormalTok{))}
+
+\CommentTok{\# plot both in grid and save}
+\NormalTok{cowplot}\SpecialCharTok{::}\FunctionTok{plot\_grid}\NormalTok{(rsqsmplot, rsqlgplot, }\AttributeTok{labels =} \StringTok{"auto"}\NormalTok{, }\AttributeTok{nrow =} \DecValTok{1}\NormalTok{)}
+\FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/chem\_rsq.png"}\NormalTok{, }\AttributeTok{width =} \DecValTok{12}\NormalTok{, }\AttributeTok{height =} \DecValTok{6}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+We also look at selecting degrees of freedom in BSR using 5,000 vs.~50,000 MCMC iterations. Refer to the code for fitting BSR on the smaller size datasets for how the models for this test were run.
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# extract names of files for 50,000 iterations}
+\NormalTok{main\_folder }\OtherTok{\textless{}{-}} \StringTok{"sim/bsr\_df\_sm"}
+\NormalTok{subfolders }\OtherTok{\textless{}{-}} \FunctionTok{list.dirs}\NormalTok{(main\_folder, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{recursive =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{mod\_subfolders }\OtherTok{\textless{}{-}}\NormalTok{ subfolders[}\FunctionTok{grepl}\NormalTok{(}\StringTok{"mods"}\NormalTok{, subfolders)]}
+\NormalTok{mod\_labels }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{D"}\NormalTok{, }\StringTok{""}\NormalTok{, mod\_subfolders)}
+\NormalTok{mod\_labels }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(mod\_labels }\SpecialCharTok{==} \StringTok{""}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FunctionTok{as.numeric}\NormalTok{(mod\_labels))}
+
+\NormalTok{mod\_paths }\OtherTok{\textless{}{-}}\NormalTok{ mod\_subfolders }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{list.files}\NormalTok{(x, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  \}) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{setNames}\NormalTok{(}\AttributeTok{nm =}\NormalTok{ mod\_labels)}
+
+\CommentTok{\# extract WAIC values from model output}
+\NormalTok{waic }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(mod\_paths) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+\NormalTok{    mod\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bsr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+          \AttributeTok{df =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{), }
+          \AttributeTok{waic =} \FunctionTok{c}\NormalTok{(bsr[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{waic, }
+\NormalTok{                   bsr[[}\DecValTok{2}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{waic, }
+\NormalTok{                   bsr[[}\DecValTok{3}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{waic, }
+\NormalTok{                   bsr[[}\DecValTok{4}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{waic, }
+\NormalTok{                   bsr[[}\DecValTok{5}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{waic), }
+          \AttributeTok{trial =} \FunctionTok{rep}\NormalTok{(}\FunctionTok{substr}\NormalTok{(y, }\FunctionTok{nchar}\NormalTok{(y) }\SpecialCharTok{{-}} \DecValTok{4}\NormalTok{, }\FunctionTok{nchar}\NormalTok{(y) }\SpecialCharTok{{-}} \DecValTok{4}\NormalTok{))}
+\NormalTok{        )}
+        \FunctionTok{rm}\NormalTok{(bsr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+
+\FunctionTok{write\_csv}\NormalTok{(waic, }\StringTok{"sim/tables/test\_waic.csv"}\NormalTok{)}
+
+\CommentTok{\# look at waic values}
+\NormalTok{waic }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"sim/tables/test\_waic.csv"}\NormalTok{)}
+
+\CommentTok{\# select degrees of freedom that minimizes waic}
+\NormalTok{min\_waic }\OtherTok{\textless{}{-}}\NormalTok{ waic }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{group\_by}\NormalTok{(case, trial) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{filter}\NormalTok{(waic }\SpecialCharTok{==} \FunctionTok{min}\NormalTok{(waic)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{arrange}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(case))}
+
+\CommentTok{\# extract names of files for 5,000 iterations (trial 2)}
+\NormalTok{main\_folder2 }\OtherTok{\textless{}{-}} \StringTok{"sim/bsr\_df\_sm2"}
+\NormalTok{subfolders2 }\OtherTok{\textless{}{-}} \FunctionTok{list.dirs}\NormalTok{(main\_folder2, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{recursive =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{mod\_subfolders2 }\OtherTok{\textless{}{-}}\NormalTok{ subfolders2[}\FunctionTok{grepl}\NormalTok{(}\StringTok{"mods"}\NormalTok{, subfolders2)]}
+\NormalTok{mod\_labels2 }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{D"}\NormalTok{, }\StringTok{""}\NormalTok{, }\FunctionTok{substr}\NormalTok{(mod\_subfolders2, }\DecValTok{16}\NormalTok{, }\FunctionTok{nchar}\NormalTok{(mod\_subfolders2)))}
+\NormalTok{mod\_labels2 }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(mod\_labels2 }\SpecialCharTok{==} \StringTok{""}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FunctionTok{as.numeric}\NormalTok{(mod\_labels2))}
+
+\NormalTok{mod\_paths2 }\OtherTok{\textless{}{-}}\NormalTok{ mod\_subfolders2 }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{list.files}\NormalTok{(x, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  \}) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{setNames}\NormalTok{(}\AttributeTok{nm =}\NormalTok{ mod\_labels2)}
+
+\CommentTok{\# extract waic from model outputs}
+\NormalTok{waic2 }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(mod\_paths2) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+\NormalTok{    mod\_paths2[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bsr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+          \AttributeTok{df =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{), }
+          \AttributeTok{waic =} \FunctionTok{c}\NormalTok{(bsr[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{waic, }
+\NormalTok{                   bsr[[}\DecValTok{2}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{waic, }
+\NormalTok{                   bsr[[}\DecValTok{3}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{waic, }
+\NormalTok{                   bsr[[}\DecValTok{4}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{waic, }
+\NormalTok{                   bsr[[}\DecValTok{5}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{waic), }
+          \AttributeTok{trial =} \FunctionTok{rep}\NormalTok{(}\FunctionTok{substr}\NormalTok{(y, }\FunctionTok{nchar}\NormalTok{(y) }\SpecialCharTok{{-}} \DecValTok{4}\NormalTok{, }\FunctionTok{nchar}\NormalTok{(y) }\SpecialCharTok{{-}} \DecValTok{4}\NormalTok{))}
+\NormalTok{        )}
+        \FunctionTok{rm}\NormalTok{(bsr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+
+\FunctionTok{write\_csv}\NormalTok{(waic2, }\StringTok{"sim/tables/test\_waic2.csv"}\NormalTok{)}
+
+\CommentTok{\# compare them}
+\NormalTok{waic }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"sim/tables/test\_waic.csv"}\NormalTok{)}
+\NormalTok{waic2 }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"sim/tables/test\_waic2.csv"}\NormalTok{)}
+\NormalTok{waic\_comb }\OtherTok{\textless{}{-}}\NormalTok{ waic }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{iter =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{bind\_rows}\NormalTok{(}\FunctionTok{mutate}\NormalTok{(waic2, }\AttributeTok{iter =} \DecValTok{2}\NormalTok{))}
+
+\CommentTok{\# create plot}
+\NormalTok{waic\_comb }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{filter}\NormalTok{(trial }\SpecialCharTok{\textless{}=} \DecValTok{5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{df =} \FunctionTok{as.factor}\NormalTok{(df), }
+         \AttributeTok{iter =} \FunctionTok{factor}\NormalTok{(}\FunctionTok{ifelse}\NormalTok{(iter }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\StringTok{"F"}\NormalTok{, }\StringTok{"P"}\NormalTok{), }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"P"}\NormalTok{, }\StringTok{"F"}\NormalTok{))) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ iter, }\AttributeTok{y =}\NormalTok{ waic, }\AttributeTok{color =}\NormalTok{ df)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{group =}\NormalTok{ df)) }\SpecialCharTok{+} 
+\NormalTok{  ggh4x}\SpecialCharTok{::}\FunctionTok{facet\_grid2}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"Trial "}\NormalTok{, trial) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ case, }
+                     \AttributeTok{scales =} \StringTok{"free\_y"}\NormalTok{, }\AttributeTok{independent =} \StringTok{"y"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.y=}\FunctionTok{element\_blank}\NormalTok{(),}
+        \AttributeTok{axis.ticks.y=}\FunctionTok{element\_blank}\NormalTok{(), }
+        \AttributeTok{plot.caption =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \DecValTok{0}\NormalTok{, }\AttributeTok{size =} \DecValTok{7}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{y =} \StringTok{"WAIC"}\NormalTok{, }\AttributeTok{x =} \StringTok{"\# MCMC iterations (F = 50,000, P = 5,000)"}\NormalTok{, }
+       \AttributeTok{color =} \StringTok{"Degrees}\SpecialCharTok{\textbackslash{}n}\StringTok{freedom"}\NormalTok{,}
+       \AttributeTok{caption =} \FunctionTok{paste0}\NormalTok{(}
+         \StringTok{"Scenarios are labelled in the top strip as follows:}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }
+         \StringTok{"1 = base case; 2 = HgNi mult. small; 3 = HgNi mult. large; "}\NormalTok{, }
+         \StringTok{"4 = HgNi poly. small; 5 = HgNi poly. large; "}\NormalTok{, }
+         \StringTok{"6 = CdAs mult. small; 7 = CdAs mult. large;"}\NormalTok{, }
+         \StringTok{"8 = CdAs poly. small; 9 = CdAs poly. large;}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }
+         \StringTok{"10 = NiCo mult. small; 11 = NiCo mult. large; "}\NormalTok{, }
+         \StringTok{"12 = NiCo poly. small; 13 = NiCo poly. large; "}\NormalTok{, }
+         \StringTok{"14 = HgNiTl mult. small; 15 = HgNiTl mult. large; "}\NormalTok{, }
+         \StringTok{"16 = HgNiTl poly. small; 17 = HgNiTl poly. large"}\NormalTok{))}
+
+\FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/test\_waic2.png"}\NormalTok{, }\AttributeTok{height =} \DecValTok{6}\NormalTok{, }\AttributeTok{width =} \DecValTok{9}\NormalTok{)}
+
+\CommentTok{\# get proportion of correctly selected df\textquotesingle{}s}
+\NormalTok{waic\_min }\OtherTok{\textless{}{-}}\NormalTok{ waic\_comb }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{iter =} \FunctionTok{ifelse}\NormalTok{(iter }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\StringTok{"full"}\NormalTok{, }\StringTok{"partial"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{arrange}\NormalTok{(iter, case, trial) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{filter}\NormalTok{(trial }\SpecialCharTok{\textless{}=} \DecValTok{5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{group\_by}\NormalTok{(iter, trial, case) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{filter}\NormalTok{(waic }\SpecialCharTok{==} \FunctionTok{min}\NormalTok{(waic)) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{pivot\_wider}\NormalTok{(}\AttributeTok{id\_cols =} \FunctionTok{c}\NormalTok{(trial, case), }
+              \AttributeTok{names\_from =}\NormalTok{ iter, }\AttributeTok{values\_from =}\NormalTok{ df) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{equal =}\NormalTok{ (full }\SpecialCharTok{==}\NormalTok{ partial))}
+\FunctionTok{mean}\NormalTok{(waic\_min}\SpecialCharTok{$}\NormalTok{equal)  }
+\end{Highlighting}
+\end{Shaded}
+\normalsize
 
 \hypertarget{corrections}{%
 \chapter*{Corrections}\label{corrections}}

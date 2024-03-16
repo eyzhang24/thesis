@@ -347,11 +347,11 @@ Figure \@ref(fig:toy4) illustrates the fit proposed by a linear spline regressio
 include_graphics(path = "figures/ch3_toy5.png")
 ```
 
-However, this linear spline regression is still unable to fully estimate the nonlinearity in our example. Increasing the order to $P=4$ with a cubic spline regression offers additional flexibility. Figure \@ref(fig:toy5) illustrates the fit proposed by this model. Here, we can see the benefits of using a cubic polynomial relationship in a nonlinear setting: the estimated relationship is continuous at the knots, and the nonlinear relationship has been flexibly captured. 
-
 ```{r toy6, fig.cap="Natural spline regression (blue) with four knots (dotted lines) compared to the true relationship (orange).", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch3_toy6.png")
 ```
+
+However, this linear spline regression is still unable to fully estimate the nonlinearity in our example. Increasing the order to $P=4$ with a cubic spline regression offers additional flexibility. Figure \@ref(fig:toy5) illustrates the fit proposed by this model. Here, we can see the benefits of using a cubic polynomial relationship in a nonlinear setting: the estimated relationship is continuous at the knots, and the nonlinear relationship has been flexibly captured. 
 
 Our final modification involves imposing linearity constraints on the boundaries of $x$ to implement a natural spline regression. Figure \@ref(fig:toy6) shows that the fit estimated using a natural spline regression. The fitted line is only slightly different than that proposed by a cubic spline regression in Figure \@ref(fig:toy5). The most noticeable difference is that the slopes of the tails of the natural spline regression are less extreme than for the cubic spline regression. 
 

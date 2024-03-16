@@ -31,6 +31,7 @@ acknowledgments: |
 bibliography: bib/thesis.bib
 csl: csl/apa.csl
 # Uncomment the following to include any additional LaTeX packages
+# add float environment
 # header-includes:
 ---
 
