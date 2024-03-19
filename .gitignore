@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+papers/.DS_Store
+.DS_Store
+thesis.Rproj
+madres_data/bk_test.RDS
+madres_data/bk_test2.RDS
