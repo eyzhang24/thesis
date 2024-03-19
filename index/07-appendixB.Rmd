@@ -1429,12 +1429,378 @@ runresplg_re <- slurm_call(
 # get output
 out2_resp1_re <- get_slurm_out(runresplg_re)
 out2_resp1_re <- out2_resp1_re[1701:2100]
-write_rds(out2_resp1_re, "sim/sim_resp_lg_b.RDS")
+write_rds(out2_resp1_re, "sim/sim_resp_lg_re.RDS")
 ```
 
 ### Code for Section \@ref(models):
 
 Here, we fit the models to our simulated data. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. This code was run on the Amherst HPC RStudio server. 
+
+First, we fit the naive and oracle MLRs
+
+Next, we fit BKMR and BSR models with the base case and with interactions between chemicals. 
+
+```{r}
+# load packages 
+library(tidyverse)
+library(bkmr)
+library(NLinteraction)
+```
+
+
+```{r}
+#########
+# run bkmr
+#########
+
+### smaller sample size
+
+out1_resp1 <- read_rds("sim/sim_resp_sm_a.RDS")
+
+run_bkmr_sm <- function(vector) {
+  # initiate vector of times
+  bkmr_times <- vector(mode = "list", length = length(vector))
+  
+  # create folder for model output
+  if(!dir.exists("mods")) {
+    dir.create("mods")
+  }
+  if(!dir.exists("times")) {
+    dir.create("times")
+  }
+  
+  # for each simulated dataset...
+  for(i in vector) {
+    print(paste0("------------- run ", i, "--------------"))
+    
+    # prepare data
+    df <- out1_resp1[[i]]
+    Z <- df |> 
+      select(As:Sn)
+    X <- df |>
+      bind_cols(
+        data.frame(model.matrix(~ race-1, data = 
+                                  mutate(df, race = as.factor(race))))
+      ) |> 
+      select(race2:race5, smoke:bmi)
+    y <- df$y
+    
+    # fit model and save time
+    set.seed(0)
+    start.time <- Sys.time()
+    mod <- kmbayes(y = y, Z = Z, X = X, 
+                          iter = 50000, verbose = FALSE, varsel = TRUE)
+    end.time <- Sys.time()
+    bkmr_times[[i]] <- end.time - start.time
+    
+    # save model and remove from memory
+    write_rds(mod, file = paste0("mods/bkmr_sm_", names(out1_resp1)[i], "_", i, ".RDS"))
+    write_rds(bkmr_times[[i]], file = 
+                paste0("times/bkmr_sm_", names(out1_resp1)[i], "_", i, ".RDS"))
+    rm(mod)
+  }
+  # save times
+  write_rds(bkmr_times, file = "bkmr_sm_times.RDS")
+}
+
+# example of call to HPC for first 100 simulated datasets
+bksmjob01 <- slurm_call(
+  run_bkmr_sm, params = list(vector = 1:100),
+  global_objects = c('out1_resp1'),
+  jobname = 'bkmr_sm01',
+  slurm_options = list(mem = '8G'))
+  # repeat up until dataset 1700
+```
+
+```{r}
+### larger sample size
+out2_resp1 <- read_rds("sim/sim_resp_lg_a.RDS")
+
+run_bkmr_lg <- function(vector) {
+  # initiate vector of times
+  bkmr_times <- vector(mode = "list", length = length(vector))
+  
+  # create folder for model output
+  if(!dir.exists("mods")) {
+    dir.create("mods")
+  }
+  if(!dir.exists("times")) {
+    dir.create("times")
+  }
+  
+  # sometimes this code would stop prematurely...
+  # so this chunk finds the index of the last model that was run
+  list_files <- list.files("mods", full.names = TRUE)
+  nums <- as.numeric(sub(".*_(\\d+)\\.RDS", "\\1", list_files))
+  print(nums)
+  if(length(nums) == 0) {
+    final <- 0; starting <- min(vector)
+  } else {
+    final <- max(nums); starting <- final + 1
+  }
+  # keep note of when the loop was stopped and re-started
+  if(file.exists("final.txt")) {
+    write(paste0("final ran = ", final, ", starting at ", starting), "final.txt", append = T)
+  } else {
+    writeLines(paste0("final ran = ", final, ", starting at ", starting), "final.txt")
+  }
+  
+  # for each simulated dataset...
+  for(i in starting:max(vector)) {
+    print(paste0("------------- run ", i, "--------------"))
+    
+    # prepare data
+    df <- out2_resp1[[i]]
+    Z <- df |> 
+      select(As:Sn)
+    X <- df |>
+      bind_cols(
+        data.frame(model.matrix(~ race-1, data = 
+                                  mutate(df, race = as.factor(race))))
+      ) |> 
+      select(race2:race5, smoke:bmi)
+    y <- df$y
+    knots <- fields::cover.design(Z, nd = 100)$design
+    
+    # fit model and save time
+    set.seed(0)
+    start.time <- Sys.time()
+    mod <- kmbayes(y = y, Z = Z, X = X, knots = knots,
+                   iter = 50000, verbose = FALSE, varsel = TRUE)
+    end.time <- Sys.time()
+    bkmr_times[[i]] <- end.time - start.time
+    
+    # save model and remove from memory
+    write_rds(mod, file = paste0("mods/bkmr_lg_", names(out2_resp1)[i], "_", i, ".RDS"))
+    write_rds(bkmr_times[[i]], file = 
+                paste0("times/bkmr_lg_", names(out2_resp1)[i], "_", i, ".RDS"))
+    rm(mod)
+  }
+  # save times
+  write_rds(bkmr_times, file = "bkmr_lg_times.RDS")
+}
+
+# example of call to HPC for first 100 simulated datasets
+bklgjob01 <- slurm_call(
+  run_bkmr_lg, params = list(vector = 1:100),
+  global_objects = c('out2_resp1'),
+  jobname = 'bkmr_lg01',
+  slurm_options = list(mem = '8G'))
+  # repeat up until dataset 1700
+```
+
+```{r}
+########
+# run bsr
+########
+
+### smaller sample size
+
+out1_resp1 <- read_rds("sim/sim_resp_sm_a.RDS")
+
+run_bsr_sm <- function(vector) {
+  bsr_times <- vector(mode = "list", length = length(vector))
+  
+  # create folder for model output
+  if(!dir.exists("mods")) {
+    dir.create("mods")
+  }
+  if(!dir.exists("times")) {
+    dir.create("times")
+  }
+  
+  # sometimes this code would stop prematurely...
+  # so this chunk finds the index of the last model that was run
+  list_files <- list.files("mods", full.names = TRUE)
+  nums <- as.numeric(sub(".+_(.+)d.+", "\\1", list_files))
+  if(length(nums) == 0) {
+    final <- 0; starting <- min(vector)
+  } else {
+    final <- max(nums); starting <- final + 1
+  }
+  if(file.exists("final.txt")) {
+    write(paste0("final ran = ", final, ", starting at ", starting), "final.txt", append = T)
+  } else {
+    writeLines(paste0("final ran = ", final, ", starting at ", starting), "final.txt")
+  }
+  
+  # for each simulated dataset...
+  for(i in starting:max(vector)) {
+    print(paste0("------------- run ", i, "--------------"))
+    
+    # prepare data
+    df <- out1_resp1[[i]]
+    X <- df |> 
+      select(As:Sn) |> 
+      as.matrix.data.frame()
+    C <- df |>
+      bind_cols(
+        data.frame(model.matrix(~ race-1, data = 
+                                  mutate(df, race = as.factor(race))))
+      ) |> 
+      select(race2:race5, smoke:bmi) |> 
+      as.matrix.data.frame()
+    Y <- df$y
+    
+    # fit model for d = {1, 2, 3, 4, 5} and save time
+    list_times <- vector(mode = "list", length = 2)
+    
+    set.seed(0)
+    start.time <- Sys.time()
+    mod1 <- NLint(Y = Y, X = X, C = C, 
+                  nIter = 5000, nBurn = 2500, ns = 1)
+    mod2 <- NLint(Y = Y, X = X, C = C, 
+                  nIter = 5000, nBurn = 2500, ns = 2)
+    mod3 <- NLint(Y = Y, X = X, C = C, 
+                  nIter = 5000, nBurn = 2500, ns = 3)
+    mod4 <- NLint(Y = Y, X = X, C = C, 
+                  nIter = 5000, nBurn = 2500, ns = 4)
+    end.time <- Sys.time()
+    list_times[[1]] <- end.time - start.time
+    
+    ind <- which.min(c(mod1$waic, mod2$waic, mod3$waic, mod4$waic))
+    
+    print(paste0("-------- chose ", ind, " -----------"))
+    
+    # fit with selected d from waic
+    start.time <- Sys.time()
+    mod <- NLint(Y = Y, X = X, C = C, 
+                 nIter = 50000, nBurn = 25000, ns = ind)
+    end.time <- Sys.time()
+    list_times[[2]] <- end.time - start.time
+    
+    bsr_times[[i]] <- list_times
+    
+    # save model and remove from memory
+    write_rds(mod, file = 
+                paste0("mods/bsr_sm_", names(out1_resp1)[i], "_", i, 
+                       "df", ind, ".RDS"))
+    write_rds(list_times, file = 
+                 paste0("times/bsr_sm_", names(out1_resp1)[i], "_", i, 
+                        "df", ind, ".RDS"))
+    rm(mod1, mod2, mod3, mod4, mod)
+  }
+  
+  write_rds(bsr_times, file = "bsr_smf_times.RDS")
+  return(bsr_times)
+}
+
+# example of call to HPC for first 100 simulated datasets
+rjob01 <- slurm_call(
+  run_bsr_sm, params = list(vector = 1:100),
+  global_objects = c('out1_resp1'),
+  jobname = 'bsr_sm01',
+  slurm_options = list(mem = '8G'))
+  # repeat up until dataset 1700
+```
+
+```{r}
+### larger sample size
+
+out2_resp1 <- read_rds("sim/sim_resp_lg_a.RDS")
+
+run_bsr_lg <- function(vector) {
+  bsr_times <- vector(mode = "list", length = length(vector))
+  
+  # create folder for model output
+  if(!dir.exists("mods")) {
+    dir.create("mods")
+  }
+  if(!dir.exists("times")) {
+    dir.create("times")
+  }
+  
+  # sometimes this code would stop prematurely...
+  # so this chunk finds the index of the last model that was run
+  list_files <- list.files("mods", full.names = TRUE)
+  nums <- as.numeric(sub(".+_(.+)d.+", "\\1", list_files))
+  if(length(nums) == 0) {
+    final <- 0; starting <- min(vector)
+  } else {
+    final <- max(nums); starting <- final + 1
+  }
+  if(file.exists("final.txt")) {
+    write(paste0("final ran = ", final, ", starting at ", starting), "final.txt", append = T)
+  } else {
+    writeLines(paste0("final ran = ", final, ", starting at ", starting), "final.txt")
+  }
+  
+  for(i in starting:max(vector)) {
+    print(paste0("------------- run ", i, "--------------"))
+    
+    # prepare data
+    df <- out2_resp1[[i]]
+    X <- df |> 
+      select(As:Sn) |> 
+      as.matrix.data.frame()
+    C <- df |>
+      bind_cols(
+        data.frame(model.matrix(~ race-1, data = 
+                                  mutate(df, race = as.factor(race))))
+      ) |> 
+      select(race2:race5, smoke:bmi) |> 
+      as.matrix.data.frame()
+    Y <- df$y
+    
+    # fit model for d = {1, 2, 3, 4, 5} and save time
+    list_times <- vector(mode = "list", length = 2)
+    
+    set.seed(0)
+    start.time <- Sys.time()
+    mod1 <- NLint(Y = Y, X = X, C = C, 
+                  nIter = 5000, nBurn = 2500, ns = 1)
+    mod2 <- NLint(Y = Y, X = X, C = C, 
+                  nIter = 5000, nBurn = 2500, ns = 2)
+    mod3 <- NLint(Y = Y, X = X, C = C, 
+                  nIter = 5000, nBurn = 2500, ns = 3)
+    mod4 <- NLint(Y = Y, X = X, C = C, 
+                  nIter = 5000, nBurn = 2500, ns = 4)
+    end.time <- Sys.time()
+    list_times[[1]] <- end.time - start.time
+    
+    ind <- which.min(c(mod1$waic, mod2$waic, mod3$waic, mod4$waic))
+    
+    print(paste0("-------- chose ", ind, " -----------"))
+    
+    start.time <- Sys.time()
+    mod <- NLint(Y = Y, X = X, C = C, 
+                 nIter = 50000, nBurn = 25000, ns = ind)
+    end.time <- Sys.time()
+    list_times[[2]] <- end.time - start.time
+    
+    bsr_times[[i]] <- list_times
+    
+    # save model and remove from memory
+    write_rds(mod, file = 
+                paste0("mods/bsr_lgf_", names(out2_resp1)[i], "_", i, 
+                       "df", ind, ".RDS"))
+    write_rds(list_times, file = 
+                paste0("times/bsr_lgf_", names(out2_resp1)[i], "_", i, 
+                       "df", ind, ".RDS"))
+    
+    rm(mod1, mod2, mod3, mod4, mod)
+  }
+  
+  write_rds(bsr_times, file = "bsr_lgf_times.RDS")
+  # return(bsr_times)
+}
+
+# example of call to HPC for first 100 simulated datasets
+qjob01 <- slurm_call(
+  run_bsr_lg, params = list(vector = 1:100),
+  global_objects = c('out2_resp1'),
+  jobname = 'bsr_lg01',
+  slurm_options = list(mem = '8G'))
+  # repeat up until dataset 1700
+```
+
+Next, we fit stratified models with an interaction between the categorical race variable and a chemical. 
+
+```{r}
+
+```
+
+
 
 ### Code for Section \@ref(results):
 
@@ -1874,6 +2240,8 @@ ggsave("index/figures/ch4_corr_lg_simorigdens.png", width = 10, height = 12)
 ```
 
 Here, we create the visualization of $R^2$ values in multiple linear regressions with the true functional form of the chemicals specified, in order to ensure we are achieving a realistic signal-to-noise ratio. 
+
+[*include code from cluster on fitting chem-only models*]
 
 ```{r}
 # extract rsq from smaller size datasets
