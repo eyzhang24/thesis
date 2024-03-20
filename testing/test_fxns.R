@@ -9,10 +9,50 @@ bk <- read_rds("testing/bkmr_sm_am2_201.RDS")
 fit <- bk
 z1 <- 5
 z2 <- 4
-qs.diff = c(0.25, 0.75)
-qs.fixed = c(0.25, 0.75)
-q.rest = 0.5
+z3 <- 6
+qs.diff <-  c(0.1, 0.5, 0.9)
+q.fixed <- 0.5
+ngrid <- 50
+min.plot.dist <- 0.5
 
+trivarsurf <- function(fit, z1, z2, z3, qs.diff = c(0.1, 0.5, 0.9), 
+                       q.fixed = 0.5, ngrid = 50) {
+  # call from fit
+  y <- fit$y
+  Z <- fit$Z
+  X <- fit$X
+  z.names <- colnames(Z)
+  
+  # create new ordering
+  ord <- c(z1, z2, z3, setdiff(1:ncol(Z), c(z1, z2, z3)))
+  
+  # create grid of z-values to evaluate at
+  z1.grid <- seq(min(Z[, ord[1]]), max(Z[, ord[1]]), length = ngrid)
+  z2.grid <- quantile(Z[, ord[2]], probs = qs.diff)
+  z3.grid <- quantile(Z[, ord[3]], probs = qs.diff)
+  z.all <- c(list(z1.grid), list(z2.grid), list(z3.grid))
+  if (ncol(Z) > 3) {
+    z.others <- lapply(4:ncol(Z), function(x) quantile(Z[, ord[x]], q.fixed))
+    z.all <- c(z.all, z.others)
+  }
+  newz.grid <- expand.grid(z.all)
+  z1save <- newz.grid[, 1]
+  colnames(newz.grid) <- colnames(Z)[ord]
+  newz.grid <- newz.grid[, colnames(Z)]
+  
+  # evaluate prediction, assume approx fit
+  preds <- ComputePostmeanHnew(fit = fit, y = y, Z = Z, X = X, Znew = newz.grid)
+  preds.mean <- preds$postmean
+  preds.se <- sqrt(diag(preds$postvar))
+  
+  # return
+  return(data.frame(z1 = z1save, 
+                    z23_q = rep(qs.diff, each = ngrid), 
+                    est = preds.mean, 
+                    se = preds.se))
+}
+
+test <- trivarsurf(fit, z1 = 4, z2 = 5, z3 = 6)
 
 bivarinter <- function(fit, z1, z2, qs.diff = c(0.25, 0.75), qs.fixed = c(0.25, 0.75), 
                        q.rest = 0.5) {
@@ -76,6 +116,75 @@ quantile_j2 <- 0.5
 quantile_rest <- 0.5
 
 getbivarsurf <- function(NLmod, X, C, j1, j2, gridLength = 50, quantile_j2, 
+                         quantile_rest = 0.5) {
+  
+  # define parameters
+  n  <-  dim(X)[1]
+  ns <- NLmod$ns
+  k <- NLmod$k
+  p <- dim(X)[2]
+  Xstar <- array(NA, dim = c(n, p, ns + 1))
+  Xstar[, , 1] <- 1
+  for (j in 1:p) {
+    Xstar[, j, 2:(ns + 1)] <- scale(splines::ns(X[, j], df = ns))
+  }
+  
+  # define posteriors
+  zetaPost <- NLmod$posterior$zeta
+  betaList <- NLmod$posterior$beta
+  betaCPost <- NLmod$posterior$betaC
+  totalScans <- dim(NLmod$posterior$betaC)[2]
+  nChains <- dim(NLmod$posterior$betaC)[1]
+  
+  # create design of covariates
+  pc <- dim(C)[2]
+  NewDesignC <- matrix(NA, gridLength, pc + 1)
+  NewDesignC[, 1] <- 1
+  for (jc in 1:pc) {
+    NewDesignC[, jc + 1] <- mean(C[, jc])
+  }
+  
+  # for each quantile of j2
+  df <- purrr::map_df(quantile_j2, \(quantile_j2) {
+    # create design of chemicals
+    n <- dim(X)[1]
+    NewDesignMat <- matrix(NA, gridLength, p)
+    for (j in 1:p) {
+      NewDesignMat[, j] <- quantile(X[, j], quantile_rest)
+    }
+    NewDesignMat[, j1] <- seq(quantile(X[, j1], 0.025), 
+                              quantile(X[, j1], 0.975), length = gridLength)
+    NewDesignMat[, j2] <- quantile(X[, j2], quantile_j2)
+    NewDesign <- array(NA, dim = c(gridLength, p, ns + 1))
+    NewDesign[, , 1] <- 1
+    for (j in 1:p) {
+      temp_ns_object <- splines::ns(X[, j], df = ns)
+      temp_sds <- apply(temp_ns_object, 2, sd)
+      temp_means <- apply(temp_ns_object, 2, mean)
+      NewDesign[, j, 2:(ns + 1)] <- t((t(predict(temp_ns_object, 
+                                                 NewDesignMat[, j])) - temp_means)/temp_sds)
+    }
+    
+    # generate predictions
+    predictions <- NLinteraction:::PredictionsMixture(
+      XstarOld = Xstar, XstarNew = NewDesign, 
+      designC = NewDesignC, totalScans = totalScans, nChains = nChains, 
+      zetaPost = zetaPost, betaList = betaList, betaCPost = betaCPost, 
+      k = k, ns = ns)
+    
+    # get surface
+    return(data.frame(
+      j1val = NewDesignMat[, j1], 
+      j2quant = rep(quantile_j2, gridLength), 
+      est = apply(predictions$PredictedPost, 3, mean), 
+      lower = apply(predictions$PredictedPost, 3, quantile, 0.025), 
+      upper = apply(predictions$PredictedPost, 3, quantile, 0.975)
+    ))
+  })
+  return(df)
+}
+
+gettrivarsurf <- function(NLmod, X, C, j1, j2, j3, gridLength = 50, quantile_j2, 
                          quantile_rest = 0.5) {
   
   # define parameters

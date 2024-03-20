@@ -169,8 +169,15 @@ ksm_ints |>
   group_by(case, variable) |> 
   summarize(sensitivity = sum(signif)/n()) |> 
   ggplot(aes(x = variable, y = sensitivity)) +
-  geom_bar(stat = "identity") +
-  facet_wrap(~case, scales = "free_x")
+  geom_bar(stat = "identity", fill = "grey85") +
+  geom_text(aes(label = sensitivity*100), vjust = -0.5, size = 3) +
+  ylim(0, 0.15) +
+  facet_wrap(~case, scales = "free_x", 
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  labs(y = "Sensitivity", 
+       x = "Chemical, with all others fixed")
+ggsave("index/figures/ch4_ksm_int_rest.png", width = 7.5, height = 5)
 
 # one vs. other significant visualization
 ksm_intb <- read_csv("sim/bkmr_sm/int_bivar.csv")
@@ -188,8 +195,15 @@ ksm_intb |>
   group_by(case) |> 
   summarize(sensitivity = sum(signif)/n()) |> 
   ggplot(aes(x = "", y = sensitivity)) +
-  geom_bar(stat = "identity") +
-  facet_wrap(~case)
+  geom_bar(stat = "identity", fill = "grey85") +
+  geom_text(aes(label = sensitivity*100), vjust = -0.5, size = 3) +
+  ylim(0, 0.15) +
+  facet_wrap(~case,
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  labs(y = "Sensitivity", 
+       x = NULL)
+ggsave("index/figures/ch4_ksm_int_biv.png", width = 6, height = 4)
 
 # one vs. two others significant visualization
 ksm_intt <- read_csv("sim/bkmr_sm/int_trivar.csv")
@@ -206,8 +220,15 @@ ksm_intt |>
   group_by(case, cond) |> 
   summarize(sensitivity = sum(signif)/n()) |>
   ggplot(aes(x = cond, y = sensitivity)) +
-  geom_bar(stat = "identity") +
-  facet_wrap(~case)
+  geom_bar(stat = "identity", fill = "grey85") +
+  geom_text(aes(label = sensitivity*100), vjust = -0.5, size = 3) +
+  ylim(0, 0.025) +
+  facet_wrap(~case,
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  labs(y = "Sensitivity", 
+       x = NULL)
+ggsave("index/figures/ch4_ksm_int_triv.png", width = 6, height = 4)
 
 # bivar and trivar together
 int_comb <- bind_rows(
@@ -219,6 +240,13 @@ int_comb |>
   group_by(case, cond) |> 
   summarize(sensitivity = sum(signif)/n()) |> 
   ggplot(aes(cond, sensitivity)) +
-  geom_bar(stat = "identity") +
-  facet_wrap(~case, scales = "free_x")
+  geom_bar(stat = "identity", fill = "grey85") +
+  geom_text(aes(label = sensitivity*100), vjust = -0.5, size = 3) +
+  ylim(0, 0.025) +
+  facet_wrap(~case, scales = "free_x",
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  labs(y = "Sensitivity", 
+       x = NULL)
+ggsave("index/figures/ch4_ksm_int_bitri.png", width = 7.5, height = 5)
 
