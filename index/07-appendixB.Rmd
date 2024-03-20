@@ -1436,7 +1436,9 @@ write_rds(out2_resp1_re, "sim/sim_resp_lg_re.RDS")
 
 Here, we fit the models to our simulated data. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. This code was run on the Amherst HPC RStudio server. 
 
-First, we fit the naive and oracle MLRs
+First, we fit the naive and oracle MLRs.
+
+[*include code for mlrs*]
 
 Next, we fit BKMR and BSR models with the base case and with interactions between chemicals. 
 
@@ -1797,6 +1799,537 @@ qjob01 <- slurm_call(
 Next, we fit stratified models with an interaction between the categorical race variable and a chemical. 
 
 ```{r}
+##########
+# stratified bkmr, smaller size
+##########
+
+out1_resp1_re <- read_rds("sim/sim_resp_sm_re.RDS")
+
+run_bkmr_sm_re <- function(vector) {
+  bkmr_times <- vector(mode = "list", length = length(vector))
+  
+  # create folder for model output
+  if(!dir.exists("mods")) {
+    dir.create("mods")
+  }
+  if(!dir.exists("times")) {
+    dir.create("times")
+  }
+  
+  for(i in vector) {
+    print(paste0("------------- run ", i, "--------------"))
+    
+    # prepare data
+    df_full <- out1_resp1_re[[i]]
+    
+    # for each race level, run bmkr
+    list_times <- vector(mod = "list", length = 6)
+    list_mods <- vector(mod = "list", length = 6)
+    
+    set.seed(0)
+    for(j in 1:5) {
+      df <- df_full[df_full$race == j, ]
+      Z <- df |> 
+        select(As:Sn)
+      X <- df |>
+        select(smoke:bmi)
+      y <- df$y
+      
+      # fit model and save time
+      start.time <- Sys.time()
+      mod <- tryCatch({
+        kmbayes(y = y, Z = Z, X = X, 
+                iter = 50000, verbose = FALSE, varsel = TRUE)
+      }, error = function(e) {
+        NA
+      })
+      end.time <- Sys.time()
+      list_times[[i]] <- end.time - start.time
+      list_mods[[i]] <- mod
+    }
+    
+    # combine 1-3 r/e
+    df <- df_full[df_full$race %in% c(1, 2, 3), ]
+    Z <- df |> 
+      select(As:Sn)
+    X <- df |>
+      select(smoke:bmi)
+    y <- df$y
+    
+    # fit model and save time
+    start.time <- Sys.time()
+    mod <- tryCatch({
+      kmbayes(y = y, Z = Z, X = X, 
+              iter = 50000, verbose = FALSE, varsel = TRUE)
+    }, error = function(e) {
+      NA
+    })
+    end.time <- Sys.time()
+    list_times[[6]] <- end.time - start.time
+    list_mods[[6]] <- mod
+    
+    
+    bkmr_times[[i]] <- list_times
+    # save model and remove from memory
+    write_rds(list_mods, file = 
+                paste0("mods/bkmr_sm_", names(out1_resp1_re)[i], "_", i, ".RDS"))
+    write_rds(list_times, file = 
+                paste0("times/bkmr_smf_", names(out1_resp1_re)[i], "_", i, ".RDS"))
+    rm(mod)
+  }
+  # write_rds(bkmr_times, file = "bkmr_sm_times.RDS")
+  return(bkmr_times)
+}
+
+# send to hpc
+ujob01 <- slurm_call(
+  run_bkmr_sm_re, params = list(vector = 1:100),
+  global_objects = c('out1_resp1_re'),
+  jobname = 'ksmre01',
+  slurm_options = list(mem = '8G'))
+
+ujob02 <- slurm_call(
+  run_bkmr_sm_re, params = list(vector = 101:200),
+  global_objects = c('out1_resp1_re'),
+  jobname = 'ksmre02',
+  slurm_options = list(mem = '8G'))
+
+ujob03 <- slurm_call(
+  run_bkmr_sm_re, params = list(vector = 201:300),
+  global_objects = c('out1_resp1_re'),
+  jobname = 'ksmre03',
+  slurm_options = list(mem = '8G'))
+
+ujob04 <- slurm_call(
+  run_bkmr_sm_re, params = list(vector = 301:400),
+  global_objects = c('out1_resp1_re'),
+  jobname = 'ksmre04',
+  slurm_options = list(mem = '8G'))
+```
+
+```{r}
+##########
+# stratified bkmr, larger size
+##########
+
+out2_resp1_re <- read_rds("sim/sim_resp_lg_re.RDS")
+
+run_bkmr_lg_re <- function(vector) {
+  bkmr_times <- vector(mode = "list", length = length(vector))
+  
+  # create folder for model output
+  if(!dir.exists("mods")) {
+    dir.create("mods")
+  }
+  if(!dir.exists("times")) {
+    dir.create("times")
+  }
+  
+  for(i in vector) {
+    print(paste0("------------- run ", i, "--------------"))
+    
+    # prepare data
+    df_full <- out2_resp1_re[[i]]
+    
+    # for each race level, run bmkr
+    list_times <- vector(mod = "list", length = 5)
+    list_mods <- vector(mod = "list", length = 5)
+    
+    set.seed(0)
+    for(j in 1:5) {
+      df <- df_full[df_full$race == j, ]
+      Z <- df |> 
+        select(As:Sn)
+      X <- df |>
+        select(smoke:bmi)
+      y <- df$y
+      
+      # fit model and save time
+      start.time <- Sys.time()
+      mod <- kmbayes(y = y, Z = Z, X = X, 
+                     iter = 50000, verbose = FALSE, varsel = TRUE)
+      end.time <- Sys.time()
+      list_times[[i]] <- end.time - start.time
+      list_mods[[i]] <- mod
+    }
+    
+    bkmr_times[[i]] <- list_times
+    # save model and remove from memory
+    write_rds(list_mods, file = 
+                paste0("mods/bkmr_lg_", names(out2_resp1_re)[i], "_", i, ".RDS"))
+    write_rds(list_times, file = 
+                paste0("times/bkmr_lgf_", names(out2_resp1_re)[i], "_", i, ".RDS"))
+    rm(mod)
+  }
+  # write_rds(bkmr_times, file = "bkmr_lg_times_re.RDS")
+  return(bkmr_times)
+}
+
+# send to hpc
+tjob01 <- slurm_call(
+  run_bkmr_lg_re, params = list(vector = 1:100),
+  global_objects = c('out2_resp1_re'),
+  jobname = 'klgre01',
+  slurm_options = list(mem = '8G'))
+
+tjob02 <- slurm_call(
+  run_bkmr_lg_re, params = list(vector = 101:200),
+  global_objects = c('out2_resp1_re'),
+  jobname = 'klgre02',
+  slurm_options = list(mem = '8G'))
+
+tjob03 <- slurm_call(
+  run_bkmr_lg_re, params = list(vector = 201:300),
+  global_objects = c('out2_resp1_re'),
+  jobname = 'klgre03',
+  slurm_options = list(mem = '8G'))
+
+tjob04 <- slurm_call(
+  run_bkmr_lg_re, params = list(vector = 301:400),
+  global_objects = c('out2_resp1_re'),
+  jobname = 'klgre04',
+  slurm_options = list(mem = '8G'))
+```
+
+```{r}
+###########
+# stratified bsr, smaller size
+###########
+
+out1_resp1_re <- read_rds("sim/sim_resp_sm_re.RDS")
+
+run_bsr_sm_re <- function(vector) {
+  bsr_times <- vector(mode = "list", length = length(vector))
+  
+  # create folder for model output
+  if(!dir.exists("mods")) {
+    dir.create("mods")
+  }
+  if(!dir.exists("times")) {
+    dir.create("times")
+  }
+  
+  # sometimes bsr would stop prematurely...
+  # so this code finds the index of the last model run
+  list_files <- list.files("mods", full.names = TRUE)
+  nums <- as.numeric(sub(".+_(.+)d.+", "\\1", list_files))
+  if(length(nums) == 0) {
+    final <- 0
+    starting <- min(vector)
+  } else {
+    final <- max(nums)
+    starting <- final + 1
+  }
+  if(file.exists("final.txt")) {
+    write(paste0("final ran = ", final, ", starting at ", starting), "final.txt", append = T)
+  } else {
+    writeLines(paste0("final ran = ", final, ", starting at ", starting), "final.txt")
+  }
+  
+  
+  for(i in starting:max(vector)) {
+    print(paste0("------------- run ", i, "--------------"))
+    
+    # prepare data
+    df_full <- out1_resp1_re[[i]]
+    
+    # for each race level, run bsr
+    list_times <- vector(mod = "list", length = 6) 
+    list_mods <- vector(mod = "list", length = 6)
+    
+    set.seed(0)
+    for(j in 1:5) {
+      df <- df_full[df_full$race == j, ]
+      X <- df |> 
+        select(As:Sn) |> 
+        as.matrix.data.frame()
+      C <- df |> 
+        select(smoke:bmi) |> 
+        as.matrix.data.frame()
+      Y <- df$y
+      
+      # waic for choosing df
+      list_times_small <- vector(mode = "list", length = 2)
+      
+      start.time <- Sys.time()
+      mod1 <- NLint(Y = Y, X = X, C = C, 
+                    nIter = 5000, nBurn = 2500, ns = 1)
+      mod2 <- NLint(Y = Y, X = X, C = C, 
+                    nIter = 5000, nBurn = 2500, ns = 2)
+      mod3 <- NLint(Y = Y, X = X, C = C, 
+                    nIter = 5000, nBurn = 2500, ns = 3)
+      mod4 <- NLint(Y = Y, X = X, C = C, 
+                    nIter = 5000, nBurn = 2500, ns = 4)
+      end.time <- Sys.time()
+      list_times_small[[1]] <- end.time - start.time
+      
+      ind <- which.min(c(mod1$waic, mod2$waic, mod3$waic, mod4$waic))
+      
+      # fit model and save time
+      start.time <- Sys.time()
+      mod <- tryCatch({
+        NLint(Y = Y, X = X, C = C, 
+              nIter = 50000, nBurn = 25000, ns = ind)
+      }, error = function(e) {
+        NA
+      })
+      end.time <- Sys.time()
+      list_times_small[[2]] <- end.time - start.time
+      
+      bsr_times[[i]] <- list_times_small
+      list_mods[[i]] <- mod
+    }
+    
+    # combine 1-3 r/e
+    df <- df_full[df_full$race %in% c(1, 2, 3), ]
+    X <- df |> 
+      select(As:Sn) |> 
+      as.matrix.data.frame()
+    C <- df |> 
+      select(smoke:bmi) |> 
+      as.matrix.data.frame()
+    Y <- df$y
+    
+    # waic for choosing df
+    list_times_small <- vector(mode = "list", length = 2)
+    
+    start.time <- Sys.time()
+    mod1 <- NLint(Y = Y, X = X, C = C, 
+                  nIter = 5000, nBurn = 2500, ns = 1)
+    mod2 <- NLint(Y = Y, X = X, C = C, 
+                  nIter = 5000, nBurn = 2500, ns = 2)
+    mod3 <- NLint(Y = Y, X = X, C = C, 
+                  nIter = 5000, nBurn = 2500, ns = 3)
+    mod4 <- NLint(Y = Y, X = X, C = C, 
+                  nIter = 5000, nBurn = 2500, ns = 4)
+    end.time <- Sys.time()
+    list_times_small[[1]] <- end.time - start.time
+    
+    ind <- which.min(c(mod1$waic, mod2$waic, mod3$waic, mod4$waic))
+    
+    # fit model and save time
+    start.time <- Sys.time()
+    mod <- tryCatch({
+      NLint(Y = Y, X = X, C = C, 
+            nIter = 50000, nBurn = 25000, ns = ind)
+    }, error = function(e) {
+      NA
+    })
+    end.time <- Sys.time()
+    list_times_small[[2]] <- end.time - start.time
+    
+    list_times[[6]] <- list_times_small
+    list_mods[[6]] <- mod
+    
+    # save model and remove from memory
+    write_rds(list_mods, file = 
+                paste0("mods/bsr_sm_", names(out1_resp1_re)[i], "_", i, 
+                       "df", ind, ".RDS"))
+    write_rds(list_times, file = 
+                paste0("times/bsr_sm_", names(out1_resp1_re)[i], "_", i, 
+                       "df", ind, ".RDS"))
+    
+    rm(mod1, mod2, mod3, mod4, mod)
+  }
+  
+  return(bsr_times)
+}
+
+# send to hpc
+vjob01 <- slurm_call(
+  run_bsr_sm_re, params = list(vector = 1:100),
+  global_objects = c('out1_resp1_re'),
+  jobname = 'ssmre01',
+  slurm_options = list(mem = '8G'))
+
+vjob02 <- slurm_call(
+  run_bsr_sm_re, params = list(vector = 101:200),
+  global_objects = c('out1_resp1_re'),
+  jobname = 'ssmre02',
+  slurm_options = list(mem = '8G'))
+
+vjob03 <- slurm_call(
+  run_bsr_sm_re, params = list(vector = 201:300),
+  global_objects = c('out1_resp1_re'),
+  jobname = 'ssmre03',
+  slurm_options = list(mem = '8G'))
+
+vjob04 <- slurm_call(
+  run_bsr_sm_re, params = list(vector = 301:400),
+  global_objects = c('out1_resp1_re'),
+  jobname = 'ssmre04',
+  slurm_options = list(mem = '8G'))
+```
+
+```{r}
+###########
+# stratified bsr, larger size
+###########
+
+out2_resp1_re <- read_rds("sim/sim_resp_lg_re.RDS")
+
+run_bsr_lg_re <- function(vector) {
+  bsr_times <- vector(mode = "list", length = length(vector))
+  
+  # create folder for model output
+  if(!dir.exists("mods")) {
+    dir.create("mods")
+  }
+  if(!dir.exists("times")) {
+    dir.create("times")
+  }
+  
+  # sometimes bsr would stop prematurely...
+  # so this code finds the index of the last model run
+  list_files <- list.files("mods", full.names = TRUE)
+  nums <- as.numeric(sub(".+_(.+)d.+", "\\1", list_files))
+  if(length(nums) == 0) {
+    final <- 0
+    starting <- min(vector)
+  } else {
+    final <- max(nums)
+    starting <- final + 1
+  }
+  if(file.exists("final.txt")) {
+    write(paste0("final ran = ", final, ", starting at ", starting), "final.txt", append = T)
+  } else {
+    writeLines(paste0("final ran = ", final, ", starting at ", starting), "final.txt")
+  }
+  
+  
+  for(i in starting:max(vector)) {
+    print(paste0("------------- run ", i, "--------------"))
+    
+    # prepare data
+    df_full <- out2_resp1_re[[i]]
+    
+    # for each race level, run bsr
+    list_times <- vector(mod = "list", length = 6) 
+    list_mods <- vector(mod = "list", length = 6)
+    
+    set.seed(0)
+    for(j in 1:5) {
+      df <- df_full[df_full$race == j, ]
+      X <- df |> 
+        select(As:Sn) |> 
+        as.matrix.data.frame()
+      C <- df |> 
+        select(smoke:bmi) |> 
+        as.matrix.data.frame()
+      Y <- df$y
+      
+      # waic for choosing df
+      list_times_small <- vector(mode = "list", length = 2)
+      
+      start.time <- Sys.time()
+      mod1 <- NLint(Y = Y, X = X, C = C, 
+                    nIter = 5000, nBurn = 2500, ns = 1)
+      mod2 <- NLint(Y = Y, X = X, C = C, 
+                    nIter = 5000, nBurn = 2500, ns = 2)
+      mod3 <- NLint(Y = Y, X = X, C = C, 
+                    nIter = 5000, nBurn = 2500, ns = 3)
+      mod4 <- NLint(Y = Y, X = X, C = C, 
+                    nIter = 5000, nBurn = 2500, ns = 4)
+      end.time <- Sys.time()
+      list_times_small[[1]] <- end.time - start.time
+      
+      ind <- which.min(c(mod1$waic, mod2$waic, mod3$waic, mod4$waic))
+      
+      # fit model and save time
+      start.time <- Sys.time()
+      mod <- tryCatch({
+        NLint(Y = Y, X = X, C = C, 
+              nIter = 50000, nBurn = 25000, ns = ind)
+      }, error = function(e) {
+        NA
+      })
+      end.time <- Sys.time()
+      list_times_small[[2]] <- end.time - start.time
+      
+      bsr_times[[i]] <- list_times_small
+      list_mods[[i]] <- mod
+    }
+    
+    # combine 1-3 r/e
+    df <- df_full[df_full$race %in% c(1, 2, 3), ]
+    X <- df |> 
+      select(As:Sn) |> 
+      as.matrix.data.frame()
+    C <- df |> 
+      select(smoke:bmi) |> 
+      as.matrix.data.frame()
+    Y <- df$y
+    
+    # waic for choosing df
+    list_times_small <- vector(mode = "list", length = 2)
+    
+    start.time <- Sys.time()
+    mod1 <- NLint(Y = Y, X = X, C = C, 
+                  nIter = 5000, nBurn = 2500, ns = 1)
+    mod2 <- NLint(Y = Y, X = X, C = C, 
+                  nIter = 5000, nBurn = 2500, ns = 2)
+    mod3 <- NLint(Y = Y, X = X, C = C, 
+                  nIter = 5000, nBurn = 2500, ns = 3)
+    mod4 <- NLint(Y = Y, X = X, C = C, 
+                  nIter = 5000, nBurn = 2500, ns = 4)
+    end.time <- Sys.time()
+    list_times_small[[1]] <- end.time - start.time
+    
+    ind <- which.min(c(mod1$waic, mod2$waic, mod3$waic, mod4$waic))
+    
+    # fit model and save time
+    start.time <- Sys.time()
+    mod <- tryCatch({
+      NLint(Y = Y, X = X, C = C, 
+            nIter = 50000, nBurn = 25000, ns = ind)
+    }, error = function(e) {
+      NA
+    })
+    end.time <- Sys.time()
+    list_times_small[[2]] <- end.time - start.time
+    
+    list_times[[6]] <- list_times_small
+    list_mods[[6]] <- mod
+    
+    # save model and remove from memory
+    write_rds(list_mods, file = 
+                paste0("mods/bsr_lg_", names(out2_resp1_re)[i], "_", i, 
+                       "df", ind, ".RDS"))
+    write_rds(list_times, file = 
+                paste0("times/bsr_lg_", names(out2_resp1_re)[i], "_", i, 
+                       "df", ind, ".RDS"))
+    
+    rm(mod1, mod2, mod3, mod4, mod)
+  }
+  
+  # write_rds(bsr_times, file = "bsr_lgf_times.RDS")
+  return(bsr_times)
+}
+
+# send to hpc
+wjob01 <- slurm_call(
+  run_bsr_lg_re, params = list(vector = 1:100),
+  global_objects = c('out2_resp1_re'),
+  jobname = 'slgre01',
+  slurm_options = list(mem = '8G'))
+
+wjob02 <- slurm_call(
+  run_bsr_lg_re, params = list(vector = 101:200),
+  global_objects = c('out2_resp1_re'),
+  jobname = 'slgre02',
+  slurm_options = list(mem = '8G'))
+
+wjob03 <- slurm_call(
+  run_bsr_lg_re, params = list(vector = 201:300),
+  global_objects = c('out2_resp1_re'),
+  jobname = 'slgre03',
+  slurm_options = list(mem = '8G'))
+
+wjob04 <- slurm_call(
+  run_bsr_lg_re, params = list(vector = 301:400),
+  global_objects = c('out2_resp1_re'),
+  jobname = 'slgre04',
+  slurm_options = list(mem = '8G'))
 
 ```
 
@@ -1842,7 +2375,6 @@ p4 <- ggplot(NULL) +
 cowplot::plot_grid(p1, p2, p3, p4)
 ggsave("index/figures/univariatelines.png", width = 6, height = 4)
 ```
-
 
 Next, we visualize 3D surfaces for pair-wise interactions between exposures. 
 
