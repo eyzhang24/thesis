@@ -2583,6 +2583,115 @@ wjob04 <- slurm_call(
 
 Here, we extract results from our simulation. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. This code was run on the Amherst HPC RStudio server. 
 
+First, we extract p-values from the multiple linear regression models. 
+
+```{r}
+# naive small, chemxchem models
+mlr_sm <- read_rds("sim/mlr_mods_sm.RDS")
+
+mlrsm_pval <- 1:1700 |> 
+  map_df(\(x) {
+    mod <- mlr_sm[[x]]
+    data.frame(summary(mod)$coefficients) |> 
+      rownames_to_column(var = "var") |> 
+      select(var, p = 5) |> 
+      mutate(case = x)
+  })
+write_csv(mlrsm_pval, "sim/_mlr/pvalsm.csv")
+
+# naive large, chemxchem models
+mlr_lg <- read_rds("sim/mlr_mods_lg.RDS")
+
+mlrlg_pval <- 1:1700 |> 
+  map_df(\(x) {
+    mod <- mlr_lg[[x]]
+    data.frame(summary(mod)$coefficients) |> 
+      rownames_to_column(var = "var") |> 
+      select(var, p = 5) |> 
+      mutate(case = x)
+  })
+write_csv(mlrlg_pval, "sim/_mlr/pvallg.csv")
+
+# oracle small, chemxchem models
+orac_sm <- read_rds("sim/oracle_mods_sm.RDS")
+
+oracsm_pval <- 1:1700 |> 
+  map_df(\(x) {
+    mod <- orac_sm[[x]]
+    data.frame(summary(mod)$coefficients) |> 
+      rownames_to_column(var = "var") |> 
+      select(var, p = 5) |> 
+      mutate(case = x)
+  })
+write_csv(oracsm_pval, "sim/_oracle/pvalsm.csv")
+
+# oracle large, chemxchem models
+orac_lg <- read_rds("sim/oracle_mods_lg.RDS")
+
+oraclg_pval <- 1:1700 |> 
+  map_df(\(x) {
+    mod <- orac_lg[[x]]
+    data.frame(summary(mod)$coefficients) |> 
+      rownames_to_column(var = "var") |> 
+      select(var, p = 5) |> 
+      mutate(case = x)
+  })
+write_csv(oraclg_pval, "sim/_oracle/pvallg.csv")
+
+# naive small, chemxcov models
+mlr_sm_re <- read_rds("sim/mlr_mods_sm_re.RDS")
+
+mlrsmre_pval <- 1:400 |> 
+  map_df(\(x) {
+    mod <- mlr_sm_re[[x]]
+    data.frame(summary(mod)$coefficients) |> 
+      rownames_to_column(var = "var") |> 
+      select(var, p = 5) |> 
+      mutate(case = x)
+  })
+write_csv(mlrsmre_pval, "sim/_mlr/pvalsmre.csv")
+
+# naive large, chemxcov models
+mlr_lg_re <- read_rds("sim/mlr_mods_lg_re.RDS")
+
+mlrlgre_pval <- 1:400 |> 
+  map_df(\(x) {
+    mod <- mlr_lg_re[[x]]
+    data.frame(summary(mod)$coefficients) |> 
+      rownames_to_column(var = "var") |> 
+      select(var, p = 5) |> 
+      mutate(case = x)
+  })
+write_csv(mlrlgre_pval, "sim/_mlr/pvallgre.csv")
+
+# oracle small, chemxcov models
+orac_sm_re <- read_rds("sim/oracle_mods_sm_re.RDS")
+
+oracsmre_pval <- 1:400 |> 
+  map_df(\(x) {
+    mod <- orac_sm_re[[x]]
+    data.frame(summary(mod)$coefficients) |> 
+      rownames_to_column(var = "var") |> 
+      select(var, p = 5) |> 
+      mutate(case = x)
+  })
+write_csv(oracsmre_pval, "sim/_oracle/pvalsmre.csv")
+
+# oracle large, chemxcov models
+orac_lg_re <- read_rds("sim/oracle_mods_lg_re.RDS")
+
+oraclgre_pval <- 1:400 |> 
+  map_df(\(x) {
+    mod <- orac_lg_re[[x]]
+    data.frame(summary(mod)$coefficients) |> 
+      rownames_to_column(var = "var") |> 
+      select(var, p = 5) |> 
+      mutate(case = x)
+  })
+write_csv(oraclgre_pval, "sim/_oracle/pvallgre.csv")
+```
+
+
 ### Code for Appendix \@ref(appa):
 
 Here, we create the supplemental output that is included in Appendix \@ref(appa). 

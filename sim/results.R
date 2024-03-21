@@ -169,7 +169,14 @@ ksm_triv <- ksm_triv |>
 ksm_triv |> 
   ggplot(aes(z1_val, est, color = quantile)) +
   geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) + 
-  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x")
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x") +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2+3\nquantile")
+ggsave("index/figures/ch4_ksm_triv_expresp.png", width = 6, height = 4)
 
 # int vs. rest significant visualization
 ksm_ints <- read_csv("sim/bkmr_sm/ints.csv")
@@ -392,7 +399,14 @@ klg_triv <- klg_triv |>
 klg_triv |> 
   ggplot(aes(z1_val, est, color = quantile)) +
   geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) + 
-  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x")
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x") +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2+3\nquantile")
+ggsave("index/figures/ch4_klg_triv_expresp.png", width = 6, height = 4)
 
 # int vs. rest significant visualization
 klg_ints <- read_csv("sim/bkmr_lg/ints.csv")
