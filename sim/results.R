@@ -153,6 +153,11 @@ ksm_biv |>
        color = "Chem 2\nquantile")
 ggsave("index/figures/ch4_ksm_biv_expresp_3.png", width = 6, height = 4)
 
+# plot trivariate relationships bkmr small
+ksm_triv <- read_csv("sim/bkmr_sm/triv_expresp.csv")
+ksm_triv |> 
+  filter(case )
+
 
 # int vs. rest significant visualization
 ksm_ints <- read_csv("sim/bkmr_sm/ints.csv")

@@ -1436,12 +1436,6 @@ write_rds(out2_resp1_re, "sim/sim_resp_lg_re.RDS")
 
 Here, we fit the models to our simulated data. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. This code was run on the Amherst HPC RStudio server. 
 
-First, we fit the naive and oracle MLRs.
-
-[*include code for mlrs*]
-
-Next, we fit BKMR and BSR models with the base case and with interactions between chemicals. 
-
 ```{r}
 # load packages 
 library(tidyverse)
@@ -1449,6 +1443,256 @@ library(bkmr)
 library(NLinteraction)
 ```
 
+First, we fit the naive and oracle MLRs.
+
+```{r}
+#########
+# naive and oracle MLRs 
+#########
+
+### smaller size
+
+# read in simulated data
+out1_resp1 <- read_rds("sim/sim_resp_sm_a.RDS")
+
+run_mlr_sm <- function() {
+  # initialize vectors
+  mlrs <- vector(mode='list', length = 1700)
+  names(mlrs) <- names(out1_resp1)
+  mlrtimes <- vector(mode = 'list', length = 1700)
+  names(mlrtimes) <- names(out1_resp1)
+  
+  oracles <- vector(mode='list', length = 1700)
+  names(oracles) <- names(out1_resp1)
+  oracletimes <- vector(mode = 'list', length = 1700)
+  names(oracletimes) <- names(out1_resp1)
+  
+  for(i in 1:1700) {
+    df <- out1_resp1[[i]] |> 
+      mutate(race = as.factor(race), smoke = as.factor(smoke)) |> 
+      select(-sim)
+    
+    start.time <- Sys.time()
+    mlrs[[i]] <- lm(y ~ ., data = df)
+    end.time <- Sys.time()
+    mlrtimes[[i]] <- end.time - start.time
+    
+    if(i <= 100) {
+      start.time <- Sys.time()
+      oracles[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimes[[i]] <- end.time - start.time
+    } else if (i <= 300) {
+      start.time <- Sys.time()
+      oracles[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           Hg*Ni + 
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimes[[i]] <- end.time - start.time
+    } else if (i <= 500) {
+      start.time <- Sys.time()
+      oracles[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           I(Hg*((Ni-1)^2)) + 
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimes[[i]] <- end.time - start.time
+    } else if (i <= 700) {
+      start.time <- Sys.time()
+      oracles[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           Cd*As + 
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimes[[i]] <- end.time - start.time
+    } else if (i <= 900) {
+      start.time <- Sys.time()
+      oracles[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           I(Cd*((As-1)^2)) + 
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimes[[i]] <- end.time - start.time
+    } else if (i <= 1100) {
+      start.time <- Sys.time()
+      oracles[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           Ni*Co + 
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimes[[i]] <- end.time - start.time
+    } else if (i <= 1300) {
+      start.time <- Sys.time()
+      oracles[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           I(Ni*((Co-1)^2)) + 
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimes[[i]] <- end.time - start.time
+    } else if (i <= 1500) {
+      start.time <- Sys.time()
+      oracles[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           Hg:Ni:Tl + 
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimes[[i]] <- end.time - start.time
+    } else if (i <= 1700) {
+      start.time <- Sys.time()
+      oracles[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           I(Hg*((Ni-1)^2)*Tl) + 
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimes[[i]] <- end.time - start.time
+    }
+  }
+  return(list(mlrs, mlrtimes, oracles, oracletimes))
+}
+
+# send to hpc
+sjob5 <- slurm_call(
+  run_mlr_sm, 
+  global_objects = c('out1_resp1'),
+  jobname = 'mlr_sm')
+
+# get output
+mlr_sm <- get_slurm_out(sjob5)
+mlr_mods <- mlr_sm[[1]]
+mlr_times <- mlr_sm[[2]]
+oracle_mods <- mlr_sm[[3]]
+oracle_times <- mlr_sm[[4]]
+write_rds(mlr_mods, "sim/mlr_mods_sm.RDS")
+write_rds(mlr_times, "sim/mlr_mods_sm_times.RDS")
+write_rds(oracle_mods, "sim/oracle_mods_sm.RDS")
+write_rds(oracle_times, "sim/oracle_mods_sm_times.RDS")
+
+### larger sample size
+
+# read in simulated data
+out2_resp1 <- read_rds("sim/sim_resp_lg_a.RDS")
+
+run_mlr_lg <- function() {
+  # initialize vectors
+  mlrl <- vector(mode='list', length = 1700)
+  names(mlrl) <- names(out2_resp1)
+  mlrtimel <- vector(mode = 'list', length = 1700)
+  names(mlrtimel) <- names(out2_resp1)
+  
+  oraclel <- vector(mode='list', length = 1700)
+  names(oraclel) <- names(out2_resp1)
+  oracletimel <- vector(mode = 'list', length = 1700)
+  names(oracletimel) <- names(out2_resp1)
+  
+  for(i in 1:1700) {
+    df <- out2_resp1[[i]] |> 
+      mutate(race = as.factor(race), smoke = as.factor(smoke)) |> 
+      select(-sim)
+    
+    start.time <- Sys.time()
+    mlrl[[i]] <- lm(y ~ ., data = df)
+    end.time <- Sys.time()
+    mlrtimel[[i]] <- end.time - start.time
+    
+    if(i <= 100) {
+      start.time <- Sys.time()
+      oraclel[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimel[[i]] <- end.time - start.time
+    } else if (i <= 300) {
+      start.time <- Sys.time()
+      oraclel[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           Hg*Ni + 
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimel[[i]] <- end.time - start.time
+    } else if (i <= 500) {
+      start.time <- Sys.time()
+      oraclel[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           I(Hg*((Ni-1)^2)) + 
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimel[[i]] <- end.time - start.time
+    } else if (i <= 700) {
+      start.time <- Sys.time()
+      oraclel[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           Cd*As + 
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimel[[i]] <- end.time - start.time
+    } else if (i <= 900) {
+      start.time <- Sys.time()
+      oraclel[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           I(Cd*((As-1)^2)) + 
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimel[[i]] <- end.time - start.time
+    } else if (i <= 1100) {
+      start.time <- Sys.time()
+      oraclel[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           Ni*Co + 
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimel[[i]] <- end.time - start.time
+    } else if (i <= 1300) {
+      start.time <- Sys.time()
+      oraclel[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           I(Ni*((Co-1)^2)) + 
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimel[[i]] <- end.time - start.time
+    } else if (i <= 1500) {
+      start.time <- Sys.time()
+      oraclel[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           Hg:Ni:Tl + 
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimel[[i]] <- end.time - start.time
+    } else if (i <= 1700) {
+      start.time <- Sys.time()
+      oraclel[[i]] <- lm(y ~ Hg + Sb +
+                           I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                           I(Hg*((Ni-1)^2)*Tl) + 
+                           age + bmi + race + smoke, data = df)
+      end.time <- Sys.time()
+      oracletimel[[i]] <- end.time - start.time
+    }
+  }
+  return(list(mlrl, mlrtimel, oraclel, oracletimel))
+}
+
+# send to hpc
+sjob6 <- slurm_call(
+  run_mlr_lg, 
+  global_objects = c('out2_resp1'),
+  jobname = 'mlr_lg')
+
+# get output
+mlr_lg <- get_slurm_out(sjob6)
+mlr_modl <- mlr_lg[[1]]
+mlr_timel <- mlr_lg[[2]]
+oracle_modl <- mlr_lg[[3]]
+oracle_timel <- mlr_lg[[4]]
+write_rds(mlr_modl, "sim/mlr_mods_lg.RDS")
+write_rds(mlr_timel, "sim/mlr_mods_lg_times.RDS")
+write_rds(oracle_modl, "sim/oracle_mods_lg.RDS")
+write_rds(oracle_timel, "sim/oracle_mods_lg_times.RDS")
+```
+
+
+Next, we fit BKMR and BSR models with the base case and with interactions between chemicals. 
 
 ```{r}
 #########
@@ -2771,9 +3015,143 @@ cowplot::plot_grid(top_row2, cors_dens2, labels = c("", "c"), label_size = 16,
 ggsave("index/figures/ch4_corr_lg_simorigdens.png", width = 10, height = 12)
 ```
 
-Here, we create the visualization of $R^2$ values in multiple linear regressions with the true functional form of the chemicals specified, in order to ensure we are achieving a realistic signal-to-noise ratio. 
+Here, we create the visualization of $R^2$ values in multiple linear regressions with the true functional form of the chemicals specified, in order to ensure we are achieving a realistic signal-to-noise ratio. This code was run on the Amherst HPC RStudio server. 
 
-[*include code from cluster on fitting chem-only models*]
+```{r}
+### smaller size
+
+# read in simulated datasets
+out1_resp1 <- read_rds("sim/sim_resp_sm_a.RDS")
+run_co_sm <- function() {
+  # initialize vectors
+  chems_oracle <- vector(mode = 'list', length = 1700) 
+  names(chems_oracle) <- names(out1_resp1)
+  
+  for(i in 1:1700) {
+    df <- out1_resp1[[i]] |> 
+      mutate(race = as.factor(race), smoke = as.factor(smoke)) |> 
+      select(-sim)
+    
+    if(i <= 100) {
+      chems_oracle[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + 
+                                I(1/(1+exp(-4*Sn))), data = df)
+    } else if (i <= 300) {
+      chems_oracle[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                                Hg*Ni, data = df)
+    } else if (i <= 500) {
+      chems_oracle[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                                I(Hg*((Ni-1)^2)), data = df)
+    } else if (i <= 700) {
+      chems_oracle[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                                Cd*As, data = df)
+    } else if (i <= 900) {
+      chems_oracle[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                                I(Cd*((As-1)^2)), data = df)
+    } else if (i <= 1100) {
+      chems_oracle[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                                Ni*Co, data = df)
+    } else if (i <= 1300) {
+      chems_oracle[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                                I(Ni*((Co-1)^2)), data = df)
+    } else if (i <= 1500) {
+      chems_oracle[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                                Hg:Ni:Tl, data = df)
+    } else if (i <= 1700) {
+      chems_oracle[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                                I(Hg*((Ni-1)^2)*Tl), data = df)
+    }
+  }
+  return(chems_oracle)
+}
+
+# send to hpc
+cosjob <- slurm_call(
+  run_mlr_sm, 
+  global_objects = c('out1_resp1'),
+  jobname = 'co_sm')
+
+# get output
+chem_oracle <- get_slurm_out(cosjob)
+write_rds(chem_oracle, "sim/chem_oracle_sm.RDS")
+
+### larger sample size
+
+# read in simulated datasets
+out2_resp1 <- read_rds("sim/sim_resp_lg_a.RDS")
+
+run_co_lg <- function() {
+  # initialize vectors
+  chems_onlyl <- vector(mode = 'list', length = 1700)
+  names(chems_onlyl) <- names(out2_resp1)
+  chems_oraclel <- vector(mode = 'list', length = 1700) 
+  names(chems_oraclel) <- names(out2_resp1)
+  
+  for(i in 1:1700) {
+    df <- out2_resp1[[i]] |> 
+      mutate(race = as.factor(race), smoke = as.factor(smoke)) |> 
+      select(-sim)
+    
+    if(i <= 100) {
+      chems_oraclel[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + 
+                                I(1/(1+exp(-4*Sn))), data = df)
+    } else if (i <= 300) {
+      chems_oraclel[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                                Hg*Ni, data = df)
+    } else if (i <= 500) {
+      chems_oraclel[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                                I(Hg*((Ni-1)^2)), data = df)
+    } else if (i <= 700) {
+      chems_oraclel[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                                Cd*As, data = df)
+    } else if (i <= 900) {
+      chems_oraclel[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                                I(Cd*((As-1)^2)), data = df)
+    } else if (i <= 1100) {
+      chems_oraclel[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                                Ni*Co, data = df)
+    } else if (i <= 1300) {
+      chems_oraclel[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                                I(Ni*((Co-1)^2)), data = df)
+    } else if (i <= 1500) {
+      chems_oraclel[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                                Hg:Ni:Tl, data = df)
+    } else if (i <= 1700) {
+      chems_oraclel[[i]] <- lm(y ~ Hg + Sb +
+                                I(1/(1+exp(-4*Ni))) + I(Sb^2) + I(1/(1+exp(-4*Sn))) +
+                                I(Hg*((Ni-1)^2)*Tl), data = df)
+    }
+  }
+  return(chems_oraclel)
+}
+
+# send to hpc
+coljob <- slurm_call(
+  run_co_lg, 
+  global_objects = c('out2_resp1'),
+  jobname = 'co_lg')
+
+# get output
+chem_oraclel <- get_slurm_out(coljob)
+write_rds(chem_oraclel, "sim/chem_oracle_lg.RDS")
+```
+
 
 ```{r}
 # extract rsq from smaller size datasets
@@ -2820,7 +3198,6 @@ rsqlgplot <- rsq_cheml |>
 cowplot::plot_grid(rsqsmplot, rsqlgplot, labels = "auto", nrow = 1)
 ggsave("index/figures/chem_rsq.png", width = 12, height = 6)
 ```
-
 
 We also look at selecting degrees of freedom in BSR using 5,000 vs. 50,000 MCMC iterations. Refer to the code for fitting BSR on the smaller size datasets for how the models for this test were run. 
 
