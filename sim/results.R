@@ -1,6 +1,9 @@
 library(tidyverse)
 library(latex2exp)
 
+
+# set up ------------------------------------------------------------------
+
 # set theme for plots
 theme_set(theme_light())
 theme_update(
@@ -30,9 +33,38 @@ appendera <- function(string) {
   return(equations1[match(string, namesa)])
 }
 
-##########
-# smaller size bkmr
-##########
+# add coloring based on true significance
+get_sign <- function(case, chem) {
+  case_when(
+    chem %in% c("Hg", "Ni", "Sb", "Sn") ~ TRUE, 
+    case %in% 6:9 & chem %in% c("Cd", "As") ~ TRUE, 
+    case %in% 10:13 & chem == "Co" ~ TRUE, 
+    case %in% 14:17 & chem == "Tl" ~ TRUE, 
+    .default = FALSE
+  )
+}
+
+# add coloring based on true significance BSR
+get_sign_bsr <- function(case, chem) {
+  case_when(
+    case %in% 2:5 & chem %in% c(4, 5) ~ TRUE, 
+    case %in% 6:9 & chem %in% c(1, 2) ~ TRUE, 
+    case %in% 10:13 & chem %in% c(3, 5) ~ TRUE, 
+    case %in% 14:17 & chem %in% c(4, 5, 6) ~ TRUE, 
+    .default = FALSE
+  )
+}
+
+# naive mlr ---------------------------------------------------------------
+
+
+
+# oracle mlr --------------------------------------------------------------
+
+
+
+# smaller size bkmr -------------------------------------------------------
+
 
 # plot pips bkmr small
 ksm_pips <- read_csv("sim/bkmr_sm/pips.csv")
@@ -52,16 +84,6 @@ ksm_pips <- read_csv("sim/bkmr_sm/pips.csv")
 #   geom_bar(stat = "identity") +
 #   facet_wrap(~case)
 
-# add coloring based on true significance
-get_sign <- function(case, chem) {
-  case_when(
-    chem %in% c("Hg", "Ni", "Sb", "Sn") ~ TRUE, 
-    case %in% 6:9 & chem %in% c("Cd", "As") ~ TRUE, 
-    case %in% 10:13 & chem == "Co" ~ TRUE, 
-    case %in% 14:17 & chem == "Tl" ~ TRUE, 
-    .default = FALSE
-  )
-}
 
 ksm_pip_sig <- ksm_pips |> 
   mutate(sign = get_sign(case, variable))
@@ -169,7 +191,9 @@ ksm_triv <- ksm_triv |>
 ksm_triv |> 
   ggplot(aes(z1_val, est, color = quantile)) +
   geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) + 
-  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x") +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
   scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
                      guide = guide_legend(override.aes = list(alpha = 1), 
                                           reverse = TRUE)) +
@@ -275,23 +299,12 @@ int_comb |>
 ggsave("index/figures/ch4_ksm_int_bitri.png", width = 7.5, height = 5)
 
 
-##########
-# larger size bkmr
-##########
+# larger size bkmr --------------------------------------------------------
+
 
 # plot pips bkmr large
 klg_pips <- read_csv("sim/bkmr_lg/pips.csv")
 
-# add coloring based on true significance
-get_sign <- function(case, chem) {
-  case_when(
-    chem %in% c("Hg", "Ni", "Sb", "Sn") ~ TRUE, 
-    case %in% 6:9 & chem %in% c("Cd", "As") ~ TRUE, 
-    case %in% 10:13 & chem == "Co" ~ TRUE, 
-    case %in% 14:17 & chem == "Tl" ~ TRUE, 
-    .default = FALSE
-  )
-}
 
 klg_pip_sig <- klg_pips |> 
   mutate(sign = get_sign(case, variable))
@@ -399,7 +412,9 @@ klg_triv <- klg_triv |>
 klg_triv |> 
   ggplot(aes(z1_val, est, color = quantile)) +
   geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) + 
-  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x") +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
   scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
                      guide = guide_legend(override.aes = list(alpha = 1), 
                                           reverse = TRUE)) +
@@ -486,7 +501,7 @@ ggsave("index/figures/ch4_klg_int_triv.png", width = 6, height = 4)
 
 # bivar and trivar together
 int_comb <- bind_rows(
-  select(klg_intb, cond, trial, case, signif), 
+  select(klg_intb, cond, trial, case, signif),
   select(klg_intt, cond, trial, case, signif)
 )
 
@@ -503,4 +518,172 @@ int_comb |>
   labs(y = "Sensitivity", 
        x = NULL)
 ggsave("index/figures/ch4_klg_int_bitri.png", width = 7.5, height = 5)
+
+
+# smaller size bsr --------------------------------------------------------
+
+# plot pip's bsr small
+ssm_pips <- read_csv("sim/bsr_sm/pips.csv")
+
+ssm_pip_sig <- ssm_pips |> 
+  mutate(sign = get_sign(case, variable))
+ssm_pip_sen <- ssm_pips |> 
+  mutate(imp = PIP > 0.5) |> 
+  group_by(case, variable) |> 
+  summarize(sensitivity = sum(imp)/n())
+
+# point and lineplot
+ssm_pip_sig |> 
+  ggplot(aes(x = variable)) +
+  geom_bar(data = ssm_pip_sen, 
+           aes(y = sensitivity), 
+           stat = "identity", fill = "grey85") +
+  geom_pointrange(aes(y = PIP, color = sign), 
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  facet_wrap(~case,
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  scale_y_continuous(sec.axis = sec_axis(trans = ~., name = "Sensitivity")) +
+  scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1), 
+        legend.position = c(0.95, 0.05)) +
+  labs(y = "PIP value distribution", 
+       color = "Truly significant", 
+       x = "Chemical")
+ggsave("index/figures/ch4_ssm_univ_pips.png", width = 7.5, height = 5)
+
+# plot bivariate pip's small
+ssm_pipb <- read_csv("sim/bsr_sm/pip_biv.csv")
+
+ssm_pipb |> 
+  # filter(case == 2) |> 
+  mutate(sign = get_sign_bsr(case, Var1) & get_sign_bsr(case, Var2), 
+         inter = paste0(Var1, "_", Var2)) |> 
+  ggplot(aes(x = inter)) + 
+  geom_pointrange(aes(y = PIP, color = sign),
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z, 0.25)},
+                  fun.max = function(z) {quantile(z, 0.75)}, 
+                  fun = median, 
+                  size  = 0.05) +
+  scale_color_manual(values = c("#92D0E4", "darkorange2")) +
+  facet_wrap(~case, 
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(), 
+        legend.position = c(0.9, 0.1)) +
+  labs(y = "PIP value distribution", 
+       color = "Truly significant", 
+       x = NULL)
+ggsave("index/figures/ch4_ssm_biv_pips.png", width = 7.5, height = 5)
+
+# plot trivariate pip's small
+ssm_pipt <- read_csv("sim/bsr_sm/pip_triv.csv")
+
+ssm_pipt |> 
+  ggplot(aes(x = "")) +
+  geom_pointrange(aes(y = PIP),
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z, 0.25)},
+                  fun.max = function(z) {quantile(z, 0.75)}, 
+                  fun = median, 
+                  size  = 0.05) +
+  facet_wrap(~case, 
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(), 
+        legend.position = c(0.9, 0.1)) +
+  labs(y = "PIP value distribution", 
+       color = "Truly significant", 
+       x = NULL)
+
+# plot bivariate relationships bkmr small
+ssm_biv <- read_csv("sim/bsr_sm/biv_expresp.csv")
+
+# plot Hg and Ni
+ssm_biv |> 
+  filter(case %in% 2:5) |> 
+  mutate(variable1 = ifelse(j1 == "Hg", "Hg by Ni", "Ni by Hg"), 
+         quantile = as.factor(j2quant)) |> 
+  ggplot(aes(j1val, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  ylim(-3, 9) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_ssm_biv_expresp_1.png", width = 6, height = 4)
+
+# plot Cd and As
+ssm_biv |> 
+  filter(case %in% 6:9) |> 
+  mutate(variable1 = ifelse(j1 == "Cd", "Cd by As", "As by Cd"), 
+         quantile = as.factor(j2quant)) |> 
+  ggplot(aes(j1val, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  ylim(-2, 6) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_ssm_biv_expresp_2.png", width = 6, height = 4)
+
+# plot Ni and Co
+ssm_biv |> 
+  filter(case %in% 10:13) |> 
+  mutate(variable1 = ifelse(j1 == "Ni", "Ni by Co", "Co by Ni"), 
+         quantile = as.factor(j2quant)) |> 
+  ggplot(aes(j1val, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  # ylim(-6, 6) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_ssm_biv_expresp_3.png", width = 6, height = 4)
+
+# plot trivariate relationships bsr small
+ssm_triv <- read_csv("sim/bsr_sm/triv_expresp.csv")
+ssm_triv <- ssm_triv |> 
+  mutate(variable1 = case_when(
+    j1 == "Hg" ~ "Hg by Ni + Tl", 
+    j1 == "Ni" ~ "Ni by Hg + Tl", 
+    j1 == "Tl" ~ "Tl by Hg + Ni"), 
+    quantile = as.factor(j23quant)) 
+
+ssm_triv |> 
+  ggplot(aes(j1val, est, color = quantile)) +
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) + 
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2+3\nquantile")
+ggsave("index/figures/ch4_ssm_triv_expresp.png", width = 6, height = 4)
+
 

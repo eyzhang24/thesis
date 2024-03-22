@@ -2577,8 +2577,6 @@ wjob04 <- slurm_call(
 
 ```
 
-
-
 ### Code for Section \@ref(results):
 
 Here, we extract results from our simulation. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. This code was run on the Amherst HPC RStudio server. 
@@ -2690,6 +2688,18 @@ oraclgre_pval <- 1:400 |>
   })
 write_csv(oraclgre_pval, "sim/_oracle/pvallgre.csv")
 ```
+
+Next, we extract output from BKMR models run on smaller size simulated datasets, including the base case and models with interactions between chemicals. 
+
+```{r}
+
+```
+
+Next, we extract output from BSR models run on smaller size simulated datasets, including the base case and models with interactions between chemicals. 
+
+[*results part two*]
+
+Here, we visualize and summarize results from model output. 
 
 
 ### Code for Appendix \@ref(appa):
