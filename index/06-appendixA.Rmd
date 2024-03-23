@@ -106,10 +106,13 @@ include_graphics(path = "figures/chem_rsq.png")
 
 Figure \@ref(fig:comparedf) compares the degrees of freedom selected using the WAIC criterion when fitting BSR using 5,000 MCMC iterations to 50,000 MCMC iterations. We ran this test on five smaller size datasets from the 16 scenarios containing interactions between exposures, as well as from the base case. 
 
-
 ```{r comparedf, fig.cap = "compare df.", out.width = '100%', echo = FALSE}
 include_graphics(path = "figures/test_waic2.png")
 ```
+
+Here, we describe the formula for calculating the confidence interval of the difference in difference of the estimated response at the 0.75 and 0.25 quantiles of one chemical, while holding one or two other chemicals at their 0.75 and 0.25 quantiles and the rest of the chemicals at their 0.5 quantiles. 
+
+[*figure this out at some points??*]
 
 
 ## Results {#suppresults}
