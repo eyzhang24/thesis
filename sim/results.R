@@ -1,7 +1,6 @@
 library(tidyverse)
 library(latex2exp)
 
-
 # set up ------------------------------------------------------------------
 
 # set theme for plots
@@ -57,14 +56,239 @@ get_sign_bsr <- function(case, chem) {
 
 # naive mlr ---------------------------------------------------------------
 
+# p-values small
+nsm_pval <- read_csv("sim/_mlr/pvalsm.csv")
+nsm_pvalc <- nsm_pval |> 
+  filter(var %in% c("As", "Cd", "Co", "Hg", "Ni", 
+                    "Tl", "Pb", "Mo", "Sb", "Sn")) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = get_sign(case, var))
+nsm_pvalc_sens <- nsm_pvalc |> 
+  mutate(imp = p < 0.05) |> 
+  group_by(case, var) |> 
+  summarize(sensitivity = sum(imp)/n())
 
+# line plot of p-values
+nsm_pvalc |> 
+  ggplot(aes(x = var, y = p)) +
+  geom_bar(data = nsm_pvalc_sens, 
+           aes(y = sensitivity), 
+           stat = "identity", fill = "grey85") +
+  geom_pointrange(aes(color = sign), 
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  scale_y_continuous(sec.axis = sec_axis(trans = ~., name = "Sensitivity")) +
+  scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), 
+        legend.position = c(0.95, 0.05)) +
+  labs(y = "p-value distribution", 
+       color = "Truly significant", 
+       x = "Chemical") +
+  facet_wrap(~case, 
+             labeller = labeller(
+               case = as_labeller(appendera, default = label_parsed))) 
+ggsave("index/figures/ch4_nsm_univ_pval.png", width = 7.5, height = 5)
+
+# p-values large
+nlg_pval <- read_csv("sim/_mlr/pvallg.csv")
+nlg_pvalc <- nlg_pval |> 
+  filter(var %in% c("As", "Cd", "Co", "Hg", "Ni", 
+                    "Tl", "Pb", "Mo", "Sb", "Sn")) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = get_sign(case, var))
+nlg_pvalc_sens <- nlg_pvalc |> 
+  mutate(imp = p < 0.05) |> 
+  group_by(case, var) |> 
+  summarize(sensitivity = sum(imp)/n())
+
+# line plot of p-values
+nlg_pvalc |> 
+  ggplot(aes(x = var, y = p)) +
+  geom_bar(data = nlg_pvalc_sens, 
+           aes(y = sensitivity), 
+           stat = "identity", fill = "grey85") +
+  geom_pointrange(aes(color = sign), 
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  scale_y_continuous(sec.axis = sec_axis(trans = ~., name = "Sensitivity")) +
+  scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), 
+        legend.position = c(0.95, 0.05)) +
+  labs(y = "p-value distribution", 
+       color = "Truly significant", 
+       x = "Chemical") +
+  facet_wrap(~case, 
+             labeller = labeller(
+               case = as_labeller(appendera, default = label_parsed))) 
+ggsave("index/figures/ch4_nlg_univ_pval.png", width = 7.5, height = 5)
 
 # oracle mlr --------------------------------------------------------------
 
+# p-values small
+osm_pval <- read_csv("sim/_oracle/pvalsm.csv")
+osm_pvalc <- osm_pval |> 
+  mutate(var = case_when(
+    grepl("Ni", var) ~ "Ni*", 
+    grepl("Sn", var) ~ "Sn*", 
+    grepl("I\\(Sb", var) ~ "Sb^2", 
+    .default = var
+  )) |> 
+  filter(var %in% c("Hg", "Ni*", "Tl", "Pb", "Mo", "Sb", "Sn*", "Sb^2")) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = get_sign(case, var))
+osm_pvalc_sens <- osm_pvalc |> 
+  mutate(imp = p < 0.05) |> 
+  group_by(case, var) |> 
+  summarize(sensitivity = sum(imp)/n())
 
+# line plot of p-values
+osm_pvalc |> 
+  ggplot(aes(x = var, y = p)) +
+  geom_bar(data = osm_pvalc_sens, 
+           aes(y = sensitivity), 
+           stat = "identity", fill = "grey85") +
+  geom_pointrange(stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  scale_y_continuous(sec.axis = sec_axis(trans = ~., name = "Sensitivity")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), 
+        legend.position = c(0.95, 0.05)) +
+  labs(y = "p-value distribution", 
+       color = "Truly significant", 
+       x = "Chemical") +
+  facet_wrap(~case, 
+             labeller = labeller(
+               case = as_labeller(appendera, default = label_parsed))) 
+ggsave("index/figures/ch4_osm_univ_pval.png", width = 7.5, height = 5)
+
+# interactions
+
+keepnames <- c('(Intercept)', 'Hg', 'Sb', 'I(1/(1 + exp(-4 * Ni)))', 'Ni', 
+               'I(Sb^2)', 'I(1/(1 + exp(-4 * Sn)))', 'age', 'bmi', 
+               'race2', 'race3', 'race4', 'race5', 'smoke1', 'Cd', 'As', 'Co')
+
+osm_pvali <- osm_pval |> 
+  filter(!(var %in% keepnames)) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = get_sign(case, var))
+osm_pvali_sens <- osm_pvali |> 
+  mutate(imp = p < 0.05) |> 
+  group_by(case, var) |> 
+  summarize(sensitivity = sum(imp)/n())
+
+# line plot of p-values
+osm_pvali |> 
+  ggplot(aes(x = "", y = p)) +
+  geom_bar(data = osm_pvali_sens, 
+           aes(y = sensitivity), 
+           stat = "identity", fill = "grey85") +
+  geom_pointrange(stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  scale_y_continuous(sec.axis = sec_axis(trans = ~., name = "Sensitivity")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), 
+        legend.position = c(0.95, 0.05)) +
+  labs(y = "p-value distribution", 
+       color = "Truly significant", 
+       x = NULL) +
+  facet_wrap(~case, 
+             labeller = labeller(
+               case = as_labeller(appendera, default = label_parsed))) 
+ggsave("index/figures/ch4_osm_biv_pval.png", width = 7.5, height = 5)
+
+# p-values large
+olg_pval <- read_csv("sim/_oracle/pvallg.csv")
+olg_pvalc <- olg_pval |> 
+  mutate(var = case_when(
+    grepl("Ni", var) ~ "Ni*", 
+    grepl("Sn", var) ~ "Sn*", 
+    grepl("I\\(Sb", var) ~ "Sb^2", 
+    .default = var
+  )) |> 
+  filter(var %in% c("Hg", "Ni*", "Tl", "Pb", "Mo", "Sb", "Sn*", "Sb^2")) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = get_sign(case, var))
+olg_pvalc_sens <- olg_pvalc |> 
+  mutate(imp = p < 0.05) |> 
+  group_by(case, var) |> 
+  summarize(sensitivity = sum(imp)/n())
+
+# line plot of p-values
+olg_pvalc |> 
+  ggplot(aes(x = var, y = p)) +
+  geom_bar(data = olg_pvalc_sens, 
+           aes(y = sensitivity), 
+           stat = "identity", fill = "grey85") +
+  geom_pointrange(stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  scale_y_continuous(sec.axis = sec_axis(trans = ~., name = "Sensitivity")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), 
+        legend.position = c(0.95, 0.05)) +
+  labs(y = "p-value distribution", 
+       color = "Truly significant", 
+       x = "Chemical") +
+  facet_wrap(~case, 
+             labeller = labeller(
+               case = as_labeller(appendera, default = label_parsed))) 
+ggsave("index/figures/ch4_olg_univ_pval.png", width = 7.5, height = 5)
+
+# interactions
+
+keepnames <- c('(Intercept)', 'Hg', 'Sb', 'I(1/(1 + exp(-4 * Ni)))', 'Ni', 
+               'I(Sb^2)', 'I(1/(1 + exp(-4 * Sn)))', 'age', 'bmi', 
+               'race2', 'race3', 'race4', 'race5', 'smoke1', 'Cd', 'As', 'Co')
+
+olg_pvali <- olg_pval |> 
+  filter(!(var %in% keepnames)) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = get_sign(case, var))
+olg_pvali_sens <- olg_pvali |> 
+  mutate(imp = p < 0.05) |> 
+  group_by(case, var) |> 
+  summarize(sensitivity = sum(imp)/n())
+
+# line plot of p-values
+olg_pvali |> 
+  ggplot(aes(x = "", y = p)) +
+  geom_bar(data = olg_pvali_sens, 
+           aes(y = sensitivity), 
+           stat = "identity", fill = "grey85") +
+  geom_pointrange(stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  scale_y_continuous(sec.axis = sec_axis(trans = ~., name = "Sensitivity")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), 
+        legend.position = c(0.95, 0.05)) +
+  labs(y = "p-value distribution", 
+       color = "Truly significant", 
+       x = NULL) +
+  facet_wrap(~case, 
+             labeller = labeller(
+               case = as_labeller(appendera, default = label_parsed))) 
+ggsave("index/figures/ch4_olg_biv_pval.png", width = 7.5, height = 5)
 
 # smaller size bkmr -------------------------------------------------------
-
 
 # plot pips bkmr small
 ksm_pips <- read_csv("sim/bkmr_sm/pips.csv")
@@ -77,7 +301,7 @@ ksm_pips <- read_csv("sim/bkmr_sm/pips.csv")
 # 
 # # proportion > 0.5
 # ksm_pips |> 
-#   mutate(imp = PIP > 0.5) |> 
+#   mutate(imp = PIP >= 0.5) |> 
 #   group_by(case, variable) |> 
 #   summarize(sensitivity = sum(imp)) |> 
 #   ggplot(aes(x = variable, y = sensitivity)) +
@@ -88,7 +312,7 @@ ksm_pips <- read_csv("sim/bkmr_sm/pips.csv")
 ksm_pip_sig <- ksm_pips |> 
   mutate(sign = get_sign(case, variable))
 ksm_pip_sen <- ksm_pips |> 
-  mutate(imp = PIP > 0.5) |> 
+  mutate(imp = PIP >= 0.5) |> 
   group_by(case, variable) |> 
   summarize(sensitivity = sum(imp)/n())
 
@@ -109,7 +333,7 @@ ksm_pip_sig |>
                                     default = label_parsed)) +
   scale_y_continuous(sec.axis = sec_axis(trans = ~., name = "Sensitivity")) +
   scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1), 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), 
         legend.position = c(0.95, 0.05)) +
   labs(y = "PIP value distribution", 
        color = "Truly significant", 
@@ -309,7 +533,7 @@ klg_pips <- read_csv("sim/bkmr_lg/pips.csv")
 klg_pip_sig <- klg_pips |> 
   mutate(sign = get_sign(case, variable))
 klg_pip_sen <- klg_pips |> 
-  mutate(imp = PIP > 0.5) |> 
+  mutate(imp = PIP >= 0.5) |> 
   group_by(case, variable) |> 
   summarize(sensitivity = sum(imp)/n())
 
@@ -330,7 +554,7 @@ klg_pip_sig |>
                                     default = label_parsed)) +
   scale_y_continuous(sec.axis = sec_axis(trans = ~., name = "Sensitivity")) +
   scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1), 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), 
         legend.position = c(0.95, 0.05)) +
   labs(y = "PIP value distribution", 
        color = "Truly significant", 
@@ -528,7 +752,7 @@ ssm_pips <- read_csv("sim/bsr_sm/pips.csv")
 ssm_pip_sig <- ssm_pips |> 
   mutate(sign = get_sign(case, variable))
 ssm_pip_sen <- ssm_pips |> 
-  mutate(imp = PIP > 0.5) |> 
+  mutate(imp = PIP >= 0.5) |> 
   group_by(case, variable) |> 
   summarize(sensitivity = sum(imp)/n())
 
@@ -549,7 +773,7 @@ ssm_pip_sig |>
                                     default = label_parsed)) +
   scale_y_continuous(sec.axis = sec_axis(trans = ~., name = "Sensitivity")) +
   scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1), 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), 
         legend.position = c(0.95, 0.05)) +
   labs(y = "PIP value distribution", 
        color = "Truly significant", 
@@ -672,6 +896,8 @@ ssm_triv <- ssm_triv |>
     j1 == "Tl" ~ "Tl by Hg + Ni"), 
     quantile = as.factor(j23quant)) 
 
+## WHAT TO DO ABOUT THIS?? ##
+
 ssm_triv |> 
   ggplot(aes(j1val, est, color = quantile)) +
   geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) + 
@@ -684,6 +910,6 @@ ssm_triv |>
   labs(x = "Chem 1 value",  
        y = "Estimated response", 
        color = "Chem 2+3\nquantile")
-ggsave("index/figures/ch4_ssm_triv_expresp.png", width = 6, height = 4)
+# ggsave("index/figures/ch4_ssm_triv_expresp.png", width = 6, height = 4)
 
 
