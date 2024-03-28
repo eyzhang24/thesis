@@ -1,30 +1,4 @@
 # Introduction {#intro}
-<!--
-Each chapter file must start with a chapter header (e.g., # Chapter name). Notice we have also included a label after the chapter name ({# intro}) so we can refer back to this chapter later in the text if want to (e.g., by using \@ref(intro)). This also helps you debut potential issues as you knit.
-
-You can knit chapters all at once using the index file, or individually. When you knit a single chapter, every other chapter will have a one-sentence placeholder to make knitting easier.
-
-You can re-name each chapter file (e.g., change this filename from "01-chap1.Rmd" to "01-introduction.Rmd"), just make sure you also update the filename in the list of rmd files in _bookdown.yml.
-
-The introduction should provide an overview of the work you set out to do and provide structure for the remainder of the document.
-
-## Resources for new(er) users {#resources}
-
-If you are new to bookdown, the package this thesis template is built on, I highly recommend bookmarking Chapter 2 of Yihui Xie's book, ["bookdown: Authoring Books and Technical Documents with R Markdown"](https://bookdown.org/yihui/bookdown/markdown-syntax.html) as a reference for **R** and LaTeX components useful to writing your thesis, including 
-
-* _R Markdown_ syntax
-* math expressions
-* numbering and referencing equations
-* special chunks for *theorems*, *definitions*, *proofs*, etc.
-* captioning and referencing figures
-* captioning and referencing tables
-* in-text citations and bibliographies
-
-
-### What to expect
-
-While Yihui Xie's books is the best resource, the remainder of this document will include examples of commonly used formatting. The amherst thesis github repo also contains a guide on dealing with all the different files in this thesis directory.
--->
 
 Rapid industrial development has created conditions of cumulative chronic toxicity which pose an acute risk to the wellbeing of humans and our living environment. In fact, it has been estimated that, globally, human activity releases chemicals at a rate of 220 billion tons per annum [@cribb_surviving_2016]. These staggering levels of pollution have led scholars to formally declare that humanity has surpassed the safe operating space of the planetary boundary for novel entities [@persson_outside_2022]. As a result, exposure to low levels of pollutants has become an inevitable peril of daily life [@naidu_chemical_2021; @vineis_john_2018]. In this new era of pervasive toxicity, understanding the nature and severity of health effects associated with chemical exposures is especially timely. 
 
@@ -32,9 +6,9 @@ For this, we turn to epidemiological studies. The broad field of preventive epid
 
 There are clear practical motivations for studies that examine the health effects of exposure to co-occurring mixtures of chemicals, hereafter referred to as exposure mixtures. However, expanding the focus of analysis from one exposure to multiple exposures introduces unique statistical challenges. In addition to a common issue of small effect sizes and small sample sizes present in most exposure analyses, multiple exposure analyses must also contend with high-dimensionality, collinearity, non-linear effects, and non-additive interactions [@yu_review_2022]. In particular, data with numerous pollutants, or predictors, require exponentially greater levels of complexity and time cost in analysis. Collinearity between exposures is common when analyzing pollutants from a single source and can lead to unstable estimates in a generalized linear model if left unaccounted for. Finally, exposures can have both non-linear single effects and non-additive interaction effects, which are difficult to capture unless explicitly specified in the model. 
 
-The classic multiple linear regression framework often fails to capture the true effects in this setting. In the past few years, a wide variety of statistical methods have been developed to overcome these challenges [see reviews at @gibson_overview_2019; @yu_review_2022], which have been accompanied by a host of comparative simulation studies for general mixture scenarios [e.g., @hoskovec_model_2021; @lazarevic_performance_2020; @pesenti_comparative_2023]. However, to our knowledge, there has yet to be a simulation study which provides conclusive guidance about the ability of recently developed methods to conduct inference on non-additive interactions between exposures when the nature and effect sizes of these interactions vary. 
+The classic multiple linear regression framework often fails to capture the true effects in this setting. In the past few years, a wide variety of statistical methods have been developed to overcome these challenges [see reviews at @gibson_overview_2019; @yu_review_2022], which have been accompanied by a host of comparative simulation studies for general mixture scenarios [e.g., @hoskovec_model_2021; @lazarevic_performance_2020; @pesenti_comparative_2023]. However, to our knowledge, there has yet to be a simulation study which provides conclusive guidance about the ability of recently developed methods to conduct inference on non-additive interactions between exposures when the nature and effect sizes of these interactions vary. Moreover, there is no guidance in the literature on assessing interactions between covariates and exposures in exposure mixtures, including the potential of stratified models for detecting such interactions. 
 
-The goal of this thesis is to fill this gap in the literature by exploring the theory and performance of Bayesian regression techniques for quantifying complex interactions between multiple environmental exposures and related covariates. Specifically, we will compare two recently developed models for estimating the health effects of exposure mixtures: Bayesian Kernel Machine Regression (BKMR) [@bobb_bayesian_2015] and Bayesian Semiparametric Regression (BSR) [@antonelli_estimating_2020].
+The goal of this thesis is to fill this gap in the literature by exploring the theory and performance of Bayesian regression techniques for quantifying complex interactions between multiple environmental exposures and related covariates. Specifically, we will compare two recently developed models for estimating the health effects of exposure mixtures: Bayesian Kernel Machine Regression (BKMR) [@bobb_bayesian_2015] and Bayesian Semiparametric Regression (BSR) [@antonelli_estimating_2020]. 
 
 In an age where anthropogenic actions have radically reshaped the earth, humanistic inquiry can offer critical insights into how we navigate the hazards of our rapidly changing environment. We begin in Chapter 2 by contextualizing this thesis with a brief overview of cultural and social understandings of toxicity. Chapter 3 explains the motivation for studying interactions and provides background on the theory of Bayesian methods for analyzing exposure mixtures. Chapter 4 assesses the performance of these methods using a simulation study, based on a dataset with information on the relationship between prenatal exposure to heavy metals and gestational weight. We conclude with a discussion of the implications of this work for the future study of complex interactions in exposure mixture studies. 
 

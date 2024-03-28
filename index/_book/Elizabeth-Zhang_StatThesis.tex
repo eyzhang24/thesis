@@ -933,7 +933,7 @@ We simulated predictor data by randomly sampling from the fitted multivariate Ga
 
 \caption{Spearman's correlation heat maps of exposures from observed data (a) and averaged from 2100 smaller size (n=252) simulated datasets (b).}\label{fig:corsimssm}
 \end{figure}
-We generated one set of simulated datasets with the same sample size as the observed dataset (n=252), which is typical in many cohort studies. We also generated another set of simulated datasets with a larger sample size (n=1000), which has become increasingly common with the rise of larger-scale studies and big data. The goal of this choice was to inform sample size considerations in study design. We verified that the original structure of the observed dataset were preserved by visually comparing univariate distributions of exposures (Figure \ref{fig:univexpsim}) and covariates (Figure @(ref:univcovsim)), as well as the correlation structure using Spearman's \(\rho\) (Figure \ref{fig:corsimssm}). Distributions of Spearman's correlation were approximately normal (Figure \ref{fig:cordistsm}). Plots for the larger size simulated datasets were similar (Figures \ref{fig:univexplg}, \ref{fig:univcovlg}, and \ref{fig:corsimslg}).
+We generated one set of simulated datasets with the same sample size as the observed dataset (n=252), which is typical in many cohort studies. We also generated another set of simulated datasets with a larger sample size (n=1000), which has become increasingly common with the rise of larger-scale studies. The goal of this choice was to inform sample size considerations in study design. We verified that the original structure of the observed dataset were preserved by visually comparing univariate distributions of exposures (Figure \ref{fig:univexpsim}) and covariates (Figure @(ref:univcovsim)), as well as the correlation structure using Spearman's \(\rho\) (Figure \ref{fig:corsimssm}). Distributions of Spearman's correlation were approximately normal (Figure \ref{fig:cordistsm}). Plots for the larger size simulated datasets were similar (Figures \ref{fig:univexplg}, \ref{fig:univcovlg}, and \ref{fig:corsimslg}).
 
 \hypertarget{simresp}{%
 \subsection{Simulating predictor-response relationships}\label{simresp}}
@@ -982,102 +982,35 @@ This resulted in a total of 42 scenarios ({[}1 base case + 5 interaction cases \
 \hypertarget{models}{%
 \subsection{Models}\label{models}}
 
-We ran four methods on our simulated datasets. All metal concentrations were standardized in analysis to keep values scale-free.
+We ran four methods on our simulated datasets. All metal concentrations and continuous covariates were standardized in analysis to keep values scale-free.
 
-To get a baseline, we ran a multiple linear regression, including all exposures and covariates as linear, additive terms in the model. We refer to this model as the naive MLR. Then, we ran a multiple linear regression with the true model explicitly specified by excluding non-significant exposures and specifying the known form of non-linear terms and non-additive interactions. We refer to this model as the oracle MLR.
+To get a baseline, we ran a multiple linear regression, including all exposures and covariates as linear, additive terms in the model. We refer to this model as the naive MLR. Then, we ran a multiple linear regression with the true model explicitly specified by excluding non-significant exposures and specifying the known form of non-linear terms and non-additive interactions. We refer to this model as the oracle MLR. In scenarios with an interaction between race and Hg, we collapsed race into a binary variable indicating whether or not the original race category was interacting with Hg before running oracle MLR's, in order to simplify the detection of the interaction.
 
-Next, we ran BKMR using the \texttt{bkmr} package in R Bobb (2022). We chose to implement component-wise variable selection rather than hierarchical selection to make simulation results more interpretable, and because there was only moderate multicollinearity in the observed and simulated data. We specified the default priors (Bobb et al., 2015, and listed in Section \ref{bkmrprior}), which is common in the literature for BKMR Pesenti et al. (2023). We ran the MCMC sampler for 50,000 iterations, as recommended by Bobb et al. (2018), and discarded the first 25,000 iterations for burn-in.
+Next, we ran BKMR using the \texttt{bkmr} package in R Bobb (2022). We chose to implement component-wise variable selection rather than hierarchical selection to make simulation results more interpretable, and because there was only moderate multicollinearity in the observed and simulated data. We specified the default priors (Bobb et al., 2015, and as listed in Section \ref{bkmrprior}), which is common in the literature for BKMR Pesenti et al. (2023). We ran the MCMC sampler for 50,000 iterations, as recommended by Bobb et al. (2018), and discarded the first 25,000 iterations for burn-in.
 
 We ran BSR using the \texttt{NLinteraction} package in R (Antonelli, 2018). We specified the default priors (Antonelli et al., 2020, and as listed in \ref{bsrprior}), which is common in the literature for BSR Pesenti et al. (2023). Antonelli et al. (2020) suggests separately fitting models for degrees of freedom \(d=\{1, 2, 3, 4\}\) and selecting the value for \(d\) which minimizes WAIC. Due to time constraints in this thesis, we first fit BSR on the grid of values for \(d\) using 5,000 MCMC iterations to obtain the empirical Bayes estimate for \(\sigma^2_{\boldsymbol\beta}\) and then another 5,000 MCMC iterations to obtain the posterior distributions, discarding the first 2,500 iterations for burn-in each time. We selected \(d\) based on the WAIC criterion on these preliminary models. Then, we fit the full BSR model using 50,000 MCMC iterations to obtain the empirical Bayes estimate and then another 50,000 MCMC iterations to obtain the posterior distributions, discarding the first 25,000 iterations for burn-in each time. In a small test run on five smaller size datasets for each scenario containing interactions between exposures, as well as the base case, we found that using 5,000 iterations selected the same degrees of freedom as using 50,000 iterations 86\% of the time (see Appendix \ref{suppmethods}, Figure \ref{fig:comparedf}).
 
-Finally, we
+Finally, we ran stratified BKMR and BSR models in scenarios where we simulated an interaction between race and Hg. This involved running five separate models for each race category, each with the same settings specified above. For the smaller size datasets, we often observed convergence issues in BKMR within the smaller race categories. As such, for smaller size datasets, we also assess the impact of collapsing the three smaller race categories (Non-Hispanic white, black, and other) into one category before stratifying. This is a common practice in real-world studies where sample sizes for certain categories are low.
 
 We checked convergence for a selection of BKMR and BSR models using trace plots (Appendix \ref{suppresults}, {[}\emph{add figure labels}{]}).
 
-{[}\emph{include details on stratified models}{]}
-\begin{itemize}
-\tightlist
-\item
-  collapse cat's 1-3 in smaller size models to determine effect of collapsing r/e variable
-\item
-  expect that there will be less power to detect these interactions, especially in smaller size datasets
-\end{itemize}
 \hypertarget{model-assessment}{%
 \subsection{Model assessment}\label{model-assessment}}
 
-We assessed model performance using variable importance metrics. For the naive and oracle MLRs, we
+We assessed model performance based on detection of significant univariate chemicals as well as detection of interactions. For the naive and oracle MLRs, we considered a \(p\)-value less than 0.05 to indicate detection of a significant term. For BKMR and BSR, we used the median probability model, which considers a PIP greater than or equal to 0.5 to indicate detection of a significant term (Barbieri \& Berger, 2004).
 
-naive and oracle mlr:
-\begin{itemize}
-\tightlist
-\item
-  detection = p-value less than 0.05
-  \begin{itemize}
-  \tightlist
-  \item
-    detection of all significant variables (naive)
-  \item
-    detection of interactions + significant (oracle)
-  \end{itemize}
-\end{itemize}
-bkmr:
-\begin{itemize}
-\tightlist
-\item
-  detection of all significant variables
-  \begin{itemize}
-  \tightlist
-  \item
-    median probability model: sensitivity/power
-  \end{itemize}
-\item
-  detection of interaction
-  \begin{itemize}
-  \tightlist
-  \item
-    conf. int of difference in resp. between q1 and q2 of one chem at q1 vs.~q2 of another chemical
-  \item
-    look at plots of chem at diff. quantiles of another chem
-  \end{itemize}
-\end{itemize}
-bsr:
-\begin{itemize}
-\tightlist
-\item
-  detection of all significant variables
-  \begin{itemize}
-  \tightlist
-  \item
-    median probability model
-  \end{itemize}
-\item
-  detection of interaction
-  \begin{itemize}
-  \tightlist
-  \item
-    median probability model: sensitivity/power
-  \item
-    \emph{figure out if we can generate confidence intervals??}
-  \item
-    look at plots of chem at diff. quantiles of another chem
-  \end{itemize}
-\end{itemize}
-stratified models:
-\begin{itemize}
-\tightlist
-\item
-  x
-\end{itemize}
-to do:
-\begin{itemize}
-\tightlist
-\item
-  \emph{what to do for stratified models??}
-\item
-  \emph{include false discovery rate?}
-\end{itemize}
+While BSR provides PIP's to quantify detection of interactions, BKMR does not. As such, for BKMR, we considered formal detection of an interaction based on confidence intervals constructed around the estimated response. Specifically, we first calculated the difference in estimated response at a chemical's 0.25 and 0.75 quantiles. Then, we assessed whether this quantity differed at the 0.25 and 0.75 quantiles of one (or two, for three-way interactions) other chemicals in the interaction, while holding all other chemicals at their 0.5 quantiles, by constructing a confidence interval of the difference in differences. See {[}\emph{decide whether or not to include formulation}{]}.
+
+For both BKMR and BSR, we also visually assessed detection of interactions by plotting the estimated exposure-response surface for one chemical while fixing one (or two, for three-way interactions) other chemicals at their 0.1, 0.5, and 0.9 quantiles. In all scenarios, we calculate the sensitivity as the proportion of times a significant term is correctly detected.
+
+Finally, for stratified models, we
+
+{[}\emph{include false discovery rate?}{]}
+
 \hypertarget{results}{%
 \section{Results}\label{results}}
+
+In this section, we report on results from our simulation study.
 \begin{itemize}
 \tightlist
 \item
@@ -1085,6 +1018,243 @@ to do:
 \item
   figures + tables w/ model performance
 \end{itemize}
+\hypertarget{base-case}{%
+\subsection{Base case}\label{base-case}}
+
+We start by presenting results from models run on the base case scenario, in which the true relationship contained no interactions.
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{figures/ch4_basecasesig} 
+
+}
+
+\caption{P-value distributions from smaller (a) and larger (b) size datasets and PIP distributions from smaller (c) and larger (d) size datasets.}\label{fig:basecasesig}
+\end{figure}
+\begin{table}
+
+\caption{\label{tab:basecasetab}Detection rate of chemicals in base case scenario.}
+\centering
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{6em}cccccccccc}
+\toprule
+\multicolumn{1}{c}{ } & \multicolumn{4}{c}{Significant} & \multicolumn{6}{c}{Insignificant} \\
+\cmidrule(l{3pt}r{3pt}){2-5} \cmidrule(l{3pt}r{3pt}){6-11}
+ & Hg & Ni & Sb & Sn & As & Cd & Co & Mo & Pb & Tl\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{11}{l}{\textbf{Naive MLR}}\\
+\hspace{1em}Small & 0.80 & 0.70 & 0.12 & 0.24 & 0.05 & 0.07 & 0.02 & 0.07 & 0.03 & 0.08\\
+\hspace{1em}Large & 1.00 & 1.00 & 0.51 & 0.71 & 0.02 & 0.04 & 0.08 & 0.13 & 0.03 & 0.03\\
+\addlinespace[0.3em]
+\multicolumn{11}{l}{\textbf{Oracle MLR}}\\
+\hspace{1em}Small & 0.84 & 0.94 & 0.95 & 0.35 & - & - & - & - & - & -\\
+\hspace{1em}Large & 1.00 & 1.00 & 1.00 & 0.89 & - & - & - & - & - & -\\
+\addlinespace[0.3em]
+\multicolumn{11}{l}{\textbf{BKMR}}\\
+\hspace{1em}Small & 0.86 & 0.92 & 0.95 & 0.52 & 0.30 & 0.33 & 0.36 & 0.38 & 0.41 & 0.40\\
+\hspace{1em}Large & 1.00 & 1.00 & 1.00 & 0.77 & 0.12 & 0.12 & 0.14 & 0.13 & 0.08 & 0.13\\
+\addlinespace[0.3em]
+\multicolumn{11}{l}{\textbf{BSR}}\\
+\hspace{1em}Small & 0.51 & 0.67 & 0.88 & 0.17 & 0.06 & 0.04 & 0.04 & 0.04 & 0.04 & 0.05\\
+\hspace{1em}Large & 1.00 & 1.00 & 1.00 & 0.62 & 0.01 & 0.00 & 0.03 & 0.02 & 0.03 & 0.00\\
+\bottomrule
+\end{tabular}
+\end{table}
+\hypertarget{univariate-sensitivity}{%
+\subsection{Univariate sensitivity}\label{univariate-sensitivity}}
+\begin{itemize}
+\tightlist
+\item
+  naive and oracle do p-values
+\item
+  bsr and bkmr do pips
+\end{itemize}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# basecasesig, fig.cap = "P{-}value distributions from smaller (a) and larger (b) size datasets and PIP distributions from smaller (c) and larger (d) size datasets.", out.width = \textquotesingle{}100\%\textquotesingle{}, echo = FALSE}
+
+\CommentTok{\# naive small}
+\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"figures/ch4\_nsm\_univ\_pval.png"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{center}\includegraphics[width=0.75\linewidth]{figures/ch4_nsm_univ_pval} \end{center}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# naive large}
+\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"figures/ch4\_nlg\_univ\_pval.png"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{center}\includegraphics[width=0.75\linewidth]{figures/ch4_nlg_univ_pval} \end{center}
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# }\AlertTok{NOTE}\DocumentationTok{: oracle take out interaction???}
+
+\CommentTok{\# oracle small}
+\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"figures/ch4\_osm\_pval.png"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{center}\includegraphics[width=0.75\linewidth]{figures/ch4_osm_pval} \end{center}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# oracle large}
+\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"figures/ch4\_olg\_pval.png"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{center}\includegraphics[width=0.75\linewidth]{figures/ch4_olg_pval} \end{center}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# bkmr small}
+\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"figures/ch4\_ksm\_univ\_pips.png"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{center}\includegraphics[width=0.75\linewidth]{figures/ch4_ksm_univ_pips} \end{center}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# bkmr large}
+\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"figures/ch4\_klg\_univ\_pips.png"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{center}\includegraphics[width=0.75\linewidth]{figures/ch4_klg_univ_pips} \end{center}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# bsr small}
+\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"figures/ch4\_ssm\_univ\_pips.png"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{center}\includegraphics[width=0.75\linewidth]{figures/ch4_ssm_univ_pips} \end{center}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# bsr large}
+\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"figures/ch4\_slg\_univ\_pips.png"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\begin{center}\includegraphics[width=0.75\linewidth]{figures/ch4_slg_univ_pips} \end{center}
+\begin{table}
+
+\caption{\label{tab:onewaytab}Detection rate of chemicals in all scenarios with interactions between exposures.}
+\centering
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{6em}cc}
+\toprule
+size & Significant & Insignificant\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{3}{l}{\textbf{Naive MLR}}\\
+\hspace{1em}Small & 0.474 & 0.051\\
+\hspace{1em}Large & 0.801 & 0.063\\
+\addlinespace[0.3em]
+\multicolumn{3}{l}{\textbf{Oracle MLR}}\\
+\hspace{1em}Small & 0.702 & -\\
+\hspace{1em}Large & 0.910 & -\\
+\addlinespace[0.3em]
+\multicolumn{3}{l}{\textbf{BKMR}}\\
+\hspace{1em}Small & 0.823 & 0.324\\
+\hspace{1em}Large & 0.937 & 0.136\\
+\addlinespace[0.3em]
+\multicolumn{3}{l}{\textbf{BSR}}\\
+\hspace{1em}Small & 0.586 & 0.044\\
+\hspace{1em}Large & 0.915 & 0.044\\
+\bottomrule
+\end{tabular}
+\end{table}
+\hypertarget{two-way-interactions-between-chemicals}{%
+\subsection{Two-way interactions between chemicals}\label{two-way-interactions-between-chemicals}}
+\begin{tabular}[t]{lrllr}
+\toprule
+mod & case & size & cond & sensitivity\\
+\midrule
+Oracle MLR & 2 & Large & Hg:Ni & 0.48\\
+Oracle MLR & 2 & Small & Hg:Ni & 0.24\\
+Oracle MLR & 3 & Large & Hg:Ni & 1.00\\
+Oracle MLR & 3 & Small & Hg:Ni & 0.50\\
+Oracle MLR & 4 & Large & I(Hg * ((Ni - 1)\textasciicircum{}2)) & 0.54\\
+\addlinespace
+Oracle MLR & 4 & Small & I(Hg * ((Ni - 1)\textasciicircum{}2)) & 0.14\\
+Oracle MLR & 5 & Large & I(Hg * ((Ni - 1)\textasciicircum{}2)) & 1.00\\
+Oracle MLR & 5 & Small & I(Hg * ((Ni - 1)\textasciicircum{}2)) & 0.48\\
+Oracle MLR & 6 & Large & Cd:As & 0.59\\
+Oracle MLR & 6 & Small & Cd:As & 0.15\\
+\addlinespace
+Oracle MLR & 7 & Large & Cd:As & 0.99\\
+Oracle MLR & 7 & Small & Cd:As & 0.52\\
+Oracle MLR & 8 & Large & I(Cd * ((As - 1)\textasciicircum{}2)) & 0.57\\
+Oracle MLR & 8 & Small & I(Cd * ((As - 1)\textasciicircum{}2)) & 0.18\\
+Oracle MLR & 9 & Large & I(Cd * ((As - 1)\textasciicircum{}2)) & 0.99\\
+\addlinespace
+Oracle MLR & 9 & Small & I(Cd * ((As - 1)\textasciicircum{}2)) & 0.52\\
+Oracle MLR & 10 & Large & Ni:Co & 0.52\\
+Oracle MLR & 10 & Small & Ni:Co & 0.18\\
+Oracle MLR & 11 & Large & Ni:Co & 0.98\\
+Oracle MLR & 11 & Small & Ni:Co & 0.50\\
+\addlinespace
+Oracle MLR & 12 & Large & I(Ni * ((Co - 1)\textasciicircum{}2)) & 0.53\\
+Oracle MLR & 12 & Small & I(Ni * ((Co - 1)\textasciicircum{}2)) & 0.16\\
+Oracle MLR & 13 & Large & I(Ni * ((Co - 1)\textasciicircum{}2)) & 0.97\\
+Oracle MLR & 13 & Small & I(Ni * ((Co - 1)\textasciicircum{}2)) & 0.54\\
+BKMR & 2 & Large & Hg+Ni & 0.21\\
+\addlinespace
+BKMR & 3 & Large & Hg+Ni & 0.88\\
+BKMR & 4 & Large & Hg+Ni & 0.18\\
+BKMR & 5 & Large & Hg+Ni & 0.76\\
+BKMR & 6 & Large & As+Cd & 0.04\\
+BKMR & 7 & Large & As+Cd & 0.57\\
+\addlinespace
+BKMR & 8 & Large & As+Cd & 0.00\\
+BKMR & 9 & Large & As+Cd & 0.03\\
+BKMR & 10 & Large & Co+Ni & 0.03\\
+BKMR & 11 & Large & Co+Ni & 0.52\\
+BKMR & 12 & Large & Co+Ni & 0.00\\
+\addlinespace
+BKMR & 13 & Large & Co+Ni & 0.05\\
+BKMR & 2 & Small & Hg+Ni & 0.01\\
+BKMR & 3 & Small & Hg+Ni & 0.11\\
+BKMR & 4 & Small & Hg+Ni & 0.01\\
+BKMR & 5 & Small & Hg+Ni & 0.03\\
+\addlinespace
+BKMR & 6 & Small & As+Cd & 0.00\\
+BKMR & 7 & Small & As+Cd & 0.01\\
+BKMR & 8 & Small & As+Cd & 0.00\\
+BKMR & 9 & Small & As+Cd & 0.00\\
+BKMR & 10 & Small & Co+Ni & 0.01\\
+\addlinespace
+BKMR & 11 & Small & Co+Ni & 0.02\\
+BKMR & 12 & Small & Co+Ni & 0.00\\
+BKMR & 13 & Small & Co+Ni & 0.00\\
+BSR & 2 & Large & Hg-Ni & 0.28\\
+BSR & 3 & Large & Hg-Ni & 0.77\\
+\addlinespace
+BSR & 4 & Large & Hg-Ni & 0.27\\
+BSR & 5 & Large & Hg-Ni & 0.76\\
+BSR & 6 & Large & As-Cd & 0.01\\
+BSR & 7 & Large & As-Cd & 0.39\\
+BSR & 8 & Large & As-Cd & 0.00\\
+\addlinespace
+BSR & 9 & Large & As-Cd & 0.21\\
+BSR & 10 & Large & Co-Ni & 0.00\\
+BSR & 11 & Large & Co-Ni & 0.09\\
+BSR & 12 & Large & Co-Ni & 0.00\\
+BSR & 13 & Large & Co-Ni & 0.05\\
+\addlinespace
+BSR & 2 & Small & Hg-Ni & 0.07\\
+BSR & 3 & Small & Hg-Ni & 0.10\\
+BSR & 4 & Small & Hg-Ni & 0.03\\
+BSR & 5 & Small & Hg-Ni & 0.14\\
+BSR & 6 & Small & As-Cd & 0.00\\
+\addlinespace
+BSR & 7 & Small & As-Cd & 0.02\\
+BSR & 8 & Small & As-Cd & 0.00\\
+BSR & 9 & Small & As-Cd & 0.00\\
+BSR & 10 & Small & Co-Ni & 0.01\\
+BSR & 11 & Small & Co-Ni & 0.01\\
+\addlinespace
+BSR & 12 & Small & Co-Ni & 0.00\\
+BSR & 13 & Small & Co-Ni & 0.02\\
+\bottomrule
+\end{tabular}
+\hypertarget{three-way-interactions-between-chemicals}{%
+\subsection{Three-way interactions between chemicals}\label{three-way-interactions-between-chemicals}}
+
+\hypertarget{interactions-between-race-and-an-exposure}{%
+\subsection{Interactions between race and an exposure}\label{interactions-between-race-and-an-exposure}}
+
 \hypertarget{conclusion}{%
 \chapter*{Conclusion}\label{conclusion}}
 \addcontentsline{toc}{chapter}{Conclusion}
@@ -1271,6 +1441,10 @@ Figure \ref{fig:comparedf} compares the degrees of freedom selected using the WA
 
 \caption{compare df.}\label{fig:comparedf}
 \end{figure}
+Here, we describe the formula for calculating the confidence interval of the difference in difference of the estimated response at the 0.75 and 0.25 quantiles of one chemical, while holding one or two other chemicals at their 0.75 and 0.25 quantiles and the rest of the chemicals at their 0.5 quantiles.
+
+{[}\emph{figure this out at some points??}{]}
+
 \hypertarget{suppresults}{%
 \section{Results}\label{suppresults}}
 
@@ -2796,7 +2970,7 @@ Next, we simulate the response data. We use the \texttt{rslurm} package in this 
 \CommentTok{\# get output}
 \NormalTok{out2\_resp1\_re }\OtherTok{\textless{}{-}} \FunctionTok{get\_slurm\_out}\NormalTok{(runresplg\_re)}
 \NormalTok{out2\_resp1\_re }\OtherTok{\textless{}{-}}\NormalTok{ out2\_resp1\_re[}\DecValTok{1701}\SpecialCharTok{:}\DecValTok{2100}\NormalTok{]}
-\FunctionTok{write\_rds}\NormalTok{(out2\_resp1\_re, }\StringTok{"sim/sim\_resp\_lg\_b.RDS"}\NormalTok{)}
+\FunctionTok{write\_rds}\NormalTok{(out2\_resp1\_re, }\StringTok{"sim/sim\_resp\_lg\_re.RDS"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 \normalsize
@@ -2806,10 +2980,1313 @@ Next, we simulate the response data. We use the \texttt{rslurm} package in this 
 
 Here, we fit the models to our simulated data. We use the \texttt{rslurm}, \texttt{bkmr}, and \texttt{NLinteraction} packages in this section. This code was run on the Amherst HPC RStudio server.
 
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# load packages }
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(bkmr)}
+\FunctionTok{library}\NormalTok{(NLinteraction)}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+First, we fit the naive and oracle MLRs.
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#\#}
+\CommentTok{\# naive and oracle MLRs }
+\DocumentationTok{\#\#\#\#\#\#\#\#\#}
+
+\DocumentationTok{\#\#\# smaller size}
+
+\CommentTok{\# read in simulated data}
+\NormalTok{out1\_resp1 }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_resp\_sm\_a.RDS"}\NormalTok{)}
+
+\NormalTok{run\_mlr\_sm }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+  \CommentTok{\# initialize vectors}
+\NormalTok{  mlrs }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode=}\StringTok{\textquotesingle{}list\textquotesingle{}}\NormalTok{, }\AttributeTok{length =} \DecValTok{1700}\NormalTok{)}
+  \FunctionTok{names}\NormalTok{(mlrs) }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(out1\_resp1)}
+\NormalTok{  mlrtimes }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{\textquotesingle{}list\textquotesingle{}}\NormalTok{, }\AttributeTok{length =} \DecValTok{1700}\NormalTok{)}
+  \FunctionTok{names}\NormalTok{(mlrtimes) }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(out1\_resp1)}
+  
+\NormalTok{  oracles }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode=}\StringTok{\textquotesingle{}list\textquotesingle{}}\NormalTok{, }\AttributeTok{length =} \DecValTok{1700}\NormalTok{)}
+  \FunctionTok{names}\NormalTok{(oracles) }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(out1\_resp1)}
+\NormalTok{  oracletimes }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{\textquotesingle{}list\textquotesingle{}}\NormalTok{, }\AttributeTok{length =} \DecValTok{1700}\NormalTok{)}
+  \FunctionTok{names}\NormalTok{(oracletimes) }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(out1\_resp1)}
+  
+  \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{1700}\NormalTok{) \{}
+\NormalTok{    df }\OtherTok{\textless{}{-}}\NormalTok{ out1\_resp1[[i]] }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{race =} \FunctionTok{as.factor}\NormalTok{(race), }\AttributeTok{smoke =} \FunctionTok{as.factor}\NormalTok{(smoke)) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{sim)}
+    
+\NormalTok{    start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    mlrs[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    mlrtimes[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+    
+    \ControlFlowTok{if}\NormalTok{(i }\SpecialCharTok{\textless{}=} \DecValTok{100}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracles[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimes[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{300}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracles[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                           Hg}\SpecialCharTok{*}\NormalTok{Ni }\SpecialCharTok{+} 
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimes[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{500}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracles[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(Hg}\SpecialCharTok{*}\NormalTok{((Ni}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)) }\SpecialCharTok{+} 
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimes[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{700}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracles[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                           Cd}\SpecialCharTok{*}\NormalTok{As }\SpecialCharTok{+} 
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimes[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{900}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracles[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(Cd}\SpecialCharTok{*}\NormalTok{((As}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)) }\SpecialCharTok{+} 
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimes[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{1100}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracles[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                           Ni}\SpecialCharTok{*}\NormalTok{Co }\SpecialCharTok{+} 
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimes[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{1300}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracles[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(Ni}\SpecialCharTok{*}\NormalTok{((Co}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)) }\SpecialCharTok{+} 
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimes[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{1500}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracles[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                           Hg}\SpecialCharTok{:}\NormalTok{Ni}\SpecialCharTok{:}\NormalTok{Tl }\SpecialCharTok{+} 
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimes[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{1700}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracles[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(Hg}\SpecialCharTok{*}\NormalTok{((Ni}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}\SpecialCharTok{*}\NormalTok{Tl) }\SpecialCharTok{+} 
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimes[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \}}
+\NormalTok{  \}}
+  \FunctionTok{return}\NormalTok{(}\FunctionTok{list}\NormalTok{(mlrs, mlrtimes, oracles, oracletimes))}
+\NormalTok{\}}
+
+\CommentTok{\# send to hpc}
+\NormalTok{sjob5 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_mlr\_sm, }
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out1\_resp1\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}mlr\_sm\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# get output}
+\NormalTok{mlr\_sm }\OtherTok{\textless{}{-}} \FunctionTok{get\_slurm\_out}\NormalTok{(sjob5)}
+\NormalTok{mlr\_mods }\OtherTok{\textless{}{-}}\NormalTok{ mlr\_sm[[}\DecValTok{1}\NormalTok{]]}
+\NormalTok{mlr\_times }\OtherTok{\textless{}{-}}\NormalTok{ mlr\_sm[[}\DecValTok{2}\NormalTok{]]}
+\NormalTok{oracle\_mods }\OtherTok{\textless{}{-}}\NormalTok{ mlr\_sm[[}\DecValTok{3}\NormalTok{]]}
+\NormalTok{oracle\_times }\OtherTok{\textless{}{-}}\NormalTok{ mlr\_sm[[}\DecValTok{4}\NormalTok{]]}
+\FunctionTok{write\_rds}\NormalTok{(mlr\_mods, }\StringTok{"sim/mlr\_mods\_sm.RDS"}\NormalTok{)}
+\FunctionTok{write\_rds}\NormalTok{(mlr\_times, }\StringTok{"sim/mlr\_mods\_sm\_times.RDS"}\NormalTok{)}
+\FunctionTok{write\_rds}\NormalTok{(oracle\_mods, }\StringTok{"sim/oracle\_mods\_sm.RDS"}\NormalTok{)}
+\FunctionTok{write\_rds}\NormalTok{(oracle\_times, }\StringTok{"sim/oracle\_mods\_sm\_times.RDS"}\NormalTok{)}
+
+\DocumentationTok{\#\#\# larger sample size}
+
+\CommentTok{\# read in simulated data}
+\NormalTok{out2\_resp1 }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_resp\_lg\_a.RDS"}\NormalTok{)}
+
+\NormalTok{run\_mlr\_lg }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+  \CommentTok{\# initialize vectors}
+\NormalTok{  mlrl }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode=}\StringTok{\textquotesingle{}list\textquotesingle{}}\NormalTok{, }\AttributeTok{length =} \DecValTok{1700}\NormalTok{)}
+  \FunctionTok{names}\NormalTok{(mlrl) }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(out2\_resp1)}
+\NormalTok{  mlrtimel }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{\textquotesingle{}list\textquotesingle{}}\NormalTok{, }\AttributeTok{length =} \DecValTok{1700}\NormalTok{)}
+  \FunctionTok{names}\NormalTok{(mlrtimel) }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(out2\_resp1)}
+  
+\NormalTok{  oraclel }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode=}\StringTok{\textquotesingle{}list\textquotesingle{}}\NormalTok{, }\AttributeTok{length =} \DecValTok{1700}\NormalTok{)}
+  \FunctionTok{names}\NormalTok{(oraclel) }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(out2\_resp1)}
+\NormalTok{  oracletimel }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{\textquotesingle{}list\textquotesingle{}}\NormalTok{, }\AttributeTok{length =} \DecValTok{1700}\NormalTok{)}
+  \FunctionTok{names}\NormalTok{(oracletimel) }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(out2\_resp1)}
+  
+  \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{1700}\NormalTok{) \{}
+\NormalTok{    df }\OtherTok{\textless{}{-}}\NormalTok{ out2\_resp1[[i]] }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{race =} \FunctionTok{as.factor}\NormalTok{(race), }\AttributeTok{smoke =} \FunctionTok{as.factor}\NormalTok{(smoke)) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{sim)}
+    
+\NormalTok{    start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    mlrl[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    mlrtimel[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+    
+    \ControlFlowTok{if}\NormalTok{(i }\SpecialCharTok{\textless{}=} \DecValTok{100}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimel[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{300}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                           Hg}\SpecialCharTok{*}\NormalTok{Ni }\SpecialCharTok{+} 
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimel[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{500}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(Hg}\SpecialCharTok{*}\NormalTok{((Ni}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)) }\SpecialCharTok{+} 
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimel[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{700}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                           Cd}\SpecialCharTok{*}\NormalTok{As }\SpecialCharTok{+} 
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimel[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{900}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(Cd}\SpecialCharTok{*}\NormalTok{((As}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)) }\SpecialCharTok{+} 
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimel[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{1100}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                           Ni}\SpecialCharTok{*}\NormalTok{Co }\SpecialCharTok{+} 
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimel[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{1300}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(Ni}\SpecialCharTok{*}\NormalTok{((Co}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)) }\SpecialCharTok{+} 
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimel[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{1500}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                           Hg}\SpecialCharTok{:}\NormalTok{Ni}\SpecialCharTok{:}\NormalTok{Tl }\SpecialCharTok{+} 
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimel[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{1700}\NormalTok{) \{}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+                           \FunctionTok{I}\NormalTok{(Hg}\SpecialCharTok{*}\NormalTok{((Ni}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}\SpecialCharTok{*}\NormalTok{Tl) }\SpecialCharTok{+} 
+\NormalTok{                           age }\SpecialCharTok{+}\NormalTok{ bmi }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ smoke, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      oracletimel[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    \}}
+\NormalTok{  \}}
+  \FunctionTok{return}\NormalTok{(}\FunctionTok{list}\NormalTok{(mlrl, mlrtimel, oraclel, oracletimel))}
+\NormalTok{\}}
+
+\CommentTok{\# send to hpc}
+\NormalTok{sjob6 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_mlr\_lg, }
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out2\_resp1\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}mlr\_lg\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# get output}
+\NormalTok{mlr\_lg }\OtherTok{\textless{}{-}} \FunctionTok{get\_slurm\_out}\NormalTok{(sjob6)}
+\NormalTok{mlr\_modl }\OtherTok{\textless{}{-}}\NormalTok{ mlr\_lg[[}\DecValTok{1}\NormalTok{]]}
+\NormalTok{mlr\_timel }\OtherTok{\textless{}{-}}\NormalTok{ mlr\_lg[[}\DecValTok{2}\NormalTok{]]}
+\NormalTok{oracle\_modl }\OtherTok{\textless{}{-}}\NormalTok{ mlr\_lg[[}\DecValTok{3}\NormalTok{]]}
+\NormalTok{oracle\_timel }\OtherTok{\textless{}{-}}\NormalTok{ mlr\_lg[[}\DecValTok{4}\NormalTok{]]}
+\FunctionTok{write\_rds}\NormalTok{(mlr\_modl, }\StringTok{"sim/mlr\_mods\_lg.RDS"}\NormalTok{)}
+\FunctionTok{write\_rds}\NormalTok{(mlr\_timel, }\StringTok{"sim/mlr\_mods\_lg\_times.RDS"}\NormalTok{)}
+\FunctionTok{write\_rds}\NormalTok{(oracle\_modl, }\StringTok{"sim/oracle\_mods\_lg.RDS"}\NormalTok{)}
+\FunctionTok{write\_rds}\NormalTok{(oracle\_timel, }\StringTok{"sim/oracle\_mods\_lg\_times.RDS"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+Next, we fit BKMR and BSR models with the base case and with interactions between chemicals.
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#\#}
+\CommentTok{\# run bkmr}
+\DocumentationTok{\#\#\#\#\#\#\#\#\#}
+
+\DocumentationTok{\#\#\# smaller sample size}
+
+\NormalTok{out1\_resp1 }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_resp\_sm\_a.RDS"}\NormalTok{)}
+
+\NormalTok{run\_bkmr\_sm }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(vector) \{}
+  \CommentTok{\# initiate vector of times}
+\NormalTok{  bkmr\_times }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \FunctionTok{length}\NormalTok{(vector))}
+  
+  \CommentTok{\# create folder for model output}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"mods"}\NormalTok{)) \{}
+    \FunctionTok{dir.create}\NormalTok{(}\StringTok{"mods"}\NormalTok{)}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"times"}\NormalTok{)) \{}
+    \FunctionTok{dir.create}\NormalTok{(}\StringTok{"times"}\NormalTok{)}
+\NormalTok{  \}}
+  
+  \CommentTok{\# for each simulated dataset...}
+  \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in}\NormalTok{ vector) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-} run "}\NormalTok{, i, }\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}"}\NormalTok{))}
+    
+    \CommentTok{\# prepare data}
+\NormalTok{    df }\OtherTok{\textless{}{-}}\NormalTok{ out1\_resp1[[i]]}
+\NormalTok{    Z }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn)}
+\NormalTok{    X }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}}
+      \FunctionTok{bind\_cols}\NormalTok{(}
+        \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ race}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{data =} 
+                                  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{race =} \FunctionTok{as.factor}\NormalTok{(race))))}
+\NormalTok{      ) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(race2}\SpecialCharTok{:}\NormalTok{race5, smoke}\SpecialCharTok{:}\NormalTok{bmi)}
+\NormalTok{    y }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{y}
+    
+    \CommentTok{\# fit model and save time}
+    \FunctionTok{set.seed}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+\NormalTok{    start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    mod }\OtherTok{\textless{}{-}} \FunctionTok{kmbayes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{Z =}\NormalTok{ Z, }\AttributeTok{X =}\NormalTok{ X, }
+                          \AttributeTok{iter =} \DecValTok{50000}\NormalTok{, }\AttributeTok{verbose =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{varsel =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{    end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    bkmr\_times[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+    
+    \CommentTok{\# save model and remove from memory}
+    \FunctionTok{write\_rds}\NormalTok{(mod, }\AttributeTok{file =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"mods/bkmr\_sm\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(out1\_resp1)[i], }\StringTok{"\_"}\NormalTok{, i, }\StringTok{".RDS"}\NormalTok{))}
+    \FunctionTok{write\_rds}\NormalTok{(bkmr\_times[[i]], }\AttributeTok{file =} 
+                \FunctionTok{paste0}\NormalTok{(}\StringTok{"times/bkmr\_sm\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(out1\_resp1)[i], }\StringTok{"\_"}\NormalTok{, i, }\StringTok{".RDS"}\NormalTok{))}
+    \FunctionTok{rm}\NormalTok{(mod)}
+\NormalTok{  \}}
+  \CommentTok{\# save times}
+  \FunctionTok{write\_rds}\NormalTok{(bkmr\_times, }\AttributeTok{file =} \StringTok{"bkmr\_sm\_times.RDS"}\NormalTok{)}
+\NormalTok{\}}
+
+\CommentTok{\# example of call to HPC for first 100 simulated datasets}
+\NormalTok{bksmjob01 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bkmr\_sm, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out1\_resp1\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}bkmr\_sm01\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+  \CommentTok{\# repeat up until dataset 1700}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\# larger sample size}
+\NormalTok{out2\_resp1 }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_resp\_lg\_a.RDS"}\NormalTok{)}
+
+\NormalTok{run\_bkmr\_lg }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(vector) \{}
+  \CommentTok{\# initiate vector of times}
+\NormalTok{  bkmr\_times }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \FunctionTok{length}\NormalTok{(vector))}
+  
+  \CommentTok{\# create folder for model output}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"mods"}\NormalTok{)) \{}
+    \FunctionTok{dir.create}\NormalTok{(}\StringTok{"mods"}\NormalTok{)}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"times"}\NormalTok{)) \{}
+    \FunctionTok{dir.create}\NormalTok{(}\StringTok{"times"}\NormalTok{)}
+\NormalTok{  \}}
+  
+  \CommentTok{\# sometimes this code would stop prematurely...}
+  \CommentTok{\# so this chunk finds the index of the last model that was run}
+\NormalTok{  list\_files }\OtherTok{\textless{}{-}} \FunctionTok{list.files}\NormalTok{(}\StringTok{"mods"}\NormalTok{, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  nums }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".*\_(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d+)}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.RDS"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, list\_files))}
+  \FunctionTok{print}\NormalTok{(nums)}
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{length}\NormalTok{(nums) }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    final }\OtherTok{\textless{}{-}} \DecValTok{0}\NormalTok{; starting }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(vector)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    final }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(nums); starting }\OtherTok{\textless{}{-}}\NormalTok{ final }\SpecialCharTok{+} \DecValTok{1}
+\NormalTok{  \}}
+  \CommentTok{\# keep note of when the loop was stopped and re{-}started}
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{file.exists}\NormalTok{(}\StringTok{"final.txt"}\NormalTok{)) \{}
+    \FunctionTok{write}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"final ran = "}\NormalTok{, final, }\StringTok{", starting at "}\NormalTok{, starting), }\StringTok{"final.txt"}\NormalTok{, }\AttributeTok{append =}\NormalTok{ T)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"final ran = "}\NormalTok{, final, }\StringTok{", starting at "}\NormalTok{, starting), }\StringTok{"final.txt"}\NormalTok{)}
+\NormalTok{  \}}
+  
+  \CommentTok{\# for each simulated dataset...}
+  \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in}\NormalTok{ starting}\SpecialCharTok{:}\FunctionTok{max}\NormalTok{(vector)) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-} run "}\NormalTok{, i, }\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}"}\NormalTok{))}
+    
+    \CommentTok{\# prepare data}
+\NormalTok{    df }\OtherTok{\textless{}{-}}\NormalTok{ out2\_resp1[[i]]}
+\NormalTok{    Z }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn)}
+\NormalTok{    X }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}}
+      \FunctionTok{bind\_cols}\NormalTok{(}
+        \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ race}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{data =} 
+                                  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{race =} \FunctionTok{as.factor}\NormalTok{(race))))}
+\NormalTok{      ) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(race2}\SpecialCharTok{:}\NormalTok{race5, smoke}\SpecialCharTok{:}\NormalTok{bmi)}
+\NormalTok{    y }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{y}
+\NormalTok{    knots }\OtherTok{\textless{}{-}}\NormalTok{ fields}\SpecialCharTok{::}\FunctionTok{cover.design}\NormalTok{(Z, }\AttributeTok{nd =} \DecValTok{100}\NormalTok{)}\SpecialCharTok{$}\NormalTok{design}
+    
+    \CommentTok{\# fit model and save time}
+    \FunctionTok{set.seed}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+\NormalTok{    start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    mod }\OtherTok{\textless{}{-}} \FunctionTok{kmbayes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{Z =}\NormalTok{ Z, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{knots =}\NormalTok{ knots,}
+                   \AttributeTok{iter =} \DecValTok{50000}\NormalTok{, }\AttributeTok{verbose =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{varsel =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{    end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    bkmr\_times[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+    
+    \CommentTok{\# save model and remove from memory}
+    \FunctionTok{write\_rds}\NormalTok{(mod, }\AttributeTok{file =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"mods/bkmr\_lg\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(out2\_resp1)[i], }\StringTok{"\_"}\NormalTok{, i, }\StringTok{".RDS"}\NormalTok{))}
+    \FunctionTok{write\_rds}\NormalTok{(bkmr\_times[[i]], }\AttributeTok{file =} 
+                \FunctionTok{paste0}\NormalTok{(}\StringTok{"times/bkmr\_lg\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(out2\_resp1)[i], }\StringTok{"\_"}\NormalTok{, i, }\StringTok{".RDS"}\NormalTok{))}
+    \FunctionTok{rm}\NormalTok{(mod)}
+\NormalTok{  \}}
+  \CommentTok{\# save times}
+  \FunctionTok{write\_rds}\NormalTok{(bkmr\_times, }\AttributeTok{file =} \StringTok{"bkmr\_lg\_times.RDS"}\NormalTok{)}
+\NormalTok{\}}
+
+\CommentTok{\# example of call to HPC for first 100 simulated datasets}
+\NormalTok{bklgjob01 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bkmr\_lg, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out2\_resp1\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}bkmr\_lg01\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+  \CommentTok{\# repeat up until dataset 1700}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+\CommentTok{\# run bsr}
+\DocumentationTok{\#\#\#\#\#\#\#\#}
+
+\DocumentationTok{\#\#\# smaller sample size}
+
+\NormalTok{out1\_resp1 }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_resp\_sm\_a.RDS"}\NormalTok{)}
+
+\NormalTok{run\_bsr\_sm }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(vector) \{}
+\NormalTok{  bsr\_times }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \FunctionTok{length}\NormalTok{(vector))}
+  
+  \CommentTok{\# create folder for model output}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"mods"}\NormalTok{)) \{}
+    \FunctionTok{dir.create}\NormalTok{(}\StringTok{"mods"}\NormalTok{)}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"times"}\NormalTok{)) \{}
+    \FunctionTok{dir.create}\NormalTok{(}\StringTok{"times"}\NormalTok{)}
+\NormalTok{  \}}
+  
+  \CommentTok{\# sometimes this code would stop prematurely...}
+  \CommentTok{\# so this chunk finds the index of the last model that was run}
+\NormalTok{  list\_files }\OtherTok{\textless{}{-}} \FunctionTok{list.files}\NormalTok{(}\StringTok{"mods"}\NormalTok{, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  nums }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, list\_files))}
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{length}\NormalTok{(nums) }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    final }\OtherTok{\textless{}{-}} \DecValTok{0}\NormalTok{; starting }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(vector)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    final }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(nums); starting }\OtherTok{\textless{}{-}}\NormalTok{ final }\SpecialCharTok{+} \DecValTok{1}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{file.exists}\NormalTok{(}\StringTok{"final.txt"}\NormalTok{)) \{}
+    \FunctionTok{write}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"final ran = "}\NormalTok{, final, }\StringTok{", starting at "}\NormalTok{, starting), }\StringTok{"final.txt"}\NormalTok{, }\AttributeTok{append =}\NormalTok{ T)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"final ran = "}\NormalTok{, final, }\StringTok{", starting at "}\NormalTok{, starting), }\StringTok{"final.txt"}\NormalTok{)}
+\NormalTok{  \}}
+  
+  \CommentTok{\# for each simulated dataset...}
+  \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in}\NormalTok{ starting}\SpecialCharTok{:}\FunctionTok{max}\NormalTok{(vector)) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-} run "}\NormalTok{, i, }\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}"}\NormalTok{))}
+    
+    \CommentTok{\# prepare data}
+\NormalTok{    df }\OtherTok{\textless{}{-}}\NormalTok{ out1\_resp1[[i]]}
+\NormalTok{    X }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{    C }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}}
+      \FunctionTok{bind\_cols}\NormalTok{(}
+        \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ race}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{data =} 
+                                  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{race =} \FunctionTok{as.factor}\NormalTok{(race))))}
+\NormalTok{      ) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(race2}\SpecialCharTok{:}\NormalTok{race5, smoke}\SpecialCharTok{:}\NormalTok{bmi) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{    Y }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{y}
+    
+    \CommentTok{\# fit model for d = \{1, 2, 3, 4, 5\} and save time}
+\NormalTok{    list\_times }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \DecValTok{2}\NormalTok{)}
+    
+    \FunctionTok{set.seed}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+\NormalTok{    start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    mod1 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                  \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{1}\NormalTok{)}
+\NormalTok{    mod2 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                  \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{2}\NormalTok{)}
+\NormalTok{    mod3 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                  \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{3}\NormalTok{)}
+\NormalTok{    mod4 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                  \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{4}\NormalTok{)}
+\NormalTok{    end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    list\_times[[}\DecValTok{1}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+    
+\NormalTok{    ind }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(}\FunctionTok{c}\NormalTok{(mod1}\SpecialCharTok{$}\NormalTok{waic, mod2}\SpecialCharTok{$}\NormalTok{waic, mod3}\SpecialCharTok{$}\NormalTok{waic, mod4}\SpecialCharTok{$}\NormalTok{waic))}
+    
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-} chose "}\NormalTok{, ind, }\StringTok{" {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}"}\NormalTok{))}
+    
+    \CommentTok{\# fit with selected d from waic}
+\NormalTok{    start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    mod }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                 \AttributeTok{nIter =} \DecValTok{50000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{25000}\NormalTok{, }\AttributeTok{ns =}\NormalTok{ ind)}
+\NormalTok{    end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    list\_times[[}\DecValTok{2}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+    
+\NormalTok{    bsr\_times[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ list\_times}
+    
+    \CommentTok{\# save model and remove from memory}
+    \FunctionTok{write\_rds}\NormalTok{(mod, }\AttributeTok{file =} 
+                \FunctionTok{paste0}\NormalTok{(}\StringTok{"mods/bsr\_sm\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(out1\_resp1)[i], }\StringTok{"\_"}\NormalTok{, i, }
+                       \StringTok{"df"}\NormalTok{, ind, }\StringTok{".RDS"}\NormalTok{))}
+    \FunctionTok{write\_rds}\NormalTok{(list\_times, }\AttributeTok{file =} 
+                 \FunctionTok{paste0}\NormalTok{(}\StringTok{"times/bsr\_sm\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(out1\_resp1)[i], }\StringTok{"\_"}\NormalTok{, i, }
+                        \StringTok{"df"}\NormalTok{, ind, }\StringTok{".RDS"}\NormalTok{))}
+    \FunctionTok{rm}\NormalTok{(mod1, mod2, mod3, mod4, mod)}
+\NormalTok{  \}}
+  
+  \FunctionTok{write\_rds}\NormalTok{(bsr\_times, }\AttributeTok{file =} \StringTok{"bsr\_smf\_times.RDS"}\NormalTok{)}
+  \FunctionTok{return}\NormalTok{(bsr\_times)}
+\NormalTok{\}}
+
+\CommentTok{\# example of call to HPC for first 100 simulated datasets}
+\NormalTok{rjob01 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bsr\_sm, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out1\_resp1\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}bsr\_sm01\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+  \CommentTok{\# repeat up until dataset 1700}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\# larger sample size}
+
+\NormalTok{out2\_resp1 }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_resp\_lg\_a.RDS"}\NormalTok{)}
+
+\NormalTok{run\_bsr\_lg }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(vector) \{}
+\NormalTok{  bsr\_times }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \FunctionTok{length}\NormalTok{(vector))}
+  
+  \CommentTok{\# create folder for model output}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"mods"}\NormalTok{)) \{}
+    \FunctionTok{dir.create}\NormalTok{(}\StringTok{"mods"}\NormalTok{)}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"times"}\NormalTok{)) \{}
+    \FunctionTok{dir.create}\NormalTok{(}\StringTok{"times"}\NormalTok{)}
+\NormalTok{  \}}
+  
+  \CommentTok{\# sometimes this code would stop prematurely...}
+  \CommentTok{\# so this chunk finds the index of the last model that was run}
+\NormalTok{  list\_files }\OtherTok{\textless{}{-}} \FunctionTok{list.files}\NormalTok{(}\StringTok{"mods"}\NormalTok{, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  nums }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, list\_files))}
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{length}\NormalTok{(nums) }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    final }\OtherTok{\textless{}{-}} \DecValTok{0}\NormalTok{; starting }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(vector)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    final }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(nums); starting }\OtherTok{\textless{}{-}}\NormalTok{ final }\SpecialCharTok{+} \DecValTok{1}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{file.exists}\NormalTok{(}\StringTok{"final.txt"}\NormalTok{)) \{}
+    \FunctionTok{write}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"final ran = "}\NormalTok{, final, }\StringTok{", starting at "}\NormalTok{, starting), }\StringTok{"final.txt"}\NormalTok{, }\AttributeTok{append =}\NormalTok{ T)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"final ran = "}\NormalTok{, final, }\StringTok{", starting at "}\NormalTok{, starting), }\StringTok{"final.txt"}\NormalTok{)}
+\NormalTok{  \}}
+  
+  \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in}\NormalTok{ starting}\SpecialCharTok{:}\FunctionTok{max}\NormalTok{(vector)) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-} run "}\NormalTok{, i, }\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}"}\NormalTok{))}
+    
+    \CommentTok{\# prepare data}
+\NormalTok{    df }\OtherTok{\textless{}{-}}\NormalTok{ out2\_resp1[[i]]}
+\NormalTok{    X }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{    C }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}}
+      \FunctionTok{bind\_cols}\NormalTok{(}
+        \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ race}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{data =} 
+                                  \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{race =} \FunctionTok{as.factor}\NormalTok{(race))))}
+\NormalTok{      ) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(race2}\SpecialCharTok{:}\NormalTok{race5, smoke}\SpecialCharTok{:}\NormalTok{bmi) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{    Y }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{y}
+    
+    \CommentTok{\# fit model for d = \{1, 2, 3, 4, 5\} and save time}
+\NormalTok{    list\_times }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \DecValTok{2}\NormalTok{)}
+    
+    \FunctionTok{set.seed}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+\NormalTok{    start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    mod1 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                  \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{1}\NormalTok{)}
+\NormalTok{    mod2 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                  \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{2}\NormalTok{)}
+\NormalTok{    mod3 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                  \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{3}\NormalTok{)}
+\NormalTok{    mod4 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                  \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{4}\NormalTok{)}
+\NormalTok{    end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    list\_times[[}\DecValTok{1}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+    
+\NormalTok{    ind }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(}\FunctionTok{c}\NormalTok{(mod1}\SpecialCharTok{$}\NormalTok{waic, mod2}\SpecialCharTok{$}\NormalTok{waic, mod3}\SpecialCharTok{$}\NormalTok{waic, mod4}\SpecialCharTok{$}\NormalTok{waic))}
+    
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-} chose "}\NormalTok{, ind, }\StringTok{" {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}"}\NormalTok{))}
+    
+\NormalTok{    start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    mod }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                 \AttributeTok{nIter =} \DecValTok{50000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{25000}\NormalTok{, }\AttributeTok{ns =}\NormalTok{ ind)}
+\NormalTok{    end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    list\_times[[}\DecValTok{2}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+    
+\NormalTok{    bsr\_times[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ list\_times}
+    
+    \CommentTok{\# save model and remove from memory}
+    \FunctionTok{write\_rds}\NormalTok{(mod, }\AttributeTok{file =} 
+                \FunctionTok{paste0}\NormalTok{(}\StringTok{"mods/bsr\_lgf\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(out2\_resp1)[i], }\StringTok{"\_"}\NormalTok{, i, }
+                       \StringTok{"df"}\NormalTok{, ind, }\StringTok{".RDS"}\NormalTok{))}
+    \FunctionTok{write\_rds}\NormalTok{(list\_times, }\AttributeTok{file =} 
+                \FunctionTok{paste0}\NormalTok{(}\StringTok{"times/bsr\_lgf\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(out2\_resp1)[i], }\StringTok{"\_"}\NormalTok{, i, }
+                       \StringTok{"df"}\NormalTok{, ind, }\StringTok{".RDS"}\NormalTok{))}
+    
+    \FunctionTok{rm}\NormalTok{(mod1, mod2, mod3, mod4, mod)}
+\NormalTok{  \}}
+  
+  \FunctionTok{write\_rds}\NormalTok{(bsr\_times, }\AttributeTok{file =} \StringTok{"bsr\_lgf\_times.RDS"}\NormalTok{)}
+  \CommentTok{\# return(bsr\_times)}
+\NormalTok{\}}
+
+\CommentTok{\# example of call to HPC for first 100 simulated datasets}
+\NormalTok{qjob01 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bsr\_lg, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out2\_resp1\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}bsr\_lg01\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+  \CommentTok{\# repeat up until dataset 1700}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+Next, we fit stratified models with an interaction between the categorical race variable and a chemical.
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#}
+\CommentTok{\# stratified bkmr, smaller size}
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#}
+
+\NormalTok{out1\_resp1\_re }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_resp\_sm\_re.RDS"}\NormalTok{)}
+
+\NormalTok{run\_bkmr\_sm\_re }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(vector) \{}
+\NormalTok{  bkmr\_times }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \FunctionTok{length}\NormalTok{(vector))}
+  
+  \CommentTok{\# create folder for model output}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"mods"}\NormalTok{)) \{}
+    \FunctionTok{dir.create}\NormalTok{(}\StringTok{"mods"}\NormalTok{)}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"times"}\NormalTok{)) \{}
+    \FunctionTok{dir.create}\NormalTok{(}\StringTok{"times"}\NormalTok{)}
+\NormalTok{  \}}
+  
+  \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in}\NormalTok{ vector) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-} run "}\NormalTok{, i, }\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}"}\NormalTok{))}
+    
+    \CommentTok{\# prepare data}
+\NormalTok{    df\_full }\OtherTok{\textless{}{-}}\NormalTok{ out1\_resp1\_re[[i]]}
+    
+    \CommentTok{\# for each race level, run bmkr}
+\NormalTok{    list\_times }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mod =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \DecValTok{6}\NormalTok{)}
+\NormalTok{    list\_mods }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mod =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \DecValTok{6}\NormalTok{)}
+    
+    \FunctionTok{set.seed}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+    \ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{) \{}
+\NormalTok{      df }\OtherTok{\textless{}{-}}\NormalTok{ df\_full[df\_full}\SpecialCharTok{$}\NormalTok{race }\SpecialCharTok{==}\NormalTok{ j, ]}
+\NormalTok{      Z }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+        \FunctionTok{select}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn)}
+\NormalTok{      X }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}}
+        \FunctionTok{select}\NormalTok{(smoke}\SpecialCharTok{:}\NormalTok{bmi)}
+\NormalTok{      y }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{y}
+      
+      \CommentTok{\# fit model and save time}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      mod }\OtherTok{\textless{}{-}} \FunctionTok{tryCatch}\NormalTok{(\{}
+        \FunctionTok{kmbayes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{Z =}\NormalTok{ Z, }\AttributeTok{X =}\NormalTok{ X, }
+                \AttributeTok{iter =} \DecValTok{50000}\NormalTok{, }\AttributeTok{verbose =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{varsel =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{      \}, }\AttributeTok{error =} \ControlFlowTok{function}\NormalTok{(e) \{}
+        \ConstantTok{NA}
+\NormalTok{      \})}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      list\_times[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{      list\_mods[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ mod}
+\NormalTok{    \}}
+    
+    \CommentTok{\# combine 1{-}3 r/e}
+\NormalTok{    df }\OtherTok{\textless{}{-}}\NormalTok{ df\_full[df\_full}\SpecialCharTok{$}\NormalTok{race }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{), ]}
+\NormalTok{    Z }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn)}
+\NormalTok{    X }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}}
+      \FunctionTok{select}\NormalTok{(smoke}\SpecialCharTok{:}\NormalTok{bmi)}
+\NormalTok{    y }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{y}
+    
+    \CommentTok{\# fit model and save time}
+\NormalTok{    start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    mod }\OtherTok{\textless{}{-}} \FunctionTok{tryCatch}\NormalTok{(\{}
+      \FunctionTok{kmbayes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{Z =}\NormalTok{ Z, }\AttributeTok{X =}\NormalTok{ X, }
+              \AttributeTok{iter =} \DecValTok{50000}\NormalTok{, }\AttributeTok{verbose =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{varsel =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{    \}, }\AttributeTok{error =} \ControlFlowTok{function}\NormalTok{(e) \{}
+      \ConstantTok{NA}
+\NormalTok{    \})}
+\NormalTok{    end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    list\_times[[}\DecValTok{6}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{    list\_mods[[}\DecValTok{6}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ mod}
+    
+    
+\NormalTok{    bkmr\_times[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ list\_times}
+    \CommentTok{\# save model and remove from memory}
+    \FunctionTok{write\_rds}\NormalTok{(list\_mods, }\AttributeTok{file =} 
+                \FunctionTok{paste0}\NormalTok{(}\StringTok{"mods/bkmr\_sm\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(out1\_resp1\_re)[i], }\StringTok{"\_"}\NormalTok{, i, }\StringTok{".RDS"}\NormalTok{))}
+    \FunctionTok{write\_rds}\NormalTok{(list\_times, }\AttributeTok{file =} 
+                \FunctionTok{paste0}\NormalTok{(}\StringTok{"times/bkmr\_smf\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(out1\_resp1\_re)[i], }\StringTok{"\_"}\NormalTok{, i, }\StringTok{".RDS"}\NormalTok{))}
+    \FunctionTok{rm}\NormalTok{(mod)}
+\NormalTok{  \}}
+  \CommentTok{\# write\_rds(bkmr\_times, file = "bkmr\_sm\_times.RDS")}
+  \FunctionTok{return}\NormalTok{(bkmr\_times)}
+\NormalTok{\}}
+
+\CommentTok{\# send to hpc}
+\NormalTok{ujob01 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bkmr\_sm\_re, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out1\_resp1\_re\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}ksmre01\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+
+\NormalTok{ujob02 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bkmr\_sm\_re, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{101}\SpecialCharTok{:}\DecValTok{200}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out1\_resp1\_re\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}ksmre02\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+
+\NormalTok{ujob03 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bkmr\_sm\_re, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{201}\SpecialCharTok{:}\DecValTok{300}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out1\_resp1\_re\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}ksmre03\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+
+\NormalTok{ujob04 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bkmr\_sm\_re, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{301}\SpecialCharTok{:}\DecValTok{400}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out1\_resp1\_re\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}ksmre04\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#}
+\CommentTok{\# stratified bkmr, larger size}
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#}
+
+\NormalTok{out2\_resp1\_re }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_resp\_lg\_re.RDS"}\NormalTok{)}
+
+\NormalTok{run\_bkmr\_lg\_re }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(vector) \{}
+\NormalTok{  bkmr\_times }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \FunctionTok{length}\NormalTok{(vector))}
+  
+  \CommentTok{\# create folder for model output}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"mods"}\NormalTok{)) \{}
+    \FunctionTok{dir.create}\NormalTok{(}\StringTok{"mods"}\NormalTok{)}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"times"}\NormalTok{)) \{}
+    \FunctionTok{dir.create}\NormalTok{(}\StringTok{"times"}\NormalTok{)}
+\NormalTok{  \}}
+  
+  \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in}\NormalTok{ vector) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-} run "}\NormalTok{, i, }\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}"}\NormalTok{))}
+    
+    \CommentTok{\# prepare data}
+\NormalTok{    df\_full }\OtherTok{\textless{}{-}}\NormalTok{ out2\_resp1\_re[[i]]}
+    
+    \CommentTok{\# for each race level, run bmkr}
+\NormalTok{    list\_times }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mod =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \DecValTok{5}\NormalTok{)}
+\NormalTok{    list\_mods }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mod =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \DecValTok{5}\NormalTok{)}
+    
+    \FunctionTok{set.seed}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+    \ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{) \{}
+\NormalTok{      df }\OtherTok{\textless{}{-}}\NormalTok{ df\_full[df\_full}\SpecialCharTok{$}\NormalTok{race }\SpecialCharTok{==}\NormalTok{ j, ]}
+\NormalTok{      Z }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+        \FunctionTok{select}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn)}
+\NormalTok{      X }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}}
+        \FunctionTok{select}\NormalTok{(smoke}\SpecialCharTok{:}\NormalTok{bmi)}
+\NormalTok{      y }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{y}
+      
+      \CommentTok{\# fit model and save time}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      mod }\OtherTok{\textless{}{-}} \FunctionTok{kmbayes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{Z =}\NormalTok{ Z, }\AttributeTok{X =}\NormalTok{ X, }
+                     \AttributeTok{iter =} \DecValTok{50000}\NormalTok{, }\AttributeTok{verbose =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{varsel =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      list\_times[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{      list\_mods[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ mod}
+\NormalTok{    \}}
+    
+\NormalTok{    bkmr\_times[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ list\_times}
+    \CommentTok{\# save model and remove from memory}
+    \FunctionTok{write\_rds}\NormalTok{(list\_mods, }\AttributeTok{file =} 
+                \FunctionTok{paste0}\NormalTok{(}\StringTok{"mods/bkmr\_lg\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(out2\_resp1\_re)[i], }\StringTok{"\_"}\NormalTok{, i, }\StringTok{".RDS"}\NormalTok{))}
+    \FunctionTok{write\_rds}\NormalTok{(list\_times, }\AttributeTok{file =} 
+                \FunctionTok{paste0}\NormalTok{(}\StringTok{"times/bkmr\_lgf\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(out2\_resp1\_re)[i], }\StringTok{"\_"}\NormalTok{, i, }\StringTok{".RDS"}\NormalTok{))}
+    \FunctionTok{rm}\NormalTok{(mod)}
+\NormalTok{  \}}
+  \CommentTok{\# write\_rds(bkmr\_times, file = "bkmr\_lg\_times\_re.RDS")}
+  \FunctionTok{return}\NormalTok{(bkmr\_times)}
+\NormalTok{\}}
+
+\CommentTok{\# send to hpc}
+\NormalTok{tjob01 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bkmr\_lg\_re, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out2\_resp1\_re\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}klgre01\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+
+\NormalTok{tjob02 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bkmr\_lg\_re, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{101}\SpecialCharTok{:}\DecValTok{200}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out2\_resp1\_re\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}klgre02\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+
+\NormalTok{tjob03 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bkmr\_lg\_re, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{201}\SpecialCharTok{:}\DecValTok{300}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out2\_resp1\_re\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}klgre03\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+
+\NormalTok{tjob04 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bkmr\_lg\_re, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{301}\SpecialCharTok{:}\DecValTok{400}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out2\_resp1\_re\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}klgre04\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#}
+\CommentTok{\# stratified bsr, smaller size}
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#}
+
+\NormalTok{out1\_resp1\_re }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_resp\_sm\_re.RDS"}\NormalTok{)}
+
+\NormalTok{run\_bsr\_sm\_re }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(vector) \{}
+\NormalTok{  bsr\_times }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \FunctionTok{length}\NormalTok{(vector))}
+  
+  \CommentTok{\# create folder for model output}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"mods"}\NormalTok{)) \{}
+    \FunctionTok{dir.create}\NormalTok{(}\StringTok{"mods"}\NormalTok{)}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"times"}\NormalTok{)) \{}
+    \FunctionTok{dir.create}\NormalTok{(}\StringTok{"times"}\NormalTok{)}
+\NormalTok{  \}}
+  
+  \CommentTok{\# sometimes bsr would stop prematurely...}
+  \CommentTok{\# so this code finds the index of the last model run}
+\NormalTok{  list\_files }\OtherTok{\textless{}{-}} \FunctionTok{list.files}\NormalTok{(}\StringTok{"mods"}\NormalTok{, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  nums }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, list\_files))}
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{length}\NormalTok{(nums) }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    final }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{    starting }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(vector)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    final }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(nums)}
+\NormalTok{    starting }\OtherTok{\textless{}{-}}\NormalTok{ final }\SpecialCharTok{+} \DecValTok{1}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{file.exists}\NormalTok{(}\StringTok{"final.txt"}\NormalTok{)) \{}
+    \FunctionTok{write}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"final ran = "}\NormalTok{, final, }\StringTok{", starting at "}\NormalTok{, starting), }\StringTok{"final.txt"}\NormalTok{, }\AttributeTok{append =}\NormalTok{ T)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"final ran = "}\NormalTok{, final, }\StringTok{", starting at "}\NormalTok{, starting), }\StringTok{"final.txt"}\NormalTok{)}
+\NormalTok{  \}}
+  
+  
+  \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in}\NormalTok{ starting}\SpecialCharTok{:}\FunctionTok{max}\NormalTok{(vector)) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-} run "}\NormalTok{, i, }\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}"}\NormalTok{))}
+    
+    \CommentTok{\# prepare data}
+\NormalTok{    df\_full }\OtherTok{\textless{}{-}}\NormalTok{ out1\_resp1\_re[[i]]}
+    
+    \CommentTok{\# for each race level, run bsr}
+\NormalTok{    list\_times }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mod =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \DecValTok{6}\NormalTok{) }
+\NormalTok{    list\_mods }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mod =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \DecValTok{6}\NormalTok{)}
+    
+    \FunctionTok{set.seed}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+    \ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{) \{}
+\NormalTok{      df }\OtherTok{\textless{}{-}}\NormalTok{ df\_full[df\_full}\SpecialCharTok{$}\NormalTok{race }\SpecialCharTok{==}\NormalTok{ j, ]}
+\NormalTok{      X }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+        \FunctionTok{select}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn) }\SpecialCharTok{|\textgreater{}} 
+        \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{      C }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+        \FunctionTok{select}\NormalTok{(smoke}\SpecialCharTok{:}\NormalTok{bmi) }\SpecialCharTok{|\textgreater{}} 
+        \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{      Y }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{y}
+      
+      \CommentTok{\# waic for choosing df}
+\NormalTok{      list\_times\_small }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \DecValTok{2}\NormalTok{)}
+      
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      mod1 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                    \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{1}\NormalTok{)}
+\NormalTok{      mod2 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                    \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{2}\NormalTok{)}
+\NormalTok{      mod3 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                    \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{3}\NormalTok{)}
+\NormalTok{      mod4 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                    \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{4}\NormalTok{)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      list\_times\_small[[}\DecValTok{1}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+      
+\NormalTok{      ind }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(}\FunctionTok{c}\NormalTok{(mod1}\SpecialCharTok{$}\NormalTok{waic, mod2}\SpecialCharTok{$}\NormalTok{waic, mod3}\SpecialCharTok{$}\NormalTok{waic, mod4}\SpecialCharTok{$}\NormalTok{waic))}
+      
+      \CommentTok{\# fit model and save time}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      mod }\OtherTok{\textless{}{-}} \FunctionTok{tryCatch}\NormalTok{(\{}
+        \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+              \AttributeTok{nIter =} \DecValTok{50000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{25000}\NormalTok{, }\AttributeTok{ns =}\NormalTok{ ind)}
+\NormalTok{      \}, }\AttributeTok{error =} \ControlFlowTok{function}\NormalTok{(e) \{}
+        \ConstantTok{NA}
+\NormalTok{      \})}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      list\_times\_small[[}\DecValTok{2}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+      
+\NormalTok{      bsr\_times[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ list\_times\_small}
+\NormalTok{      list\_mods[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ mod}
+\NormalTok{    \}}
+    
+    \CommentTok{\# combine 1{-}3 r/e}
+\NormalTok{    df }\OtherTok{\textless{}{-}}\NormalTok{ df\_full[df\_full}\SpecialCharTok{$}\NormalTok{race }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{), ]}
+\NormalTok{    X }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{    C }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(smoke}\SpecialCharTok{:}\NormalTok{bmi) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{    Y }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{y}
+    
+    \CommentTok{\# waic for choosing df}
+\NormalTok{    list\_times\_small }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \DecValTok{2}\NormalTok{)}
+    
+\NormalTok{    start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    mod1 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                  \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{1}\NormalTok{)}
+\NormalTok{    mod2 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                  \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{2}\NormalTok{)}
+\NormalTok{    mod3 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                  \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{3}\NormalTok{)}
+\NormalTok{    mod4 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                  \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{4}\NormalTok{)}
+\NormalTok{    end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    list\_times\_small[[}\DecValTok{1}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+    
+\NormalTok{    ind }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(}\FunctionTok{c}\NormalTok{(mod1}\SpecialCharTok{$}\NormalTok{waic, mod2}\SpecialCharTok{$}\NormalTok{waic, mod3}\SpecialCharTok{$}\NormalTok{waic, mod4}\SpecialCharTok{$}\NormalTok{waic))}
+    
+    \CommentTok{\# fit model and save time}
+\NormalTok{    start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    mod }\OtherTok{\textless{}{-}} \FunctionTok{tryCatch}\NormalTok{(\{}
+      \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+            \AttributeTok{nIter =} \DecValTok{50000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{25000}\NormalTok{, }\AttributeTok{ns =}\NormalTok{ ind)}
+\NormalTok{    \}, }\AttributeTok{error =} \ControlFlowTok{function}\NormalTok{(e) \{}
+      \ConstantTok{NA}
+\NormalTok{    \})}
+\NormalTok{    end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    list\_times\_small[[}\DecValTok{2}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+    
+\NormalTok{    list\_times[[}\DecValTok{6}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ list\_times\_small}
+\NormalTok{    list\_mods[[}\DecValTok{6}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ mod}
+    
+    \CommentTok{\# save model and remove from memory}
+    \FunctionTok{write\_rds}\NormalTok{(list\_mods, }\AttributeTok{file =} 
+                \FunctionTok{paste0}\NormalTok{(}\StringTok{"mods/bsr\_sm\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(out1\_resp1\_re)[i], }\StringTok{"\_"}\NormalTok{, i, }
+                       \StringTok{"df"}\NormalTok{, ind, }\StringTok{".RDS"}\NormalTok{))}
+    \FunctionTok{write\_rds}\NormalTok{(list\_times, }\AttributeTok{file =} 
+                \FunctionTok{paste0}\NormalTok{(}\StringTok{"times/bsr\_sm\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(out1\_resp1\_re)[i], }\StringTok{"\_"}\NormalTok{, i, }
+                       \StringTok{"df"}\NormalTok{, ind, }\StringTok{".RDS"}\NormalTok{))}
+    
+    \FunctionTok{rm}\NormalTok{(mod1, mod2, mod3, mod4, mod)}
+\NormalTok{  \}}
+  
+  \FunctionTok{return}\NormalTok{(bsr\_times)}
+\NormalTok{\}}
+
+\CommentTok{\# send to hpc}
+\NormalTok{vjob01 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bsr\_sm\_re, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out1\_resp1\_re\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}ssmre01\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+
+\NormalTok{vjob02 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bsr\_sm\_re, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{101}\SpecialCharTok{:}\DecValTok{200}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out1\_resp1\_re\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}ssmre02\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+
+\NormalTok{vjob03 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bsr\_sm\_re, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{201}\SpecialCharTok{:}\DecValTok{300}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out1\_resp1\_re\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}ssmre03\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+
+\NormalTok{vjob04 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bsr\_sm\_re, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{301}\SpecialCharTok{:}\DecValTok{400}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out1\_resp1\_re\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}ssmre04\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#}
+\CommentTok{\# stratified bsr, larger size}
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#}
+
+\NormalTok{out2\_resp1\_re }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_resp\_lg\_re.RDS"}\NormalTok{)}
+
+\NormalTok{run\_bsr\_lg\_re }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(vector) \{}
+\NormalTok{  bsr\_times }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \FunctionTok{length}\NormalTok{(vector))}
+  
+  \CommentTok{\# create folder for model output}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"mods"}\NormalTok{)) \{}
+    \FunctionTok{dir.create}\NormalTok{(}\StringTok{"mods"}\NormalTok{)}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"times"}\NormalTok{)) \{}
+    \FunctionTok{dir.create}\NormalTok{(}\StringTok{"times"}\NormalTok{)}
+\NormalTok{  \}}
+  
+  \CommentTok{\# sometimes bsr would stop prematurely...}
+  \CommentTok{\# so this code finds the index of the last model run}
+\NormalTok{  list\_files }\OtherTok{\textless{}{-}} \FunctionTok{list.files}\NormalTok{(}\StringTok{"mods"}\NormalTok{, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  nums }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, list\_files))}
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{length}\NormalTok{(nums) }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    final }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{    starting }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(vector)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    final }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(nums)}
+\NormalTok{    starting }\OtherTok{\textless{}{-}}\NormalTok{ final }\SpecialCharTok{+} \DecValTok{1}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{file.exists}\NormalTok{(}\StringTok{"final.txt"}\NormalTok{)) \{}
+    \FunctionTok{write}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"final ran = "}\NormalTok{, final, }\StringTok{", starting at "}\NormalTok{, starting), }\StringTok{"final.txt"}\NormalTok{, }\AttributeTok{append =}\NormalTok{ T)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"final ran = "}\NormalTok{, final, }\StringTok{", starting at "}\NormalTok{, starting), }\StringTok{"final.txt"}\NormalTok{)}
+\NormalTok{  \}}
+  
+  
+  \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in}\NormalTok{ starting}\SpecialCharTok{:}\FunctionTok{max}\NormalTok{(vector)) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-} run "}\NormalTok{, i, }\StringTok{"{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}"}\NormalTok{))}
+    
+    \CommentTok{\# prepare data}
+\NormalTok{    df\_full }\OtherTok{\textless{}{-}}\NormalTok{ out2\_resp1\_re[[i]]}
+    
+    \CommentTok{\# for each race level, run bsr}
+\NormalTok{    list\_times }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mod =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \DecValTok{6}\NormalTok{) }
+\NormalTok{    list\_mods }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mod =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \DecValTok{6}\NormalTok{)}
+    
+    \FunctionTok{set.seed}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+    \ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{) \{}
+\NormalTok{      df }\OtherTok{\textless{}{-}}\NormalTok{ df\_full[df\_full}\SpecialCharTok{$}\NormalTok{race }\SpecialCharTok{==}\NormalTok{ j, ]}
+\NormalTok{      X }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+        \FunctionTok{select}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn) }\SpecialCharTok{|\textgreater{}} 
+        \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{      C }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+        \FunctionTok{select}\NormalTok{(smoke}\SpecialCharTok{:}\NormalTok{bmi) }\SpecialCharTok{|\textgreater{}} 
+        \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{      Y }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{y}
+      
+      \CommentTok{\# waic for choosing df}
+\NormalTok{      list\_times\_small }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \DecValTok{2}\NormalTok{)}
+      
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      mod1 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                    \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{1}\NormalTok{)}
+\NormalTok{      mod2 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                    \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{2}\NormalTok{)}
+\NormalTok{      mod3 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                    \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{3}\NormalTok{)}
+\NormalTok{      mod4 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                    \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{4}\NormalTok{)}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      list\_times\_small[[}\DecValTok{1}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+      
+\NormalTok{      ind }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(}\FunctionTok{c}\NormalTok{(mod1}\SpecialCharTok{$}\NormalTok{waic, mod2}\SpecialCharTok{$}\NormalTok{waic, mod3}\SpecialCharTok{$}\NormalTok{waic, mod4}\SpecialCharTok{$}\NormalTok{waic))}
+      
+      \CommentTok{\# fit model and save time}
+\NormalTok{      start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      mod }\OtherTok{\textless{}{-}} \FunctionTok{tryCatch}\NormalTok{(\{}
+        \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+              \AttributeTok{nIter =} \DecValTok{50000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{25000}\NormalTok{, }\AttributeTok{ns =}\NormalTok{ ind)}
+\NormalTok{      \}, }\AttributeTok{error =} \ControlFlowTok{function}\NormalTok{(e) \{}
+        \ConstantTok{NA}
+\NormalTok{      \})}
+\NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{      list\_times\_small[[}\DecValTok{2}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+      
+\NormalTok{      bsr\_times[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ list\_times\_small}
+\NormalTok{      list\_mods[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ mod}
+\NormalTok{    \}}
+    
+    \CommentTok{\# combine 1{-}3 r/e}
+\NormalTok{    df }\OtherTok{\textless{}{-}}\NormalTok{ df\_full[df\_full}\SpecialCharTok{$}\NormalTok{race }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{), ]}
+\NormalTok{    X }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{    C }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(smoke}\SpecialCharTok{:}\NormalTok{bmi) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{    Y }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{y}
+    
+    \CommentTok{\# waic for choosing df}
+\NormalTok{    list\_times\_small }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{"list"}\NormalTok{, }\AttributeTok{length =} \DecValTok{2}\NormalTok{)}
+    
+\NormalTok{    start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    mod1 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                  \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{1}\NormalTok{)}
+\NormalTok{    mod2 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                  \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{2}\NormalTok{)}
+\NormalTok{    mod3 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                  \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{3}\NormalTok{)}
+\NormalTok{    mod4 }\OtherTok{\textless{}{-}} \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+                  \AttributeTok{nIter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{2500}\NormalTok{, }\AttributeTok{ns =} \DecValTok{4}\NormalTok{)}
+\NormalTok{    end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    list\_times\_small[[}\DecValTok{1}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+    
+\NormalTok{    ind }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(}\FunctionTok{c}\NormalTok{(mod1}\SpecialCharTok{$}\NormalTok{waic, mod2}\SpecialCharTok{$}\NormalTok{waic, mod3}\SpecialCharTok{$}\NormalTok{waic, mod4}\SpecialCharTok{$}\NormalTok{waic))}
+    
+    \CommentTok{\# fit model and save time}
+\NormalTok{    start.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    mod }\OtherTok{\textless{}{-}} \FunctionTok{tryCatch}\NormalTok{(\{}
+      \FunctionTok{NLint}\NormalTok{(}\AttributeTok{Y =}\NormalTok{ Y, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }
+            \AttributeTok{nIter =} \DecValTok{50000}\NormalTok{, }\AttributeTok{nBurn =} \DecValTok{25000}\NormalTok{, }\AttributeTok{ns =}\NormalTok{ ind)}
+\NormalTok{    \}, }\AttributeTok{error =} \ControlFlowTok{function}\NormalTok{(e) \{}
+      \ConstantTok{NA}
+\NormalTok{    \})}
+\NormalTok{    end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
+\NormalTok{    list\_times\_small[[}\DecValTok{2}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+    
+\NormalTok{    list\_times[[}\DecValTok{6}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ list\_times\_small}
+\NormalTok{    list\_mods[[}\DecValTok{6}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ mod}
+    
+    \CommentTok{\# save model and remove from memory}
+    \FunctionTok{write\_rds}\NormalTok{(list\_mods, }\AttributeTok{file =} 
+                \FunctionTok{paste0}\NormalTok{(}\StringTok{"mods/bsr\_lg\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(out2\_resp1\_re)[i], }\StringTok{"\_"}\NormalTok{, i, }
+                       \StringTok{"df"}\NormalTok{, ind, }\StringTok{".RDS"}\NormalTok{))}
+    \FunctionTok{write\_rds}\NormalTok{(list\_times, }\AttributeTok{file =} 
+                \FunctionTok{paste0}\NormalTok{(}\StringTok{"times/bsr\_lg\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(out2\_resp1\_re)[i], }\StringTok{"\_"}\NormalTok{, i, }
+                       \StringTok{"df"}\NormalTok{, ind, }\StringTok{".RDS"}\NormalTok{))}
+    
+    \FunctionTok{rm}\NormalTok{(mod1, mod2, mod3, mod4, mod)}
+\NormalTok{  \}}
+  
+  \CommentTok{\# write\_rds(bsr\_times, file = "bsr\_lgf\_times.RDS")}
+  \FunctionTok{return}\NormalTok{(bsr\_times)}
+\NormalTok{\}}
+
+\CommentTok{\# send to hpc}
+\NormalTok{wjob01 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bsr\_lg\_re, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out2\_resp1\_re\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}slgre01\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+
+\NormalTok{wjob02 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bsr\_lg\_re, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{101}\SpecialCharTok{:}\DecValTok{200}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out2\_resp1\_re\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}slgre02\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+
+\NormalTok{wjob03 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bsr\_lg\_re, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{201}\SpecialCharTok{:}\DecValTok{300}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out2\_resp1\_re\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}slgre03\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+
+\NormalTok{wjob04 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_bsr\_lg\_re, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{301}\SpecialCharTok{:}\DecValTok{400}\NormalTok{),}
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out2\_resp1\_re\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}slgre04\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
 \hypertarget{code-for-section-refresults}{%
 \subsection{Code for Section \ref{results}:}\label{code-for-section-refresults}}
 
 Here, we extract results from our simulation. We use the \texttt{rslurm}, \texttt{bkmr}, and \texttt{NLinteraction} packages in this section. This code was run on the Amherst HPC RStudio server.
+
+First, we extract p-values from the multiple linear regression models.
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# naive small, chemxchem models}
+\NormalTok{mlr\_sm }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/mlr\_mods\_sm.RDS"}\NormalTok{)}
+
+\NormalTok{mlrsm\_pval }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{1700} \SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+\NormalTok{    mod }\OtherTok{\textless{}{-}}\NormalTok{ mlr\_sm[[x]]}
+    \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{summary}\NormalTok{(mod)}\SpecialCharTok{$}\NormalTok{coefficients) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{rownames\_to\_column}\NormalTok{(}\AttributeTok{var =} \StringTok{"var"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(var, }\AttributeTok{p =} \DecValTok{5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(mlrsm\_pval, }\StringTok{"sim/\_mlr/pvalsm.csv"}\NormalTok{)}
+
+\CommentTok{\# naive large, chemxchem models}
+\NormalTok{mlr\_lg }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/mlr\_mods\_lg.RDS"}\NormalTok{)}
+
+\NormalTok{mlrlg\_pval }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{1700} \SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+\NormalTok{    mod }\OtherTok{\textless{}{-}}\NormalTok{ mlr\_lg[[x]]}
+    \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{summary}\NormalTok{(mod)}\SpecialCharTok{$}\NormalTok{coefficients) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{rownames\_to\_column}\NormalTok{(}\AttributeTok{var =} \StringTok{"var"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(var, }\AttributeTok{p =} \DecValTok{5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(mlrlg\_pval, }\StringTok{"sim/\_mlr/pvallg.csv"}\NormalTok{)}
+
+\CommentTok{\# oracle small, chemxchem models}
+\NormalTok{orac\_sm }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/oracle\_mods\_sm.RDS"}\NormalTok{)}
+
+\NormalTok{oracsm\_pval }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{1700} \SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+\NormalTok{    mod }\OtherTok{\textless{}{-}}\NormalTok{ orac\_sm[[x]]}
+    \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{summary}\NormalTok{(mod)}\SpecialCharTok{$}\NormalTok{coefficients) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{rownames\_to\_column}\NormalTok{(}\AttributeTok{var =} \StringTok{"var"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(var, }\AttributeTok{p =} \DecValTok{5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(oracsm\_pval, }\StringTok{"sim/\_oracle/pvalsm.csv"}\NormalTok{)}
+
+\CommentTok{\# oracle large, chemxchem models}
+\NormalTok{orac\_lg }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/oracle\_mods\_lg.RDS"}\NormalTok{)}
+
+\NormalTok{oraclg\_pval }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{1700} \SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+\NormalTok{    mod }\OtherTok{\textless{}{-}}\NormalTok{ orac\_lg[[x]]}
+    \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{summary}\NormalTok{(mod)}\SpecialCharTok{$}\NormalTok{coefficients) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{rownames\_to\_column}\NormalTok{(}\AttributeTok{var =} \StringTok{"var"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(var, }\AttributeTok{p =} \DecValTok{5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(oraclg\_pval, }\StringTok{"sim/\_oracle/pvallg.csv"}\NormalTok{)}
+
+\CommentTok{\# naive small, chemxcov models}
+\NormalTok{mlr\_sm\_re }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/mlr\_mods\_sm\_re.RDS"}\NormalTok{)}
+
+\NormalTok{mlrsmre\_pval }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{400} \SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+\NormalTok{    mod }\OtherTok{\textless{}{-}}\NormalTok{ mlr\_sm\_re[[x]]}
+    \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{summary}\NormalTok{(mod)}\SpecialCharTok{$}\NormalTok{coefficients) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{rownames\_to\_column}\NormalTok{(}\AttributeTok{var =} \StringTok{"var"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(var, }\AttributeTok{p =} \DecValTok{5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(mlrsmre\_pval, }\StringTok{"sim/\_mlr/pvalsmre.csv"}\NormalTok{)}
+
+\CommentTok{\# naive large, chemxcov models}
+\NormalTok{mlr\_lg\_re }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/mlr\_mods\_lg\_re.RDS"}\NormalTok{)}
+
+\NormalTok{mlrlgre\_pval }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{400} \SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+\NormalTok{    mod }\OtherTok{\textless{}{-}}\NormalTok{ mlr\_lg\_re[[x]]}
+    \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{summary}\NormalTok{(mod)}\SpecialCharTok{$}\NormalTok{coefficients) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{rownames\_to\_column}\NormalTok{(}\AttributeTok{var =} \StringTok{"var"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(var, }\AttributeTok{p =} \DecValTok{5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(mlrlgre\_pval, }\StringTok{"sim/\_mlr/pvallgre.csv"}\NormalTok{)}
+
+\CommentTok{\# oracle small, chemxcov models}
+\NormalTok{orac\_sm\_re }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/oracle\_mods\_sm\_re.RDS"}\NormalTok{)}
+
+\NormalTok{oracsmre\_pval }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{400} \SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+\NormalTok{    mod }\OtherTok{\textless{}{-}}\NormalTok{ orac\_sm\_re[[x]]}
+    \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{summary}\NormalTok{(mod)}\SpecialCharTok{$}\NormalTok{coefficients) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{rownames\_to\_column}\NormalTok{(}\AttributeTok{var =} \StringTok{"var"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(var, }\AttributeTok{p =} \DecValTok{5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(oracsmre\_pval, }\StringTok{"sim/\_oracle/pvalsmre.csv"}\NormalTok{)}
+
+\CommentTok{\# oracle large, chemxcov models}
+\NormalTok{orac\_lg\_re }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/oracle\_mods\_lg\_re.RDS"}\NormalTok{)}
+
+\NormalTok{oraclgre\_pval }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{400} \SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+\NormalTok{    mod }\OtherTok{\textless{}{-}}\NormalTok{ orac\_lg\_re[[x]]}
+    \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{summary}\NormalTok{(mod)}\SpecialCharTok{$}\NormalTok{coefficients) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{rownames\_to\_column}\NormalTok{(}\AttributeTok{var =} \StringTok{"var"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(var, }\AttributeTok{p =} \DecValTok{5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(oraclgre\_pval, }\StringTok{"sim/\_oracle/pvallgre.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+Next, we extract output from BKMR models run on smaller size simulated datasets, including the base case and models with interactions between chemicals.
+
+\scriptsize
+
+\normalsize
+
+Next, we extract output from BSR models run on smaller size simulated datasets, including the base case and models with interactions between chemicals.
+
+{[}\emph{results part two}{]}
+
+Here, we visualize and summarize results from model output.
 
 \hypertarget{code-for-appendix-refappa}{%
 \subsection{Code for Appendix \ref{appa}:}\label{code-for-appendix-refappa}}
@@ -3271,7 +4748,146 @@ Next, we look at simulated exposure and covariate data for the larger size datas
 \end{Shaded}
 \normalsize
 
-Here, we create the visualization of \(R^2\) values in multiple linear regressions with the true functional form of the chemicals specified, in order to ensure we are achieving a realistic signal-to-noise ratio.
+Here, we create the visualization of \(R^2\) values in multiple linear regressions with the true functional form of the chemicals specified, in order to ensure we are achieving a realistic signal-to-noise ratio. This code was run on the Amherst HPC RStudio server.
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\# smaller size}
+
+\CommentTok{\# read in simulated datasets}
+\NormalTok{out1\_resp1 }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_resp\_sm\_a.RDS"}\NormalTok{)}
+\NormalTok{run\_co\_sm }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+  \CommentTok{\# initialize vectors}
+\NormalTok{  chems\_oracle }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{\textquotesingle{}list\textquotesingle{}}\NormalTok{, }\AttributeTok{length =} \DecValTok{1700}\NormalTok{) }
+  \FunctionTok{names}\NormalTok{(chems\_oracle) }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(out1\_resp1)}
+  
+  \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{1700}\NormalTok{) \{}
+\NormalTok{    df }\OtherTok{\textless{}{-}}\NormalTok{ out1\_resp1[[i]] }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{race =} \FunctionTok{as.factor}\NormalTok{(race), }\AttributeTok{smoke =} \FunctionTok{as.factor}\NormalTok{(smoke)) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{sim)}
+    
+    \ControlFlowTok{if}\NormalTok{(i }\SpecialCharTok{\textless{}=} \DecValTok{100}\NormalTok{) \{}
+\NormalTok{      chems\_oracle[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} 
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))), }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{300}\NormalTok{) \{}
+\NormalTok{      chems\_oracle[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                                Hg}\SpecialCharTok{*}\NormalTok{Ni, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{500}\NormalTok{) \{}
+\NormalTok{      chems\_oracle[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(Hg}\SpecialCharTok{*}\NormalTok{((Ni}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)), }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{700}\NormalTok{) \{}
+\NormalTok{      chems\_oracle[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                                Cd}\SpecialCharTok{*}\NormalTok{As, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{900}\NormalTok{) \{}
+\NormalTok{      chems\_oracle[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(Cd}\SpecialCharTok{*}\NormalTok{((As}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)), }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{1100}\NormalTok{) \{}
+\NormalTok{      chems\_oracle[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                                Ni}\SpecialCharTok{*}\NormalTok{Co, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{1300}\NormalTok{) \{}
+\NormalTok{      chems\_oracle[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(Ni}\SpecialCharTok{*}\NormalTok{((Co}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)), }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{1500}\NormalTok{) \{}
+\NormalTok{      chems\_oracle[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                                Hg}\SpecialCharTok{:}\NormalTok{Ni}\SpecialCharTok{:}\NormalTok{Tl, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{1700}\NormalTok{) \{}
+\NormalTok{      chems\_oracle[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(Hg}\SpecialCharTok{*}\NormalTok{((Ni}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}\SpecialCharTok{*}\NormalTok{Tl), }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \}}
+\NormalTok{  \}}
+  \FunctionTok{return}\NormalTok{(chems\_oracle)}
+\NormalTok{\}}
+
+\CommentTok{\# send to hpc}
+\NormalTok{cosjob }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_mlr\_sm, }
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out1\_resp1\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}co\_sm\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# get output}
+\NormalTok{chem\_oracle }\OtherTok{\textless{}{-}} \FunctionTok{get\_slurm\_out}\NormalTok{(cosjob)}
+\FunctionTok{write\_rds}\NormalTok{(chem\_oracle, }\StringTok{"sim/chem\_oracle\_sm.RDS"}\NormalTok{)}
+
+\DocumentationTok{\#\#\# larger sample size}
+
+\CommentTok{\# read in simulated datasets}
+\NormalTok{out2\_resp1 }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_resp\_lg\_a.RDS"}\NormalTok{)}
+
+\NormalTok{run\_co\_lg }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+  \CommentTok{\# initialize vectors}
+\NormalTok{  chems\_onlyl }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{\textquotesingle{}list\textquotesingle{}}\NormalTok{, }\AttributeTok{length =} \DecValTok{1700}\NormalTok{)}
+  \FunctionTok{names}\NormalTok{(chems\_onlyl) }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(out2\_resp1)}
+\NormalTok{  chems\_oraclel }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{mode =} \StringTok{\textquotesingle{}list\textquotesingle{}}\NormalTok{, }\AttributeTok{length =} \DecValTok{1700}\NormalTok{) }
+  \FunctionTok{names}\NormalTok{(chems\_oraclel) }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(out2\_resp1)}
+  
+  \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{1700}\NormalTok{) \{}
+\NormalTok{    df }\OtherTok{\textless{}{-}}\NormalTok{ out2\_resp1[[i]] }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{race =} \FunctionTok{as.factor}\NormalTok{(race), }\AttributeTok{smoke =} \FunctionTok{as.factor}\NormalTok{(smoke)) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{sim)}
+    
+    \ControlFlowTok{if}\NormalTok{(i }\SpecialCharTok{\textless{}=} \DecValTok{100}\NormalTok{) \{}
+\NormalTok{      chems\_oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} 
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))), }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{300}\NormalTok{) \{}
+\NormalTok{      chems\_oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                                Hg}\SpecialCharTok{*}\NormalTok{Ni, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{500}\NormalTok{) \{}
+\NormalTok{      chems\_oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(Hg}\SpecialCharTok{*}\NormalTok{((Ni}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)), }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{700}\NormalTok{) \{}
+\NormalTok{      chems\_oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                                Cd}\SpecialCharTok{*}\NormalTok{As, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{900}\NormalTok{) \{}
+\NormalTok{      chems\_oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(Cd}\SpecialCharTok{*}\NormalTok{((As}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)), }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{1100}\NormalTok{) \{}
+\NormalTok{      chems\_oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                                Ni}\SpecialCharTok{*}\NormalTok{Co, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{1300}\NormalTok{) \{}
+\NormalTok{      chems\_oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(Ni}\SpecialCharTok{*}\NormalTok{((Co}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)), }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{1500}\NormalTok{) \{}
+\NormalTok{      chems\_oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+\NormalTok{                                Hg}\SpecialCharTok{:}\NormalTok{Ni}\SpecialCharTok{:}\NormalTok{Tl, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textless{}=} \DecValTok{1700}\NormalTok{) \{}
+\NormalTok{      chems\_oraclel[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hg }\SpecialCharTok{+}\NormalTok{ Sb }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Ni))) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Sb}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\SpecialCharTok{*}\NormalTok{Sn))) }\SpecialCharTok{+}
+                                \FunctionTok{I}\NormalTok{(Hg}\SpecialCharTok{*}\NormalTok{((Ni}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}\SpecialCharTok{*}\NormalTok{Tl), }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{    \}}
+\NormalTok{  \}}
+  \FunctionTok{return}\NormalTok{(chems\_oraclel)}
+\NormalTok{\}}
+
+\CommentTok{\# send to hpc}
+\NormalTok{coljob }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
+\NormalTok{  run\_co\_lg, }
+  \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out2\_resp1\textquotesingle{}}\NormalTok{),}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}co\_lg\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# get output}
+\NormalTok{chem\_oraclel }\OtherTok{\textless{}{-}} \FunctionTok{get\_slurm\_out}\NormalTok{(coljob)}
+\FunctionTok{write\_rds}\NormalTok{(chem\_oraclel, }\StringTok{"sim/chem\_oracle\_lg.RDS"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
 
 \scriptsize
 \begin{Shaded}
@@ -3487,6 +5103,9 @@ Antonelli, J. (2018). {NLinteraction}: {Bayesian} variable selection in multivar
 
 \leavevmode\vadjust pre{\hypertarget{ref-antonelli_estimating_2020}{}}%
 Antonelli, J., Mazumdar, M., Bellinger, D., Christiani, D., Wright, R., \& Coull, B. (2020). Estimating the health effects of environmental mixtures using {Bayesian} semiparametric regression and sparsity inducing priors. \emph{The Annals of Applied Statistics}, \emph{14}(1), 257--275. http://doi.org/\href{https://doi.org/10.1214/19-AOAS1307}{10.1214/19-AOAS1307}
+
+\leavevmode\vadjust pre{\hypertarget{ref-barbieri_optimal_2004}{}}%
+Barbieri, M. M., \& Berger, J. O. (2004). Optimal predictive model selection. \emph{The Annals of Statistics}, \emph{32}(3), 870--897. http://doi.org/\href{https://doi.org/10.1214/009053604000000238}{10.1214/009053604000000238}
 
 \leavevmode\vadjust pre{\hypertarget{ref-barrera-gomez_systematic_2017}{}}%
 Barrera-Gómez, J., Agier, L., Portengen, L., Chadeau-Hyam, M., Giorgis-Allemand, L., Siroux, V., \ldots{} Basagaña, X. (2017). A systematic comparison of statistical methods to detect interactions in exposome-health associations. \emph{Environmental Health}, \emph{16}(1), 74. http://doi.org/\href{https://doi.org/10.1186/s12940-017-0277-6}{10.1186/s12940-017-0277-6}

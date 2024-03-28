@@ -1177,3 +1177,200 @@ ssm_triv |>
 # ggsave("index/figures/ch4_ssm_triv_expresp.png", width = 6, height = 4)
 
 
+# larger size bsr ---------------------------------------------------------
+
+# plot pip's bsr large
+slg_pips <- read_csv("sim/bsr_lg/pips.csv")
+
+slg_pip_sig <- slg_pips |> 
+  mutate(sign = get_sign(case, variable))
+slg_pip_sen <- slg_pips |> 
+  mutate(imp = PIP >= 0.5) |> 
+  group_by(case, variable) |> 
+  summarize(sensitivity = sum(imp)/n())
+
+# point and lineplot
+slg_pip_sig |> 
+  filter(case != 1) |> 
+  ggplot(aes(x = variable)) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "grey30") +
+  # geom_bar(data = slg_pip_sen, 
+  #          aes(y = sensitivity), 
+  #          stat = "identity", fill = "grey85") +
+  geom_pointrange(aes(y = PIP, color = sign), 
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  facet_wrap(~case,
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  # scale_y_continuous(sec.axis = sec_axis(trans = ~., name = "Sensitivity")) +
+  scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  # legend.position = c(0.95, 0.05)) +
+  labs(y = "PIP value distribution", 
+       color = "Truly\nsignificant", 
+       x = "Chemical")
+ggsave("index/figures/ch4_slg_univ_pips.png", width = 7.5, height = 5)
+
+# plot bivariate pip's large
+slg_pipb <- read_csv("sim/bsr_lg/pip_biv.csv")
+
+slg_pipb |> 
+  # filter(case == 2) |> 
+  mutate(sign = get_sign_bsr(case, Var1) & get_sign_bsr(case, Var2), 
+         inter = paste0(Var1, "_", Var2)) |> 
+  ggplot(aes(x = inter)) + 
+  geom_pointrange(aes(y = PIP, color = sign),
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z, 0.25)},
+                  fun.max = function(z) {quantile(z, 0.75)}, 
+                  fun = median, 
+                  size  = 0.05) +
+  scale_color_manual(values = c("#92D0E4", "darkorange2")) +
+  facet_wrap(~case, 
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(), 
+        legend.position = c(0.9, 0.1)) +
+  labs(y = "PIP value distribution", 
+       color = "Truly significant", 
+       x = NULL)
+ggsave("index/figures/ch4_slg_biv_pips.png", width = 7.5, height = 5)
+
+# plot trivariate pip's large
+slg_pipt <- read_csv("sim/bsr_lg/pip_triv.csv")
+
+slg_pipt |> 
+  ggplot(aes(x = "")) +
+  geom_pointrange(aes(y = PIP),
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z, 0.25)},
+                  fun.max = function(z) {quantile(z, 0.75)}, 
+                  fun = median, 
+                  size  = 0.05) +
+  facet_wrap(~case, 
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(), 
+        legend.position = c(0.9, 0.1)) +
+  labs(y = "PIP value distribution", 
+       color = "Truly significant", 
+       x = NULL)
+
+# plot bivariate relationships bkmr large
+slg_biv <- read_csv("sim/bsr_lg/biv_expresp.csv")
+
+# plot Hg and Ni
+slg_biv |> 
+  filter(case %in% 2:5) |> 
+  mutate(variable1 = ifelse(j1 == "Hg", "Hg by Ni", "Ni by Hg"), 
+         quantile = as.factor(j2quant)) |> 
+  ggplot(aes(j1val, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  ylim(-3, 9) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_slg_biv_expresp_1.png", width = 6, height = 4)
+
+# plot Cd and As
+slg_biv |> 
+  filter(case %in% 6:9) |> 
+  mutate(variable1 = ifelse(j1 == "Cd", "Cd by As", "As by Cd"), 
+         quantile = as.factor(j2quant)) |> 
+  ggplot(aes(j1val, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  ylim(-2, 6) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_slg_biv_expresp_2.png", width = 6, height = 4)
+
+# plot Ni and Co
+slg_biv |> 
+  filter(case %in% 10:13) |> 
+  mutate(variable1 = ifelse(j1 == "Ni", "Ni by Co", "Co by Ni"), 
+         quantile = as.factor(j2quant)) |> 
+  ggplot(aes(j1val, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  # ylim(-6, 6) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_slg_biv_expresp_3.png", width = 6, height = 4)
+
+# plot trivariate relationships bsr large
+slg_triv <- read_csv("sim/bsr_lg/triv_expresp.csv")
+slg_triv <- slg_triv |> 
+  mutate(variable1 = case_when(
+    j1 == "Hg" ~ "Hg by Ni + Tl", 
+    j1 == "Ni" ~ "Ni by Hg + Tl", 
+    j1 == "Tl" ~ "Tl by Hg + Ni"), 
+    quantile = as.factor(j23quant)) 
+
+## WHAT TO DO ABOUT THIS?? ##
+
+slg_triv |> 
+  ggplot(aes(j1val, est, color = quantile)) +
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) + 
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2+3\nquantile")
+# ggsave("index/figures/ch4_slg_triv_expresp.png", width = 6, height = 4)
+
+
+# bsr combine sens --------------------------------------------------------
+
+# univariate pips
+bsr_pips <- bind_rows(
+  mutate(ssm_pips, size = "Small"), 
+  mutate(slg_pips, size = "Large")
+) |> 
+  group_by(size, case, variable) |> 
+  summarize(sensitivity = sum(PIP >= 0.5)/n()) |> 
+  mutate(sign = get_sign(case, variable))
+write_csv(bsr_pips, "index/data/bsr_pip_sens.csv")
+
+# interactions
+cnames <- c("As", "Cd", "Co", "Hg", "Ni", "Tl", "Pb", "Mo", "Sb", "Sn")
+
+bsr_comb <- bind_rows(
+  mutate(ssm_pipb, size = "Small"), 
+  mutate(slg_pipb, size = "Large")
+) |> 
+  mutate(sign = get_sign_bsr(case, Var1) & get_sign_bsr(case, Var2), 
+         v1 = cnames[Var1], v2 = cnames[Var2], 
+         inter = paste0(v1, "-", v2)) |> 
+  mutate(inter2 = ifelse(sign, inter, "none")) |> 
+  group_by(size, case, inter2, sign) |> 
+  summarize(sensitivity = sum(PIP >= 0.5)/n())
+write_csv(bsr_comb, "index/data/bsr_int_sens.csv")

@@ -429,7 +429,7 @@ Notably, this algorithm must deal with the explicit specification of interaction
 
 ## Detecting interactions
 
-In Section \@ref(motivation), we highlighted the challenges of analytically testing for the presence of interactions in exposure mixture studies. These challenges motivated a theoretical exploration of BKMR and BSR in Sections \@ref(bkmr) and \@ref(bsr). Now, we discuss and compare the options that BKMR and BSR provide for inference on the presence of interactions. We also include discussion on theoretical advantages and disadvantages to each. 
+In Section \@ref(motivation), we highlighted the challenges of analytically testing for the presence of interactions in exposure mixture studies. These challenges motivated a theoretical exploration of BKMR and BSR in Sections \@ref(bkmr) and \@ref(bsr). Now, we discuss and compare the options that BKMR and BSR provide for inference on the presence of interactions. We also include discussion on theoretical advantages and disadvantages to each. Importantly, we note that it is not possible to detect interactions between a covariate and an exposure within the model specifications of BKMR or BSR. 
 
 ### BKMR
 
@@ -456,9 +456,5 @@ While BKMR is a fully nonparametric approach, BSR is a semiparametric approach b
 BSR is highly sensitive to the choice of $d$, the degrees of freedom. While it employs a WAIC approach to selecting the best $d$, this parameter introduces an additional tuning step in the analysis. Both approaches can be highly sensitive to the specification of certain priors. BSR offers an empirical Bayes strategy for $\sigma^2_{\boldsymbol\beta}$, the variance of a exposure's probability of inclusion. On the other hand, the choice of prior on the influential smoothing parameter, $\rho$, in BKMR is up to the user. 
 
 We also note that BKMR offers a hierarchical variable selection approach to dealing with collinearity between exposures. While this is an additional decision that must be specified by the user, it offers a formal approach to dealing with collinear exposures. BSR does not explicitly account for collinearity in its model formulation, which can lead to erroneous interpretations of variable importance if unaccounted for. 
-
-### Exposure-covariate interactions
-
-*add exposure-covariate interaction challenges*
 
 <!-- Notes: complex vs. non-additive interaction, clarify in first section; decide what to do with covariates!! -->

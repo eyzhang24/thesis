@@ -117,6 +117,56 @@ Here, we describe the formula for calculating the confidence interval of the dif
 
 ## Results {#suppresults}
 
+```{r}
+# naive small
+include_graphics(path = "figures/ch4_nsm_univ_pval.png")
+```
+
+
+```{r}
+# naive large
+include_graphics(path = "figures/ch4_nlg_univ_pval.png")
+```
+
+
+```{r}
+## NOTE: oracle take out interaction???
+
+# oracle small
+include_graphics(path = "figures/ch4_osm_pval.png")
+```
+
+
+```{r}
+# oracle large
+include_graphics(path = "figures/ch4_olg_pval.png")
+```
+
+
+```{r}
+# bkmr small
+include_graphics(path = "figures/ch4_ksm_univ_pips.png")
+```
+
+
+```{r}
+# bkmr large
+include_graphics(path = "figures/ch4_klg_univ_pips.png")
+```
+
+
+```{r}
+# bsr small
+include_graphics(path = "figures/ch4_ssm_univ_pips.png")
+```
+
+
+```{r}
+# bsr large
+include_graphics(path = "figures/ch4_slg_univ_pips.png")
+```
+
+
 Full output from a representative base-case model, two-way interaction model, and race$\times$exp interaction model. 
 
 Potentially also include line plots of h() and f() function fits. 
