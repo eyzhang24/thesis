@@ -1,0 +1,177 @@
+mod,case,size,var,variable,sensitivity
+Oracle MLR,2,Large,Hg,Hg,1
+Oracle MLR,2,Large,Hg:Ni,Int,0.48
+Oracle MLR,2,Large,Ni*,Ni*,0.47333333333333333
+Oracle MLR,2,Large,Sb,Sb,0.82
+Oracle MLR,2,Large,Sb^2,Sb^2,1
+Oracle MLR,2,Large,Sn*,Sn*,0.9
+Oracle MLR,2,Small,Hg,Hg,0.95
+Oracle MLR,2,Small,Hg:Ni,Int,0.24
+Oracle MLR,2,Small,Ni*,Ni*,0.17
+Oracle MLR,2,Small,Sb^2,Sb^2,0.97
+Oracle MLR,2,Small,Sn*,Sn*,0.39
+Oracle MLR,3,Large,Hg,Hg,1
+Oracle MLR,3,Large,Hg:Ni,Int,1
+Oracle MLR,3,Large,Ni*,Ni*,0.6466666666666666
+Oracle MLR,3,Large,Sb,Sb,0.78
+Oracle MLR,3,Large,Sb^2,Sb^2,1
+Oracle MLR,3,Large,Sn*,Sn*,0.95
+Oracle MLR,3,Small,Hg,Hg,0.86
+Oracle MLR,3,Small,Hg:Ni,Int,0.5
+Oracle MLR,3,Small,Ni*,Ni*,0.3
+Oracle MLR,3,Small,Sb^2,Sb^2,0.96
+Oracle MLR,3,Small,Sn*,Sn*,0.36
+Oracle MLR,4,Large,Hg,Hg,1
+Oracle MLR,4,Large,I(Hg * ((Ni - 1)^2)),Int,0.54
+Oracle MLR,4,Large,Ni*,Ni*,0.77
+Oracle MLR,4,Large,Sb,Sb,0.87
+Oracle MLR,4,Large,Sb^2,Sb^2,1
+Oracle MLR,4,Large,Sn*,Sn*,0.94
+Oracle MLR,4,Small,Hg,Hg,0.77
+Oracle MLR,4,Small,I(Hg * ((Ni - 1)^2)),Int,0.14
+Oracle MLR,4,Small,Ni*,Ni*,0.54
+Oracle MLR,4,Small,Sb^2,Sb^2,1
+Oracle MLR,4,Small,Sn*,Sn*,0.49
+Oracle MLR,5,Large,Hg,Hg,1
+Oracle MLR,5,Large,I(Hg * ((Ni - 1)^2)),Int,1
+Oracle MLR,5,Large,Ni*,Ni*,1
+Oracle MLR,5,Large,Sb,Sb,0.78
+Oracle MLR,5,Large,Sb^2,Sb^2,1
+Oracle MLR,5,Large,Sn*,Sn*,0.96
+Oracle MLR,5,Small,Hg,Hg,0.74
+Oracle MLR,5,Small,I(Hg * ((Ni - 1)^2)),Int,0.48
+Oracle MLR,5,Small,Ni*,Ni*,0.71
+Oracle MLR,5,Small,Sb^2,Sb^2,0.98
+Oracle MLR,5,Small,Sn*,Sn*,0.37
+Oracle MLR,6,Large,Cd:As,Int,0.59
+Oracle MLR,6,Large,Hg,Hg,1
+Oracle MLR,6,Large,Ni*,Ni*,1
+Oracle MLR,6,Large,Sb,Sb,0.78
+Oracle MLR,6,Large,Sb^2,Sb^2,1
+Oracle MLR,6,Large,Sn*,Sn*,0.92
+Oracle MLR,6,Small,Cd:As,Int,0.15
+Oracle MLR,6,Small,Hg,Hg,0.83
+Oracle MLR,6,Small,Ni*,Ni*,0.93
+Oracle MLR,6,Small,Sb^2,Sb^2,0.93
+Oracle MLR,6,Small,Sn*,Sn*,0.43
+Oracle MLR,7,Large,Cd:As,Int,0.99
+Oracle MLR,7,Large,Hg,Hg,1
+Oracle MLR,7,Large,Ni*,Ni*,1
+Oracle MLR,7,Large,Sb,Sb,0.76
+Oracle MLR,7,Large,Sb^2,Sb^2,1
+Oracle MLR,7,Large,Sn*,Sn*,0.91
+Oracle MLR,7,Small,Cd:As,Int,0.52
+Oracle MLR,7,Small,Hg,Hg,0.82
+Oracle MLR,7,Small,Ni*,Ni*,0.97
+Oracle MLR,7,Small,Sb^2,Sb^2,0.97
+Oracle MLR,7,Small,Sn*,Sn*,0.27
+Oracle MLR,8,Large,Hg,Hg,1
+Oracle MLR,8,Large,I(Cd * ((As - 1)^2)),Int,0.57
+Oracle MLR,8,Large,Ni*,Ni*,1
+Oracle MLR,8,Large,Sb,Sb,0.85
+Oracle MLR,8,Large,Sb^2,Sb^2,1
+Oracle MLR,8,Large,Sn*,Sn*,0.87
+Oracle MLR,8,Small,Hg,Hg,0.84
+Oracle MLR,8,Small,I(Cd * ((As - 1)^2)),Int,0.18
+Oracle MLR,8,Small,Ni*,Ni*,0.9
+Oracle MLR,8,Small,Sb^2,Sb^2,0.96
+Oracle MLR,8,Small,Sn*,Sn*,0.41
+Oracle MLR,9,Large,Hg,Hg,1
+Oracle MLR,9,Large,I(Cd * ((As - 1)^2)),Int,0.99
+Oracle MLR,9,Large,Ni*,Ni*,1
+Oracle MLR,9,Large,Sb,Sb,0.82
+Oracle MLR,9,Large,Sb^2,Sb^2,1
+Oracle MLR,9,Large,Sn*,Sn*,0.94
+Oracle MLR,9,Small,Hg,Hg,0.85
+Oracle MLR,9,Small,I(Cd * ((As - 1)^2)),Int,0.52
+Oracle MLR,9,Small,Ni*,Ni*,0.94
+Oracle MLR,9,Small,Sb^2,Sb^2,0.99
+Oracle MLR,9,Small,Sn*,Sn*,0.41
+Oracle MLR,10,Large,Hg,Hg,1
+Oracle MLR,10,Large,Ni*,Ni*,0.4666666666666667
+Oracle MLR,10,Large,Ni:Co,Int,0.52
+Oracle MLR,10,Large,Sb,Sb,0.83
+Oracle MLR,10,Large,Sb^2,Sb^2,1
+Oracle MLR,10,Large,Sn*,Sn*,0.9
+Oracle MLR,10,Small,Hg,Hg,0.89
+Oracle MLR,10,Small,Ni*,Ni*,0.18333333333333332
+Oracle MLR,10,Small,Ni:Co,Int,0.18
+Oracle MLR,10,Small,Sb^2,Sb^2,1
+Oracle MLR,10,Small,Sn*,Sn*,0.51
+Oracle MLR,11,Large,Hg,Hg,1
+Oracle MLR,11,Large,Ni*,Ni*,0.62
+Oracle MLR,11,Large,Ni:Co,Int,0.98
+Oracle MLR,11,Large,Sb,Sb,0.83
+Oracle MLR,11,Large,Sb^2,Sb^2,1
+Oracle MLR,11,Large,Sn*,Sn*,0.94
+Oracle MLR,11,Small,Hg,Hg,0.84
+Oracle MLR,11,Small,Ni*,Ni*,0.27666666666666667
+Oracle MLR,11,Small,Ni:Co,Int,0.5
+Oracle MLR,11,Small,Sb^2,Sb^2,0.95
+Oracle MLR,11,Small,Sn*,Sn*,0.32
+Oracle MLR,12,Large,Hg,Hg,1
+Oracle MLR,12,Large,I(Ni * ((Co - 1)^2)),Int,0.53
+Oracle MLR,12,Large,Ni*,Ni*,0.765
+Oracle MLR,12,Large,Sb,Sb,0.73
+Oracle MLR,12,Large,Sb^2,Sb^2,1
+Oracle MLR,12,Large,Sn*,Sn*,0.95
+Oracle MLR,12,Small,Hg,Hg,0.89
+Oracle MLR,12,Small,I(Ni * ((Co - 1)^2)),Int,0.16
+Oracle MLR,12,Small,Ni*,Ni*,0.48
+Oracle MLR,12,Small,Sb^2,Sb^2,0.95
+Oracle MLR,12,Small,Sn*,Sn*,0.35
+Oracle MLR,13,Large,Hg,Hg,1
+Oracle MLR,13,Large,I(Ni * ((Co - 1)^2)),Int,0.97
+Oracle MLR,13,Large,Ni*,Ni*,0.985
+Oracle MLR,13,Large,Sb,Sb,0.83
+Oracle MLR,13,Large,Sb^2,Sb^2,1
+Oracle MLR,13,Large,Sn*,Sn*,0.91
+Oracle MLR,13,Small,Hg,Hg,0.84
+Oracle MLR,13,Small,I(Ni * ((Co - 1)^2)),Int,0.54
+Oracle MLR,13,Small,Ni*,Ni*,0.695
+Oracle MLR,13,Small,Sb^2,Sb^2,0.96
+Oracle MLR,13,Small,Sn*,Sn*,0.42
+Oracle MLR,14,Large,Hg,Hg,1
+Oracle MLR,14,Large,Hg:Ni:Tl,Int,0.45
+Oracle MLR,14,Large,Ni*,Ni*,0.725
+Oracle MLR,14,Large,Sb,Sb,0.84
+Oracle MLR,14,Large,Sb^2,Sb^2,1
+Oracle MLR,14,Large,Sn*,Sn*,0.93
+Oracle MLR,14,Small,Hg,Hg,0.89
+Oracle MLR,14,Small,Hg:Ni:Tl,Int,0.19
+Oracle MLR,14,Small,Ni*,Ni*,0.56
+Oracle MLR,14,Small,Sb^2,Sb^2,0.98
+Oracle MLR,14,Small,Sn*,Sn*,0.34
+Oracle MLR,15,Large,Hg,Hg,1
+Oracle MLR,15,Large,Hg:Ni:Tl,Int,0.97
+Oracle MLR,15,Large,Ni*,Ni*,0.985
+Oracle MLR,15,Large,Sb,Sb,0.79
+Oracle MLR,15,Large,Sb^2,Sb^2,1
+Oracle MLR,15,Large,Sn*,Sn*,0.91
+Oracle MLR,15,Small,Hg,Hg,0.85
+Oracle MLR,15,Small,Hg:Ni:Tl,Int,0.5
+Oracle MLR,15,Small,Ni*,Ni*,0.725
+Oracle MLR,15,Small,Sb^2,Sb^2,1
+Oracle MLR,15,Small,Sn*,Sn*,0.36
+Oracle MLR,16,Large,Hg,Hg,1
+Oracle MLR,16,Large,I(Hg * ((Ni - 1)^2) * Tl),Int,0.48
+Oracle MLR,16,Large,Ni*,Ni*,0.74
+Oracle MLR,16,Large,Sb,Sb,0.79
+Oracle MLR,16,Large,Sb^2,Sb^2,1
+Oracle MLR,16,Large,Sn*,Sn*,0.93
+Oracle MLR,16,Small,Hg,Hg,0.91
+Oracle MLR,16,Small,I(Hg * ((Ni - 1)^2) * Tl),Int,0.1
+Oracle MLR,16,Small,Ni*,Ni*,0.505
+Oracle MLR,16,Small,Sb^2,Sb^2,0.96
+Oracle MLR,16,Small,Sn*,Sn*,0.33
+Oracle MLR,17,Large,Hg,Hg,1
+Oracle MLR,17,Large,I(Hg * ((Ni - 1)^2) * Tl),Int,0.96
+Oracle MLR,17,Large,Ni*,Ni*,0.98
+Oracle MLR,17,Large,Sb,Sb,0.78
+Oracle MLR,17,Large,Sb^2,Sb^2,1
+Oracle MLR,17,Large,Sn*,Sn*,0.93
+Oracle MLR,17,Small,Hg,Hg,0.83
+Oracle MLR,17,Small,I(Hg * ((Ni - 1)^2) * Tl),Int,0.49
+Oracle MLR,17,Small,Ni*,Ni*,0.7
+Oracle MLR,17,Small,Sb^2,Sb^2,0.95
+Oracle MLR,17,Small,Sn*,Sn*,0.45

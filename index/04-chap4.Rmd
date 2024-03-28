@@ -198,10 +198,19 @@ In this section, we report on results from our simulation study.
 
 We start by presenting results from models run on the base case scenario, in which the true relationship contained no interactions. 
 
+```{r basecasesig, fig.cap = "P-value distributions from smaller (a) and larger (b) size datasets and PIP distributions from smaller (c) and larger (d) size datasets.", out.width = '100%', echo = FALSE}
+include_graphics(path = "figures/ch4_basecasesig.png")
+```
+
+
+
 ### Univariate sensitivity 
 
 - naive and oracle do p-values
 - bsr and bkmr do pips
+
+
+
 
 ### Two-way interactions between chemicals
 
