@@ -219,7 +219,19 @@ base_mlr <- bind_rows(
 sum_base_mlr <- base_mlr |> 
   group_by(mod, size, var, sign) |> 
   summarize(sensitivity = sum(p < 0.05)/n())
-write_csv(sum_base_mlr, "index/data/base_mlr_sens.csv")
+
+base_bay <- bind_rows(
+  mutate(base_pips, size = "Small"), 
+  mutate(base_pipl, size = "Large")
+)
+
+sum_base_bay <- base_bay |> 
+  rename(var = variable) |> 
+  group_by(mod, size, var, sign) |> 
+  summarize(sensitivity = sum(PIP >= 0.5)/n()) 
+
+sum_base <- bind_rows(sum_base_mlr, sum_base_bay)
+write_csv(sum_base, "index/data/base_sens.csv")
 
 # naive mlr ---------------------------------------------------------------
 

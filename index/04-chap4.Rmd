@@ -202,6 +202,9 @@ We start by presenting results from models run on the base case scenario, in whi
 include_graphics(path = "figures/ch4_basecasesig.png")
 ```
 
+```{r basecasetab, echo = FALSE}
+
+```
 
 
 ### Univariate sensitivity 

@@ -1,0 +1,69 @@
+mod,size,var,sign,sensitivity
+Naive MLR,Large,As,FALSE,0.02
+Naive MLR,Large,Cd,FALSE,0.04
+Naive MLR,Large,Co,FALSE,0.08
+Naive MLR,Large,Hg,TRUE,1
+Naive MLR,Large,Mo,FALSE,0.13
+Naive MLR,Large,Ni,TRUE,1
+Naive MLR,Large,Pb,FALSE,0.03
+Naive MLR,Large,Sb,TRUE,0.51
+Naive MLR,Large,Sn,TRUE,0.71
+Naive MLR,Large,Tl,FALSE,0.03
+Naive MLR,Small,As,FALSE,0.05
+Naive MLR,Small,Cd,FALSE,0.07
+Naive MLR,Small,Co,FALSE,0.02
+Naive MLR,Small,Hg,TRUE,0.8
+Naive MLR,Small,Mo,FALSE,0.07
+Naive MLR,Small,Ni,TRUE,0.7
+Naive MLR,Small,Pb,FALSE,0.03
+Naive MLR,Small,Sb,TRUE,0.12
+Naive MLR,Small,Sn,TRUE,0.24
+Naive MLR,Small,Tl,FALSE,0.08
+Oracle MLR,Large,Hg,TRUE,1
+Oracle MLR,Large,Ni*,TRUE,1
+Oracle MLR,Large,Sb^2,TRUE,1
+Oracle MLR,Large,Sn*,TRUE,0.89
+Oracle MLR,Small,Hg,TRUE,0.84
+Oracle MLR,Small,Ni*,TRUE,0.94
+Oracle MLR,Small,Sb^2,TRUE,0.95
+Oracle MLR,Small,Sn*,TRUE,0.35
+BKMR,Large,As,FALSE,0.12
+BKMR,Large,Cd,FALSE,0.12
+BKMR,Large,Co,FALSE,0.14
+BKMR,Large,Hg,TRUE,1
+BKMR,Large,Mo,FALSE,0.13
+BKMR,Large,Ni,TRUE,1
+BKMR,Large,Pb,FALSE,0.08
+BKMR,Large,Sb,TRUE,1
+BKMR,Large,Sn,TRUE,0.77
+BKMR,Large,Tl,FALSE,0.13
+BKMR,Small,As,FALSE,0.3
+BKMR,Small,Cd,FALSE,0.33
+BKMR,Small,Co,FALSE,0.36
+BKMR,Small,Hg,TRUE,0.86
+BKMR,Small,Mo,FALSE,0.38
+BKMR,Small,Ni,TRUE,0.92
+BKMR,Small,Pb,FALSE,0.41
+BKMR,Small,Sb,TRUE,0.95
+BKMR,Small,Sn,TRUE,0.52
+BKMR,Small,Tl,FALSE,0.4
+BSR,Large,As,FALSE,0.01
+BSR,Large,Cd,FALSE,0
+BSR,Large,Co,FALSE,0.03
+BSR,Large,Hg,TRUE,1
+BSR,Large,Mo,FALSE,0.02
+BSR,Large,Ni,TRUE,1
+BSR,Large,Pb,FALSE,0.03
+BSR,Large,Sb,TRUE,1
+BSR,Large,Sn,TRUE,0.62
+BSR,Large,Tl,FALSE,0
+BSR,Small,As,FALSE,0.06
+BSR,Small,Cd,FALSE,0.04
+BSR,Small,Co,FALSE,0.04
+BSR,Small,Hg,TRUE,0.51
+BSR,Small,Mo,FALSE,0.04
+BSR,Small,Ni,TRUE,0.67
+BSR,Small,Pb,FALSE,0.04
+BSR,Small,Sb,TRUE,0.88
+BSR,Small,Sn,TRUE,0.17
+BSR,Small,Tl,FALSE,0.05
