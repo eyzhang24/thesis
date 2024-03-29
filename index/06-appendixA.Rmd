@@ -114,8 +114,12 @@ Here, we describe the formula for calculating the confidence interval of the dif
 
 [*figure this out at some points??*]
 
+Examples of trace plots for BKMR and BSR. 
+
 
 ## Results {#suppresults}
+
+Full output for univariate
 
 ```{r}
 # naive small
@@ -130,16 +134,14 @@ include_graphics(path = "figures/ch4_nlg_univ_pval.png")
 
 
 ```{r}
-## NOTE: oracle take out interaction???
-
 # oracle small
-include_graphics(path = "figures/ch4_osm_pval.png")
+include_graphics(path = "figures/ch4_osm_univ_pval.png")
 ```
 
 
 ```{r}
 # oracle large
-include_graphics(path = "figures/ch4_olg_pval.png")
+include_graphics(path = "figures/ch4_olg_univ_pval.png")
 ```
 
 
@@ -166,9 +168,20 @@ include_graphics(path = "figures/ch4_ssm_univ_pips.png")
 include_graphics(path = "figures/ch4_slg_univ_pips.png")
 ```
 
+Full output for bivariate
 
-Full output from a representative base-case model, two-way interaction model, and race$\times$exp interaction model. 
+```{r}
+# oracle small
+include_graphics(path = "figures/ch4_osm_biv_pval.png")
+```
 
-Potentially also include line plots of h() and f() function fits. 
+```{r}
+include_graphics(path = "figures/ch4_olg_biv_pval.png")
+```
 
-Examples of trace plots for BKMR and BSR. 
+Exposure response surfaces
+
+```{r}
+
+```
+

@@ -190,11 +190,6 @@ Finally, for stratified models, we
 
 ## Results {#results}
 
-In this section, we report on results from our simulation study. 
-
-- example output from representative model 
-- figures + tables w/ model performance
-
 ### Base case
 
 We start by presenting results from models run on the base case scenario, in which the true relationship contained no interactions. 
@@ -221,25 +216,22 @@ base_sens2 |>
   kbl(booktabs = TRUE, escape = FALSE, 
       col.names = c("", names(base_sens2)[3:12]),
       align = "lcccccccccc",
-      caption = "Detection rate of chemicals in base case scenario.") |> 
+      caption = "Sensitivity and false discovery rate (FDR) of chemicals in base case scenario.") |> 
   column_spec(1, width = "6em") |>
-  add_header_above(header = c(" " = 1, "Significant" = 4, "Insignificant" = 6)) |>
+  add_header_above(header = c(" " = 1, "Sensitivity" = 4, "FDR" = 6)) |>
   pack_rows(index = base_mod_ord) 
 ```
 
 
 ### Univariate sensitivity 
 
-Probably only include results from Hg and Ni here, move everything else to appendix
+Hg Ni full output
 
-- naive and oracle do p-values
-- bsr and bkmr do pips
-
-```{r, out.width = '75%', echo = FALSE}
-# basecasesig, fig.cap = "P-value distributions from smaller (a) and larger (b) size datasets and PIP distributions from smaller (c) and larger (d) size datasets.", out.width = '100%', echo = FALSE
-
-
+```{r hgniuniv, fig.cap = "P-value (a) and PIP (b) distributions for univariate chemicals from all models in scenarios with an interaction between Hg and Ni.", out.width = '100%', echo = FALSE}
+include_graphics("figures/ch4_hgni_univ.png")
 ```
+
+Table of everything
 
 ```{r onewaytab, echo = FALSE, message = FALSE}
 naive_sens <- read_csv("data/naive_sens.csv")
@@ -277,15 +269,26 @@ comb_sens |>
   select(-mod) |> 
   relocate(size, Significant, Insignificant) |> 
   kbl(booktabs = TRUE, escape = FALSE, digits = 3, align = "lcc",
-      caption = "Detection rate of chemicals in all scenarios with interactions between exposures.") |> 
+      caption = "Sensitivity and false discovery rate (FDR) of chemicals in all scenarios with interactions between exposures.", 
+      col.names = c("", "Sensitivity", "FDR")) |> 
   column_spec(1, width = "6em") |>
   pack_rows(index = comb_sens_ord) 
 ```
 
+Everything else is in appendix
 
 ### Two-way interactions between chemicals
 
 Probably only include false discovery rates for BKMR for, again, Hg and Ni to reduce complexity and run-time, note that future work would involve getting FDR's for all models
+
+Hg Ni full output
+
+```{r hgnibiv, echo = FALSE, out.width = '100%'}
+include_graphics("figures/ch4_hgni_biv.png")
+```
+
+
+Table of all sensitivities
 
 ```{r twowaytab, echo = FALSE, message = FALSE}
 oracle_comb <- read_csv("data/oracle_sens.csv")
@@ -298,43 +301,44 @@ comb_int <- bind_rows(
   bkmr_comb |> mutate(mod = "BKMR"), 
   bsr_comb |> mutate(mod = "BSR") |> filter(sign) |> rename(cond = inter2) |> select(-sign)
 ) |>
-  filter(case %in% 2:13) 
-# |>
-#   mutate(
-#     variable = gsub("[^[:alpha:]]", "", variable),
-#     mod = factor(mod, levels = c("Naive MLR", "Oracle MLR", "BKMR", "BSR")) ,
-#     sign = ifelse(mod == "Oracle MLR", TRUE, sign),
-#     new_sign = factor(ifelse(
-#       variable %in% c("Hg", "Ni", "Sb", "Sn"),
-#       "Significant",
-#       "Insignificant"
-#     ))
-#   ) |>
-#   group_by(mod, size, new_sign) |>
-#   summarize(detection = mean(sensitivity)) |> 
-#   pivot_wider(names_from = new_sign, values_from = detection) |> 
-#   arrange(mod, desc(size)) |> 
-#   ungroup()
-# 
-# comb_sens_ord <- table(comb_sens$mod)
-# 
-# options(knitr.kable.NA = '-')
-# comb_sens |> 
-#   select(-mod) |> 
-#   relocate(size, Significant, Insignificant) |> 
-#   kbl(booktabs = TRUE, escape = FALSE, digits = 3, align = "lcc",
-#       caption = "Detection rate of chemicals in all scenarios with interactions between exposures.") |> 
-#   column_spec(1, width = "6em") |>
-#   pack_rows(index = comb_sens_ord) 
+  filter(case %in% 2:13) |> 
+  mutate(cond = gsub(":", "-", cond), 
+         cond = gsub("\\+", "-", cond),
+         cond = case_when(
+           cond == "I(Hg * ((Ni - 1)^2))" ~ "Hg-Ni", 
+           cond == "I(Cd * ((As - 1)^2))" ~ "Cd-As", 
+           cond == "I(Ni * ((Co - 1)^2))" ~ "Ni-Co", 
+           cond == "As-Cd" ~ "Cd-As", 
+           cond == "Co-Ni" ~ "Ni-Co", 
+           .default = cond
+         ), 
+         cond = factor(cond, levels = c("Hg-Ni", "Cd-As", "Ni-Co")), 
+         inter_type = ifelse(case %% 4 %in% 1:2, "Multiplicative", "Polynomial"), 
+         effect_size = factor(ifelse(case %% 2 == 1, "Higher", "Lower"), 
+                              levels = c("Lower", "Higher"))) |> 
+  select(-case) |>
+  arrange(desc(size)) |> 
+  pivot_wider(names_from = c(mod, size), values_from = sensitivity, 
+              names_sep = " ") |> 
+  arrange(cond, inter_type, effect_size)
+
+comb_int_ord <- table(comb_int$cond)
 
 comb_int |> 
-  kbl(booktabs = TRUE)
+  select(-cond) |> 
+  kbl(booktabs = TRUE, escape = FALSE, 
+      align = "llcccccc", 
+      caption = "Sensitivity to interactions in all scenarios with interactions between exposures.", 
+      col.names = c("Interaction type", "Effect size", rep(c("Oracle", "BKMR", "BSR"), 2))) |> 
+  add_header_above(header = c(" " = 2, "Small" = 3, "Large" = 3), bold = TRUE) |>
+  pack_rows(index = comb_int_ord) |> 
+  collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace")
 ```
 
-To do still:
+Include a table of false discovery rates for BSR and BKMR
 
-- finish extracting BSR larges
-- 
+Everything else is in appendix
+
 
 ### Three-way interactions between chemicals
 
