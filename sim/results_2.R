@@ -1190,7 +1190,8 @@ slg_triv |>
                                           reverse = TRUE)) +
   labs(x = "Chem 1 value",  
        y = "Estimated response", 
-       color = "Chem 2+3\nquantile")
+       color = "Chem 2+3\nquantile") +
+  theme(strip.text = element_text(size = 7))
 ggsave("index/figures/ch4_slg_triv_expresp.png", width = 6, height = 4)
 
 
@@ -1474,6 +1475,8 @@ ggsave("index/figures/ch4_hgni_biv.png", width = 9, height = 6)
 
 
 # run times ---------------------------------------------------------------
+
+## ALSO HAVE TO ADD IN RACE BY ETHNICITY!!! 
 
 t_ksm <- read_rds("sim/bkmr_sm/times.RDS")
 t_klg <- read_rds("sim/bkmr_lg/times.RDS")

@@ -106,15 +106,18 @@ include_graphics(path = "figures/chem_rsq.png")
 
 Figure \@ref(fig:comparedf) compares the degrees of freedom selected using the WAIC criterion when fitting BSR using 5,000 MCMC iterations to 50,000 MCMC iterations. We ran this test on five smaller size datasets from the 16 scenarios containing interactions between exposures, as well as from the base case. 
 
-```{r comparedf, fig.cap = "compare df.", out.width = '100%', echo = FALSE}
+```{r comparedf, fig.cap = "Test comparing WAIC selection of degrees of freedom from BSR models fit with either 5,000 or 50,000 MCMC iterations.", out.width = '100%', echo = FALSE}
 include_graphics(path = "figures/test_waic2.png")
 ```
 
-Here, we describe the formula for calculating the confidence interval of the difference in difference of the estimated response at the 0.75 and 0.25 quantiles of one chemical, while holding one or two other chemicals at their 0.75 and 0.25 quantiles and the rest of the chemicals at their 0.5 quantiles. 
+<!-- Here, we describe the formula for calculating the confidence interval of the difference in difference of the estimated response at the 0.75 and 0.25 quantiles of one chemical, while holding one or two other chemicals at their 0.75 and 0.25 quantiles and the rest of the chemicals at their 0.5 quantiles.  -->
 
 [*figure this out at some points??*]
 
-Examples of trace plots for BKMR and BSR. 
+```{r traceplots, fig.cap = "Examples of trace plots from smaller size BKMR (a) and BSR (b) as well as larger size BKMR (c) and BSR (d) in scenarios with larger effect size interactions between Hg and Ni.", echo = FALSE, out.width = '100%'}
+include_graphics(path = "figures/traceplots/bksm_traceplotmerged.png")
+```
+
 
 
 ## Results {#suppresults}
@@ -182,6 +185,20 @@ include_graphics(path = "figures/ch4_olg_biv_pval.png")
 Exposure response surfaces
 
 ```{r}
-
+include_graphics(path = "figures/ch4_ksm_biv_expresp_2.png")
 ```
+
+```{r}
+include_graphics("figures/ch4_klg_biv_expresp_2.png")
+```
+
+
+```{r}
+include_graphics("figures/ch4_ksm_biv_expresp_3.png")
+```
+
+```{r}
+include_graphics("figures/ch4_klg_biv_expresp_3.png")
+```
+
 
