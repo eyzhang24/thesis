@@ -1,0 +1,11 @@
+mod,size,Base,Mult. Lower,Mult. Higher,Poly. Lower,Poly. Higher
+Naive,Small,0.0032 s,0.0016 s,0.002 s,0.0016 s,0.0017 s
+Naive,Large,0.002 s,0.002 s,0.0035 s,0.0031 s,0.0025 s
+Oracle,Small,0.0015 s,0.0015 s,0.0015 s,0.0019 s,0.0016 s
+Oracle,Large,0.0044 s,0.0018 s,0.0018 s,0.0019 s,0.0024 s
+BKMR,Small,13.56 m,15.21 m,15.51 m,15.20 m,15.17 m
+BKMR,Large,1.64 h,1.68 h,1.62 h,1.64 h,1.59 h
+BSR df,Small,30.11 m,33.15 m,32.92 m,33.81 m,35.11 m
+BSR df,Large,57.22 m,58.02 m,1.06 h,57.75 m,1.05 h
+BSR mod,Small,1.37 h,1.36 h,1.42 h,1.44 h,1.49 h
+BSR mod,Large,2.92 h,2.81 h,3.06 h,2.87 h,3.04 h

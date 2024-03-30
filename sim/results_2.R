@@ -1472,3 +1472,153 @@ cowplot::plot_grid(hgnitwo, hgnilegend2, nrow = 2, rel_heights = c(5, 0.4))
 # ggsave("temp.png", width = 9, height = 7)
 ggsave("index/figures/ch4_hgni_biv.png", width = 9, height = 6)
 
+
+# run times ---------------------------------------------------------------
+
+t_ksm <- read_rds("sim/bkmr_sm/times.RDS")
+t_klg <- read_rds("sim/bkmr_lg/times.RDS")
+
+t_ssm <- read_rds("sim/bsr_sm/times.RDS") |> 
+  pivot_longer(cols = c(time_selection, time), 
+               names_to = "mod", values_to = "time") |> 
+  mutate(mod = ifelse(mod == "time", "BSR mod", "BSR df"))
+t_slg <- read_rds("sim/bsr_lg/times.RDS") |> 
+  pivot_longer(cols = c(time_selection, time), 
+               names_to = "mod", values_to = "time") |> 
+  mutate(mod = ifelse(mod == "time", "BSR mod", "BSR df"))
+
+t_nsm1 <- read_rds("sim/_mlr/mlr_mods_sm_times.RDS") |> unlist()
+t_nsm <- data.frame(
+  case_full = names(t_nsm1), 
+  time = t_nsm1
+) |> 
+  mutate(case = cumsum(case_full != lag(case_full, default = first(case_full))) + 1, 
+         time = as.difftime(time, units = "secs"), 
+         case = as.character(case)) 
+
+t_nlg1 <- read_rds("sim/_mlr/mlr_mods_lg_times.RDS") |> unlist()
+t_nlg <- data.frame(
+  case_full = names(t_nlg1), 
+  time = t_nlg1
+) |> 
+  mutate(case = cumsum(case_full != lag(case_full, default = first(case_full))) + 1, 
+         time = as.difftime(time, units = "secs"), 
+         case = as.character(case)) 
+
+t_osm1 <- read_rds("sim/_oracle/oracle_mods_sm_times.RDS") |> unlist()
+t_osm <- data.frame(
+  case_full = names(t_osm1), 
+  time = t_osm1
+) |> 
+  mutate(case = cumsum(case_full != lag(case_full, default = first(case_full))) + 1, 
+         time = as.difftime(time, units = "secs"), 
+         case = as.character(case)) 
+
+t_olg1 <- read_rds("sim/_oracle/oracle_mods_lg_times.RDS") |> unlist()
+t_olg <- data.frame(
+  case_full = names(t_olg1), 
+  time = t_olg1
+) |> 
+  mutate(case = cumsum(case_full != lag(case_full, default = first(case_full))) + 1, 
+         time = as.difftime(time, units = "secs"), 
+         case = as.character(case)) 
+
+times <- bind_rows(
+  mutate(t_nsm, mod = "Naive", size = "Small"), 
+  mutate(t_nlg, mod = "Naive", size = "Large"), 
+  mutate(t_osm, mod = "Oracle", size = "Small"), 
+  mutate(t_olg, mod = "Oracle", size = "Large"), 
+  mutate(t_ksm, mod = "BKMR", size = "Small"), 
+  mutate(t_klg, mod = "BKMR", size = "Large"), 
+  mutate(t_ssm, size = "Small"), 
+  mutate(t_slg, size = "Large"), 
+)
+
+# function to format difftime objects with appropriate units
+format_difftime <- function(difftime_obj) {
+  value <- as.numeric(difftime_obj)
+  # determine appropriate units
+  if (abs(value) < 60) {
+    duration <- as.numeric(difftime_obj, units = "secs")
+    result <- sprintf("%.2g %s", duration, "s")
+  } else if (abs(value) < 3600) {
+    duration <- as.numeric(difftime_obj, units = "mins")
+    result <- sprintf("%.2f %s", duration, "m")
+  } else if (abs(value) < 86400) {
+    duration <- as.numeric(difftime_obj, units = "hours")
+    result <- sprintf("%.2f %s", duration, "h")
+  } else {
+    duration <- as.numeric(difftime_obj, units = "days")
+    result <- sprintf("%.2f %s", duration, "d")
+  }
+  return(result)
+}
+
+time_table <- times |> 
+  mutate(mod = factor(mod, levels = c("Naive", "Oracle", "BKMR", "BSR df", "BSR mod")), 
+         size = factor(size, levels = c("Small", "Large")), 
+         case = as.numeric(case), 
+         scenario = case_when(
+           case == 1 ~ "Base", 
+           case %in% c(2, 6, 10, 14) ~ "Mult. Lower", 
+           case %in% c(3, 7, 11, 15) ~ "Mult. Higher", 
+           case %in% c(4, 8, 12, 16) ~ "Poly. Lower", 
+           case %in% c(5, 9, 13, 17) ~ "Poly. Higher"
+         ), 
+         scenario = factor(scenario, levels = c("Base", "Mult. Lower", "Mult. Higher", 
+                                                "Poly. Lower", "Poly. Higher", "Three-way"))) |> 
+  group_by(mod, size, scenario) |> 
+  summarize(mean_time = mean(time)) |> 
+  ungroup() |> 
+  rowwise() |> 
+  mutate(mean_time = format_difftime(mean_time))
+  # mutate(mean_time = format_largest_unit(format_difftime(mean_time)))
+
+time_table_wide <- time_table |> 
+  pivot_wider(names_from = scenario, values_from = mean_time)
+
+write_csv(time_table_wide, "sim/tables/time1.csv")
+write_csv(time_table_wide, "index/data/time1.csv")
+
+
+# three-way sens ----------------------------------------------------------
+
+oracle_senst <- bind_rows(
+  filter(mutate(osm_comb, size = "Small"), case %in% 14:17), 
+  filter(mutate(olg_comb, size = "Large"), case %in% 14:17)
+) |> 
+  group_by(case, size) |> 
+  summarize(sensitivity = sum(p < 0.05)/n()) |> 
+  mutate(mod = "Oracle") |> 
+  relocate(mod)
+bkmr_senst <- bkmr_comb |> 
+  filter(case %in% 14:17) |> 
+  pivot_wider(names_from = cond, values_from = signif) |> 
+  mutate(signif = unname(pick(4) | pick(5) | pick(6))) |> 
+  rename(signif = 7) |> 
+  group_by(case, size) |> 
+  summarize(sensitivity = sum(signif)/n()) |> 
+  mutate(mod = "BKMR") |> 
+  relocate(mod)
+bsr_senst <- bind_rows(
+  mutate(ssm_pipt, size = "Small"), 
+  mutate(slg_pipt, size = "Large")
+) |> 
+  group_by(case, size) |> 
+  summarize(sensitivity = sum(PIP >= 0.5)/n()) |> 
+  mutate(mod = "BSR") |> 
+  relocate(mod)
+
+all_senst <- bind_rows(oracle_senst, bkmr_senst, bsr_senst) |> 
+  mutate(inter_type = ifelse(case %in% c(14, 15), "Multiplicative", "Polynomial"), 
+         effect_size = ifelse(case %in% c(14, 16), "Lower", "Higher"))
+write_csv(all_senst, "index/data/triv_sens.csv")
+write_csv(all_senst, "sim/tables/triv_sens.csv")
+
+
+
+
+
+
+
+
