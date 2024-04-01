@@ -148,7 +148,7 @@ Finally, we ran stratified BKMR and BSR models in scenarios where we simulated a
 
 <!-- - expect that there will be less power to detect these interactions, especially in smaller size datasets -->
 
-We checked convergence for a selection of BKMR and BSR models using trace plots (Appendix \@ref(suppresults), [*add figure labels*]). 
+We checked convergence for a selection of BKMR and BSR models using trace plots (Appendix \@ref(suppresults), Figure \@ref(fig:traceplots)). 
 
 ### Model assessment 
 
@@ -304,7 +304,7 @@ comb_int |>
   select(-cond) |> 
   kbl(booktabs = TRUE, escape = FALSE, 
       align = "llcccccc", 
-      caption = "Sensitivity to interactions in all scenarios with interactions between exposures.", 
+      caption = "Sensitivity to interactions in all scenarios with two-way interactions between exposures.", 
       col.names = c("Interaction type", "Effect size", rep(c("Oracle", "BKMR", "BSR"), 2))) |> 
   add_header_above(header = c(" " = 2, "Small" = 3, "Large" = 3), bold = TRUE) |>
   pack_rows(index = comb_int_ord) |> 
@@ -313,8 +313,40 @@ comb_int |>
 
 Include a table of false discovery rates for BSR and BKMR
 
-```{r}
+```{r twowayfdrtab, echo = FALSE, message = FALSE}
+fdr_comb <- read_csv("data/comb_int_fdr.csv")
 
+fdr_comb2 <- fdr_comb |>
+  filter(inter2 == "none", case %in% 2:13) |>
+  mutate(
+    cond = case_when(
+      case %in% 2:5 ~ "Hg-Ni",
+      case %in% 6:9 ~ "Cd-As",
+      case %in% 10:13 ~ "Ni-Co"
+    ),
+    cond = factor(cond, levels = c("Hg-Ni", "Cd-As", "Ni-Co")), 
+    inter_type = ifelse(case %% 4 %in% 1:2, "Multiplicative", "Polynomial"),
+    effect_size = factor(
+      ifelse(case %% 2 == 1, "Higher", "Lower"),
+      levels = c("Lower", "Higher")
+    )
+  ) |> 
+  select(-inter2, -sign, -case) |>  
+  pivot_wider(names_from = c(mod, size), values_from = sensitivity) |> 
+  arrange(cond, inter_type, effect_size) |> 
+  relocate(cond, inter_type, effect_size, BKMR_Small, BSR_Small, BKMR_Large, BSR_Large)
+
+fdr_ord <- table(fdr_comb2$cond)
+
+fdr_comb2 |> 
+  select(-cond) |> 
+  kbl(booktabs = TRUE, escape = FALSE, 
+      align = "llcccc", 
+      caption = "False discovery rate of interactions in all scenarios with two-way interactions between exposures.", 
+      col.names = c("Interaction type", "Effect size", rep(c("BKMR", "BSR"), 2))) |> 
+  add_header_above(header = c(" " = 2, "Small" = 2, "Large" = 2), bold = TRUE) |>
+  pack_rows(index = fdr_ord) |> 
+  collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace")
 ```
 
 
@@ -327,7 +359,7 @@ Decide whether or not to include a figure???
 
 Table of sensitivities (try alternative ways of thresholding BSR???)
 
-```{r}
+```{r threewaysens, echo = FALSE, message = FALSE}
 triv <- read_csv("data/triv_sens.csv")
 
 triv |> 
@@ -348,7 +380,7 @@ Consider getting false discovery rates?
 
 ### Run-time analysis
 
-```{r}
+```{r runtimes, echo = FALSE, message = FALSE}
 times <- read_csv("data/time1.csv")
 
 times |> 

@@ -299,7 +299,7 @@ For this, we turn to epidemiological studies. The broad field of preventive epid
 
 There are clear practical motivations for studies that examine the health effects of exposure to co-occurring mixtures of chemicals, hereafter referred to as exposure mixtures. However, expanding the focus of analysis from one exposure to multiple exposures introduces unique statistical challenges. In addition to a common issue of small effect sizes and small sample sizes present in most exposure analyses, multiple exposure analyses must also contend with high-dimensionality, collinearity, non-linear effects, and non-additive interactions (Yu et al., 2022). In particular, data with numerous pollutants, or predictors, require exponentially greater levels of complexity and time cost in analysis. Collinearity between exposures is common when analyzing pollutants from a single source and can lead to unstable estimates in a generalized linear model if left unaccounted for. Finally, exposures can have both non-linear single effects and non-additive interaction effects, which are difficult to capture unless explicitly specified in the model.
 
-The classic multiple linear regression framework often fails to capture the true effects in this setting. In the past few years, a wide variety of statistical methods have been developed to overcome these challenges (see reviews at Gibson et al., 2019; Yu et al., 2022), which have been accompanied by a host of comparative simulation studies for general mixture scenarios (e.g., Hoskovec, Benka-Coker, Severson, Magzamen, \& Wilson, 2021; Lazarevic, Knibbs, Sly, \& Barnett, 2020; Pesenti et al., 2023). However, to our knowledge, there has yet to be a simulation study which provides conclusive guidance about the ability of recently developed methods to conduct inference on non-additive interactions between exposures when the nature and effect sizes of these interactions vary.
+The classic multiple linear regression framework often fails to capture the true effects in this setting. In the past few years, a wide variety of statistical methods have been developed to overcome these challenges (see reviews at Gibson et al., 2019; Yu et al., 2022), which have been accompanied by a host of comparative simulation studies for general mixture scenarios (e.g., Hoskovec, Benka-Coker, Severson, Magzamen, \& Wilson, 2021; Lazarevic, Knibbs, Sly, \& Barnett, 2020; Pesenti et al., 2023). However, to our knowledge, there has yet to be a simulation study which provides conclusive guidance about the ability of recently developed methods to conduct inference on non-additive interactions between exposures when the nature and effect sizes of these interactions vary. Moreover, there is no guidance in the literature on assessing interactions between covariates and exposures in exposure mixtures, including the potential of stratified models for detecting such interactions.
 
 The goal of this thesis is to fill this gap in the literature by exploring the theory and performance of Bayesian regression techniques for quantifying complex interactions between multiple environmental exposures and related covariates. Specifically, we will compare two recently developed models for estimating the health effects of exposure mixtures: Bayesian Kernel Machine Regression (BKMR) (Bobb et al., 2015) and Bayesian Semiparametric Regression (BSR) (Antonelli et al., 2020).
 
@@ -803,7 +803,7 @@ Notably, this algorithm must deal with the explicit specification of interaction
 \hypertarget{detecting-interactions}{%
 \section{Detecting interactions}\label{detecting-interactions}}
 
-In Section \ref{motivation}, we highlighted the challenges of analytically testing for the presence of interactions in exposure mixture studies. These challenges motivated a theoretical exploration of BKMR and BSR in Sections \ref{bkmr} and \ref{bsr}. Now, we discuss and compare the options that BKMR and BSR provide for inference on the presence of interactions. We also include discussion on theoretical advantages and disadvantages to each.
+In Section \ref{motivation}, we highlighted the challenges of analytically testing for the presence of interactions in exposure mixture studies. These challenges motivated a theoretical exploration of BKMR and BSR in Sections \ref{bkmr} and \ref{bsr}. Now, we discuss and compare the options that BKMR and BSR provide for inference on the presence of interactions. We also include discussion on theoretical advantages and disadvantages to each. Importantly, we note that it is not possible to detect interactions between a covariate and an exposure within the model specifications of BKMR or BSR.
 
 \hypertarget{bkmr-1}{%
 \subsection{BKMR}\label{bkmr-1}}
@@ -833,11 +833,6 @@ While BKMR is a fully nonparametric approach, BSR is a semiparametric approach b
 BSR is highly sensitive to the choice of \(d\), the degrees of freedom. While it employs a WAIC approach to selecting the best \(d\), this parameter introduces an additional tuning step in the analysis. Both approaches can be highly sensitive to the specification of certain priors. BSR offers an empirical Bayes strategy for \(\sigma^2_{\boldsymbol\beta}\), the variance of a exposure's probability of inclusion. On the other hand, the choice of prior on the influential smoothing parameter, \(\rho\), in BKMR is up to the user.
 
 We also note that BKMR offers a hierarchical variable selection approach to dealing with collinearity between exposures. While this is an additional decision that must be specified by the user, it offers a formal approach to dealing with collinear exposures. BSR does not explicitly account for collinearity in its model formulation, which can lead to erroneous interpretations of variable importance if unaccounted for.
-
-\hypertarget{exposure-covariate-interactions}{%
-\subsection{Exposure-covariate interactions}\label{exposure-covariate-interactions}}
-
-\emph{add exposure-covariate interaction challenges}
 
 \hypertarget{sims}{%
 \chapter{Simulations}\label{sims}}
@@ -914,7 +909,7 @@ Various families of copulas have been described, each of which specifies a diffe
 
 }
 
-\caption{Distributions of exposures from observed data (blue) and 2100 simulated smaller size (n=252) datasets (gray).}\label{fig:univexpsim}
+\caption{Distributions of log-transformed exposures from observed data (blue) and 2100 simulated smaller size (n=252) datasets (gray).}\label{fig:univexpsim}
 \end{figure}
 \begin{figure}
 
@@ -954,7 +949,7 @@ In subsequent scenarios, we added an additional interaction term to the base cas
 \toprule
 \multicolumn{1}{c}{ } & \multicolumn{2}{c}{Effect size} \\
 \cmidrule(l{3pt}r{3pt}){2-3}
- & Small & Large\\
+ & Lower & Higher\\
 \midrule
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{Univariately significant}}\\
@@ -986,13 +981,13 @@ We ran four methods on our simulated datasets. All metal concentrations and cont
 
 To get a baseline, we ran a multiple linear regression, including all exposures and covariates as linear, additive terms in the model. We refer to this model as the naive MLR. Then, we ran a multiple linear regression with the true model explicitly specified by excluding non-significant exposures and specifying the known form of non-linear terms and non-additive interactions. We refer to this model as the oracle MLR. In scenarios with an interaction between race and Hg, we collapsed race into a binary variable indicating whether or not the original race category was interacting with Hg before running oracle MLR's, in order to simplify the detection of the interaction.
 
-Next, we ran BKMR using the \texttt{bkmr} package in R Bobb (2022). We chose to implement component-wise variable selection rather than hierarchical selection to make simulation results more interpretable, and because there was only moderate multicollinearity in the observed and simulated data. We specified the default priors (Bobb et al., 2015, and as listed in Section \ref{bkmrprior}), which is common in the literature for BKMR Pesenti et al. (2023). We ran the MCMC sampler for 50,000 iterations, as recommended by Bobb et al. (2018), and discarded the first 25,000 iterations for burn-in.
+Next, we ran BKMR using the \texttt{bkmr} package in R Bobb (2022). We chose to implement component-wise variable selection rather than hierarchical selection to make simulation results more interpretable, and because there was only moderate multicollinearity in the observed and simulated data. We specified the default priors (Bobb et al., 2015, and as listed in Section \ref{bkmrprior}), which is common in the literature for BKMR Pesenti et al. (2023). We ran the MCMC sampler for 50,000 iterations, as recommended by Bobb et al. (2018), and discarded the first 25,000 iterations for burn-in. BKMR does not provide the option to run multiple chains or to thin chains. For larger size datasets, we sped up computations by employing a Gaussian predictive process on 100 knots specified evenly across the predictor space.
 
-We ran BSR using the \texttt{NLinteraction} package in R (Antonelli, 2018). We specified the default priors (Antonelli et al., 2020, and as listed in \ref{bsrprior}), which is common in the literature for BSR Pesenti et al. (2023). Antonelli et al. (2020) suggests separately fitting models for degrees of freedom \(d=\{1, 2, 3, 4\}\) and selecting the value for \(d\) which minimizes WAIC. Due to time constraints in this thesis, we first fit BSR on the grid of values for \(d\) using 5,000 MCMC iterations to obtain the empirical Bayes estimate for \(\sigma^2_{\boldsymbol\beta}\) and then another 5,000 MCMC iterations to obtain the posterior distributions, discarding the first 2,500 iterations for burn-in each time. We selected \(d\) based on the WAIC criterion on these preliminary models. Then, we fit the full BSR model using 50,000 MCMC iterations to obtain the empirical Bayes estimate and then another 50,000 MCMC iterations to obtain the posterior distributions, discarding the first 25,000 iterations for burn-in each time. In a small test run on five smaller size datasets for each scenario containing interactions between exposures, as well as the base case, we found that using 5,000 iterations selected the same degrees of freedom as using 50,000 iterations 86\% of the time (see Appendix \ref{suppmethods}, Figure \ref{fig:comparedf}).
+We ran BSR using the \texttt{NLinteraction} package in R (Antonelli, 2018). We specified the default priors (Antonelli et al., 2020, and as listed in \ref{bsrprior}), which is common in the literature for BSR Pesenti et al. (2023). Antonelli et al. (2020) suggests separately fitting models for degrees of freedom \(d=\{1, 2, 3, 4\}\) and selecting the value for \(d\) which minimizes WAIC. Due to time constraints in this thesis, we first fit BSR on the grid of values for \(d\) using 5,000 MCMC iterations to obtain the empirical Bayes estimate for \(\sigma^2_{\boldsymbol\beta}\) and then another 5,000 MCMC iterations to obtain the posterior distributions, discarding the first 2,500 iterations for burn-in each time. We selected \(d\) based on the WAIC criterion on these preliminary models. Then, we fit the full BSR model using 50,000 MCMC iterations to obtain the empirical Bayes estimate and then another 50,000 MCMC iterations to obtain the posterior distributions, discarding the first 25,000 iterations for burn-in each time. We ran two chains to very convergence, thinning each chains by selecting every 8th iteration to reduce autocorrelation based on default settings. In a small test run on five smaller size datasets for each scenario containing interactions between exposures, as well as the base case, we found that using 5,000 iterations selected the same degrees of freedom as using 50,000 iterations 86\% of the time (see Appendix \ref{suppmethods}, Figure \ref{fig:comparedf}).
 
 Finally, we ran stratified BKMR and BSR models in scenarios where we simulated an interaction between race and Hg. This involved running five separate models for each race category, each with the same settings specified above. For the smaller size datasets, we often observed convergence issues in BKMR within the smaller race categories. As such, for smaller size datasets, we also assess the impact of collapsing the three smaller race categories (Non-Hispanic white, black, and other) into one category before stratifying. This is a common practice in real-world studies where sample sizes for certain categories are low.
 
-We checked convergence for a selection of BKMR and BSR models using trace plots (Appendix \ref{suppresults}, {[}\emph{add figure labels}{]}).
+We checked convergence for a selection of BKMR and BSR models using trace plots (Appendix \ref{suppresults}, Figure \ref{fig:traceplots}).
 
 \hypertarget{model-assessment}{%
 \subsection{Model assessment}\label{model-assessment}}
@@ -1007,17 +1002,11 @@ Finally, for stratified models, we
 
 {[}\emph{include false discovery rate?}{]}
 
+{[}\emph{increase threshold of PIP for interactions?}{]}
+
 \hypertarget{results}{%
 \section{Results}\label{results}}
 
-In this section, we report on results from our simulation study.
-\begin{itemize}
-\tightlist
-\item
-  example output from representative model
-\item
-  figures + tables w/ model performance
-\end{itemize}
 \hypertarget{base-case}{%
 \subsection{Base case}\label{base-case}}
 
@@ -1032,11 +1021,11 @@ We start by presenting results from models run on the base case scenario, in whi
 \end{figure}
 \begin{table}
 
-\caption{\label{tab:basecasetab}Detection rate of chemicals in base case scenario.}
+\caption{\label{tab:basecasetab}Sensitivity and false discovery rate (FDR) of chemicals in base case scenario.}
 \centering
 \begin{tabular}[t]{>{\raggedright\arraybackslash}p{6em}cccccccccc}
 \toprule
-\multicolumn{1}{c}{ } & \multicolumn{4}{c}{Significant} & \multicolumn{6}{c}{Insignificant} \\
+\multicolumn{1}{c}{ } & \multicolumn{4}{c}{Sensitivity} & \multicolumn{6}{c}{FDR} \\
 \cmidrule(l{3pt}r{3pt}){2-5} \cmidrule(l{3pt}r{3pt}){6-11}
  & Hg & Ni & Sb & Sn & As & Cd & Co & Mo & Pb & Tl\\
 \midrule
@@ -1061,80 +1050,24 @@ We start by presenting results from models run on the base case scenario, in whi
 \end{table}
 \hypertarget{univariate-sensitivity}{%
 \subsection{Univariate sensitivity}\label{univariate-sensitivity}}
-\begin{itemize}
-\tightlist
-\item
-  naive and oracle do p-values
-\item
-  bsr and bkmr do pips
-\end{itemize}
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# basecasesig, fig.cap = "P{-}value distributions from smaller (a) and larger (b) size datasets and PIP distributions from smaller (c) and larger (d) size datasets.", out.width = \textquotesingle{}100\%\textquotesingle{}, echo = FALSE}
 
-\CommentTok{\# naive small}
-\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"figures/ch4\_nsm\_univ\_pval.png"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-\begin{center}\includegraphics[width=0.75\linewidth]{figures/ch4_nsm_univ_pval} \end{center}
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# naive large}
-\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"figures/ch4\_nlg\_univ\_pval.png"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-\begin{center}\includegraphics[width=0.75\linewidth]{figures/ch4_nlg_univ_pval} \end{center}
-\begin{Shaded}
-\begin{Highlighting}[]
-\DocumentationTok{\#\# }\AlertTok{NOTE}\DocumentationTok{: oracle take out interaction???}
+Hg Ni full output
+\begin{figure}
 
-\CommentTok{\# oracle small}
-\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"figures/ch4\_osm\_pval.png"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-\begin{center}\includegraphics[width=0.75\linewidth]{figures/ch4_osm_pval} \end{center}
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# oracle large}
-\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"figures/ch4\_olg\_pval.png"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-\begin{center}\includegraphics[width=0.75\linewidth]{figures/ch4_olg_pval} \end{center}
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# bkmr small}
-\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"figures/ch4\_ksm\_univ\_pips.png"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-\begin{center}\includegraphics[width=0.75\linewidth]{figures/ch4_ksm_univ_pips} \end{center}
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# bkmr large}
-\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"figures/ch4\_klg\_univ\_pips.png"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-\begin{center}\includegraphics[width=0.75\linewidth]{figures/ch4_klg_univ_pips} \end{center}
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# bsr small}
-\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"figures/ch4\_ssm\_univ\_pips.png"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-\begin{center}\includegraphics[width=0.75\linewidth]{figures/ch4_ssm_univ_pips} \end{center}
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# bsr large}
-\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"figures/ch4\_slg\_univ\_pips.png"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-\begin{center}\includegraphics[width=0.75\linewidth]{figures/ch4_slg_univ_pips} \end{center}
+{\centering \includegraphics[width=1\linewidth]{figures/ch4_hgni_univ} 
+
+}
+
+\caption{P-value (a) and PIP (b) distributions for univariate chemicals from all models in scenarios with an interaction between Hg and Ni.}\label{fig:hgniuniv}
+\end{figure}
+Table of everything
 \begin{table}
 
-\caption{\label{tab:onewaytab}Detection rate of chemicals in all scenarios with interactions between exposures.}
+\caption{\label{tab:onewaytab}Sensitivity and false discovery rate (FDR) of chemicals in all scenarios with two-way interactions between exposures.}
 \centering
 \begin{tabular}[t]{>{\raggedright\arraybackslash}p{6em}cc}
 \toprule
-size & Significant & Insignificant\\
+ & Sensitivity & FDR\\
 \midrule
 \addlinespace[0.3em]
 \multicolumn{3}{l}{\textbf{Naive MLR}}\\
@@ -1155,106 +1088,169 @@ size & Significant & Insignificant\\
 \bottomrule
 \end{tabular}
 \end{table}
+Everything else is in appendix
+
 \hypertarget{two-way-interactions-between-chemicals}{%
 \subsection{Two-way interactions between chemicals}\label{two-way-interactions-between-chemicals}}
-\begin{tabular}[t]{lrllr}
+
+Probably only include false discovery rates for BKMR for, again, Hg and Ni to reduce complexity and run-time, note that future work would involve getting FDR's for all models
+
+Hg Ni full output
+\begin{center}\includegraphics[width=1\linewidth]{figures/ch4_hgni_biv} \end{center}
+
+Table of all sensitivities
+\begin{table}
+
+\caption{\label{tab:twowaytab}Sensitivity to interactions in all scenarios with two-way interactions between exposures.}
+\centering
+\begin{tabular}[t]{llcccccc}
 \toprule
-mod & case & size & cond & sensitivity\\
+\multicolumn{2}{c}{\textbf{ }} & \multicolumn{3}{c}{\textbf{Small}} & \multicolumn{3}{c}{\textbf{Large}} \\
+\cmidrule(l{3pt}r{3pt}){3-5} \cmidrule(l{3pt}r{3pt}){6-8}
+Interaction type & Effect size & Oracle & BKMR & BSR & Oracle & BKMR & BSR\\
 \midrule
-Oracle MLR & 2 & Large & Hg:Ni & 0.48\\
-Oracle MLR & 2 & Small & Hg:Ni & 0.24\\
-Oracle MLR & 3 & Large & Hg:Ni & 1.00\\
-Oracle MLR & 3 & Small & Hg:Ni & 0.50\\
-Oracle MLR & 4 & Large & I(Hg * ((Ni - 1)\textasciicircum{}2)) & 0.54\\
+\addlinespace[0.3em]
+\multicolumn{8}{l}{\textbf{Hg-Ni}}\\
+ & Lower & 0.24 & 0.01 & 0.07 & 0.48 & 0.21 & 0.28\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.48 & 0.03 & 0.14 & 1.00 & 0.76 & 0.76\\
 \addlinespace
-Oracle MLR & 4 & Small & I(Hg * ((Ni - 1)\textasciicircum{}2)) & 0.14\\
-Oracle MLR & 5 & Large & I(Hg * ((Ni - 1)\textasciicircum{}2)) & 1.00\\
-Oracle MLR & 5 & Small & I(Hg * ((Ni - 1)\textasciicircum{}2)) & 0.48\\
-Oracle MLR & 6 & Large & Cd:As & 0.59\\
-Oracle MLR & 6 & Small & Cd:As & 0.15\\
+ & Lower & 0.14 & 0.01 & 0.03 & 0.54 & 0.18 & 0.27\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.50 & 0.11 & 0.10 & 1.00 & 0.88 & 0.77\\
 \addlinespace
-Oracle MLR & 7 & Large & Cd:As & 0.99\\
-Oracle MLR & 7 & Small & Cd:As & 0.52\\
-Oracle MLR & 8 & Large & I(Cd * ((As - 1)\textasciicircum{}2)) & 0.57\\
-Oracle MLR & 8 & Small & I(Cd * ((As - 1)\textasciicircum{}2)) & 0.18\\
-Oracle MLR & 9 & Large & I(Cd * ((As - 1)\textasciicircum{}2)) & 0.99\\
+\addlinespace[0.3em]
+\multicolumn{8}{l}{\textbf{Cd-As}}\\
+ & Lower & 0.15 & 0.00 & 0.00 & 0.59 & 0.04 & 0.01\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.52 & 0.00 & 0.00 & 0.99 & 0.03 & 0.21\\
 \addlinespace
-Oracle MLR & 9 & Small & I(Cd * ((As - 1)\textasciicircum{}2)) & 0.52\\
-Oracle MLR & 10 & Large & Ni:Co & 0.52\\
-Oracle MLR & 10 & Small & Ni:Co & 0.18\\
-Oracle MLR & 11 & Large & Ni:Co & 0.98\\
-Oracle MLR & 11 & Small & Ni:Co & 0.50\\
+ & Lower & 0.18 & 0.00 & 0.00 & 0.57 & 0.00 & 0.00\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.52 & 0.01 & 0.02 & 0.99 & 0.57 & 0.39\\
 \addlinespace
-Oracle MLR & 12 & Large & I(Ni * ((Co - 1)\textasciicircum{}2)) & 0.53\\
-Oracle MLR & 12 & Small & I(Ni * ((Co - 1)\textasciicircum{}2)) & 0.16\\
-Oracle MLR & 13 & Large & I(Ni * ((Co - 1)\textasciicircum{}2)) & 0.97\\
-Oracle MLR & 13 & Small & I(Ni * ((Co - 1)\textasciicircum{}2)) & 0.54\\
-BKMR & 2 & Large & Hg+Ni & 0.21\\
+\addlinespace[0.3em]
+\multicolumn{8}{l}{\textbf{Ni-Co}}\\
+ & Lower & 0.18 & 0.01 & 0.01 & 0.52 & 0.03 & 0.00\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.54 & 0.00 & 0.02 & 0.97 & 0.05 & 0.05\\
 \addlinespace
-BKMR & 3 & Large & Hg+Ni & 0.88\\
-BKMR & 4 & Large & Hg+Ni & 0.18\\
-BKMR & 5 & Large & Hg+Ni & 0.76\\
-BKMR & 6 & Large & As+Cd & 0.04\\
-BKMR & 7 & Large & As+Cd & 0.57\\
-\addlinespace
-BKMR & 8 & Large & As+Cd & 0.00\\
-BKMR & 9 & Large & As+Cd & 0.03\\
-BKMR & 10 & Large & Co+Ni & 0.03\\
-BKMR & 11 & Large & Co+Ni & 0.52\\
-BKMR & 12 & Large & Co+Ni & 0.00\\
-\addlinespace
-BKMR & 13 & Large & Co+Ni & 0.05\\
-BKMR & 2 & Small & Hg+Ni & 0.01\\
-BKMR & 3 & Small & Hg+Ni & 0.11\\
-BKMR & 4 & Small & Hg+Ni & 0.01\\
-BKMR & 5 & Small & Hg+Ni & 0.03\\
-\addlinespace
-BKMR & 6 & Small & As+Cd & 0.00\\
-BKMR & 7 & Small & As+Cd & 0.01\\
-BKMR & 8 & Small & As+Cd & 0.00\\
-BKMR & 9 & Small & As+Cd & 0.00\\
-BKMR & 10 & Small & Co+Ni & 0.01\\
-\addlinespace
-BKMR & 11 & Small & Co+Ni & 0.02\\
-BKMR & 12 & Small & Co+Ni & 0.00\\
-BKMR & 13 & Small & Co+Ni & 0.00\\
-BSR & 2 & Large & Hg-Ni & 0.28\\
-BSR & 3 & Large & Hg-Ni & 0.77\\
-\addlinespace
-BSR & 4 & Large & Hg-Ni & 0.27\\
-BSR & 5 & Large & Hg-Ni & 0.76\\
-BSR & 6 & Large & As-Cd & 0.01\\
-BSR & 7 & Large & As-Cd & 0.39\\
-BSR & 8 & Large & As-Cd & 0.00\\
-\addlinespace
-BSR & 9 & Large & As-Cd & 0.21\\
-BSR & 10 & Large & Co-Ni & 0.00\\
-BSR & 11 & Large & Co-Ni & 0.09\\
-BSR & 12 & Large & Co-Ni & 0.00\\
-BSR & 13 & Large & Co-Ni & 0.05\\
-\addlinespace
-BSR & 2 & Small & Hg-Ni & 0.07\\
-BSR & 3 & Small & Hg-Ni & 0.10\\
-BSR & 4 & Small & Hg-Ni & 0.03\\
-BSR & 5 & Small & Hg-Ni & 0.14\\
-BSR & 6 & Small & As-Cd & 0.00\\
-\addlinespace
-BSR & 7 & Small & As-Cd & 0.02\\
-BSR & 8 & Small & As-Cd & 0.00\\
-BSR & 9 & Small & As-Cd & 0.00\\
-BSR & 10 & Small & Co-Ni & 0.01\\
-BSR & 11 & Small & Co-Ni & 0.01\\
-\addlinespace
-BSR & 12 & Small & Co-Ni & 0.00\\
-BSR & 13 & Small & Co-Ni & 0.02\\
+ & Lower & 0.16 & 0.00 & 0.00 & 0.53 & 0.00 & 0.00\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.50 & 0.02 & 0.01 & 0.98 & 0.52 & 0.09\\
 \bottomrule
 \end{tabular}
+\end{table}
+Include a table of false discovery rates for BSR and BKMR
+\begin{table}
+
+\caption{\label{tab:twowayfdrtab}False discovery rate of interactions in all scenarios with two-way interactions between exposures.}
+\centering
+\begin{tabular}[t]{llcccc}
+\toprule
+\multicolumn{2}{c}{\textbf{ }} & \multicolumn{2}{c}{\textbf{Small}} & \multicolumn{2}{c}{\textbf{Large}} \\
+\cmidrule(l{3pt}r{3pt}){3-4} \cmidrule(l{3pt}r{3pt}){5-6}
+Interaction type & Effect size & BKMR & BSR & BKMR & BSR\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Hg-Ni}}\\
+ & Lower & 0.001 & 0.003 & 0.003 & 0.013\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.001 & 0.003 & 0.006 & 0.018\\
+\addlinespace
+ & Lower & 0.001 & 0.001 & 0.003 & 0.015\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.002 & 0.002 & 0.005 & 0.016\\
+\addlinespace
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Cd-As}}\\
+ & Lower & 0.001 & 0.003 & 0.004 & 0.012\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.000 & 0.002 & 0.003 & 0.017\\
+\addlinespace
+ & Lower & 0.002 & 0.002 & 0.004 & 0.014\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.002 & 0.002 & 0.006 & 0.015\\
+\addlinespace
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Ni-Co}}\\
+ & Lower & 0.001 & 0.002 & 0.002 & 0.012\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.001 & 0.003 & 0.002 & 0.017\\
+\addlinespace
+ & Lower & 0.002 & 0.003 & 0.004 & 0.014\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.001 & 0.001 & 0.002 & 0.015\\
+\bottomrule
+\end{tabular}
+\end{table}
+Everything else is in appendix
+
 \hypertarget{three-way-interactions-between-chemicals}{%
 \subsection{Three-way interactions between chemicals}\label{three-way-interactions-between-chemicals}}
+
+Decide whether or not to include a figure???
+
+Table of sensitivities (try alternative ways of thresholding BSR???)
+\begin{table}
+
+\caption{\label{tab:threewaysens}Sensitivity to trivariate.}
+\centering
+\begin{tabular}[t]{llrrrrrr}
+\toprule
+\multicolumn{2}{c}{\textbf{ }} & \multicolumn{3}{c}{\textbf{Small}} & \multicolumn{3}{c}{\textbf{Large}} \\
+\cmidrule(l{3pt}r{3pt}){3-5} \cmidrule(l{3pt}r{3pt}){6-8}
+Interaction type & Effect size & Oracle & BKMR & BSR & Oracle & BKMR & BSR\\
+\midrule
+ & Lower & 0.59 & 0.01 & 0 & 0.80 & 0.01 & 0.00\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash Multiplicative} & Higher & 0.69 & 0.02 & 0 & 0.98 & 0.01 & 0.01\\
+\addlinespace
+ & Lower & 0.55 & 0.01 & 0 & 0.81 & 0.01 & 0.00\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash Polynomial} & Higher & 0.69 & 0.01 & 0 & 0.98 & 0.13 & 0.00\\
+\bottomrule
+\end{tabular}
+\end{table}
+Consider getting false discovery rates?
 
 \hypertarget{interactions-between-race-and-an-exposure}{%
 \subsection{Interactions between race and an exposure}\label{interactions-between-race-and-an-exposure}}
 
+\hypertarget{run-time-analysis}{%
+\subsection{Run-time analysis}\label{run-time-analysis}}
+\begin{table}
+
+\caption{\label{tab:runtimes}Run-times.}
+\centering
+\begin{tabular}[t]{llccccl}
+\toprule
+\multicolumn{3}{c}{\textbf{ }} & \multicolumn{2}{c}{\textbf{Multiplicative}} & \multicolumn{2}{c}{\textbf{Polynomial}} \\
+\cmidrule(l{3pt}r{3pt}){4-5} \cmidrule(l{3pt}r{3pt}){6-7}
+Model & Sample size & Base & Lower & Higher & Lower & Higher\\
+\midrule
+ & Small & 0.0032 s & 0.0016 s & 0.002 s & 0.0016 s & 0.0017 s\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash Naive} & Large & 0.002 s & 0.002 s & 0.0035 s & 0.0031 s & 0.0025 s\\
+\addlinespace
+ & Small & 0.0015 s & 0.0015 s & 0.0015 s & 0.0019 s & 0.0016 s\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash Oracle} & Large & 0.0044 s & 0.0018 s & 0.0018 s & 0.0019 s & 0.0024 s\\
+\addlinespace
+ & Small & 13.56 m & 15.21 m & 15.51 m & 15.20 m & 15.17 m\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash BKMR} & Large & 1.64 h & 1.68 h & 1.62 h & 1.64 h & 1.59 h\\
+\addlinespace
+ & Small & 30.11 m & 33.15 m & 32.92 m & 33.81 m & 35.11 m\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash BSR df} & Large & 57.22 m & 58.02 m & 1.06 h & 57.75 m & 1.05 h\\
+\addlinespace
+ & Small & 1.37 h & 1.36 h & 1.42 h & 1.44 h & 1.49 h\\
+
+\multirow{-2}{*}{\raggedright\arraybackslash BSR mod} & Large & 2.92 h & 2.81 h & 3.06 h & 2.87 h & 3.04 h\\
+\bottomrule
+\end{tabular}
+\end{table}
 \hypertarget{conclusion}{%
 \chapter*{Conclusion}\label{conclusion}}
 \addcontentsline{toc}{chapter}{Conclusion}
@@ -1439,21 +1435,121 @@ Figure \ref{fig:comparedf} compares the degrees of freedom selected using the WA
 
 }
 
-\caption{compare df.}\label{fig:comparedf}
+\caption{Test comparing WAIC selection of degrees of freedom from BSR models fit with either 5,000 or 50,000 MCMC iterations.}\label{fig:comparedf}
 \end{figure}
-Here, we describe the formula for calculating the confidence interval of the difference in difference of the estimated response at the 0.75 and 0.25 quantiles of one chemical, while holding one or two other chemicals at their 0.75 and 0.25 quantiles and the rest of the chemicals at their 0.5 quantiles.
-
 {[}\emph{figure this out at some points??}{]}
+\begin{figure}
 
+{\centering \includegraphics[width=1\linewidth]{figures/traceplots/bksm_traceplotmerged} 
+
+}
+
+\caption{Examples of trace plots from smaller size BKMR (a) and BSR (b) as well as larger size BKMR (c) and BSR (d) in scenarios with larger effect size interactions between Hg and Ni.}\label{fig:traceplots}
+\end{figure}
 \hypertarget{suppresults}{%
 \section{Results}\label{suppresults}}
 
-Full output from a representative base-case model, two-way interaction model, and race\(\times\)exp interaction model.
+Full output for univariate
+\begin{figure}
 
-Potentially also include line plots of h() and f() function fits.
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_nsm_univ_pval} 
 
-Examples of trace plots for BKMR and BSR.
+}
 
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_nlg_univ_pval} 
+
+}
+
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_osm_univ_pval} 
+
+}
+
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_olg_univ_pval} 
+
+}
+
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_ksm_univ_pips} 
+
+}
+
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_klg_univ_pips} 
+
+}
+
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_ssm_univ_pips} 
+
+}
+
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_slg_univ_pips} 
+
+}
+
+\end{figure}
+Full output for bivariate
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_osm_biv_pval} 
+
+}
+
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_olg_biv_pval} 
+
+}
+
+\end{figure}
+Exposure response surfaces
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_ksm_biv_expresp_2} 
+
+}
+
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_klg_biv_expresp_2} 
+
+}
+
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_ksm_biv_expresp_3} 
+
+}
+
+\end{figure}
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{figures/ch4_klg_biv_expresp_3} 
+
+}
+
+\end{figure}
 \hypertarget{code}{%
 \chapter{Code}\label{code}}
 
@@ -3600,7 +3696,7 @@ Next, we fit BKMR and BSR models with the base case and with interactions betwee
 \NormalTok{qjob01 }\OtherTok{\textless{}{-}} \FunctionTok{slurm\_call}\NormalTok{(}
 \NormalTok{  run\_bsr\_lg, }\AttributeTok{params =} \FunctionTok{list}\NormalTok{(}\AttributeTok{vector =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{),}
   \AttributeTok{global\_objects =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}out2\_resp1\textquotesingle{}}\NormalTok{),}
-  \AttributeTok{jobname =} \StringTok{\textquotesingle{}bsr\_lg01\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{jobname =} \StringTok{\textquotesingle{}bsr\_lg01\textquotesingle{}}\NormalTok{, }\CommentTok{\# increase by 1 for each case}
   \AttributeTok{slurm\_options =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mem =} \StringTok{\textquotesingle{}8G\textquotesingle{}}\NormalTok{))}
   \CommentTok{\# repeat up until dataset 1700}
 \end{Highlighting}
@@ -3657,8 +3753,8 @@ Next, we fit stratified models with an interaction between the categorical race 
         \ConstantTok{NA}
 \NormalTok{      \})}
 \NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
-\NormalTok{      list\_times[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
-\NormalTok{      list\_mods[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ mod}
+\NormalTok{      list\_times[[j]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{      list\_mods[[j]] }\OtherTok{\textless{}{-}}\NormalTok{ mod}
 \NormalTok{    \}}
     
     \CommentTok{\# combine 1{-}3 r/e}
@@ -3766,8 +3862,8 @@ Next, we fit stratified models with an interaction between the categorical race 
 \NormalTok{      mod }\OtherTok{\textless{}{-}} \FunctionTok{kmbayes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{Z =}\NormalTok{ Z, }\AttributeTok{X =}\NormalTok{ X, }
                      \AttributeTok{iter =} \DecValTok{50000}\NormalTok{, }\AttributeTok{verbose =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{varsel =} \ConstantTok{TRUE}\NormalTok{)}
 \NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
-\NormalTok{      list\_times[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
-\NormalTok{      list\_mods[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ mod}
+\NormalTok{      list\_times[[j]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
+\NormalTok{      list\_mods[[j]] }\OtherTok{\textless{}{-}}\NormalTok{ mod}
 \NormalTok{    \}}
     
 \NormalTok{    bkmr\_times[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ list\_times}
@@ -3897,8 +3993,8 @@ Next, we fit stratified models with an interaction between the categorical race 
 \NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
 \NormalTok{      list\_times\_small[[}\DecValTok{2}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
       
-\NormalTok{      bsr\_times[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ list\_times\_small}
-\NormalTok{      list\_mods[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ mod}
+\NormalTok{      bsr\_times[[j]] }\OtherTok{\textless{}{-}}\NormalTok{ list\_times\_small}
+\NormalTok{      list\_mods[[j]] }\OtherTok{\textless{}{-}}\NormalTok{ mod}
 \NormalTok{    \}}
     
     \CommentTok{\# combine 1{-}3 r/e}
@@ -4071,8 +4167,8 @@ Next, we fit stratified models with an interaction between the categorical race 
 \NormalTok{      end.time }\OtherTok{\textless{}{-}} \FunctionTok{Sys.time}\NormalTok{()}
 \NormalTok{      list\_times\_small[[}\DecValTok{2}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ end.time }\SpecialCharTok{{-}}\NormalTok{ start.time}
       
-\NormalTok{      bsr\_times[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ list\_times\_small}
-\NormalTok{      list\_mods[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ mod}
+\NormalTok{      bsr\_times[[j]] }\OtherTok{\textless{}{-}}\NormalTok{ list\_times\_small}
+\NormalTok{      list\_mods[[j]] }\OtherTok{\textless{}{-}}\NormalTok{ mod}
 \NormalTok{    \}}
     
     \CommentTok{\# combine 1{-}3 r/e}
@@ -4276,16 +4372,1128 @@ First, we extract p-values from the multiple linear regression models.
 \end{Shaded}
 \normalsize
 
-Next, we extract output from BKMR models run on smaller size simulated datasets, including the base case and models with interactions between chemicals.
+Now, we write some functions to extract output from BKMR and BSR models.
 
 \scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bivarinter\_bkmr }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(fit, z1, z2, }\AttributeTok{qs.diff =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{), }
+                            \AttributeTok{qs.fixed =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{), }\AttributeTok{q.rest =} \FloatTok{0.5}\NormalTok{) \{}
+  \CommentTok{\#\textquotesingle{} fit = bkmr model}
+  \CommentTok{\#\textquotesingle{} z1 = index of chemical 1}
+  \CommentTok{\#\textquotesingle{} z2 = index of chemical 2}
+  \CommentTok{\#\textquotesingle{} qs.diff = quantiles to calculate response diff for}
+  \CommentTok{\#\textquotesingle{} qs.fixed = quantiles to fix other chemical at}
+  \CommentTok{\#\textquotesingle{} q.rest = quantile to fix rest of chemicals at}
+  \CommentTok{\#\textquotesingle{} }
+  \CommentTok{\#\textquotesingle{} note that order of z1 and z2 don\textquotesingle{}t matter}
+  
+  \CommentTok{\# extract fit}
+\NormalTok{  y }\OtherTok{\textless{}{-}}\NormalTok{ fit}\SpecialCharTok{$}\NormalTok{y}
+\NormalTok{  Z }\OtherTok{\textless{}{-}}\NormalTok{ fit}\SpecialCharTok{$}\NormalTok{Z}
+\NormalTok{  X }\OtherTok{\textless{}{-}}\NormalTok{ fit}\SpecialCharTok{$}\NormalTok{X}
+  
+  \CommentTok{\# fix all chems at q.rest}
+\NormalTok{  point2 }\OtherTok{\textless{}{-}}\NormalTok{ point1 }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(Z, }\DecValTok{2}\NormalTok{, quantile, q.rest)}
+  \CommentTok{\# fix z2 at lower}
+\NormalTok{  point2[z2] }\OtherTok{\textless{}{-}}\NormalTok{ point1[z2] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(Z[, z2], qs.fixed[}\DecValTok{1}\NormalTok{])}
+  \CommentTok{\# fix z1 at lower and upper}
+\NormalTok{  point2[z1] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(Z[, z1], qs.diff[}\DecValTok{2}\NormalTok{])}
+\NormalTok{  point1[z1] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(Z[, z1], qs.diff[}\DecValTok{1}\NormalTok{])}
+\NormalTok{  newz.q1 }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(point1, point2) }\CommentTok{\# has all lower quantiles of z2}
+  \CommentTok{\# fix all chems at q.rest}
+\NormalTok{  point2 }\OtherTok{\textless{}{-}}\NormalTok{ point1 }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(Z, }\DecValTok{2}\NormalTok{, quantile, q.rest)}
+  \CommentTok{\# fix z2 at higher}
+\NormalTok{  point2[z2] }\OtherTok{\textless{}{-}}\NormalTok{ point1[z2] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(Z[, z2], qs.fixed[}\DecValTok{2}\NormalTok{])}
+  \CommentTok{\# fix z1 at lower and upper}
+\NormalTok{  point2[z1] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(Z[, z1], qs.diff[}\DecValTok{2}\NormalTok{])}
+\NormalTok{  point1[z1] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(Z[, z1], qs.diff[}\DecValTok{1}\NormalTok{])}
+\NormalTok{  newz.q2 }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(point1, point2) }\CommentTok{\# has all upper quantiles of z2}
+  
+  \CommentTok{\# prepare}
+\NormalTok{  cc }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1} \SpecialCharTok{*} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{), }\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\NormalTok{  newz }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(newz.q1, newz.q2)}
+  
+  \CommentTok{\# default to using approximate calculation}
+\NormalTok{  preds }\OtherTok{\textless{}{-}} \FunctionTok{ComputePostmeanHnew}\NormalTok{(}\AttributeTok{fit =}\NormalTok{ fit, }\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{Z =}\NormalTok{ Z, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{Znew =}\NormalTok{ newz)}
+  
+  \CommentTok{\# extract intervals}
+\NormalTok{  int }\OtherTok{\textless{}{-}} \FunctionTok{drop}\NormalTok{(cc }\SpecialCharTok{\%*\%}\NormalTok{ preds}\SpecialCharTok{$}\NormalTok{postmean)}
+\NormalTok{  int.se }\OtherTok{\textless{}{-}} \FunctionTok{drop}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(cc }\SpecialCharTok{\%*\%}\NormalTok{ preds}\SpecialCharTok{$}\NormalTok{postvar }\SpecialCharTok{\%*\%}\NormalTok{ cc))}
+\NormalTok{  ints }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\AttributeTok{est =}\NormalTok{ int, }\AttributeTok{sd =}\NormalTok{ int.se)}
+  
+  \FunctionTok{return}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{z1 =} \FunctionTok{colnames}\NormalTok{(Z)[z1], }\AttributeTok{z2 =} \FunctionTok{colnames}\NormalTok{(Z)[z2], }
+                    \AttributeTok{est =}\NormalTok{ ints[}\StringTok{"est"}\NormalTok{], }\AttributeTok{sd =}\NormalTok{ ints[}\StringTok{"sd"}\NormalTok{], }\AttributeTok{row.names =} \ConstantTok{NULL}\NormalTok{))}
+\NormalTok{\}}
 
+\NormalTok{trivarinter\_bkmr }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(fit, z1, z2, z3, }\AttributeTok{qs.diff =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{), }
+                             \AttributeTok{qs.fixed =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{), }\AttributeTok{q.rest =} \FloatTok{0.5}\NormalTok{) \{}
+  \CommentTok{\#\textquotesingle{} fit = bkmr model}
+  \CommentTok{\#\textquotesingle{} z1 = index of chemical 1}
+  \CommentTok{\#\textquotesingle{} z2 = index of chemical 2}
+  \CommentTok{\#\textquotesingle{} z3 = index of chemical 3}
+  \CommentTok{\#\textquotesingle{} qs.diff = quantiles to calculate response diff for}
+  \CommentTok{\#\textquotesingle{} qs.fixed = quantiles to fix other chemical at}
+  \CommentTok{\#\textquotesingle{} q.rest = quantile to fix rest of chemicals at}
+  \CommentTok{\#\textquotesingle{} }
+  \CommentTok{\#\textquotesingle{} note that order of z1, z2, z3 don\textquotesingle{}t matter}
+  
+  \CommentTok{\# extract fit}
+\NormalTok{  y }\OtherTok{\textless{}{-}}\NormalTok{ fit}\SpecialCharTok{$}\NormalTok{y}
+\NormalTok{  Z }\OtherTok{\textless{}{-}}\NormalTok{ fit}\SpecialCharTok{$}\NormalTok{Z}
+\NormalTok{  X }\OtherTok{\textless{}{-}}\NormalTok{ fit}\SpecialCharTok{$}\NormalTok{X}
+  
+\NormalTok{  df }\OtherTok{\textless{}{-}}\NormalTok{ purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{, \textbackslash{}(x) \{}
+    \ControlFlowTok{if}\NormalTok{(x }\SpecialCharTok{==} \DecValTok{1}\NormalTok{) \{}
+\NormalTok{      c1 }\OtherTok{\textless{}{-}}\NormalTok{ z1; c2 }\OtherTok{\textless{}{-}}\NormalTok{ z2; c3 }\OtherTok{\textless{}{-}}\NormalTok{ z3}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (x }\SpecialCharTok{==} \DecValTok{2}\NormalTok{) \{}
+\NormalTok{      c1 }\OtherTok{\textless{}{-}}\NormalTok{ z2; c2 }\OtherTok{\textless{}{-}}\NormalTok{ z3; c3 }\OtherTok{\textless{}{-}}\NormalTok{ z1}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      c1 }\OtherTok{\textless{}{-}}\NormalTok{ z3; c2 }\OtherTok{\textless{}{-}}\NormalTok{ z1; c3 }\OtherTok{\textless{}{-}}\NormalTok{ z2}
+\NormalTok{    \}}
+    
+    \CommentTok{\# fix all chems at q.rest}
+\NormalTok{    point2 }\OtherTok{\textless{}{-}}\NormalTok{ point1 }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(Z, }\DecValTok{2}\NormalTok{, quantile, q.rest)}
+    \CommentTok{\# fix c2 at lower}
+\NormalTok{    point2[c2] }\OtherTok{\textless{}{-}}\NormalTok{ point1[c2] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(Z[, c2], qs.fixed[}\DecValTok{1}\NormalTok{])}
+    \CommentTok{\# fix c3 at lower}
+\NormalTok{    point2[c3] }\OtherTok{\textless{}{-}}\NormalTok{ point1[c3] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(Z[, c3], qs.fixed[}\DecValTok{1}\NormalTok{])}
+    \CommentTok{\# fix c1 at lower and upper}
+\NormalTok{    point2[c1] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(Z[, c1], qs.diff[}\DecValTok{2}\NormalTok{])}
+\NormalTok{    point1[c1] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(Z[, c1], qs.diff[}\DecValTok{1}\NormalTok{])}
+\NormalTok{    newz.q1 }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(point1, point2) }\CommentTok{\# has all lower quantiles of c2, c3}
+    \CommentTok{\# fix all chems at q.rest}
+\NormalTok{    point2 }\OtherTok{\textless{}{-}}\NormalTok{ point1 }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(Z, }\DecValTok{2}\NormalTok{, quantile, q.rest)}
+    \CommentTok{\# fix c2 at higher}
+\NormalTok{    point2[c2] }\OtherTok{\textless{}{-}}\NormalTok{ point1[c2] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(Z[, c2], qs.fixed[}\DecValTok{2}\NormalTok{])}
+    \CommentTok{\# fix c3 at higher}
+\NormalTok{    point2[c3] }\OtherTok{\textless{}{-}}\NormalTok{ point1[c3] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(Z[, c3], qs.fixed[}\DecValTok{2}\NormalTok{])}
+    \CommentTok{\# fix c1 at lower and upper}
+\NormalTok{    point2[c1] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(Z[, c1], qs.diff[}\DecValTok{2}\NormalTok{])}
+\NormalTok{    point1[c1] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(Z[, c1], qs.diff[}\DecValTok{1}\NormalTok{])}
+\NormalTok{    newz.q2 }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(point1, point2) }\CommentTok{\# has all upper quantiles of c2, c3}
+    
+    \CommentTok{\# prepare}
+\NormalTok{    cc }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1} \SpecialCharTok{*} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{), }\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\NormalTok{    newz }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(newz.q1, newz.q2)}
+    
+    \CommentTok{\# default to using approximate calculation}
+\NormalTok{    preds }\OtherTok{\textless{}{-}} \FunctionTok{ComputePostmeanHnew}\NormalTok{(}\AttributeTok{fit =}\NormalTok{ fit, }\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{Z =}\NormalTok{ Z, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{Znew =}\NormalTok{ newz)}
+    
+    \CommentTok{\# extract intervals}
+\NormalTok{    int }\OtherTok{\textless{}{-}} \FunctionTok{drop}\NormalTok{(cc }\SpecialCharTok{\%*\%}\NormalTok{ preds}\SpecialCharTok{$}\NormalTok{postmean)}
+\NormalTok{    int.se }\OtherTok{\textless{}{-}} \FunctionTok{drop}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(cc }\SpecialCharTok{\%*\%}\NormalTok{ preds}\SpecialCharTok{$}\NormalTok{postvar }\SpecialCharTok{\%*\%}\NormalTok{ cc))}
+\NormalTok{    ints }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\AttributeTok{est =}\NormalTok{ int, }\AttributeTok{sd =}\NormalTok{ int.se)}
+    
+    \FunctionTok{return}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{variable =} \FunctionTok{colnames}\NormalTok{(Z)[c1], }\AttributeTok{fixedat1 =} \FunctionTok{colnames}\NormalTok{(Z)[c2], }
+                      \AttributeTok{fixedat2 =} \FunctionTok{colnames}\NormalTok{(Z)[c3],}
+                      \AttributeTok{est =}\NormalTok{ ints[}\StringTok{"est"}\NormalTok{], }\AttributeTok{sd =}\NormalTok{ ints[}\StringTok{"sd"}\NormalTok{], }\AttributeTok{row.names =} \ConstantTok{NULL}\NormalTok{))}
+\NormalTok{  \})}
+  
+ \FunctionTok{return}\NormalTok{(df)}
+\NormalTok{\}}
+
+\NormalTok{trivarsurf\_bkmr }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(fit, z1, z2, z3, }\AttributeTok{qs.diff =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{), }
+                            \AttributeTok{q.fixed =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{ngrid =} \DecValTok{50}\NormalTok{) \{}
+  \CommentTok{\#\textquotesingle{} fit = bkmr model}
+  \CommentTok{\#\textquotesingle{} z1 = index of chemical 1}
+  \CommentTok{\#\textquotesingle{} z2 = index of chemical 2}
+  \CommentTok{\#\textquotesingle{} z3 = index of chemical 3}
+  \CommentTok{\#\textquotesingle{} qs.diff = quantiles to calculate response diff for}
+  \CommentTok{\#\textquotesingle{} q.fixed = quantiles to fix rest of chemicals at}
+  \CommentTok{\#\textquotesingle{} }
+  \CommentTok{\#\textquotesingle{} note that order of z1, z2, z3 don\textquotesingle{}t matter}
+
+  \CommentTok{\# call from fit}
+\NormalTok{  y }\OtherTok{\textless{}{-}}\NormalTok{ fit}\SpecialCharTok{$}\NormalTok{y}
+\NormalTok{  Z }\OtherTok{\textless{}{-}}\NormalTok{ fit}\SpecialCharTok{$}\NormalTok{Z}
+\NormalTok{  X }\OtherTok{\textless{}{-}}\NormalTok{ fit}\SpecialCharTok{$}\NormalTok{X}
+\NormalTok{  z.names }\OtherTok{\textless{}{-}} \FunctionTok{colnames}\NormalTok{(Z)}
+  
+\NormalTok{  df }\OtherTok{\textless{}{-}}\NormalTok{ purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{, \textbackslash{}(x) \{}
+    \ControlFlowTok{if}\NormalTok{(x }\SpecialCharTok{==} \DecValTok{1}\NormalTok{) \{}
+\NormalTok{      c1 }\OtherTok{\textless{}{-}}\NormalTok{ z1; c2 }\OtherTok{\textless{}{-}}\NormalTok{ z2; c3 }\OtherTok{\textless{}{-}}\NormalTok{ z3}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (x }\SpecialCharTok{==} \DecValTok{2}\NormalTok{) \{}
+\NormalTok{      c1 }\OtherTok{\textless{}{-}}\NormalTok{ z2; c2 }\OtherTok{\textless{}{-}}\NormalTok{ z3; c3 }\OtherTok{\textless{}{-}}\NormalTok{ z1}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      c1 }\OtherTok{\textless{}{-}}\NormalTok{ z3; c2 }\OtherTok{\textless{}{-}}\NormalTok{ z1; c3 }\OtherTok{\textless{}{-}}\NormalTok{ z2}
+\NormalTok{    \}}
+    
+    \CommentTok{\# create new ordering}
+\NormalTok{    ord }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(c1, c2, c3, }\FunctionTok{setdiff}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(Z), }\FunctionTok{c}\NormalTok{(c1, c2, c3)))}
+    
+    \CommentTok{\# create grid of z{-}values to evaluate at}
+\NormalTok{    z1.grid }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\FunctionTok{min}\NormalTok{(Z[, ord[}\DecValTok{1}\NormalTok{]]), }\FunctionTok{max}\NormalTok{(Z[, ord[}\DecValTok{1}\NormalTok{]]), }\AttributeTok{length =}\NormalTok{ ngrid)}
+\NormalTok{    z2.grid }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(Z[, ord[}\DecValTok{2}\NormalTok{]], }\AttributeTok{probs =}\NormalTok{ qs.diff)}
+\NormalTok{    z3.grid }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(Z[, ord[}\DecValTok{3}\NormalTok{]], }\AttributeTok{probs =}\NormalTok{ qs.diff)}
+\NormalTok{    z.all }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{list}\NormalTok{(z1.grid), }\FunctionTok{list}\NormalTok{(z2.grid), }\FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{99}\NormalTok{)))}
+    \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{ncol}\NormalTok{(Z) }\SpecialCharTok{\textgreater{}} \DecValTok{3}\NormalTok{) \{}
+\NormalTok{      z.others }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\DecValTok{4}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(Z), }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{quantile}\NormalTok{(Z[, ord[x]], q.fixed))}
+\NormalTok{      z.all }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(z.all, z.others)}
+\NormalTok{    \}}
+\NormalTok{    newz.grid }\OtherTok{\textless{}{-}} \FunctionTok{expand.grid}\NormalTok{(z.all)}
+\NormalTok{    newz.grid[, }\DecValTok{3}\NormalTok{] }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(z3.grid, }\AttributeTok{each =}\NormalTok{ ngrid)}
+\NormalTok{    z1save }\OtherTok{\textless{}{-}}\NormalTok{ newz.grid[, }\DecValTok{1}\NormalTok{]}
+    \FunctionTok{colnames}\NormalTok{(newz.grid) }\OtherTok{\textless{}{-}} \FunctionTok{colnames}\NormalTok{(Z)[ord]}
+\NormalTok{    newz.grid }\OtherTok{\textless{}{-}}\NormalTok{ newz.grid[, }\FunctionTok{colnames}\NormalTok{(Z)]}
+    
+    \CommentTok{\# evaluate prediction, assume approx fit}
+\NormalTok{    preds }\OtherTok{\textless{}{-}} \FunctionTok{ComputePostmeanHnew}\NormalTok{(}\AttributeTok{fit =}\NormalTok{ fit, }\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{Z =}\NormalTok{ Z, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{Znew =}\NormalTok{ newz.grid)}
+\NormalTok{    preds.mean }\OtherTok{\textless{}{-}}\NormalTok{ preds}\SpecialCharTok{$}\NormalTok{postmean}
+\NormalTok{    preds.se }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{diag}\NormalTok{(preds}\SpecialCharTok{$}\NormalTok{postvar))}
+    
+    \CommentTok{\# return}
+    \FunctionTok{return}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{z1\_val =}\NormalTok{ z1save, }
+                      \AttributeTok{z23\_q =} \FunctionTok{rep}\NormalTok{(qs.diff, }\AttributeTok{each =}\NormalTok{ ngrid), }
+                      \AttributeTok{est =}\NormalTok{ preds.mean, }
+                      \AttributeTok{se =}\NormalTok{ preds.se, }
+                      \AttributeTok{z1\_name =} \FunctionTok{rep}\NormalTok{(}\FunctionTok{colnames}\NormalTok{(Z)[c1], }\FunctionTok{length}\NormalTok{(z1save)), }
+                      \AttributeTok{z2\_name =} \FunctionTok{rep}\NormalTok{(}\FunctionTok{colnames}\NormalTok{(Z)[c2], }\FunctionTok{length}\NormalTok{(z1save)), }
+                      \AttributeTok{z3\_name =} \FunctionTok{rep}\NormalTok{(}\FunctionTok{colnames}\NormalTok{(Z)[c3], }\FunctionTok{length}\NormalTok{(z1save))))}
+\NormalTok{  \})}
+  
+  \FunctionTok{return}\NormalTok{(df)}
+\NormalTok{\}}
+
+\NormalTok{bivarsurf\_bsr }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(NLmod, X, C, j1, j2, }\AttributeTok{gridLength =} \DecValTok{50}\NormalTok{, }
+                          \AttributeTok{quantile\_j2 =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{), }\AttributeTok{quantile\_rest =} \FloatTok{0.5}\NormalTok{) \{}
+  \CommentTok{\#\textquotesingle{} NLmod = bsr model}
+  \CommentTok{\#\textquotesingle{} X = matrix or dataframe of chemical values used to fit model}
+  \CommentTok{\#\textquotesingle{} C = matrix or dataframe of covariate values used to fit model}
+  \CommentTok{\#\textquotesingle{} gridLength = number of points to estimate response at}
+  \CommentTok{\#\textquotesingle{} j1 = index of first chemical}
+  \CommentTok{\#\textquotesingle{} j2 = index of second chemical}
+  \CommentTok{\#\textquotesingle{} quantile\_j2 = vector of quantiles to fix second chemical at}
+  \CommentTok{\#\textquotesingle{} quantile\_rest = quantile to fix other chemicals at}
+  \CommentTok{\#\textquotesingle{} }
+  \CommentTok{\#\textquotesingle{} }\AlertTok{NOTE}\CommentTok{ order of j1 and j2 doesn\textquotesingle{}t matter}
+  
+  \CommentTok{\# define parameters}
+\NormalTok{  n  }\OtherTok{\textless{}{-}}  \FunctionTok{dim}\NormalTok{(X)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{  ns }\OtherTok{\textless{}{-}}\NormalTok{ NLmod}\SpecialCharTok{$}\NormalTok{ns}
+\NormalTok{  k }\OtherTok{\textless{}{-}}\NormalTok{ NLmod}\SpecialCharTok{$}\NormalTok{k}
+\NormalTok{  p }\OtherTok{\textless{}{-}} \FunctionTok{dim}\NormalTok{(X)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{  Xstar }\OtherTok{\textless{}{-}} \FunctionTok{array}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\AttributeTok{dim =} \FunctionTok{c}\NormalTok{(n, p, ns }\SpecialCharTok{+} \DecValTok{1}\NormalTok{))}
+\NormalTok{  Xstar[, , }\DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}} \DecValTok{1}
+  \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{p) \{}
+\NormalTok{    Xstar[, j, }\DecValTok{2}\SpecialCharTok{:}\NormalTok{(ns }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)] }\OtherTok{\textless{}{-}} \FunctionTok{scale}\NormalTok{(splines}\SpecialCharTok{::}\FunctionTok{ns}\NormalTok{(X[, j], }\AttributeTok{df =}\NormalTok{ ns))}
+\NormalTok{  \}}
+  
+  \CommentTok{\# define posteriors}
+\NormalTok{  zetaPost }\OtherTok{\textless{}{-}}\NormalTok{ NLmod}\SpecialCharTok{$}\NormalTok{posterior}\SpecialCharTok{$}\NormalTok{zeta}
+\NormalTok{  betaList }\OtherTok{\textless{}{-}}\NormalTok{ NLmod}\SpecialCharTok{$}\NormalTok{posterior}\SpecialCharTok{$}\NormalTok{beta}
+\NormalTok{  betaCPost }\OtherTok{\textless{}{-}}\NormalTok{ NLmod}\SpecialCharTok{$}\NormalTok{posterior}\SpecialCharTok{$}\NormalTok{betaC}
+\NormalTok{  totalScans }\OtherTok{\textless{}{-}} \FunctionTok{dim}\NormalTok{(NLmod}\SpecialCharTok{$}\NormalTok{posterior}\SpecialCharTok{$}\NormalTok{betaC)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{  nChains }\OtherTok{\textless{}{-}} \FunctionTok{dim}\NormalTok{(NLmod}\SpecialCharTok{$}\NormalTok{posterior}\SpecialCharTok{$}\NormalTok{betaC)[}\DecValTok{1}\NormalTok{]}
+  
+  \CommentTok{\# create design of covariates}
+\NormalTok{  pc }\OtherTok{\textless{}{-}} \FunctionTok{dim}\NormalTok{(C)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{  NewDesignC }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\ConstantTok{NA}\NormalTok{, gridLength, pc }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)}
+\NormalTok{  NewDesignC[, }\DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}} \DecValTok{1}
+  \ControlFlowTok{for}\NormalTok{ (jc }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{pc) \{}
+\NormalTok{    NewDesignC[, jc }\SpecialCharTok{+} \DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(C[, jc])}
+\NormalTok{  \}}
+  
+  \CommentTok{\# for each quantile of j2}
+\NormalTok{  df }\OtherTok{\textless{}{-}}\NormalTok{ purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(quantile\_j2, \textbackslash{}(quantile\_j2) \{}
+    \CommentTok{\# create design of chemicals}
+\NormalTok{    n }\OtherTok{\textless{}{-}} \FunctionTok{dim}\NormalTok{(X)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{    NewDesignMat }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\ConstantTok{NA}\NormalTok{, gridLength, p)}
+    \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{p) \{}
+\NormalTok{      NewDesignMat[, j] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(X[, j], quantile\_rest)}
+\NormalTok{    \}}
+\NormalTok{    NewDesignMat[, j1] }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\FunctionTok{quantile}\NormalTok{(X[, j1], }\FloatTok{0.025}\NormalTok{), }
+                             \FunctionTok{quantile}\NormalTok{(X[, j1], }\FloatTok{0.975}\NormalTok{), }\AttributeTok{length =}\NormalTok{ gridLength)}
+\NormalTok{    NewDesignMat[, j2] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(X[, j2], quantile\_j2)}
+\NormalTok{    NewDesign }\OtherTok{\textless{}{-}} \FunctionTok{array}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\AttributeTok{dim =} \FunctionTok{c}\NormalTok{(gridLength, p, ns }\SpecialCharTok{+} \DecValTok{1}\NormalTok{))}
+\NormalTok{    NewDesign[, , }\DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}} \DecValTok{1}
+    \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{p) \{}
+\NormalTok{      temp\_ns\_object }\OtherTok{\textless{}{-}}\NormalTok{ splines}\SpecialCharTok{::}\FunctionTok{ns}\NormalTok{(X[, j], }\AttributeTok{df =}\NormalTok{ ns)}
+\NormalTok{      temp\_sds }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(temp\_ns\_object, }\DecValTok{2}\NormalTok{, sd)}
+\NormalTok{      temp\_means }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(temp\_ns\_object, }\DecValTok{2}\NormalTok{, mean)}
+\NormalTok{      NewDesign[, j, }\DecValTok{2}\SpecialCharTok{:}\NormalTok{(ns }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)] }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{((}\FunctionTok{t}\NormalTok{(}\FunctionTok{predict}\NormalTok{(temp\_ns\_object, }
+\NormalTok{                                                NewDesignMat[, j])) }\SpecialCharTok{{-}}\NormalTok{ temp\_means)}\SpecialCharTok{/}\NormalTok{temp\_sds)}
+\NormalTok{    \}}
+    
+    \CommentTok{\# generate predictions}
+\NormalTok{    predictions }\OtherTok{\textless{}{-}}\NormalTok{ NLinteraction}\SpecialCharTok{:::}\FunctionTok{PredictionsMixture}\NormalTok{(}
+      \AttributeTok{XstarOld =}\NormalTok{ Xstar, }\AttributeTok{XstarNew =}\NormalTok{ NewDesign, }
+      \AttributeTok{designC =}\NormalTok{ NewDesignC, }\AttributeTok{totalScans =}\NormalTok{ totalScans, }\AttributeTok{nChains =}\NormalTok{ nChains, }
+      \AttributeTok{zetaPost =}\NormalTok{ zetaPost, }\AttributeTok{betaList =}\NormalTok{ betaList, }\AttributeTok{betaCPost =}\NormalTok{ betaCPost, }
+      \AttributeTok{k =}\NormalTok{ k, }\AttributeTok{ns =}\NormalTok{ ns)}
+    
+    \CommentTok{\# get surface}
+    \FunctionTok{return}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}
+      \AttributeTok{j1val =}\NormalTok{ NewDesignMat[, j1], }
+      \AttributeTok{j2quant =} \FunctionTok{rep}\NormalTok{(quantile\_j2, gridLength), }
+      \AttributeTok{est =} \FunctionTok{apply}\NormalTok{(predictions}\SpecialCharTok{$}\NormalTok{PredictedPost, }\DecValTok{3}\NormalTok{, mean), }
+      \AttributeTok{lower =} \FunctionTok{apply}\NormalTok{(predictions}\SpecialCharTok{$}\NormalTok{PredictedPost, }\DecValTok{3}\NormalTok{, quantile, }\FloatTok{0.025}\NormalTok{), }
+      \AttributeTok{upper =} \FunctionTok{apply}\NormalTok{(predictions}\SpecialCharTok{$}\NormalTok{PredictedPost, }\DecValTok{3}\NormalTok{, quantile, }\FloatTok{0.975}\NormalTok{)}
+\NormalTok{    ))}
+\NormalTok{  \})}
+  \FunctionTok{return}\NormalTok{(df)}
+\NormalTok{\}}
+
+\NormalTok{trivarsurf\_bsr }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(NLmod, X, C, j1, j2, j3, }\AttributeTok{gridLength =} \DecValTok{50}\NormalTok{, }
+                           \AttributeTok{quantile\_j23 =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{), }\AttributeTok{quantile\_rest =} \FloatTok{0.5}\NormalTok{) \{}
+  \CommentTok{\#\textquotesingle{} NLmod = bsr model}
+  \CommentTok{\#\textquotesingle{} X = matrix or dataframe of chemical values used to fit model}
+  \CommentTok{\#\textquotesingle{} C = matrix or dataframe of covariate values used to fit model}
+  \CommentTok{\#\textquotesingle{} gridLength = number of points to estimate response at}
+  \CommentTok{\#\textquotesingle{} j1 = index of first chemical, chemical used as primary predictor}
+  \CommentTok{\#\textquotesingle{} j2 = index of second chemical}
+  \CommentTok{\#\textquotesingle{} j3 = index of third chemical}
+  \CommentTok{\#\textquotesingle{} quantile\_j23 = vector of quantiles to fix second and third chemicals at}
+  \CommentTok{\#\textquotesingle{} quantile\_rest = quantile to fix other chemicals at}
+  \CommentTok{\#\textquotesingle{} }
+  \CommentTok{\#\textquotesingle{} }\AlertTok{NOTE}\CommentTok{ order of j1, j2, j3 matters}
+
+  \CommentTok{\# define parameters}
+\NormalTok{  n  }\OtherTok{\textless{}{-}}  \FunctionTok{dim}\NormalTok{(X)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{  ns }\OtherTok{\textless{}{-}}\NormalTok{ NLmod}\SpecialCharTok{$}\NormalTok{ns}
+\NormalTok{  k }\OtherTok{\textless{}{-}}\NormalTok{ NLmod}\SpecialCharTok{$}\NormalTok{k}
+\NormalTok{  p }\OtherTok{\textless{}{-}} \FunctionTok{dim}\NormalTok{(X)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{  Xstar }\OtherTok{\textless{}{-}} \FunctionTok{array}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\AttributeTok{dim =} \FunctionTok{c}\NormalTok{(n, p, ns }\SpecialCharTok{+} \DecValTok{1}\NormalTok{))}
+\NormalTok{  Xstar[, , }\DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}} \DecValTok{1}
+  \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{p) \{}
+\NormalTok{    Xstar[, j, }\DecValTok{2}\SpecialCharTok{:}\NormalTok{(ns }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)] }\OtherTok{\textless{}{-}} \FunctionTok{scale}\NormalTok{(splines}\SpecialCharTok{::}\FunctionTok{ns}\NormalTok{(X[, j], }\AttributeTok{df =}\NormalTok{ ns))}
+\NormalTok{  \}}
+  
+  \CommentTok{\# define posteriors}
+\NormalTok{  zetaPost }\OtherTok{\textless{}{-}}\NormalTok{ NLmod}\SpecialCharTok{$}\NormalTok{posterior}\SpecialCharTok{$}\NormalTok{zeta}
+\NormalTok{  betaList }\OtherTok{\textless{}{-}}\NormalTok{ NLmod}\SpecialCharTok{$}\NormalTok{posterior}\SpecialCharTok{$}\NormalTok{beta}
+\NormalTok{  betaCPost }\OtherTok{\textless{}{-}}\NormalTok{ NLmod}\SpecialCharTok{$}\NormalTok{posterior}\SpecialCharTok{$}\NormalTok{betaC}
+\NormalTok{  totalScans }\OtherTok{\textless{}{-}} \FunctionTok{dim}\NormalTok{(NLmod}\SpecialCharTok{$}\NormalTok{posterior}\SpecialCharTok{$}\NormalTok{betaC)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{  nChains }\OtherTok{\textless{}{-}} \FunctionTok{dim}\NormalTok{(NLmod}\SpecialCharTok{$}\NormalTok{posterior}\SpecialCharTok{$}\NormalTok{betaC)[}\DecValTok{1}\NormalTok{]}
+  
+  \CommentTok{\# create design of covariates}
+\NormalTok{  pc }\OtherTok{\textless{}{-}} \FunctionTok{dim}\NormalTok{(C)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{  NewDesignC }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\ConstantTok{NA}\NormalTok{, gridLength, pc }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)}
+\NormalTok{  NewDesignC[, }\DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}} \DecValTok{1}
+  \ControlFlowTok{for}\NormalTok{ (jc }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{pc) \{}
+\NormalTok{    NewDesignC[, jc }\SpecialCharTok{+} \DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(C[, jc])}
+\NormalTok{  \}}
+  
+  \CommentTok{\# for each quantile of j2, j3}
+\NormalTok{  df }\OtherTok{\textless{}{-}}\NormalTok{ purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(quantile\_j23, \textbackslash{}(quantile\_j23) \{}
+    \CommentTok{\# create design of chemicals}
+\NormalTok{    n }\OtherTok{\textless{}{-}} \FunctionTok{dim}\NormalTok{(X)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{    NewDesignMat }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\ConstantTok{NA}\NormalTok{, gridLength, p)}
+    \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{p) \{}
+\NormalTok{      NewDesignMat[, j] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(X[, j], quantile\_rest)}
+\NormalTok{    \}}
+\NormalTok{    NewDesignMat[, j1] }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\FunctionTok{quantile}\NormalTok{(X[, j1], }\FloatTok{0.025}\NormalTok{), }
+                              \FunctionTok{quantile}\NormalTok{(X[, j1], }\FloatTok{0.975}\NormalTok{), }\AttributeTok{length =}\NormalTok{ gridLength)}
+\NormalTok{    NewDesignMat[, j2] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(X[, j2], quantile\_j23)}
+\NormalTok{    NewDesignMat[, j3] }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(X[, j3], quantile\_j23)}
+\NormalTok{    NewDesign }\OtherTok{\textless{}{-}} \FunctionTok{array}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\AttributeTok{dim =} \FunctionTok{c}\NormalTok{(gridLength, p, ns }\SpecialCharTok{+} \DecValTok{1}\NormalTok{))}
+\NormalTok{    NewDesign[, , }\DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}} \DecValTok{1}
+    \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{p) \{}
+\NormalTok{      temp\_ns\_object }\OtherTok{\textless{}{-}}\NormalTok{ splines}\SpecialCharTok{::}\FunctionTok{ns}\NormalTok{(X[, j], }\AttributeTok{df =}\NormalTok{ ns)}
+\NormalTok{      temp\_sds }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(temp\_ns\_object, }\DecValTok{2}\NormalTok{, sd)}
+\NormalTok{      temp\_means }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(temp\_ns\_object, }\DecValTok{2}\NormalTok{, mean)}
+\NormalTok{      NewDesign[, j, }\DecValTok{2}\SpecialCharTok{:}\NormalTok{(ns }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)] }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{((}\FunctionTok{t}\NormalTok{(}\FunctionTok{predict}\NormalTok{(temp\_ns\_object, }
+\NormalTok{                                                 NewDesignMat[, j])) }\SpecialCharTok{{-}}\NormalTok{ temp\_means)}\SpecialCharTok{/}\NormalTok{temp\_sds)}
+\NormalTok{    \}}
+    
+    \CommentTok{\# generate predictions}
+\NormalTok{    predictions }\OtherTok{\textless{}{-}}\NormalTok{ NLinteraction}\SpecialCharTok{:::}\FunctionTok{PredictionsMixture}\NormalTok{(}
+      \AttributeTok{XstarOld =}\NormalTok{ Xstar, }\AttributeTok{XstarNew =}\NormalTok{ NewDesign, }
+      \AttributeTok{designC =}\NormalTok{ NewDesignC, }\AttributeTok{totalScans =}\NormalTok{ totalScans, }\AttributeTok{nChains =}\NormalTok{ nChains, }
+      \AttributeTok{zetaPost =}\NormalTok{ zetaPost, }\AttributeTok{betaList =}\NormalTok{ betaList, }\AttributeTok{betaCPost =}\NormalTok{ betaCPost, }
+      \AttributeTok{k =}\NormalTok{ k, }\AttributeTok{ns =}\NormalTok{ ns)}
+    
+    \CommentTok{\# get surface}
+    \FunctionTok{return}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}
+      \AttributeTok{j1val =}\NormalTok{ NewDesignMat[, j1], }
+      \AttributeTok{j23quant =} \FunctionTok{rep}\NormalTok{(quantile\_j23, gridLength), }
+      \AttributeTok{est =} \FunctionTok{apply}\NormalTok{(predictions}\SpecialCharTok{$}\NormalTok{PredictedPost, }\DecValTok{3}\NormalTok{, mean), }
+      \AttributeTok{lower =} \FunctionTok{apply}\NormalTok{(predictions}\SpecialCharTok{$}\NormalTok{PredictedPost, }\DecValTok{3}\NormalTok{, quantile, }\FloatTok{0.025}\NormalTok{), }
+      \AttributeTok{upper =} \FunctionTok{apply}\NormalTok{(predictions}\SpecialCharTok{$}\NormalTok{PredictedPost, }\DecValTok{3}\NormalTok{, quantile, }\FloatTok{0.975}\NormalTok{)}
+\NormalTok{    ))}
+\NormalTok{  \})}
+  \FunctionTok{return}\NormalTok{(df)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
 \normalsize
 
-Next, we extract output from BSR models run on smaller size simulated datasets, including the base case and models with interactions between chemicals.
+Next, we extract output from BKMR models run on smaller and larger size simulated datasets, including the base case and models with interactions between chemicals.
 
-{[}\emph{results part two}{]}
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# load packages}
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(bkmr)}
 
+\DocumentationTok{\#\#\#\#\#\#}
+\CommentTok{\# extract bkmr smalls!}
+\DocumentationTok{\#\#\#\#\#\#}
+
+\CommentTok{\# get file paths of models}
+\NormalTok{list\_files }\OtherTok{\textless{}{-}} \FunctionTok{list.dirs}\NormalTok{(}\StringTok{"."}\NormalTok{, }\AttributeTok{full.names =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{recursive =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{list\_ksm }\OtherTok{\textless{}{-}}\NormalTok{ list\_files[}\FunctionTok{grepl}\NormalTok{(}\StringTok{"\_rslurm\_bkmr\_sm"}\NormalTok{, list\_files)]}
+
+\NormalTok{ksm\_subf }\OtherTok{\textless{}{-}} \FunctionTok{list.dirs}\NormalTok{(list\_ksm, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{recursive =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{ksm\_mod }\OtherTok{\textless{}{-}}\NormalTok{ ksm\_subf[}\FunctionTok{grepl}\NormalTok{(}\StringTok{"mods"}\NormalTok{, ksm\_subf)]}
+
+\NormalTok{ksm\_labels }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{D"}\NormalTok{, }\StringTok{""}\NormalTok{, ksm\_mod)}
+\NormalTok{ksm\_labels }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(ksm\_labels }\SpecialCharTok{==} \StringTok{""}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FunctionTok{as.numeric}\NormalTok{(ksm\_labels))}
+
+\CommentTok{\# get paths}
+\NormalTok{ksm\_paths }\OtherTok{\textless{}{-}}\NormalTok{ ksm\_mod }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{list.files}\NormalTok{(x, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  \}) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{setNames}\NormalTok{(}\AttributeTok{nm =}\NormalTok{ ksm\_labels)}
+
+\CommentTok{\# extract PIP\textquotesingle{}s}
+\NormalTok{ksm\_pips }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(ksm\_paths) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+\NormalTok{    ksm\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bkmr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+          \FunctionTok{ExtractPIPs}\NormalTok{(bkmr)}
+\NormalTok{        ) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".*\_(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d+)}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.RDS"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)))}
+        \FunctionTok{rm}\NormalTok{(bkmr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(ksm\_pips, }\StringTok{"sim/bkmr\_sm/pips.csv"}\NormalTok{)}
+
+\CommentTok{\# extract univariate relationships}
+\NormalTok{ksm\_univ }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(ksm\_paths) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+\NormalTok{    ksm\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bkmr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+          \FunctionTok{PredictorResponseUnivar}\NormalTok{(bkmr)}
+\NormalTok{        ) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".*\_(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d+)}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.RDS"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)))}
+        \FunctionTok{rm}\NormalTok{(bkmr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(ksm\_univ, }\StringTok{"sim/bkmr\_sm/univ\_expresp.csv"}\NormalTok{)}
+
+\CommentTok{\# extract bivariate relationships}
+\NormalTok{ksm\_biv }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(ksm\_paths)[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{13}\NormalTok{] }\SpecialCharTok{|\textgreater{}} \CommentTok{\# only for 2{-}way interaction}
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+\NormalTok{    indices }\OtherTok{\textless{}{-}} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{2}\SpecialCharTok{:}\DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{), }\CommentTok{\# Hg and Ni}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{6}\SpecialCharTok{:}\DecValTok{9} \SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{), }\CommentTok{\# Cd and As}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{10}\SpecialCharTok{:}\DecValTok{13} \SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{) }\CommentTok{\# Co and Ni}
+\NormalTok{    )}
+\NormalTok{    ksm\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bkmr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        bivar }\OtherTok{\textless{}{-}} \FunctionTok{PredictorResponseBivar}\NormalTok{(bkmr, }
+                               \AttributeTok{z.pairs =} \FunctionTok{rbind}\NormalTok{(indices), }\AttributeTok{verbose =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+          \FunctionTok{PredictorResponseBivarLevels}\NormalTok{(}
+            \AttributeTok{pred.resp.df =}\NormalTok{ bivar, }
+            \AttributeTok{Z =}\NormalTok{ bkmr}\SpecialCharTok{$}\NormalTok{Z, }\AttributeTok{qs =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{))}
+          
+\NormalTok{        ) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".*\_(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d+)}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.RDS"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)))}
+        \FunctionTok{rm}\NormalTok{(bkmr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\NormalTok{ksm\_biv\_nona }\OtherTok{\textless{}{-}} \FunctionTok{na.omit}\NormalTok{(ksm\_biv)}
+\FunctionTok{write\_csv}\NormalTok{(ksm\_biv\_nona, }\StringTok{"sim/bkmr\_sm/biv\_expresp.csv"}\NormalTok{)}
+
+\CommentTok{\# load in fxn}
+\FunctionTok{source}\NormalTok{(}\StringTok{"extract\_fxns.R"}\NormalTok{)}
+
+\CommentTok{\# extract trivariate relationships}
+\NormalTok{ksm\_triv }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(ksm\_paths)[}\DecValTok{14}\SpecialCharTok{:}\DecValTok{17}\NormalTok{] }\SpecialCharTok{|\textgreater{}} \CommentTok{\# only for 3{-}way}
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{message}\NormalTok{(}\StringTok{"starting "}\NormalTok{, x)}
+\NormalTok{    ksm\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bkmr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{trivarsurf\_bkmr}\NormalTok{(bkmr, }\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{6}\NormalTok{, }
+                                  \AttributeTok{qs.diff =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{), }
+                                  \AttributeTok{q.fixed =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{ngrid =} \DecValTok{50}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".*\_(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d+)}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.RDS"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)))}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(ksm\_triv, }\StringTok{"sim/bkmr\_sm/triv\_expresp.csv"}\NormalTok{)}
+
+\CommentTok{\# extract one vs. rest bivariate interactions}
+\NormalTok{ksm\_ints }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(ksm\_paths)[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{17}\NormalTok{] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"starting "}\NormalTok{, x))}
+\NormalTok{    indices }\OtherTok{\textless{}{-}} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{2}\SpecialCharTok{:}\DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{)), }\CommentTok{\# Hg and Ni}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{6}\SpecialCharTok{:}\DecValTok{9} \SpecialCharTok{\textasciitilde{}} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{)), }\CommentTok{\# Cd and As}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{10}\SpecialCharTok{:}\DecValTok{13} \SpecialCharTok{\textasciitilde{}} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{)), }\CommentTok{\# Co and Ni}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{14}\SpecialCharTok{:}\DecValTok{17} \SpecialCharTok{\textasciitilde{}} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{6}\NormalTok{)) }\CommentTok{\# Hg, Ni, Tl}
+\NormalTok{    )}
+\NormalTok{    ksm\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bkmr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        ints }\OtherTok{\textless{}{-}} \FunctionTok{SingVarIntSummaries}\NormalTok{(bkmr, }
+                                    \AttributeTok{which.z =}\NormalTok{ indices[[}\DecValTok{1}\NormalTok{]], }
+                                    \AttributeTok{qs.diff =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{), }
+                                    \AttributeTok{qs.fixed =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{),}
+                                    \AttributeTok{method =} \StringTok{"approx"}\NormalTok{)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(ints) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".*\_(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d+)}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.RDS"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)))}
+        \FunctionTok{rm}\NormalTok{(bkmr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(ksm\_ints, }\StringTok{"sim/bkmr\_sm/ints.csv"}\NormalTok{)}
+
+\CommentTok{\# load in fxn}
+\FunctionTok{source}\NormalTok{(}\StringTok{"extract\_fxns.R"}\NormalTok{)}
+
+\CommentTok{\# extract one vs. other bivariate interactions}
+\NormalTok{ksm\_intb }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(ksm\_paths)[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{13}\NormalTok{] }\SpecialCharTok{|\textgreater{}} \CommentTok{\# only for two{-}way}
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"starting "}\NormalTok{, x))}
+\NormalTok{    indices }\OtherTok{\textless{}{-}} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{2}\SpecialCharTok{:}\DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{)), }\CommentTok{\# Hg and Ni}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{6}\SpecialCharTok{:}\DecValTok{9} \SpecialCharTok{\textasciitilde{}} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{)), }\CommentTok{\# Cd and As}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{10}\SpecialCharTok{:}\DecValTok{13} \SpecialCharTok{\textasciitilde{}} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{)) }\CommentTok{\# Co and Ni}
+\NormalTok{    )}
+\NormalTok{    ksm\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bkmr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        ints }\OtherTok{\textless{}{-}} \FunctionTok{bivarinter\_bkmr}\NormalTok{(bkmr, }
+                                \AttributeTok{z1 =}\NormalTok{ indices[[}\DecValTok{1}\NormalTok{]][}\DecValTok{1}\NormalTok{], }
+                                \AttributeTok{z2 =}\NormalTok{ indices[[}\DecValTok{1}\NormalTok{]][}\DecValTok{2}\NormalTok{], }
+                                \AttributeTok{qs.diff =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{), }
+                                \AttributeTok{qs.fixed =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{),}
+                                \AttributeTok{q.rest =} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(ints) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".*\_(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d+)}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.RDS"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)))}
+        \FunctionTok{rm}\NormalTok{(bkmr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(ksm\_intb, }\StringTok{"sim/bkmr\_sm/int\_bivar.csv"}\NormalTok{)}
+
+\CommentTok{\# extract one vs. 2 others trivariate interactions}
+\NormalTok{ksm\_intt }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(ksm\_paths)[}\DecValTok{14}\SpecialCharTok{:}\DecValTok{17}\NormalTok{] }\SpecialCharTok{|\textgreater{}} \CommentTok{\# only for three{-}way}
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"starting "}\NormalTok{, x))}
+\NormalTok{    ksm\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bkmr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        ints }\OtherTok{\textless{}{-}} \FunctionTok{trivarinter\_bkmr}\NormalTok{(bkmr, }
+                                 \AttributeTok{z1 =} \DecValTok{4}\NormalTok{, }\AttributeTok{z2 =} \DecValTok{5}\NormalTok{, }\AttributeTok{z3 =} \DecValTok{6}\NormalTok{,}
+                                 \AttributeTok{qs.diff =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{), }
+                                 \AttributeTok{qs.fixed =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{),}
+                                 \AttributeTok{q.rest =} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(ints) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".*\_(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d+)}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.RDS"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)))}
+        \FunctionTok{rm}\NormalTok{(bkmr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(ksm\_intt, }\StringTok{"sim/bkmr\_sm/int\_trivar.csv"}\NormalTok{)}
+
+
+\DocumentationTok{\#\#\#\#\#\#}
+\CommentTok{\# extract bkmr larges!}
+\DocumentationTok{\#\#\#\#\#\#}
+  
+\NormalTok{list\_files }\OtherTok{\textless{}{-}} \FunctionTok{list.dirs}\NormalTok{(}\StringTok{"."}\NormalTok{, }\AttributeTok{full.names =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{recursive =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{list\_klg }\OtherTok{\textless{}{-}}\NormalTok{ list\_files[}\FunctionTok{grepl}\NormalTok{(}\StringTok{"\_rslurm\_bkmr\_lg"}\NormalTok{, list\_files)]}
+
+\NormalTok{klg\_subf }\OtherTok{\textless{}{-}} \FunctionTok{list.dirs}\NormalTok{(list\_klg, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{recursive =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{klg\_mod }\OtherTok{\textless{}{-}}\NormalTok{ klg\_subf[}\FunctionTok{grepl}\NormalTok{(}\StringTok{"mods"}\NormalTok{, klg\_subf)]}
+
+\NormalTok{klg\_labels }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{D"}\NormalTok{, }\StringTok{""}\NormalTok{, klg\_mod)}
+\NormalTok{klg\_labels }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(klg\_labels }\SpecialCharTok{==} \StringTok{""}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FunctionTok{as.numeric}\NormalTok{(klg\_labels))}
+
+\CommentTok{\# get paths}
+\NormalTok{klg\_paths }\OtherTok{\textless{}{-}}\NormalTok{ klg\_mod }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{list.files}\NormalTok{(x, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  \}) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{setNames}\NormalTok{(}\AttributeTok{nm =}\NormalTok{ klg\_labels)}
+
+\CommentTok{\# extract PIP\textquotesingle{}s}
+\NormalTok{klg\_pips }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(klg\_paths) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"starting at "}\NormalTok{, x))}
+\NormalTok{    klg\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bkmr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+          \FunctionTok{ExtractPIPs}\NormalTok{(bkmr)}
+\NormalTok{        ) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".*\_(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d+)}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.RDS"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)))}
+        \FunctionTok{rm}\NormalTok{(bkmr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(klg\_pips, }\StringTok{"sim/bkmr\_lg/pips.csv"}\NormalTok{)}
+
+\CommentTok{\# extract univariate relationships}
+\NormalTok{klg\_univ }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(klg\_paths) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+\NormalTok{    klg\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bkmr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+          \FunctionTok{PredictorResponseUnivar}\NormalTok{(bkmr)}
+\NormalTok{        ) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".*\_(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d+)}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.RDS"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)))}
+        \FunctionTok{rm}\NormalTok{(bkmr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(klg\_univ, }\StringTok{"sim/bkmr\_lg/univ\_expresp.csv"}\NormalTok{)}
+
+\CommentTok{\# extract bivariate relationships}
+\NormalTok{klg\_biv }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(klg\_paths)[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{13}\NormalTok{] }\SpecialCharTok{|\textgreater{}} \CommentTok{\# only for 2{-}way interaction}
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"starting at "}\NormalTok{, x))}
+\NormalTok{    indices }\OtherTok{\textless{}{-}} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{2}\SpecialCharTok{:}\DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{), }\CommentTok{\# Hg and Ni}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{6}\SpecialCharTok{:}\DecValTok{9} \SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{), }\CommentTok{\# Cd and As}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{10}\SpecialCharTok{:}\DecValTok{13} \SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{) }\CommentTok{\# Co and Ni}
+\NormalTok{    )}
+\NormalTok{    klg\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bkmr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        bivar }\OtherTok{\textless{}{-}} \FunctionTok{PredictorResponseBivar}\NormalTok{(bkmr, }
+                                        \AttributeTok{z.pairs =} \FunctionTok{rbind}\NormalTok{(indices), }\AttributeTok{verbose =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+          \FunctionTok{PredictorResponseBivarLevels}\NormalTok{(}
+            \AttributeTok{pred.resp.df =}\NormalTok{ bivar, }
+            \AttributeTok{Z =}\NormalTok{ bkmr}\SpecialCharTok{$}\NormalTok{Z, }\AttributeTok{qs =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{))}
+          
+\NormalTok{        ) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".*\_(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d+)}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.RDS"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)))}
+        \FunctionTok{rm}\NormalTok{(bkmr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\CommentTok{\# write\_csv(klg\_biv, "sim/bkmr\_lg/biv\_expresp.csv")}
+\CommentTok{\# write\_rds(klg\_biv, "sim/bkmr\_lg/biv\_expresp.rds")}
+\NormalTok{klg\_biv\_nona }\OtherTok{\textless{}{-}} \FunctionTok{na.omit}\NormalTok{(klg\_biv)}
+\FunctionTok{write\_csv}\NormalTok{(klg\_biv\_nona, }\StringTok{"sim/bkmr\_lg/biv\_expresp.csv"}\NormalTok{)}
+
+\CommentTok{\# load in fxn}
+\FunctionTok{source}\NormalTok{(}\StringTok{"extract\_fxns.R"}\NormalTok{)}
+
+\CommentTok{\# extract trivariate relationships}
+\NormalTok{klg\_triv }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(klg\_paths)[}\DecValTok{14}\SpecialCharTok{:}\DecValTok{17}\NormalTok{] }\SpecialCharTok{|\textgreater{}} \CommentTok{\# only for 3{-}way}
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{message}\NormalTok{(}\StringTok{"starting "}\NormalTok{, x)}
+\NormalTok{    klg\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bkmr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{trivarsurf\_bkmr}\NormalTok{(bkmr, }\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{6}\NormalTok{, }
+                                  \AttributeTok{qs.diff =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{), }
+                                  \AttributeTok{q.fixed =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{ngrid =} \DecValTok{50}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".*\_(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d+)}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.RDS"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)))}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(klg\_triv, }\StringTok{"sim/bkmr\_lg/triv\_expresp.csv"}\NormalTok{)}
+
+\CommentTok{\# extract one vs. rest bivariate interactions}
+\NormalTok{klg\_ints }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(klg\_paths)[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{17}\NormalTok{] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"starting "}\NormalTok{, x))}
+\NormalTok{    indices }\OtherTok{\textless{}{-}} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{2}\SpecialCharTok{:}\DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{)), }\CommentTok{\# Hg and Ni}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{6}\SpecialCharTok{:}\DecValTok{9} \SpecialCharTok{\textasciitilde{}} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{)), }\CommentTok{\# Cd and As}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{10}\SpecialCharTok{:}\DecValTok{13} \SpecialCharTok{\textasciitilde{}} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{)), }\CommentTok{\# Co and Ni}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{14}\SpecialCharTok{:}\DecValTok{17} \SpecialCharTok{\textasciitilde{}} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{6}\NormalTok{)) }\CommentTok{\# Hg, Ni, Tl}
+\NormalTok{    )}
+\NormalTok{    klg\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bkmr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        ints }\OtherTok{\textless{}{-}} \FunctionTok{SingVarIntSummaries}\NormalTok{(bkmr, }
+                                    \AttributeTok{which.z =}\NormalTok{ indices[[}\DecValTok{1}\NormalTok{]], }
+                                    \AttributeTok{qs.diff =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{), }
+                                    \AttributeTok{qs.fixed =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{),}
+                                    \AttributeTok{method =} \StringTok{"approx"}\NormalTok{)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(ints) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".*\_(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d+)}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.RDS"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)))}
+        \FunctionTok{rm}\NormalTok{(bkmr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(klg\_ints, }\StringTok{"sim/bkmr\_lg/ints.csv"}\NormalTok{)}
+
+\CommentTok{\# load in fxn}
+\FunctionTok{source}\NormalTok{(}\StringTok{"extract\_fxns.R"}\NormalTok{)}
+
+\CommentTok{\# extract one vs. other bivariate interactions}
+\NormalTok{klg\_intb }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(klg\_paths)[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{13}\NormalTok{] }\SpecialCharTok{|\textgreater{}} \CommentTok{\# only for two{-}way}
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"starting "}\NormalTok{, x))}
+\NormalTok{    indices }\OtherTok{\textless{}{-}} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{2}\SpecialCharTok{:}\DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{)), }\CommentTok{\# Hg and Ni}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{6}\SpecialCharTok{:}\DecValTok{9} \SpecialCharTok{\textasciitilde{}} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{)), }\CommentTok{\# Cd and As}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{10}\SpecialCharTok{:}\DecValTok{13} \SpecialCharTok{\textasciitilde{}} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{)) }\CommentTok{\# Co and Ni}
+\NormalTok{    )}
+\NormalTok{    klg\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bkmr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        ints }\OtherTok{\textless{}{-}} \FunctionTok{bivarinter\_bkmr}\NormalTok{(bkmr, }
+                                \AttributeTok{z1 =}\NormalTok{ indices[[}\DecValTok{1}\NormalTok{]][}\DecValTok{1}\NormalTok{], }
+                                \AttributeTok{z2 =}\NormalTok{ indices[[}\DecValTok{1}\NormalTok{]][}\DecValTok{2}\NormalTok{], }
+                                \AttributeTok{qs.diff =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{), }
+                                \AttributeTok{qs.fixed =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{),}
+                                \AttributeTok{q.rest =} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(ints) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".*\_(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d+)}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.RDS"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)))}
+        \FunctionTok{rm}\NormalTok{(bkmr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(klg\_intb, }\StringTok{"sim/bkmr\_lg/int\_bivar.csv"}\NormalTok{)}
+
+\CommentTok{\# extract one vs. 2 others trivariate interactions}
+\NormalTok{klg\_intt }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(klg\_paths)[}\DecValTok{14}\SpecialCharTok{:}\DecValTok{17}\NormalTok{] }\SpecialCharTok{|\textgreater{}} \CommentTok{\# only for three{-}way}
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"starting "}\NormalTok{, x))}
+\NormalTok{    klg\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bkmr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        ints }\OtherTok{\textless{}{-}} \FunctionTok{trivarinter\_bkmr}\NormalTok{(bkmr, }
+                                 \AttributeTok{z1 =} \DecValTok{4}\NormalTok{, }\AttributeTok{z2 =} \DecValTok{5}\NormalTok{, }\AttributeTok{z3 =} \DecValTok{6}\NormalTok{,}
+                                 \AttributeTok{qs.diff =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{), }
+                                 \AttributeTok{qs.fixed =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{),}
+                                 \AttributeTok{q.rest =} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(ints) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".*\_(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d+)}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.RDS"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)))}
+        \FunctionTok{rm}\NormalTok{(bkmr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(klg\_intt, }\StringTok{"sim/bkmr\_lg/int\_trivar.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+Next, we extract output from BSR models run on smaller and larger size simulated datasets, including the base case and models with interactions between chemicals.
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# load packages}
+\FunctionTok{library}\NormalTok{(NLinteraction)}
+\FunctionTok{library}\NormalTok{(tidyverse)}
+
+\CommentTok{\# create indices of chemical names}
+\NormalTok{cnames }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"As"}\NormalTok{, }\StringTok{"Cd"}\NormalTok{, }\StringTok{"Co"}\NormalTok{, }\StringTok{"Hg"}\NormalTok{, }\StringTok{"Ni"}\NormalTok{, }\StringTok{"Tl"}\NormalTok{, }\StringTok{"Pb"}\NormalTok{, }\StringTok{"Mo"}\NormalTok{, }\StringTok{"Sb"}\NormalTok{, }\StringTok{"Sn"}\NormalTok{)}
+
+\DocumentationTok{\#\#\#\#\#\#}
+\CommentTok{\# extract bsr smalls!}
+\DocumentationTok{\#\#\#\#\#\#}
+
+\CommentTok{\# extracting file names}
+\NormalTok{list\_files }\OtherTok{\textless{}{-}} \FunctionTok{list.dirs}\NormalTok{(}\StringTok{"."}\NormalTok{, }\AttributeTok{full.names =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{recursive =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{list\_ssm }\OtherTok{\textless{}{-}}\NormalTok{ list\_files[}\FunctionTok{grepl}\NormalTok{(}\StringTok{"\_rslurm\_bsr\_sm"}\NormalTok{, list\_files)]}
+
+\NormalTok{ssm\_subf }\OtherTok{\textless{}{-}} \FunctionTok{list.dirs}\NormalTok{(list\_ssm, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{recursive =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{ssm\_mod }\OtherTok{\textless{}{-}}\NormalTok{ ssm\_subf[}\FunctionTok{grepl}\NormalTok{(}\StringTok{"mods"}\NormalTok{, ssm\_subf)]}
+
+\NormalTok{ssm\_labels }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{D"}\NormalTok{, }\StringTok{""}\NormalTok{, ssm\_mod)}
+\NormalTok{ssm\_labels }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(ssm\_labels }\SpecialCharTok{==} \StringTok{""}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FunctionTok{as.numeric}\NormalTok{(ssm\_labels))}
+
+\CommentTok{\# get paths}
+\NormalTok{ssm\_paths }\OtherTok{\textless{}{-}}\NormalTok{ ssm\_mod }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{list.files}\NormalTok{(x, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  \}) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{setNames}\NormalTok{(}\AttributeTok{nm =}\NormalTok{ ssm\_labels)}
+
+\CommentTok{\# extract PIPs}
+\NormalTok{ssm\_pips }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(ssm\_paths) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"starting at "}\NormalTok{, x))}
+\NormalTok{    ssm\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bsr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{variable =}\NormalTok{ cnames, }\AttributeTok{PIP =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{MainPIP) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)), }
+                 \AttributeTok{df =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{ns)}
+        \FunctionTok{rm}\NormalTok{(bsr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(ssm\_pips, }\StringTok{"sim/bsr\_sm/pips.csv"}\NormalTok{)}
+
+\CommentTok{\# extract bivariate pip\textquotesingle{}s}
+\NormalTok{ssm\_pip\_biv }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(ssm\_paths) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"starting at "}\NormalTok{, x))}
+\NormalTok{    ssm\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bsr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        result }\OtherTok{\textless{}{-}}\NormalTok{ reshape2}\SpecialCharTok{::}\FunctionTok{melt}\NormalTok{(bsr}\SpecialCharTok{$}\NormalTok{InteractionPIP, }
+                                 \AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{, }
+                                 \AttributeTok{value.name =} \StringTok{"PIP"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)), }
+                 \AttributeTok{df =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{ns)}
+        \FunctionTok{rm}\NormalTok{(bsr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(ssm\_pip\_biv, }\StringTok{"sim/bsr\_sm/pip\_biv.csv"}\NormalTok{)}
+
+\CommentTok{\# extract trivariate pip\textquotesingle{}s}
+\NormalTok{ssm\_pip\_triv }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(ssm\_paths)[}\DecValTok{14}\SpecialCharTok{:}\DecValTok{17}\NormalTok{] }\SpecialCharTok{|\textgreater{}} \CommentTok{\# trivariate only}
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"starting at "}\NormalTok{, x)) }
+\NormalTok{    ssm\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bsr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y) }
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+          \AttributeTok{PIP =} \FunctionTok{InteractionProb}\NormalTok{(}\AttributeTok{NLmod =}\NormalTok{ bsr, }\AttributeTok{Xsub =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{6}\NormalTok{)), }
+          \AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)), }
+          \AttributeTok{df =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{ns}
+\NormalTok{        )}
+        \FunctionTok{rm}\NormalTok{(bsr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(ssm\_pip\_triv, }\StringTok{"sim/bsr\_sm/pip\_triv.csv"}\NormalTok{)}
+
+\CommentTok{\# read back in data}
+\NormalTok{out1\_resp1 }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_resp\_sm\_a.RDS"}\NormalTok{)}
+\FunctionTok{source}\NormalTok{(}\StringTok{"extract\_fxns.R"}\NormalTok{)}
+
+\CommentTok{\# extract bivariate relationships}
+\NormalTok{ssm\_biv }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(ssm\_paths)[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{13}\NormalTok{] }\SpecialCharTok{|\textgreater{}} \CommentTok{\# bivariate only }
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"starting at "}\NormalTok{, x))}
+\NormalTok{    indices }\OtherTok{\textless{}{-}} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{2}\SpecialCharTok{:}\DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{), }\CommentTok{\# Hg and Ni}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{6}\SpecialCharTok{:}\DecValTok{9} \SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{), }\CommentTok{\# Cd and As}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{10}\SpecialCharTok{:}\DecValTok{13} \SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{) }\CommentTok{\# Co and Ni}
+\NormalTok{    )}
+\NormalTok{    ssm\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        trial }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y))}
+        \ControlFlowTok{if}\NormalTok{(trial }\SpecialCharTok{\%\%} \DecValTok{5} \SpecialCharTok{==} \DecValTok{0}\NormalTok{) }\FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"index "}\NormalTok{, y))}
+\NormalTok{        df }\OtherTok{\textless{}{-}}\NormalTok{ out1\_resp1[[trial]]}
+\NormalTok{        X }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{select}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{        C }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}}
+          \FunctionTok{bind\_cols}\NormalTok{(}
+            \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ race}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{data =} 
+                                      \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{race =} \FunctionTok{as.factor}\NormalTok{(race))))}
+\NormalTok{          ) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{select}\NormalTok{(race2}\SpecialCharTok{:}\NormalTok{race5, smoke}\SpecialCharTok{:}\NormalTok{bmi) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{        Y }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{y}
+        
+\NormalTok{        bsr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+        
+\NormalTok{        result1 }\OtherTok{\textless{}{-}} \FunctionTok{bivarsurf\_bsr}\NormalTok{(bsr, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }\AttributeTok{j1 =}\NormalTok{ indices[}\DecValTok{1}\NormalTok{], }\AttributeTok{j2 =}\NormalTok{ indices[}\DecValTok{2}\NormalTok{], }
+                                \AttributeTok{gridLength =} \DecValTok{50}\NormalTok{, }\AttributeTok{quantile\_j2 =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{), }
+                                \AttributeTok{quantile\_rest =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)), }
+                 \AttributeTok{df =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{ns, }
+                 \AttributeTok{j1 =}\NormalTok{ cnames[indices[}\DecValTok{1}\NormalTok{]], }
+                 \AttributeTok{j2 =}\NormalTok{ cnames[indices[}\DecValTok{2}\NormalTok{]])}
+\NormalTok{        result2 }\OtherTok{\textless{}{-}} \FunctionTok{bivarsurf\_bsr}\NormalTok{(bsr, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }\AttributeTok{j1 =}\NormalTok{ indices[}\DecValTok{2}\NormalTok{], }\AttributeTok{j2 =}\NormalTok{ indices[}\DecValTok{1}\NormalTok{], }
+                                 \AttributeTok{gridLength =} \DecValTok{50}\NormalTok{, }\AttributeTok{quantile\_j2 =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{), }
+                                 \AttributeTok{quantile\_rest =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)), }
+                 \AttributeTok{df =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{ns, }
+                 \AttributeTok{j1 =}\NormalTok{ cnames[indices[}\DecValTok{2}\NormalTok{]], }
+                 \AttributeTok{j2 =}\NormalTok{ cnames[indices[}\DecValTok{1}\NormalTok{]])}
+        
+        \FunctionTok{rm}\NormalTok{(bsr)}
+        \FunctionTok{return}\NormalTok{(}\FunctionTok{bind\_rows}\NormalTok{(result1, result2))}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(ssm\_biv, }\StringTok{"sim/bsr\_sm/biv\_expresp.csv"}\NormalTok{)}
+
+\CommentTok{\# extract trivariate relationships}
+\NormalTok{ssm\_triv }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(ssm\_paths)[}\DecValTok{14}\SpecialCharTok{:}\DecValTok{17}\NormalTok{] }\SpecialCharTok{|\textgreater{}} \CommentTok{\# trivariate only }
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{message}\NormalTok{(}\StringTok{"starting "}\NormalTok{, x)}
+\NormalTok{    ssm\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        trial }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y))}
+        \ControlFlowTok{if}\NormalTok{(trial }\SpecialCharTok{\%\%} \DecValTok{5} \SpecialCharTok{==} \DecValTok{0}\NormalTok{) }\FunctionTok{message}\NormalTok{(}\StringTok{"   index "}\NormalTok{, trial)}
+\NormalTok{        df }\OtherTok{\textless{}{-}}\NormalTok{ out1\_resp1[[trial]]}
+\NormalTok{        X }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{select}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{        C }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}}
+          \FunctionTok{bind\_cols}\NormalTok{(}
+            \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ race}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{data =} 
+                                      \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{race =} \FunctionTok{as.factor}\NormalTok{(race))))}
+\NormalTok{          ) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{select}\NormalTok{(race2}\SpecialCharTok{:}\NormalTok{race5, smoke}\SpecialCharTok{:}\NormalTok{bmi) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{        Y }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{y}
+        
+\NormalTok{        bsr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+        
+\NormalTok{        result1 }\OtherTok{\textless{}{-}} \FunctionTok{trivarsurf\_bsr}\NormalTok{(bsr, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }\AttributeTok{j1 =} \DecValTok{4}\NormalTok{, }\AttributeTok{j2 =} \DecValTok{5}\NormalTok{, }\AttributeTok{j3 =} \DecValTok{6}\NormalTok{,}
+                                  \AttributeTok{gridLength =} \DecValTok{50}\NormalTok{, }\AttributeTok{quantile\_j2 =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{), }
+                                  \AttributeTok{quantile\_rest =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)), }
+                 \AttributeTok{df =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{ns, }
+                 \AttributeTok{j1 =}\NormalTok{ cnames[}\DecValTok{4}\NormalTok{], }
+                 \AttributeTok{j2 =}\NormalTok{ cnames[}\DecValTok{5}\NormalTok{], }
+                 \AttributeTok{j3 =}\NormalTok{ cnames[}\DecValTok{6}\NormalTok{])}
+\NormalTok{        result2 }\OtherTok{\textless{}{-}} \FunctionTok{trivarsurf\_bsr}\NormalTok{(bsr, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }\AttributeTok{j1 =} \DecValTok{5}\NormalTok{, }\AttributeTok{j2 =} \DecValTok{6}\NormalTok{, }\AttributeTok{j3 =} \DecValTok{4}\NormalTok{,}
+                                  \AttributeTok{gridLength =} \DecValTok{50}\NormalTok{, }\AttributeTok{quantile\_j2 =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{), }
+                                  \AttributeTok{quantile\_rest =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)), }
+                 \AttributeTok{df =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{ns, }
+                 \AttributeTok{j1 =}\NormalTok{ cnames[}\DecValTok{5}\NormalTok{], }
+                 \AttributeTok{j2 =}\NormalTok{ cnames[}\DecValTok{6}\NormalTok{], }
+                 \AttributeTok{j3 =}\NormalTok{ cnames[}\DecValTok{4}\NormalTok{])}
+\NormalTok{        result3 }\OtherTok{\textless{}{-}} \FunctionTok{trivarsurf\_bsr}\NormalTok{(bsr, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }\AttributeTok{j1 =} \DecValTok{6}\NormalTok{, }\AttributeTok{j2 =} \DecValTok{4}\NormalTok{, }\AttributeTok{j3 =} \DecValTok{5}\NormalTok{,}
+                                  \AttributeTok{gridLength =} \DecValTok{50}\NormalTok{, }\AttributeTok{quantile\_j2 =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{), }
+                                  \AttributeTok{quantile\_rest =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)), }
+                 \AttributeTok{df =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{ns, }
+                 \AttributeTok{j1 =}\NormalTok{ cnames[}\DecValTok{6}\NormalTok{], }
+                 \AttributeTok{j2 =}\NormalTok{ cnames[}\DecValTok{4}\NormalTok{], }
+                 \AttributeTok{j3 =}\NormalTok{ cnames[}\DecValTok{5}\NormalTok{])}
+        
+        \FunctionTok{rm}\NormalTok{(bsr)}
+        \FunctionTok{return}\NormalTok{(}\FunctionTok{bind\_rows}\NormalTok{(result1, result2, result3))}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(ssm\_triv, }\StringTok{"sim/bsr\_sm/triv\_expresp.csv"}\NormalTok{)}
+
+\DocumentationTok{\#\#\#\#\#\#}
+\CommentTok{\# extract bsr larges!}
+\DocumentationTok{\#\#\#\#\#\#}
+
+\CommentTok{\# extracting file names}
+
+\NormalTok{list\_files }\OtherTok{\textless{}{-}} \FunctionTok{list.dirs}\NormalTok{(}\StringTok{"."}\NormalTok{, }\AttributeTok{full.names =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{recursive =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{list\_slg }\OtherTok{\textless{}{-}}\NormalTok{ list\_files[}\FunctionTok{grepl}\NormalTok{(}\StringTok{"\_rslurm\_bsr\_lg"}\NormalTok{, list\_files)]}
+
+\NormalTok{slg\_subf }\OtherTok{\textless{}{-}} \FunctionTok{list.dirs}\NormalTok{(list\_slg, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{recursive =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{slg\_mod }\OtherTok{\textless{}{-}}\NormalTok{ slg\_subf[}\FunctionTok{grepl}\NormalTok{(}\StringTok{"mods"}\NormalTok{, slg\_subf)]}
+
+\NormalTok{slg\_labels }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{D"}\NormalTok{, }\StringTok{""}\NormalTok{, slg\_mod)}
+\NormalTok{slg\_labels }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(slg\_labels }\SpecialCharTok{==} \StringTok{""}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FunctionTok{as.numeric}\NormalTok{(slg\_labels))}
+
+\CommentTok{\# get paths}
+\NormalTok{slg\_paths }\OtherTok{\textless{}{-}}\NormalTok{ slg\_mod }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{list.files}\NormalTok{(x, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  \}) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{setNames}\NormalTok{(}\AttributeTok{nm =}\NormalTok{ slg\_labels)}
+
+\CommentTok{\# extract PIPs}
+\NormalTok{slg\_pips }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(slg\_paths) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"starting at "}\NormalTok{, x))}
+\NormalTok{    slg\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bsr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{variable =}\NormalTok{ cnames, }\AttributeTok{PIP =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{MainPIP) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)), }
+                 \AttributeTok{df =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{ns)}
+        \FunctionTok{rm}\NormalTok{(bsr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(slg\_pips, }\StringTok{"sim/bsr\_lg/pips.csv"}\NormalTok{)}
+
+\CommentTok{\# extract bivariate pip\textquotesingle{}s}
+\NormalTok{slg\_pip\_biv }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(slg\_paths) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"starting at "}\NormalTok{, x))}
+\NormalTok{    slg\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bsr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+\NormalTok{        result }\OtherTok{\textless{}{-}}\NormalTok{ reshape2}\SpecialCharTok{::}\FunctionTok{melt}\NormalTok{(bsr}\SpecialCharTok{$}\NormalTok{InteractionPIP, }
+                                 \AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{, }
+                                 \AttributeTok{value.name =} \StringTok{"PIP"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)), }
+                 \AttributeTok{df =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{ns)}
+        \FunctionTok{rm}\NormalTok{(bsr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(slg\_pip\_biv, }\StringTok{"sim/bsr\_lg/pip\_biv.csv"}\NormalTok{)}
+
+\CommentTok{\# extract trivariate pip\textquotesingle{}s}
+\NormalTok{slg\_pip\_triv }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(slg\_paths)[}\DecValTok{14}\SpecialCharTok{:}\DecValTok{17}\NormalTok{] }\SpecialCharTok{|\textgreater{}} \CommentTok{\# trivariate only}
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"starting at "}\NormalTok{, x)) }
+\NormalTok{    slg\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        bsr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y) }
+\NormalTok{        result }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+          \AttributeTok{PIP =} \FunctionTok{InteractionProb}\NormalTok{(}\AttributeTok{NLmod =}\NormalTok{ bsr, }\AttributeTok{Xsub =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{6}\NormalTok{)), }
+          \AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)), }
+          \AttributeTok{df =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{ns}
+\NormalTok{        )}
+        \FunctionTok{rm}\NormalTok{(bsr)}
+        \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(slg\_pip\_triv, }\StringTok{"sim/bsr\_lg/pip\_triv.csv"}\NormalTok{)}
+
+\CommentTok{\# read back in data}
+\NormalTok{out2\_resp1 }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(}\StringTok{"sim/sim\_resp\_lg\_a.RDS"}\NormalTok{)}
+\FunctionTok{source}\NormalTok{(}\StringTok{"extract\_fxns.R"}\NormalTok{)}
+
+\CommentTok{\# extract bivariate relationships}
+\NormalTok{slg\_biv }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(slg\_paths)[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{13}\NormalTok{] }\SpecialCharTok{|\textgreater{}} \CommentTok{\# bivariate only }
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"starting at "}\NormalTok{, x))}
+\NormalTok{    indices }\OtherTok{\textless{}{-}} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{2}\SpecialCharTok{:}\DecValTok{5} \SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{), }\CommentTok{\# Hg and Ni}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{6}\SpecialCharTok{:}\DecValTok{9} \SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{), }\CommentTok{\# Cd and As}
+\NormalTok{      x }\SpecialCharTok{\%in\%} \DecValTok{10}\SpecialCharTok{:}\DecValTok{13} \SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{) }\CommentTok{\# Co and Ni}
+\NormalTok{    )}
+\NormalTok{    slg\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        trial }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y))}
+        \ControlFlowTok{if}\NormalTok{(trial }\SpecialCharTok{\%\%} \DecValTok{5} \SpecialCharTok{==} \DecValTok{0}\NormalTok{) }\FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"index "}\NormalTok{, y))}
+\NormalTok{        df }\OtherTok{\textless{}{-}}\NormalTok{ out2\_resp1[[trial]]}
+\NormalTok{        X }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{select}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{        C }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}}
+          \FunctionTok{bind\_cols}\NormalTok{(}
+            \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ race}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{data =} 
+                                      \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{race =} \FunctionTok{as.factor}\NormalTok{(race))))}
+\NormalTok{          ) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{select}\NormalTok{(race2}\SpecialCharTok{:}\NormalTok{race5, smoke}\SpecialCharTok{:}\NormalTok{bmi) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{        Y }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{y}
+        
+\NormalTok{        bsr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+        
+\NormalTok{        result1 }\OtherTok{\textless{}{-}} \FunctionTok{bivarsurf\_bsr}\NormalTok{(bsr, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }\AttributeTok{j1 =}\NormalTok{ indices[}\DecValTok{1}\NormalTok{], }\AttributeTok{j2 =}\NormalTok{ indices[}\DecValTok{2}\NormalTok{], }
+                                 \AttributeTok{gridLength =} \DecValTok{50}\NormalTok{, }\AttributeTok{quantile\_j2 =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{), }
+                                 \AttributeTok{quantile\_rest =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)), }
+                 \AttributeTok{df =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{ns, }
+                 \AttributeTok{j1 =}\NormalTok{ cnames[indices[}\DecValTok{1}\NormalTok{]], }
+                 \AttributeTok{j2 =}\NormalTok{ cnames[indices[}\DecValTok{2}\NormalTok{]])}
+\NormalTok{        result2 }\OtherTok{\textless{}{-}} \FunctionTok{bivarsurf\_bsr}\NormalTok{(bsr, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }\AttributeTok{j1 =}\NormalTok{ indices[}\DecValTok{2}\NormalTok{], }\AttributeTok{j2 =}\NormalTok{ indices[}\DecValTok{1}\NormalTok{], }
+                                 \AttributeTok{gridLength =} \DecValTok{50}\NormalTok{, }\AttributeTok{quantile\_j2 =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{), }
+                                 \AttributeTok{quantile\_rest =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)), }
+                 \AttributeTok{df =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{ns, }
+                 \AttributeTok{j1 =}\NormalTok{ cnames[indices[}\DecValTok{2}\NormalTok{]], }
+                 \AttributeTok{j2 =}\NormalTok{ cnames[indices[}\DecValTok{1}\NormalTok{]])}
+        
+        \FunctionTok{rm}\NormalTok{(bsr)}
+        \FunctionTok{return}\NormalTok{(}\FunctionTok{bind\_rows}\NormalTok{(result1, result2))}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(slg\_biv, }\StringTok{"sim/bsr\_lg/biv\_expresp.csv"}\NormalTok{)}
+
+\CommentTok{\# extract trivariate relationships}
+\NormalTok{slg\_triv }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(slg\_paths)[}\DecValTok{14}\SpecialCharTok{:}\DecValTok{17}\NormalTok{] }\SpecialCharTok{|\textgreater{}} \CommentTok{\# trivariate only }
+\NormalTok{  purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(x) \{}
+    \FunctionTok{message}\NormalTok{(}\StringTok{"starting "}\NormalTok{, x)}
+\NormalTok{    slg\_paths[[x]] }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{      purrr}\SpecialCharTok{::}\FunctionTok{map\_df}\NormalTok{(\textbackslash{}(y) \{}
+\NormalTok{        trial }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y))}
+        \ControlFlowTok{if}\NormalTok{(trial }\SpecialCharTok{\%\%} \DecValTok{5} \SpecialCharTok{==} \DecValTok{0}\NormalTok{) }\FunctionTok{message}\NormalTok{(}\StringTok{"   index "}\NormalTok{, trial)}
+\NormalTok{        df }\OtherTok{\textless{}{-}}\NormalTok{ out2\_resp1[[trial]]}
+\NormalTok{        X }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{select}\NormalTok{(As}\SpecialCharTok{:}\NormalTok{Sn) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{        C }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{|\textgreater{}}
+          \FunctionTok{bind\_cols}\NormalTok{(}
+            \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ race}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{data =} 
+                                      \FunctionTok{mutate}\NormalTok{(df, }\AttributeTok{race =} \FunctionTok{as.factor}\NormalTok{(race))))}
+\NormalTok{          ) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{select}\NormalTok{(race2}\SpecialCharTok{:}\NormalTok{race5, smoke}\SpecialCharTok{:}\NormalTok{bmi) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{as.matrix.data.frame}\NormalTok{()}
+\NormalTok{        Y }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{y}
+        
+\NormalTok{        bsr }\OtherTok{\textless{}{-}} \FunctionTok{read\_rds}\NormalTok{(y)}
+        
+\NormalTok{        result1 }\OtherTok{\textless{}{-}} \FunctionTok{trivarsurf\_bsr}\NormalTok{(bsr, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }\AttributeTok{j1 =} \DecValTok{4}\NormalTok{, }\AttributeTok{j2 =} \DecValTok{5}\NormalTok{, }\AttributeTok{j3 =} \DecValTok{6}\NormalTok{,}
+                                  \AttributeTok{gridLength =} \DecValTok{50}\NormalTok{, }\AttributeTok{quantile\_j2 =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{), }
+                                  \AttributeTok{quantile\_rest =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)), }
+                 \AttributeTok{df =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{ns, }
+                 \AttributeTok{j1 =}\NormalTok{ cnames[}\DecValTok{4}\NormalTok{], }
+                 \AttributeTok{j2 =}\NormalTok{ cnames[}\DecValTok{5}\NormalTok{], }
+                 \AttributeTok{j3 =}\NormalTok{ cnames[}\DecValTok{6}\NormalTok{])}
+\NormalTok{        result2 }\OtherTok{\textless{}{-}} \FunctionTok{trivarsurf\_bsr}\NormalTok{(bsr, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }\AttributeTok{j1 =} \DecValTok{5}\NormalTok{, }\AttributeTok{j2 =} \DecValTok{6}\NormalTok{, }\AttributeTok{j3 =} \DecValTok{4}\NormalTok{,}
+                                  \AttributeTok{gridLength =} \DecValTok{50}\NormalTok{, }\AttributeTok{quantile\_j2 =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{), }
+                                  \AttributeTok{quantile\_rest =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)), }
+                 \AttributeTok{df =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{ns, }
+                 \AttributeTok{j1 =}\NormalTok{ cnames[}\DecValTok{5}\NormalTok{], }
+                 \AttributeTok{j2 =}\NormalTok{ cnames[}\DecValTok{6}\NormalTok{], }
+                 \AttributeTok{j3 =}\NormalTok{ cnames[}\DecValTok{4}\NormalTok{])}
+\NormalTok{        result3 }\OtherTok{\textless{}{-}} \FunctionTok{trivarsurf\_bsr}\NormalTok{(bsr, }\AttributeTok{X =}\NormalTok{ X, }\AttributeTok{C =}\NormalTok{ C, }\AttributeTok{j1 =} \DecValTok{6}\NormalTok{, }\AttributeTok{j2 =} \DecValTok{4}\NormalTok{, }\AttributeTok{j3 =} \DecValTok{5}\NormalTok{,}
+                                  \AttributeTok{gridLength =} \DecValTok{50}\NormalTok{, }\AttributeTok{quantile\_j2 =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.9}\NormalTok{), }
+                                  \AttributeTok{quantile\_rest =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+          \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trial =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{sub}\NormalTok{(}\StringTok{".+\_(.+)d.+"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{1"}\NormalTok{, y)), }
+                 \AttributeTok{df =}\NormalTok{ bsr}\SpecialCharTok{$}\NormalTok{ns, }
+                 \AttributeTok{j1 =}\NormalTok{ cnames[}\DecValTok{6}\NormalTok{], }
+                 \AttributeTok{j2 =}\NormalTok{ cnames[}\DecValTok{4}\NormalTok{], }
+                 \AttributeTok{j3 =}\NormalTok{ cnames[}\DecValTok{5}\NormalTok{])}
+        
+        \FunctionTok{rm}\NormalTok{(bsr)}
+        \FunctionTok{return}\NormalTok{(}\FunctionTok{bind\_rows}\NormalTok{(result1, result2, result3))}
+\NormalTok{      \}) }\SpecialCharTok{|\textgreater{}} 
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{case =}\NormalTok{ x)}
+\NormalTok{  \})}
+\FunctionTok{write\_csv}\NormalTok{(slg\_triv, }\StringTok{"sim/bsr\_lg/triv\_expresp.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+{[}\emph{what else to include?}{]}
+\begin{itemize}
+\tightlist
+\item
+  extract results from r/e
+\item
+  present results
+\item
+  create tables
+\item
+  keep track of which results are actually going into the appendix
+\end{itemize}
 Here, we visualize and summarize results from model output.
 
 \hypertarget{code-for-appendix-refappa}{%
@@ -5072,6 +6280,141 @@ We also look at selecting degrees of freedom in BSR using 5,000 vs.~50,000 MCMC 
               \AttributeTok{names\_from =}\NormalTok{ iter, }\AttributeTok{values\_from =}\NormalTok{ df) }\SpecialCharTok{|\textgreater{}} 
   \FunctionTok{mutate}\NormalTok{(}\AttributeTok{equal =}\NormalTok{ (full }\SpecialCharTok{==}\NormalTok{ partial))}
 \FunctionTok{mean}\NormalTok{(waic\_min}\SpecialCharTok{$}\NormalTok{equal)  }
+\end{Highlighting}
+\end{Shaded}
+\normalsize
+
+We check convergence using trace plots for a selection of BKMR and BSR models.
+
+\scriptsize
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(bkmr)}
+\FunctionTok{library}\NormalTok{(NLinteraction)}
+
+\CommentTok{\# bkmr fits}
+\NormalTok{bkmr\_sm\_am2\_203 }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\StringTok{"testing/bkmr\_sm\_am2\_203.RDS"}\NormalTok{)}
+\NormalTok{bkmr\_lg\_am2\_284 }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\StringTok{"testing/bkmr\_lg\_am2\_284.RDS"}\NormalTok{)}
+
+\CommentTok{\# bsr fits}
+\NormalTok{bsr\_sm\_am2\_203df2 }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\StringTok{"testing/bsr\_sm\_am2\_203df2.RDS"}\NormalTok{)}
+\NormalTok{bsr\_lgf\_am2\_284df2 }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\StringTok{"testing/bsr\_lgf\_am2\_284df2.RDS"}\NormalTok{)}
+
+\CommentTok{\# bkmr sm}
+\FunctionTok{png}\NormalTok{(}\StringTok{"index/figures/traceplots/bksm\_traceplot.png"}\NormalTok{, }\AttributeTok{width =} \DecValTok{8}\NormalTok{, }\AttributeTok{height =} \DecValTok{6}\NormalTok{, }\AttributeTok{units =} \StringTok{"in"}\NormalTok{, }\AttributeTok{res =} \DecValTok{360}\NormalTok{)}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+\FunctionTok{TracePlot}\NormalTok{(}\AttributeTok{fit =}\NormalTok{ bkmr\_sm\_am2\_203, }\AttributeTok{par =} \StringTok{"beta"}\NormalTok{) }\CommentTok{\# prior probability}
+\FunctionTok{TracePlot}\NormalTok{(}\AttributeTok{fit =}\NormalTok{ bkmr\_sm\_am2\_203, }\AttributeTok{par =} \StringTok{"sigsq.eps"}\NormalTok{) }\CommentTok{\# variance of residuals}
+\FunctionTok{TracePlot}\NormalTok{(}\AttributeTok{fit =}\NormalTok{ bkmr\_sm\_am2\_203, }\AttributeTok{par =} \StringTok{"r"}\NormalTok{, }\AttributeTok{comp =} \DecValTok{1}\NormalTok{) }\CommentTok{\# prob of each}
+\FunctionTok{TracePlot}\NormalTok{(}\AttributeTok{fit =}\NormalTok{ bkmr\_sm\_am2\_203, }\AttributeTok{par =} \StringTok{"r"}\NormalTok{, }\AttributeTok{comp =} \DecValTok{5}\NormalTok{)}
+\FunctionTok{dev.off}\NormalTok{()}
+
+\CommentTok{\# bkmr lg}
+\FunctionTok{png}\NormalTok{(}\StringTok{"index/figures/traceplots/bklg\_traceplot.png"}\NormalTok{, }\AttributeTok{width =} \DecValTok{8}\NormalTok{, }\AttributeTok{height =} \DecValTok{6}\NormalTok{, }\AttributeTok{units =} \StringTok{"in"}\NormalTok{, }\AttributeTok{res =} \DecValTok{360}\NormalTok{)}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+\FunctionTok{TracePlot}\NormalTok{(}\AttributeTok{fit =}\NormalTok{ bkmr\_lg\_am2\_284, }\AttributeTok{par =} \StringTok{"beta"}\NormalTok{)}
+\FunctionTok{TracePlot}\NormalTok{(}\AttributeTok{fit =}\NormalTok{ bkmr\_lg\_am2\_284, }\AttributeTok{par =} \StringTok{"sigsq.eps"}\NormalTok{)}
+\FunctionTok{TracePlot}\NormalTok{(}\AttributeTok{fit =}\NormalTok{ bkmr\_lg\_am2\_284, }\AttributeTok{par =} \StringTok{"r"}\NormalTok{, }\AttributeTok{comp =} \DecValTok{1}\NormalTok{)}
+\FunctionTok{TracePlot}\NormalTok{(}\AttributeTok{fit =}\NormalTok{ bkmr\_lg\_am2\_284, }\AttributeTok{par =} \StringTok{"r"}\NormalTok{, }\AttributeTok{comp =} \DecValTok{5}\NormalTok{)}
+
+\CommentTok{\# bsr sm}
+\NormalTok{h }\OtherTok{\textless{}{-}}\NormalTok{ bsr\_sm\_am2\_203df2}\SpecialCharTok{$}\NormalTok{posterior}
+
+\FunctionTok{png}\NormalTok{(}\StringTok{"index/figures/traceplots/bssm\_traceplot.png"}\NormalTok{, }\AttributeTok{width =} \DecValTok{8}\NormalTok{, }\AttributeTok{height =} \DecValTok{6}\NormalTok{, }\AttributeTok{units =} \StringTok{"in"}\NormalTok{, }\AttributeTok{res =} \DecValTok{360}\NormalTok{)}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+\NormalTok{htau }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(h[[}\StringTok{"tau"}\NormalTok{]][, , }\DecValTok{1}\NormalTok{])}
+\FunctionTok{plot}\NormalTok{(htau[, }\DecValTok{1}\NormalTok{], }\AttributeTok{type =} \StringTok{"l"}\NormalTok{, }
+     \AttributeTok{main =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"(tau = "}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(htau[,}\DecValTok{1}\NormalTok{]), }\DecValTok{2}\NormalTok{), }\StringTok{")"}\NormalTok{), }
+     \AttributeTok{xlab =} \StringTok{"scan"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"parameter value"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \FunctionTok{mean}\NormalTok{(htau[, }\DecValTok{1}\NormalTok{]), }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\NormalTok{hsigma }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(h[[}\StringTok{"sigma"}\NormalTok{]])}
+\FunctionTok{plot}\NormalTok{(hsigma[, }\DecValTok{1}\NormalTok{], }\AttributeTok{type =} \StringTok{"l"}\NormalTok{, }
+     \AttributeTok{main =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"(sigma = "}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(hsigma[,}\DecValTok{1}\NormalTok{]), }\DecValTok{2}\NormalTok{), }\StringTok{")"}\NormalTok{), }
+     \AttributeTok{xlab =} \StringTok{"scan"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"parameter value"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \FunctionTok{mean}\NormalTok{(hsigma[, }\DecValTok{1}\NormalTok{]), }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\NormalTok{hzeta1 }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(h[[}\StringTok{"zeta"}\NormalTok{]][, , }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{])}
+\FunctionTok{plot}\NormalTok{(hzeta1[, }\DecValTok{1}\NormalTok{], }\AttributeTok{type =} \StringTok{"l"}\NormalTok{, }
+     \AttributeTok{main =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"(zeta1 = "}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(hzeta1[,}\DecValTok{1}\NormalTok{]), }\DecValTok{2}\NormalTok{), }\StringTok{")"}\NormalTok{), }
+     \AttributeTok{xlab =} \StringTok{"scan"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"parameter value"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \FunctionTok{mean}\NormalTok{(hzeta1[, }\DecValTok{1}\NormalTok{]), }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\NormalTok{hzeta5 }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(h[[}\StringTok{"zeta"}\NormalTok{]][, , }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{])}
+\FunctionTok{plot}\NormalTok{(hzeta5[, }\DecValTok{1}\NormalTok{], }\AttributeTok{type =} \StringTok{"l"}\NormalTok{, }
+     \AttributeTok{main =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"(zeta5 = "}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(hzeta5[,}\DecValTok{1}\NormalTok{]), }\DecValTok{2}\NormalTok{), }\StringTok{")"}\NormalTok{), }
+     \AttributeTok{xlab =} \StringTok{"scan"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"parameter value"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \FunctionTok{mean}\NormalTok{(hzeta5[, }\DecValTok{1}\NormalTok{]), }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{dev.off}\NormalTok{()}
+
+\CommentTok{\# bsr lg}
+\NormalTok{h }\OtherTok{\textless{}{-}}\NormalTok{ bsr\_lgf\_am2\_284df2}\SpecialCharTok{$}\NormalTok{posterior}
+
+\FunctionTok{png}\NormalTok{(}\StringTok{"index/figures/traceplots/bslg\_traceplot.png"}\NormalTok{, }\AttributeTok{width =} \DecValTok{8}\NormalTok{, }\AttributeTok{height =} \DecValTok{6}\NormalTok{, }\AttributeTok{units =} \StringTok{"in"}\NormalTok{, }\AttributeTok{res =} \DecValTok{360}\NormalTok{)}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+\NormalTok{htau }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(h[[}\StringTok{"tau"}\NormalTok{]][, , }\DecValTok{1}\NormalTok{])}
+\FunctionTok{plot}\NormalTok{(htau[, }\DecValTok{1}\NormalTok{], }\AttributeTok{type =} \StringTok{"l"}\NormalTok{, }
+     \AttributeTok{main =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"(tau = "}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(htau[,}\DecValTok{1}\NormalTok{]), }\DecValTok{2}\NormalTok{), }\StringTok{")"}\NormalTok{), }
+     \AttributeTok{xlab =} \StringTok{"scan"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"parameter value"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \FunctionTok{mean}\NormalTok{(htau[, }\DecValTok{1}\NormalTok{]), }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\NormalTok{hsigma }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(h[[}\StringTok{"sigma"}\NormalTok{]])}
+\FunctionTok{plot}\NormalTok{(hsigma[, }\DecValTok{1}\NormalTok{], }\AttributeTok{type =} \StringTok{"l"}\NormalTok{, }
+     \AttributeTok{main =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"(sigma = "}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(hsigma[,}\DecValTok{1}\NormalTok{]), }\DecValTok{2}\NormalTok{), }\StringTok{")"}\NormalTok{), }
+     \AttributeTok{xlab =} \StringTok{"scan"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"parameter value"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \FunctionTok{mean}\NormalTok{(hsigma[, }\DecValTok{1}\NormalTok{]), }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\NormalTok{hzeta1 }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(h[[}\StringTok{"zeta"}\NormalTok{]][, , }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{])}
+\FunctionTok{plot}\NormalTok{(hzeta1[, }\DecValTok{1}\NormalTok{], }\AttributeTok{type =} \StringTok{"l"}\NormalTok{, }
+     \AttributeTok{main =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"(zeta1 = "}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(hzeta1[,}\DecValTok{1}\NormalTok{]), }\DecValTok{2}\NormalTok{), }\StringTok{")"}\NormalTok{), }
+     \AttributeTok{xlab =} \StringTok{"scan"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"parameter value"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \FunctionTok{mean}\NormalTok{(hzeta1[, }\DecValTok{1}\NormalTok{]), }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\NormalTok{hzeta5 }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(h[[}\StringTok{"zeta"}\NormalTok{]][, , }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{])}
+\FunctionTok{plot}\NormalTok{(hzeta5[, }\DecValTok{1}\NormalTok{], }\AttributeTok{type =} \StringTok{"l"}\NormalTok{, }
+     \AttributeTok{main =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"(zeta5 = "}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(hzeta5[,}\DecValTok{1}\NormalTok{]), }\DecValTok{2}\NormalTok{), }\StringTok{")"}\NormalTok{), }
+     \AttributeTok{xlab =} \StringTok{"scan"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"parameter value"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \FunctionTok{mean}\NormalTok{(hzeta5[, }\DecValTok{1}\NormalTok{]), }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{dev.off}\NormalTok{()}
+
+\CommentTok{\# put all together}
+
+\FunctionTok{library}\NormalTok{(magick)}
+
+\CommentTok{\# list of input files}
+\NormalTok{file\_list }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"index/figures/traceplots/bksm\_traceplot.png"}\NormalTok{, }
+               \StringTok{"index/figures/traceplots/bklg\_traceplot.png"}\NormalTok{, }
+               \StringTok{"index/figures/traceplots/bssm\_traceplot.png"}\NormalTok{, }
+               \StringTok{"index/figures/traceplots/bslg\_traceplot.png"}\NormalTok{)}
+
+\CommentTok{\# output file name}
+\NormalTok{output\_file }\OtherTok{\textless{}{-}} \StringTok{"index/figures/traceplots/bksm\_traceplotmerged.png"}
+
+\CommentTok{\# merge images}
+\NormalTok{merge\_and\_save }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(file\_list, output\_file) \{}
+\NormalTok{  images }\OtherTok{\textless{}{-}} \FunctionTok{image\_read}\NormalTok{(file\_list)}
+  
+  \CommentTok{\# two columns}
+\NormalTok{  top\_row }\OtherTok{\textless{}{-}} \FunctionTok{image\_append}\NormalTok{(images[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{], }\AttributeTok{stack =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  bottom\_row }\OtherTok{\textless{}{-}} \FunctionTok{image\_append}\NormalTok{(images[}\DecValTok{3}\SpecialCharTok{:}\DecValTok{4}\NormalTok{], }\AttributeTok{stack =} \ConstantTok{TRUE}\NormalTok{)}
+  
+  \CommentTok{\# combine columns}
+\NormalTok{  combined\_image }\OtherTok{\textless{}{-}} \FunctionTok{image\_append}\NormalTok{(}\FunctionTok{c}\NormalTok{(top\_row, bottom\_row), }\AttributeTok{stack =} \ConstantTok{FALSE}\NormalTok{)}
+  
+  \CommentTok{\# add labels}
+\NormalTok{  combined\_image }\OtherTok{\textless{}{-}} \FunctionTok{image\_annotate}\NormalTok{(combined\_image, }\StringTok{"a"}\NormalTok{, }\AttributeTok{location =} \StringTok{"+30+20"}\NormalTok{, }
+                                   \AttributeTok{size =} \DecValTok{120}\NormalTok{, }\AttributeTok{color =} \StringTok{"black"}\NormalTok{, }\AttributeTok{font =} \StringTok{"Roboto"}\NormalTok{, }\AttributeTok{weight =} \DecValTok{700}\NormalTok{)}
+\NormalTok{  combined\_image }\OtherTok{\textless{}{-}} \FunctionTok{image\_annotate}\NormalTok{(combined\_image, }\StringTok{"b"}\NormalTok{, }\AttributeTok{location =} \StringTok{"+2900+20"}\NormalTok{, }
+                                   \AttributeTok{size =} \DecValTok{120}\NormalTok{, }\AttributeTok{color =} \StringTok{"black"}\NormalTok{, }\AttributeTok{font =} \StringTok{"Roboto"}\NormalTok{, }\AttributeTok{weight =} \DecValTok{700}\NormalTok{)}
+\NormalTok{  combined\_image }\OtherTok{\textless{}{-}} \FunctionTok{image\_annotate}\NormalTok{(combined\_image, }\StringTok{"c"}\NormalTok{, }\AttributeTok{location =} \StringTok{"+30+2110"}\NormalTok{, }
+                                   \AttributeTok{size =} \DecValTok{120}\NormalTok{, }\AttributeTok{color =} \StringTok{"black"}\NormalTok{, }\AttributeTok{font =} \StringTok{"Roboto"}\NormalTok{, }\AttributeTok{weight =} \DecValTok{700}\NormalTok{)}
+\NormalTok{  combined\_image }\OtherTok{\textless{}{-}} \FunctionTok{image\_annotate}\NormalTok{(combined\_image, }\StringTok{"d"}\NormalTok{, }\AttributeTok{location =} \StringTok{"+2900+2110"}\NormalTok{, }
+                                   \AttributeTok{size =} \DecValTok{120}\NormalTok{, }\AttributeTok{color =} \StringTok{"black"}\NormalTok{, }\AttributeTok{font =} \StringTok{"Roboto"}\NormalTok{, }\AttributeTok{weight =} \DecValTok{700}\NormalTok{)}
+  
+  \FunctionTok{image\_write}\NormalTok{(combined\_image, }\AttributeTok{path =}\NormalTok{ output\_file, }\AttributeTok{format =} \StringTok{"png"}\NormalTok{)}
+\NormalTok{\}}
+
+\FunctionTok{merge\_and\_save}\NormalTok{(file\_list, output\_file)}
 \end{Highlighting}
 \end{Shaded}
 \normalsize

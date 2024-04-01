@@ -1223,6 +1223,39 @@ bsr_comb <- bind_rows(
 write_csv(bsr_comb, "index/data/bsr_int_sens.csv")
 
 
+# bivar FDR ---------------------------------------------------------------
+
+bsr_comb <- read_csv("index/data/bsr_int_sens.csv")
+
+ksmfdr<- read_csv("sim/bkmr_sm/int_bivarfull.csv")
+klgfdr <- read_csv("sim/bkmr_lg/int_bivarfull.csv")
+
+bkmr_comb <- bind_rows(
+  mutate(ksmfdr, size = "Small"), 
+  mutate(klgfdr, size = "Large")
+) |> 
+  rowwise() |> 
+  mutate(inter1 = paste0(z1, "-", z2), 
+         sign = ifelse(
+           (inter1 == "Hg-Ni" & case %in% 2:5) | 
+             (inter1 == "As-Cd" & case %in% 6:9) | 
+             (inter1 == "Co-Ni" & case %in% 10:13), TRUE, FALSE
+         ), 
+         signif = ifelse(
+           between(0, est - 1.96*sd, est + 1.96*sd), FALSE, TRUE
+         ), 
+         inter2 = ifelse(sign, inter1, "none")) |> 
+  group_by(size, case, inter2, sign) |> 
+  summarize(sensitivity = sum(signif)/n())
+
+fdr_comb <- bind_rows(
+  mutate(bkmr_comb, mod = "BKMR"), 
+  mutate(bsr_comb, mod = "BSR")
+) |> 
+  relocate(mod)
+
+write_csv(fdr_comb, "index/data/comb_int_fdr.csv")
+
 # HgNi only ---------------------------------------------------------------
 
 # univariate significance
