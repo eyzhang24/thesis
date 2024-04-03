@@ -124,81 +124,84 @@ include_graphics(path = "figures/traceplots/bksm_traceplotmerged.png")
 
 Full output for univariate
 
-```{r nsmunivp, fig.cap = "", out.width = '75%', echo = FALSE}
+```{r nsmunivp, fig.cap = "naive small univariate p-values.", out.width = '75%', echo = FALSE}
 # naive small
 include_graphics(path = "figures/ch4_nsm_univ_pval.png")
 ```
 
 
-```{r nlgunivp, fig.cap = "", out.width = '75%', echo = FALSE}
+```{r nlgunivp, fig.cap = "naive large univariate p-values.", out.width = '75%', echo = FALSE}
 # naive large
 include_graphics(path = "figures/ch4_nlg_univ_pval.png")
 ```
 
 
-```{r osmunivp, fig.cap = "", out.width = '75%', echo = FALSE}
+```{r osmunivp, fig.cap = "oracle small univariate p-values.", out.width = '75%', echo = FALSE}
 # oracle small
 include_graphics(path = "figures/ch4_osm_univ_pval.png")
 ```
 
 
-```{r olgunivp, fig.cap = "", out.width = '75%', echo = FALSE}
+```{r olgunivp, fig.cap = "oracle large univariate p-values.", out.width = '75%', echo = FALSE}
 # oracle large
 include_graphics(path = "figures/ch4_olg_univ_pval.png")
 ```
 
 
-```{r ksmunivp, fig.cap = "", out.width = '75%', echo = FALSE}
+```{r ksmunivp, fig.cap = "bkmr small univariate pip's.", out.width = '75%', echo = FALSE}
 # bkmr small
 include_graphics(path = "figures/ch4_ksm_univ_pips.png")
 ```
 
 
-```{r klgunivp, fig.cap = "", out.width = '75%', echo = FALSE}
+```{r klgunivp, fig.cap = "bkmr large univariate pip's.", out.width = '75%', echo = FALSE}
 # bkmr large
 include_graphics(path = "figures/ch4_klg_univ_pips.png")
 ```
 
 
-```{r ssmunivp, fig.cap = "", out.width = '75%', echo = FALSE}
+```{r ssmunivp, fig.cap = "bsr small univariate pip's.", out.width = '75%', echo = FALSE}
 # bsr small
 include_graphics(path = "figures/ch4_ssm_univ_pips.png")
 ```
 
 
-```{r slgunivp, fig.cap = "", out.width = '75%', echo = FALSE}
+```{r slgunivp, fig.cap = "bsr large univariate pip's.", out.width = '75%', echo = FALSE}
 # bsr large
 include_graphics(path = "figures/ch4_slg_univ_pips.png")
 ```
 
 Full output for bivariate
 
-```{r osmbivp, fig.cap = "", out.width = '75%', echo = FALSE}
+```{r osmbivp, fig.cap = "oracle small detection of interactions.", out.width = '75%', echo = FALSE}
 # oracle small
 include_graphics(path = "figures/ch4_osm_biv_pval.png")
 ```
 
-```{r olgbivp, fig.cap = "", out.width = '75%', echo = FALSE}
+```{r olgbivp, fig.cap = "oracle large detection of interactions.", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch4_olg_biv_pval.png")
 ```
 
 Exposure response surfaces
 
-```{r ksmcdas, fig.cap = "", out.width = '75%', echo = FALSE}
+```{r ksmcdas, fig.cap = "cd-as bkmr small exposure response.", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch4_ksm_biv_expresp_2.png")
 ```
 
-```{r klgcdas, fig.cap = "", out.width = '75%', echo = FALSE}
+```{r klgcdas, fig.cap = "cd-as bkmr large exposure response.", out.width = '75%', echo = FALSE}
 include_graphics("figures/ch4_klg_biv_expresp_2.png")
 ```
 
 
-```{r ksmnico, fig.cap = "", out.width = '75%', echo = FALSE}
+```{r ksmnico, fig.cap = "ni-co bkmr small exposure response.", out.width = '75%', echo = FALSE}
 include_graphics("figures/ch4_ksm_biv_expresp_3.png")
 ```
 
-```{r klgnico, fig.cap = "", out.width = '75%', echo = FALSE}
+```{r klgnico, fig.cap = "ni-co bkmr large exposure-response.", out.width = '75%', echo = FALSE}
 include_graphics("figures/ch4_klg_biv_expresp_3.png")
 ```
 
+Still need to include BSR exposure-response surfaces
+
+Potentially also will include trivariate exposure-response surfaces here, too. 
 

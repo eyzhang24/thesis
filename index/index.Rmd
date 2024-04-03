@@ -16,6 +16,7 @@ output:
 toc: true
 lot: true # set to false if no tables present
 lof: true # set to false if no figures present
+link-citations: true # adding this in to link citations
 fig_height: 3.5
 fig_width: 5.5
 # Update abstract and acknowledgments filenames below as needed

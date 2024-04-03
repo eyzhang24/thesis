@@ -16,7 +16,7 @@ knitr::knit_hooks$set(chunk = function(x, options) {
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE, size = 'scriptsize')
 ```
 
-## Code for Section \@ref(bayes):
+## Code for Chapter \@ref(bayes):
 
 The code for this section generates a toy example, used to demonstrate the kernel machine regression and spline regression techniques. 
 
@@ -230,11 +230,11 @@ ggsave("index/figures/ch3_toybounds.png", plot = qbounds,
        device = "png", width = 7, height = 3)
 ```
 
-## Code for Section \@ref(sims):
+## Code for Chapter \@ref(sims):
 
 The code for this section prepares the data from the MADRES study, generates simulated data, fits multiple linear regressions, BKMR, and BSR on the simulated data, and produces model output. 
 
-### Code for Section \@ref(madres):
+### Code for Chapter \@ref(madres):
 
 First, we clean the data from the MADRES study. 
 
@@ -345,7 +345,7 @@ write_csv(comb_small, "madres_data/base_data.csv")
 ```
 
 
-### Code for Section \@ref(copula):
+### Code for Chapter \@ref(copula):
 
 Next, we use copulas to simulate predictor data. We use the `copula` and `rslurm` packages in this section. This code was run on the Amherst HPC RStudio server. 
 
@@ -781,41 +781,6 @@ cors <- out1 |>
     return(melt_cor)
   })
 
-# # create function for breaks on density plot grid
-# newbreaks <- function(lims) {
-#   range <- diff(lims)
-#   return(c(lims[1] + range/5, mean(lims), lims[2] - range/5))
-# }
-# 
-# # density plot grid of spearman's correlation in simulated data
-# cors_dens <- cors |> 
-#   group_by(Var1, Var2) |> 
-#   mutate(mean = mean(value)) |> 
-#   ungroup() |> 
-#   ggplot(aes(x = value, fill = mean)) +
-#   geom_density() + 
-#   scale_x_continuous(breaks = newbreaks, 
-#                      labels = ~round(.x, 2)) +
-#   scale_y_continuous(position = "right") +
-#   scale_fill_gradient2(
-#     limit = c(-0.6, 0.6), breaks = c(-0.6, -0.3, 0, 0.3, 0.6),
-#     low = "deepskyblue3", mid = "white", high = "darkorange", 
-#     na.value = NA) +
-#   ggh4x::facet_grid2(fct_rev(Var2) ~ Var1, scales = "free", independent = "x", 
-#                      render_empty = FALSE, switch = "both") +
-#   labs(x = TeX(r"( Spearman's $\rho$ )")) +
-#   theme(strip.placement = "outside", 
-#         strip.text.y.left = element_text(angle = 0), 
-#         legend.justification = c(1, 0),
-#         legend.position = c(0.9, 0.1),
-#         legend.direction = "horizontal") +
-#   guides(fill = guide_colorbar(barwidth = 7, barheight = 1,
-#                                title.position = "top", title.hjust = 0.5))
-# 
-# # plot and save
-# cors_dens
-# ggsave("index/figures/ch4_corr_sim.png", width = 10, height = 7)
-
 # correlation heatmap of average correlation in simulated data
 cor_sim <- cors |> 
   group_by(Var1, Var2) |> 
@@ -850,17 +815,10 @@ top_row <- cowplot::plot_grid(cor_orig, cor_sim, labels = "auto", label_size = 1
                    nrow = 1, scale = 0.95)
 top_row
 ggsave("index/figures/ch4_corr_sim+orig.png", width = 10, height = 5)
-
-# # put original, simulated, and density plots of correlation together
-# cowplot::plot_grid(top_row, cors_dens, labels = c("", "c"), label_size = 16, 
-#                    nrow = 2, rel_heights = c(5, 7), scale = c(1, 0.95))
-# ggsave("index/figures/ch4_corr_simorigdens.png", width = 10, height = 12)
 ```
 
 
-
-
-### Code for Section \@ref(simresp):
+### Code for Chapter \@ref(simresp):
 
 Next, we simulate the response data. We use the `rslurm` package in this section. This code was run on the Amherst HPC RStudio server. 
 
@@ -1749,13 +1707,16 @@ run_bkmr_sm <- function(vector) {
   write_rds(bkmr_times, file = "bkmr_sm_times.RDS")
 }
 
-# example of call to HPC for first 100 simulated datasets
-bksmjob01 <- slurm_call(
-  run_bkmr_sm, params = list(vector = 1:100),
-  global_objects = c('out1_resp1'),
-  jobname = 'bkmr_sm01',
-  slurm_options = list(mem = '8G'))
-  # repeat up until dataset 1700
+# send all simulated datasets to hpc
+for(i in seq(1, 1601, by = 100)) {
+  slurm_call(
+    run_bkmr_sm,
+    params = list(vector = i:(i+99)),
+    global_objects = c('out1_resp1'),
+    jobname = paste0("bkmr_sm", str_pad(ceiling(i/100), 2, pad = "0")),
+    slurm_options = list(mem = '8G')
+  )
+}
 ```
 
 ```{r}
@@ -1826,13 +1787,16 @@ run_bkmr_lg <- function(vector) {
   write_rds(bkmr_times, file = "bkmr_lg_times.RDS")
 }
 
-# example of call to HPC for first 100 simulated datasets
-bklgjob01 <- slurm_call(
-  run_bkmr_lg, params = list(vector = 1:100),
-  global_objects = c('out2_resp1'),
-  jobname = 'bkmr_lg01',
-  slurm_options = list(mem = '8G'))
-  # repeat up until dataset 1700
+# send all simulated datasets to hpc
+for(i in seq(1, 1601, by = 100)) {
+  slurm_call(
+    run_bkmr_lg,
+    params = list(vector = i:(i+99)),
+    global_objects = c('out2_resp1'),
+    jobname = paste0("bkmr_lg", str_pad(ceiling(i/100), 2, pad = "0")),
+    slurm_options = list(mem = '8G')
+  )
+}
 ```
 
 ```{r}
@@ -1931,13 +1895,16 @@ run_bsr_sm <- function(vector) {
   return(bsr_times)
 }
 
-# example of call to HPC for first 100 simulated datasets
-rjob01 <- slurm_call(
-  run_bsr_sm, params = list(vector = 1:100),
-  global_objects = c('out1_resp1'),
-  jobname = 'bsr_sm01',
-  slurm_options = list(mem = '8G'))
-  # repeat up until dataset 1700
+# send all simulated datasets to hpc
+for(i in seq(1, 1601, by = 100)) {
+  slurm_call(
+    run_bsr_lg,
+    params = list(vector = i:(i+99)),
+    global_objects = c('out1_resp1'),
+    jobname = paste0("bsr_sm", str_pad(ceiling(i/100), 2, pad = "0")),
+    slurm_options = list(mem = '8G')
+  )
+}
 ```
 
 ```{r}
@@ -2031,13 +1998,16 @@ run_bsr_lg <- function(vector) {
   # return(bsr_times)
 }
 
-# example of call to HPC for first 100 simulated datasets
-qjob01 <- slurm_call(
-  run_bsr_lg, params = list(vector = 1:100),
-  global_objects = c('out2_resp1'),
-  jobname = 'bsr_lg01', # increase by 1 for each case
-  slurm_options = list(mem = '8G'))
-  # repeat up until dataset 1700
+# send all simulated datasets to hpc
+for(i in seq(1, 1601, by = 100)) {
+  slurm_call(
+    run_bsr_sm,
+    params = list(vector = i:(i+99)),
+    global_objects = c('out2_resp1'),
+    jobname = paste0("bsr_lg", str_pad(ceiling(i/100), 2, pad = "0")),
+    slurm_options = list(mem = '8G')
+  )
+}
 ```
 
 Next, we fit stratified models with an interaction between the categorical race variable and a chemical. 

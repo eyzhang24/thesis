@@ -136,7 +136,7 @@
 %%%%%%%%
 
 \Abstract{
-The abstract should be a short summary of your thesis work. A paragraph is usually sufficient here.
+
 }
 
 \Acknowledgments{
@@ -268,9 +268,8 @@ This work was performed in part using high-performance computing equipment at Am
 \pagestyle{fancyplain}
 %\pagestyle{fancy} % this removes page numbers from the frontmatter
 
-  \begin{abstract}
-    The abstract should be a short summary of your thesis work. A paragraph is usually sufficient here.
-  \end{abstract}
+
+
   \begin{acknowledgments}
     Use this space to thank those who have helped you in the thesis process (professors, staff, friends, family, etc.). If you had special funding to conduct your thesis work, that should be acknowledged here as well.
 
@@ -293,33 +292,32 @@ This work was performed in part using high-performance computing equipment at Am
 \hypertarget{intro}{%
 \chapter{Introduction}\label{intro}}
 
-Rapid industrial development has created conditions of cumulative chronic toxicity which pose an acute risk to the wellbeing of humans and our living environment. In fact, it has been estimated that, globally, human activity releases chemicals at a rate of 220 billion tons per annum (Cribb, 2016). These staggering levels of pollution have led scholars to formally declare that humanity has surpassed the safe operating space of the planetary boundary for novel entities (Persson et al., 2022). As a result, exposure to low levels of pollutants has become an inevitable peril of daily life (Naidu et al., 2021; Vineis, 2018). In this new era of pervasive toxicity, understanding the nature and severity of health effects associated with chemical exposures is especially timely.
+Rapid industrial development has created conditions of cumulative chronic toxicity which pose an acute risk to the wellbeing of humans and our living environment. In fact, it has been estimated that, globally, human activity releases chemicals at a rate of 220 billion tons per annum (\protect\hyperlink{ref-cribb_surviving_2016}{Cribb, 2016}). These staggering levels of pollution have led scholars to formally declare that humanity has surpassed the safe operating space of the planetary boundary for novel entities (\protect\hyperlink{ref-persson_outside_2022}{Persson et al., 2022}). As a result, exposure to low levels of pollutants has become an inevitable peril of daily life (\protect\hyperlink{ref-naidu_chemical_2021}{Naidu et al., 2021}; \protect\hyperlink{ref-vineis_john_2018}{Vineis, 2018}). In this new era of pervasive toxicity, understanding the nature and severity of health effects associated with chemical exposures is especially timely.
 
-For this, we turn to epidemiological studies. The broad field of preventive epidemiology involves the identification of potentially modifiable risk factors that contribute to the burden of disease within human populations. Environmental epidemiology, in particular, considers the effect of environmental exposures --- chemical or otherwise. However, studies concerning chemical pollutants in environmental epidemiology have historically focused on elucidating the effect and mechanisms of exposures to a single pollutant. In reality, humans are invariably exposed to numerous complex exposure mixtures which together contribute to the progression of adverse health outcomes. Therefore, risk assessments of single pollutants likely fail to capture the true consequences of these complex exposures (Heys, Shore, Pereira, Jones, \& Martin, 2016). Assessing mixtures of chemicals can also have more direct implications for public health interventions. The United States Environmental Protection Agency (U.S. EPA) currently passes regulations for individual pollutants. In practice, though, regulation occurs by controlling the source of pollution, which is responsible for the production of a whole mixture of chemicals with specific joint effects on human health. As a result, the National Academies of Science has advocated for a multipollutant regulatory approach, which is likely to be more protective of human health (National Academies of Sciences, Engineering, and Medicine, Division on Earth and Life Studies, Board on Environmental Studies and Toxicology, \& Committee on Incorporating 21st Century Science into Risk-Based Evaluations, 2017).
+For this, we turn to epidemiological studies. The broad field of preventive epidemiology involves the identification of potentially modifiable risk factors that contribute to the burden of disease within human populations. Environmental epidemiology, in particular, considers the effect of environmental exposures --- chemical or otherwise. However, studies concerning chemical pollutants in environmental epidemiology have historically focused on elucidating the effect and mechanisms of exposures to a single pollutant. In reality, humans are invariably exposed to numerous complex exposure mixtures which together contribute to the progression of adverse health outcomes. Therefore, risk assessments of single pollutants likely fail to capture the true consequences of these complex exposures (\protect\hyperlink{ref-heys_risk_2016}{Heys, Shore, Pereira, Jones, \& Martin, 2016}). Assessing mixtures of chemicals can also have more direct implications for public health interventions. The United States Environmental Protection Agency (U.S. EPA) currently passes regulations for individual pollutants. In practice, though, regulation occurs by controlling the source of pollution, which is responsible for the production of a whole mixture of chemicals with specific joint effects on human health. As a result, the National Academies of Science has advocated for a multipollutant regulatory approach, which is likely to be more protective of human health (NASEM et al., \protect\hyperlink{ref-national_academies_of_sciences_engineering_and_medicine_using_2017}{2017}).
 
-There are clear practical motivations for studies that examine the health effects of exposure to co-occurring mixtures of chemicals, hereafter referred to as exposure mixtures. However, expanding the focus of analysis from one exposure to multiple exposures introduces unique statistical challenges. In addition to a common issue of small effect sizes and small sample sizes present in most exposure analyses, multiple exposure analyses must also contend with high-dimensionality, collinearity, non-linear effects, and non-additive interactions (Yu et al., 2022). In particular, data with numerous pollutants, or predictors, require exponentially greater levels of complexity and time cost in analysis. Collinearity between exposures is common when analyzing pollutants from a single source and can lead to unstable estimates in a generalized linear model if left unaccounted for. Finally, exposures can have both non-linear single effects and non-additive interaction effects, which are difficult to capture unless explicitly specified in the model.
+There are clear practical motivations for studies that examine the health effects of exposure to co-occurring mixtures of chemicals, hereafter referred to as exposure mixtures. However, expanding the focus of analysis from one exposure to multiple exposures introduces unique statistical challenges. In addition to a common issue of small effect sizes and small sample sizes present in most exposure analyses, multiple exposure analyses must also contend with high-dimensionality, collinearity, non-linear effects, and non-additive interactions (\protect\hyperlink{ref-yu_review_2022}{Yu et al., 2022}). In particular, data with numerous pollutants, or predictors, require exponentially greater levels of complexity and time cost in analysis. Collinearity between exposures is common when analyzing pollutants from a single source and can lead to unstable estimates in a generalized linear model if left unaccounted for. Finally, exposures can have both non-linear single effects and non-additive interaction effects, which are difficult to capture unless explicitly specified in the model.
 
-The classic multiple linear regression framework often fails to capture the true effects in this setting. In the past few years, a wide variety of statistical methods have been developed to overcome these challenges (see reviews at Gibson et al., 2019; Yu et al., 2022), which have been accompanied by a host of comparative simulation studies for general mixture scenarios (e.g., Hoskovec, Benka-Coker, Severson, Magzamen, \& Wilson, 2021; Lazarevic, Knibbs, Sly, \& Barnett, 2020; Pesenti et al., 2023). However, to our knowledge, there has yet to be a simulation study which provides conclusive guidance about the ability of recently developed methods to conduct inference on non-additive interactions between exposures when the nature and effect sizes of these interactions vary. Moreover, there is no guidance in the literature on assessing interactions between covariates and exposures in exposure mixtures, including the potential of stratified models for detecting such interactions.
+The classic multiple linear regression framework often fails to capture the true effects in this setting. In the past few years, a wide variety of statistical methods have been developed to overcome these challenges (see reviews at \protect\hyperlink{ref-gibson_overview_2019}{Gibson et al., 2019}; \protect\hyperlink{ref-yu_review_2022}{Yu et al., 2022}), which have been accompanied by a host of comparative simulation studies for general mixture scenarios (e.g., \protect\hyperlink{ref-hoskovec_model_2021}{Hoskovec, Benka-Coker, Severson, Magzamen, \& Wilson, 2021}; \protect\hyperlink{ref-lazarevic_performance_2020}{Lazarevic, Knibbs, Sly, \& Barnett, 2020}; \protect\hyperlink{ref-pesenti_comparative_2023}{Pesenti et al., 2023}). However, to our knowledge, there has yet to be a simulation study which provides conclusive guidance about the ability of recently developed methods to conduct inference on non-additive interactions between exposures when the nature and effect sizes of these interactions vary. Moreover, there is no guidance in the literature on assessing interactions between covariates and exposures in exposure mixtures, including the potential of stratified models for detecting such interactions.
 
-The goal of this thesis is to fill this gap in the literature by exploring the theory and performance of Bayesian regression techniques for quantifying complex interactions between multiple environmental exposures and related covariates. Specifically, we will compare two recently developed models for estimating the health effects of exposure mixtures: Bayesian Kernel Machine Regression (BKMR) (Bobb et al., 2015) and Bayesian Semiparametric Regression (BSR) (Antonelli et al., 2020).
+The goal of this thesis is to fill this gap in the literature by exploring the theory and performance of Bayesian regression techniques for quantifying complex interactions between multiple environmental exposures and related covariates. Specifically, we will compare two recently developed models for estimating the health effects of exposure mixtures: Bayesian Kernel Machine Regression (BKMR) (\protect\hyperlink{ref-bobb_bayesian_2015}{Bobb et al., 2015}) and Bayesian Semiparametric Regression (BSR) (\protect\hyperlink{ref-antonelli_estimating_2020}{Antonelli et al., 2020}).
 
-In an age where anthropogenic actions have radically reshaped the earth, humanistic inquiry can offer critical insights into how we navigate the hazards of our rapidly changing environment. We begin in Chapter 2 by contextualizing this thesis with a brief overview of cultural and social understandings of toxicity. Chapter 3 explains the motivation for studying interactions and provides background on the theory of Bayesian methods for analyzing exposure mixtures. Chapter 4 assesses the performance of these methods using a simulation study, based on a dataset with information on the relationship between prenatal exposure to heavy metals and gestational weight. We conclude with a discussion of the implications of this work for the future study of complex interactions in exposure mixture studies.
+In an age where anthropogenic actions have radically reshaped the earth, humanistic inquiry can offer critical insights into how we navigate and comprehend the hazards of our rapidly changing environment. We begin in Chapter \ref{humanistic} by contextualizing this thesis with a brief overview of cultural and social understandings of toxicity. Chapter \ref{bayes} explains the motivation for studying interactions and provides background on the theory of Bayesian methods for analyzing exposure mixtures. Chapter \ref{sims} assesses the performance of these methods using a simulation study, based on a dataset with information on the relationship between prenatal exposure to heavy metals and gestational weight. We conclude with a discussion of the implications of this work for the future study of complex interactions in exposure mixture studies.
 
 \hypertarget{humanistic}{%
 \chapter{Humanistic Perspective}\label{humanistic}}
 
-List of loose ideas:
+In this section, we briefly introduce ideas from science and technology studies, which track habits of thought that have fundamentally shaped the ways in which we think about and study toxicity. Our goal, here, is to contextualize exposure mixture studies --- the motivation for this thesis --- within larger regimes of knowledge production. We aim to recognize the limitations in current norms of understanding toxicity, in order to progress toward a study of health that better reflects the complex realities of communities who bear the burdens of toxic exposure.
+
+Modern scientific thinking encourages the onlooker to see objects in the world as distinct entities. For instance, when we talk about chemicals, we tend to talk about them as disconnected molecules: lead, mercury, per- and polyfluoroalkyl substances, etc. Clouds of pollution are conceived through their individual components, each of which becomes separated from its surroundings through the lenses of our imaginations (\protect\hyperlink{ref-myers_rendering_2015}{Myers, 2015}). It is easy to accept this ontology as inevitable --- how else should one view chemicals? Yet, its origins can actually be located in the history of chemistry. The Industrial Revolution turned chemistry into a hugely profitable field, leading practitioners to become keenly interested in how structural representations of chemicals could be most useful for industrial and corporate technoscientific disciplines (\protect\hyperlink{ref-bensaude-vincent_history_1996}{Bensaude-Vincent \& Stengers, 1996}). Reducing chemical mixtures amidst complex environments down into discrete molecules made the quantification of their effects simpler --- certain side effects or relations could be masked or hidden in technical reports (\protect\hyperlink{ref-murphy_alterlife_2017}{Murphy, 2017}). Such reports were then used by industrial lobbyists as evidence for reducing or withholding environmental regulations (\protect\hyperlink{ref-murphy_alterlife_2017}{Murphy, 2017}).
+
+These lines of thinking have filtered out of industry and into scientific studies of environmental health, which have historically been permeated by a focus on studying single chemicals. The end goal has often been to obtain mechanistic explanations of their modes of toxicity. By isolating attention to a single chemical entity within a purely biological framework, one can simplify the problem; but, in so doing, one also captures only a narrow sliver of the complex social and physical realities of exposure (\protect\hyperlink{ref-murphy_uncertain_2004}{Murphy, 2004}). This is not to dismiss such studies or their contributions when, in fact, they are necessary for understanding the mechanisms of exposure. Rather, we hope to acknowledge that there exist additional possibilities for the study of exposures when we shift perspective away from isolated molecules and into chemical relations.
+
+We start by recognizing that an object cannot exist without also taking on relations to other beings --- existence implies relationality. {[}\emph{finish writing this section}{]}
 \begin{itemize}
 \tightlist
 \item
-  goal of modernism: define single causes for single effects
-  \begin{itemize}
-  \tightlist
-  \item
-    study chemicals in isolation to obtain purely mechanistic explanation of their toxicity
-  \end{itemize}
-\item
-  contrast with idea of relationality: entities cannot be understood without considering their \emph{relationality} to other surrounding entities
+  relationality: entities cannot be understood without considering their \emph{relationality} to other surrounding entities
   \begin{itemize}
   \tightlist
   \item
@@ -343,6 +341,12 @@ List of loose ideas:
 \item
   remedy: relationality leads into concept of alterlife, modern life is inseparable from alteration due to chemical exposure
 \end{itemize}
+Within the context of exposure studies, we link this concept to practices in social epidemiology, which posit that one's health is embodied within structural and social conditions (\protect\hyperlink{ref-krieger_theories_2001}{Krieger, 2001}, \protect\hyperlink{ref-krieger_epidemiology_2011}{2011}).
+
+It is important to explore radical modes of living that make our increasingly toxic world more habitable (\protect\hyperlink{ref-nguyen_breathless_2020}{Nguyen, 2020}; \protect\hyperlink{ref-shapiro_attuning_2015}{Shapiro, 2015}). This task does not fall purely to science --- other forms of knowledge are crucial for navigating the chemical hazards of our everyday life. The responsibility of science, though, is to become aware of how such hazards are lived and experienced, in order to better inform our understanding of exposure. We argue that the methods for exposure mixture studies examined in this thesis take us one step closer to this goal. In particular, exposure mixtures account for the realities of chemicals that co-occur with other chemicals. Moreover, testing for interactions between chemicals acknowledges that the relationality of these molecules with each other might affect their modes of action. Finally, we consider potential interactions between sociodemographic covariates and chemical exposures, a previously understudied form of interaction in exposure mixture studies. In so doing, we recognize that the effects of chemical exposure can be modulated by complex and unequal social conditions.
+
+Still, there is more work to do. We make a multitude of assumptions when reducing human livelihoods to numbers and then magnifying those numbers with models. For instance, the race variable that we use attempts to capture the full lived experience of racism within five categories. We set the response variable in our simulations as some numerical health outcome, which assumes that healthfulness and wellbeing can be represented by a one-dimensional variable. And there are certainly other factors that we have missed. So, we hope that this is the start of a conversation, one that continues to contend with how scientific studies of exposure can better help us make sense of our new toxic realities.
+
 \hypertarget{bayes}{%
 \chapter{Bayesian Regression Methods}\label{bayes}}
 
@@ -354,7 +358,7 @@ We are interested in using Bayesian regression techniques to characterize the na
 \hypertarget{interactions-from-a-statistical-perspective}{%
 \subsection{Interactions from a statistical perspective}\label{interactions-from-a-statistical-perspective}}
 
-First, we define additivity and non-additivity in the traditional statistical paradigm (Siemiatycki \& Thomas, 1981). Suppose we have two variables \(x_1\) and \(x_2\), and we want to consider their effect on some outcome of interest. If specifying {[}effect due to \(x_1\) and \(x_2\){]} = {[}effect due to \(x_1\){]} + {[}effect due to \(x_2\){]} can adequately capture this relationship, then we say that \(x_1\) and \(x_2\) each have an \textbf{additive effect} on the outcome and that there is no interaction between them. On the other hand, if there is variability in the outcome that can be captured by an additional term equal to some function of \(x_1\) and \(x_2\), we say that there is a \textbf{non-additive interaction} between \(x_1\) and \(x_2\). In this case, {[}effect due to \(x_1\) and \(x_2\){]} = {[}effect due to \(x_1\){]} + {[}effect due to \(x_2\){]} + {[}effect due to \(f(x_1, x_2)\){]}, where \(f\) is a non-zero function.
+First, we define additivity and non-additivity in the traditional statistical paradigm (\protect\hyperlink{ref-siemiatycki_biological_1981}{Siemiatycki \& Thomas, 1981}). Suppose we have two variables \(x_1\) and \(x_2\), and we want to consider their effect on some outcome of interest. If specifying {[}effect due to \(x_1\) and \(x_2\){]} = {[}effect due to \(x_1\){]} + {[}effect due to \(x_2\){]} can adequately capture this relationship, then we say that \(x_1\) and \(x_2\) each have an \textbf{additive effect} on the outcome and that there is no interaction between them. On the other hand, if there is variability in the outcome that can be captured by an additional term equal to some function of \(x_1\) and \(x_2\), we say that there is a \textbf{non-additive interaction} between \(x_1\) and \(x_2\). In this case, {[}effect due to \(x_1\) and \(x_2\){]} = {[}effect due to \(x_1\){]} + {[}effect due to \(x_2\){]} + {[}effect due to \(f(x_1, x_2)\){]}, where \(f\) is a non-zero function.
 
 For our sake, when we refer to ``interaction,'' we mean any non-additive interaction. We consider such non-additive interactions to be complex, meaning that they are difficult to detect. To see why, let us consider running a linear regression for \(Y\) on \(x_1\) and \(x_2\). The theoretical model would be defined as
 
@@ -366,22 +370,22 @@ Y = \beta_0+\beta_1x_1+\beta_2x_2 + \beta_{12}f(x_1, x_2),
 
 We used a two-predictor case above, but interactions can also exist between more variables (i.e., two-way by \(f(x_1, x_2)\), three-way by \(f(x_1, x_2, x_3)\), etc.). So, if we wanted to assess all possible interactions, the number to consider quickly becomes intractable in high-dimensional settings. For instance, consider modelling 10 predictors in the above linear regression setting. In order to be assessed, each interaction must be explicitly specified as a new term in the model. Even if we only considered one form for each interaction, including all possible two-way interactions would involve adding \(\binom{10}{2} = 45\) additional terms to the model, and all possible three-way interactions would add \(\binom{10}{3} = 120\) additional terms.
 
-It is important also to acknowledge, here, that there is a limit to how many variables can be included in an interaction before it becomes incomprehensible to most humans. For instance, Halford, Baker, McCredden, \& Bain (2005) suggest that there is a steep decline in interpretability from three- to four-way interactions, and that five-way interactions are only interpreted correctly at chance level. Hence, for practical purposes, we will limit our exploration to two- and three-way interactions.
+It is important also to acknowledge, here, that there is a limit to how many variables can be included in an interaction before it becomes incomprehensible to most humans. For instance, Halford, Baker, McCredden, \& Bain (\protect\hyperlink{ref-halford_how_2005}{2005}) suggest that there is a steep decline in interpretability from three- to four-way interactions, and that five-way interactions are only interpreted correctly at chance level. Hence, for practical purposes, we will limit our exploration to two- and three-way interactions.
 
 \hypertarget{mechanistic-and-public-health-relevance}{%
 \subsection{Mechanistic and public health relevance}\label{mechanistic-and-public-health-relevance}}
 
 Thus far, we have discussed interactions within a statistical paradigm. However, in addition to being an interesting estimation challenge, non-additive interactions are also relevant in exposure mixture studies from both a mechanistic and public health point of view.
 
-From a mechanistic perspective, a non-additive statistical interaction between two chemical exposures suggests that these compounds may be functionally interacting with each other. Theoretical models propose that such interactions can be classified as either synergistic or antagonistic (Heys et al., 2016; Plackett \& Hewlett, 1952). In a synergistic interaction, the joint effects of a mixture exceed the independent effects of each component. This usually occurs if a chemical induces an enzyme involved with the activation of a second chemical or if a chemical inhibits an enzyme that would have otherwise degraded a second chemical. For example, it has been shown that organophosphates slow the degradation of pyrethoids by inhibiting detoxifying enzymes --- these two classes of chemicals are often found together in commercial insecticide mixtures (Hernández et al., 2013).
+From a mechanistic perspective, a non-additive statistical interaction between two chemical exposures suggests that these compounds may be functionally interacting with each other. Theoretical models propose that such interactions can be classified as either synergistic or antagonistic (\protect\hyperlink{ref-heys_risk_2016}{Heys et al., 2016}; \protect\hyperlink{ref-plackett_quantal_1952}{Plackett \& Hewlett, 1952}). In a synergistic interaction, the joint effects of a mixture exceed the independent effects of each component. This usually occurs if a chemical induces an enzyme involved with the activation of a second chemical or if a chemical inhibits an enzyme that would have otherwise degraded a second chemical. For example, it has been shown that organophosphates slow the degradation of pyrethoids by inhibiting detoxifying enzymes --- these two classes of chemicals are often found together in commercial insecticide mixtures (\protect\hyperlink{ref-hernandez_toxic_2013}{Hernández et al., 2013}).
 
 On the other hand, in an antagonistic interaction, the joint effects of a mixture are less than their independent effects. This can occur either through competition at the target site of an enzyme or through direct chemical reactions with each other. In general, synergistic interactions are more concerning in risk assessments, as they lead to underestimation of the true toxicity of a mixture.
 
-It should be noted, though, that while statistical interactions may provide some insight into how exposure mixtures are related to health, they cannot confirm their underlying biology (VanderWeele \& Knol, 2014). If the goal is to assess a meaningful biological interaction, then the discovery of a statistical interaction should be followed up by a functional study.
+It should be noted, though, that while statistical interactions may provide some insight into how exposure mixtures are related to health, they cannot confirm their underlying biology (\protect\hyperlink{ref-vanderweele_tutorial_2014}{VanderWeele \& Knol, 2014}). If the goal is to assess a meaningful biological interaction, then the discovery of a statistical interaction should be followed up by a functional study.
 
-Now, from a public health perspective, we might be interested in how exposure mixtures interact with other covariates, or, in other words, how social and health factors might mediate the relationship between a health outcome and chemical exposures (VanderWeele \& Knol, 2014). In our case, we can include these additional covariates in the exposure mixture model, where, statistically, they would contribute to the model in the same manner as another chemical exposure: a predictor. A statistical interaction in our model between a covariate and an exposure would indicate that the \emph{magnitude} of the effect of reducing the level of an exposure might differ across various levels of the covariate. This finding could be relevant to public health policy makers, as the potential benefit of regulating a pollutant might differ across groups. For instance, it has been suggested that nutritional intake may modify susceptibility to chemical exposures (e.g., Kannan, Misra, Dvonch, \& Krishnakumar, 2006; Kordas, Lönnerdal, \& Stoltzfus, 2007).
+Now, from a public health perspective, we might be interested in how exposure mixtures interact with other covariates, or, in other words, how social and health factors might mediate the relationship between a health outcome and chemical exposures (\protect\hyperlink{ref-vanderweele_tutorial_2014}{VanderWeele \& Knol, 2014}). In our case, we can include these additional covariates in the exposure mixture model, where, statistically, they would contribute to the model in the same manner as another chemical exposure: a predictor. A statistical interaction in our model between a covariate and an exposure would indicate that the \emph{magnitude} of the effect of reducing the level of an exposure might differ across various levels of the covariate. This finding could be relevant to public health policy makers, as the potential benefit of regulating a pollutant might differ across groups. For instance, it has been suggested that nutritional intake may modify susceptibility to chemical exposures (e.g., \protect\hyperlink{ref-kannan_exposures_2006}{Kannan, Misra, Dvonch, \& Krishnakumar, 2006}; \protect\hyperlink{ref-kordas_interactions_2007}{Kordas, Lönnerdal, \& Stoltzfus, 2007}).
 
-In many cases, we might assess a covariate related to health inequity, such as socioeconomic status. We provide a cautionary comment, here, that an interaction term should not be the \emph{sole} measure used to measure a health disparity (Ward et al., 2019). In this case, we should first consider the independent, additive association between the covariate and levels of exposure or rates of a health outcome, in order to contextualize the meaning of a potential interaction term.
+In many cases, we might assess a covariate related to health inequity, such as socioeconomic status. We provide a cautionary comment, here, that an interaction term should not be the \emph{sole} measure used to measure a health disparity (\protect\hyperlink{ref-ward_how_2019}{Ward et al., 2019}). In this case, we should first consider the independent, additive association between the covariate and levels of exposure or rates of a health outcome, in order to contextualize the meaning of a potential interaction term.
 
 \hypertarget{bkmr}{%
 \section{Bayesian kernel machine regression (BKMR)}\label{bkmr}}
@@ -406,7 +410,7 @@ In this section, we introduce the theory of BKMR. First, we define the notation 
 \item
   \(\textbf{K}\) is the \(n \times n\) kernel matrix, with \((i, j)\)th element \(k(\textbf{x}_i, \textbf{x}_j)\)
 \item
-  \(\rho\) is the parameter which controls smoothnessm, associated with the kernel function
+  \(\rho\) is the parameter which controls smoothness, associated with the kernel function
 \item
   \(\tau\) is the parameter multiplied by the kernel matrix to relate \(\textbf{K}\) to \(h\)
 \item
@@ -433,7 +437,7 @@ And, we define the notation that we will be using specific to BKMR:
 \hypertarget{kernel-machine-regression}{%
 \subsection{Kernel machine regression}\label{kernel-machine-regression}}
 
-We begin by introducing kernel machine regression, with attention to its specific implementation in BKMR. First proposed by Nadaraya (1964) and Watson (1964), kernel machine regression is a nonparametric regression technique that can be used to capture non-linear effects and non-additive interactions. In this introduction, we follow the presentation of kernel machine regression provided by Bobb et al. (2015).
+We begin by introducing kernel machine regression, with attention to its specific implementation in BKMR. First proposed by Nadaraya (\protect\hyperlink{ref-nadaraya_estimating_1964}{1964}) and Watson (\protect\hyperlink{ref-watson_smooth_1964}{1964}), kernel machine regression is a nonparametric regression technique that can be used to capture non-linear effects and non-additive interactions. In this introduction, we follow the presentation of kernel machine regression provided by Bobb et al. (\protect\hyperlink{ref-bobb_bayesian_2015}{2015}).
 
 To contextualize this method, we start at the typical linear regression setting,
 
@@ -460,7 +464,7 @@ k(\textbf{x}, \textbf{x}') = \textrm{exp}\bigg\{
 
 \noindent where \(||\textbf{x}-\textbf{x}'||^2 = \sum_{m=1}^M{(x_{m}-x_{m}')^2}\) for a set of exposure values \(\textbf{x}\) and the exposure values of another subject \(\textbf{x}'\), and \(\rho\) is a tuning parameter that controls the relationship between the correlation between two points and their distance. Greater values of \(\rho\) will enforce more dependence between points and make the resulting function smoother. \(h\) is related to \(k\) by a multiplicative constant \(\tau\), a tuning parameter which controls the vertical scale of \(h\).
 
-Now that we have defined \(h\) and \(k\), we can think about how to characterize the relationship between our response and exposures Kernel machine regression is a nonparametric technique because it does not specify a functional form for this relationship. Hence, we will think about estimating the response at a particular query point. Operationally, Müller (1987) demonstrated that kernel machine regression uses a weighted average of all the observations in the dataset to estimate the response, defined as
+Now that we have defined \(h\) and \(k\), we can think about how to characterize the relationship between our response and exposures Kernel machine regression is a nonparametric technique because it does not specify a functional form for this relationship. Hence, we will think about estimating the response at a particular query point. Operationally, Müller (\protect\hyperlink{ref-muller_weighted_1987}{1987}) demonstrated that kernel machine regression uses a weighted average of all the observations in the dataset to estimate the response, defined as
 
 \[
 \bar{Y} = \frac{\sum_{i=1}^nw_iY_i}{\sum_{i=1}^nw_i},
@@ -485,13 +489,13 @@ As we move through the predictor space, we can think of the prediction as a cont
 \hypertarget{connection-to-mixed-models}{%
 \subsection{Connection to mixed models}\label{connection-to-mixed-models}}
 
-It is useful to make connections between this definition of kernel machine regression and mixed models. Liu, Lin, \& Ghosh (2007) demonstrated this by representing \(h(\textbf{x})\) as following a Gaussian process probability distribution,
+It is useful to make connections between this definition of kernel machine regression and mixed models. Liu, Lin, \& Ghosh (\protect\hyperlink{ref-liu_semiparametric_2007}{2007}) demonstrated this by representing \(h(\textbf{x})\) as following a Gaussian process probability distribution,
 
 \[
 h(\textbf{x}) \sim \mathcal{GP}(\textbf{0}, \tau k(\textbf{x}, \textbf{x}')),
 \]
 
-\noindent with covariance function \(k\), where \(\textbf{x}\) is a vector of the exposure values, and \(\textbf{x}'\) contains the exposure values of another subject. A Gaussian process is a collection of random variables, of which any finite number follow a multivariate normal distribution (Schulz, Speekenbrink, \& Krause, 2018). Here, we assume that the expected value of the \(h\) function with input \(\textbf{x}\) is \(\textbf{0}\). We use \(k\) for the covariance function, which represents the dependence between the function values with inputs \(\textbf{x}\) and \(\textbf{x}'\): \(k(\textbf{x}, \textbf{x}') = \mathbb{E}[(h(\textbf{x})- \textbf{0}) (h(\textbf{x}')- \textbf{0})]\).
+\noindent with covariance function \(k\), where \(\textbf{x}\) is a vector of the exposure values, and \(\textbf{x}'\) contains the exposure values of another subject. A Gaussian process is a collection of random variables, of which any finite number follow a multivariate normal distribution (\protect\hyperlink{ref-schulz_tutorial_2018}{Schulz, Speekenbrink, \& Krause, 2018}). Here, we assume that the expected value of the \(h\) function with input \(\textbf{x}\) is \(\textbf{0}\). We use \(k\) for the covariance function, which represents the dependence between the function values with inputs \(\textbf{x}\) and \(\textbf{x}'\): \(k(\textbf{x}, \textbf{x}') = \mathbb{E}[(h(\textbf{x})- \textbf{0}) (h(\textbf{x}')- \textbf{0})]\).
 
 Now, we can represent \(h\) as a collection of variables from a Gaussian process. \(h\) follows a multivariate normal distribution,
 
@@ -553,7 +557,7 @@ Figure \ref{fig:toyrho} demonstrates the effect of relatively smaller and larger
 \hypertarget{variable-selection}{%
 \subsection{Variable selection}\label{variable-selection}}
 
-Now that we have defined kernel machine regression, we can extend it to the Bayesian paradigm. Bobb et al. (2015) showed that the Bayesian approach can outperform frequentist kernel machine regression because simultaneous variable selection and estimation can better capture the exposure-response relationship. In this section, we discuss the two methods for Bayesian variable selection in BKMR: hierarchical variable selection and component-wise variable selection (Bobb et al., 2015).
+Now that we have defined kernel machine regression, we can extend it to the Bayesian paradigm. Bobb et al. (\protect\hyperlink{ref-bobb_bayesian_2015}{2015}) showed that the Bayesian approach can outperform frequentist kernel machine regression because simultaneous variable selection and estimation can better capture the exposure-response relationship. In this section, we discuss the two methods for Bayesian variable selection in BKMR: hierarchical variable selection and component-wise variable selection (\protect\hyperlink{ref-bobb_bayesian_2015}{Bobb et al., 2015}).
 
 In order to perform variable selection, we define a parameter that puts a weight on each exposure. Each weight controls the degree to which its associated exposure contributes to the model. In component-wise selection, we do this by augmenting the kernel function as
 
@@ -596,11 +600,11 @@ Note also that the posterior means of \(\delta_m\) generated from these variable
 \hypertarget{bkmrprior}{%
 \subsection{Prior specification}\label{bkmrprior}}
 
-In this section, we specify the default prior distributions and parameters used by the BKMR algorithm (Bobb et al., 2015).
+In this section, we specify the default prior distributions and parameters used by the BKMR algorithm (\protect\hyperlink{ref-bobb_bayesian_2015}{Bobb et al., 2015}).
 
-BKMR, by default, assumes \(\rho_m=1/r_m \sim \text{Unif}(a_r,b_r)\), a flat prior between \(a_r\) and \(b_r\) for which the default values are 0 and 100, respectively (Bobb, 2017a). This defines the prior probability of \(\rho\) as equally distributed across any value from 0 to 100. This inverse of this prior corresponds to the slab component of the ``slab-and-spike'' prior, where \(r_m|\delta_m \sim \delta_m\text{Unif}^{-1}(a_r, b_r) + (1-\delta_m)P_0\). As a flat prior, this distribution should be chosen when we have no prior knowledge about the smoothness of the exposure-response function, with hyperparameters \(a_r\) and \(b_r\) selected to represent the range of values we expect \(\rho\) to potentially span.
+BKMR, by default, assumes \(\rho_m=1/r_m \sim \text{Unif}(a_r,b_r)\), a flat prior between \(a_r\) and \(b_r\) for which the default values are 0 and 100, respectively (\protect\hyperlink{ref-bobb_introduction_2017}{Bobb, 2017a}). This defines the prior probability of \(\rho\) as equally distributed across any value from 0 to 100. This inverse of this prior corresponds to the slab component of the ``slab-and-spike'' prior, where \(r_m|\delta_m \sim \delta_m\text{Unif}^{-1}(a_r, b_r) + (1-\delta_m)P_0\). As a flat prior, this distribution should be chosen when we have no prior knowledge about the smoothness of the exposure-response function, with hyperparameters \(a_r\) and \(b_r\) selected to represent the range of values we expect \(\rho\) to potentially span.
 
-We have seen that the smoothness of a kernel machine regression responds strongly to different values of \(r_m=1/\rho\), and, accordingly, the model fit of BKMR is sensitive to their prior distribution. In general, the PIPs generated from the variable selection procedure are particularly sensitive to this prior, though their relative importance tends to remain stable (Bobb, Claus Henn, Valeri, \& Coull, 2018). As such, the BKMR algorithm also offers the options to define uniform and gamma priors for the \(r_m=1/\rho\).
+We have seen that the smoothness of a kernel machine regression responds strongly to different values of \(r_m=1/\rho\), and, accordingly, the model fit of BKMR is sensitive to their prior distribution. In general, the PIPs generated from the variable selection procedure are particularly sensitive to this prior, though their relative importance tends to remain stable (\protect\hyperlink{ref-bobb_statistical_2018}{Bobb, Claus Henn, Valeri, \& Coull, 2018}). As such, the BKMR algorithm also offers the options to define uniform and gamma priors for the \(r_m=1/\rho\).
 
 Moreover, BKMR assumes that the prior probability of including a predictor (\(\delta_m\)) or group of predictors (\(\omega_g\)) in the model is distributed \(\pi \sim \text{Beta}(a_\pi, b_\pi)\). The default hyperparameters are \(a_\pi=b_\pi=1\), which represent a flat, uninformative prior between 0 and 1. When the hierarchical selection approach is applied, equal values for \(\boldsymbol\pi_{\mathcal{S}_g}\), the probabilities of inclusion for each component in group \(\mathcal{S}_g\), are assumed.
 
@@ -609,13 +613,13 @@ Finally, BKMR assumes that the inverse of the variance of the residuals is distr
 \hypertarget{the-mcmc-algorithm}{%
 \subsection{The MCMC algorithm}\label{the-mcmc-algorithm}}
 
-Briefly, we discuss the algorithm used to find the solution in the BKMR package (Bobb et al., 2015, 2018), with commentary on its implications for the model fitting process.
+Briefly, we discuss the algorithm used to find the solution in the BKMR package (\protect\hyperlink{ref-bobb_bayesian_2015}{Bobb et al., 2015}, \protect\hyperlink{ref-bobb_statistical_2018}{2018}), with commentary on its implications for the model fitting process.
 
 BKMR uses a Markov chain Monte Carlo (MCMC) algorithm with a mix of Gibbs and Metropolis-Hastings samplers to estimate the posterior distributions of the parameters. In particular, a Gibbs step is used to update the distribution of \(\sigma^2\) while a Metropolis-Hastings step is used to update the distribution of \(\lambda\). For component-wise and hierarchical variable selection, \((\textbf{r}, \boldsymbol\delta, \boldsymbol\omega)\) are sampled jointly using a Metropolis-Hastings sampling scheme.
 
-While each distribution generated by the Gibbs step is always accepted, the distributions for \(\lambda\) and \(r_m\) generated by the Metropolis-Hastings steps are accepted based on an acceptance rate (Wagaman \& Dobrow, 2021). The standard deviation of the proposal distribution controls the acceptance rate and as such acts as a tuning parameter (Bobb, 2017b). In general, increasing the standard deviation leads to lower acceptance rates. Acceptance rates that are too low lead to slower convergence, but rates that are too high can cause convergence to a non-optimal distribution.
+While each distribution generated by the Gibbs step is always accepted, the distributions for \(\lambda\) and \(r_m\) generated by the Metropolis-Hastings steps are accepted based on an acceptance rate (\protect\hyperlink{ref-wagaman_probability_2021}{Wagaman \& Dobrow, 2021}). The standard deviation of the proposal distribution controls the acceptance rate and as such acts as a tuning parameter (\protect\hyperlink{ref-bobb_example_2017}{Bobb, 2017b}). In general, increasing the standard deviation leads to lower acceptance rates. Acceptance rates that are too low lead to slower convergence, but rates that are too high can cause convergence to a non-optimal distribution.
 
-A major computational limitation of BKMR is that at each iteration of the MCMC algorithm, the \(n \times n\) augmented kernel matrix \(\textbf{K}_{\textbf{Z},\textbf{r}}\) must be inverted multiple times. To offset this, BKMR can employ a Gaussian predictive process which involves specifying a set of \(l\) points, or ``knots,'' that are a subset of the predictor space. The vector of predictors can be approximated by projection onto this lower dimensional space, which allows the algorithm to perform inversions on an \(l\times l\) matrix. A general suggestion is to use this approach to speed up the algorithm when \(n\) is large and to specify \(l\approx n/10\) (Bellavia, 2021).
+A major computational limitation of BKMR is that at each iteration of the MCMC algorithm, the \(n \times n\) augmented kernel matrix \(\textbf{K}_{\textbf{Z},\textbf{r}}\) must be inverted multiple times. To offset this, BKMR can employ a Gaussian predictive process which involves specifying a set of \(l\) points, or ``knots,'' that are a subset of the predictor space. The vector of predictors can be approximated by projection onto this lower dimensional space, which allows the algorithm to perform inversions on an \(l\times l\) matrix. A general suggestion is to use this approach to speed up the algorithm when \(n\) is large and to specify \(l\approx n/10\) (\protect\hyperlink{ref-bellavia_statistical_2021}{Bellavia, 2021}).
 
 \hypertarget{bsr}{%
 \section{Bayesian semiparametric regression (BSR)}\label{bsr}}
@@ -663,7 +667,7 @@ And, we define the notation that we will be using specific to BSR:
 \hypertarget{spline-regression}{%
 \subsection{Spline regression}\label{spline-regression}}
 
-We begin by introducing spline regression, with attention to its specific implementation in BSR. Spline regression is a semiparametric regression technique that can be used to capture non-linear effects. In this introduction, we follow the presentation of spline regression provided by Antonelli et al. (2020), with additional details and explanation from Hastie, Tibshirani, \& Friedman (2009).
+We begin by introducing spline regression, with attention to its specific implementation in BSR. Spline regression is a semiparametric regression technique that can be used to capture non-linear effects. In this introduction, we follow the presentation of spline regression provided by Antonelli et al. (\protect\hyperlink{ref-antonelli_estimating_2020}{2020}), with additional details and explanation from Hastie, Tibshirani, \& Friedman (\protect\hyperlink{ref-hastie_elements_2009}{2009}).
 
 BSR uses spline regression to define the regression relationship as
 
@@ -744,7 +748,7 @@ Extrapolation outside the scope of \(x\) allows us to see the effect of the line
 \hypertarget{model-formulation-in-bsr}{%
 \subsection{Model formulation in BSR}\label{model-formulation-in-bsr}}
 
-Now that we have defined natural splines, we introduce BSR, following the presentation in Antonelli et al. (2020). We demonstrate the construction of \(f\) in BSR by first assuming a two-dimensional case with exposures \(X_1\) and \(X_2\). We define
+Now that we have defined natural splines, we introduce BSR, following the presentation in Antonelli et al. (\protect\hyperlink{ref-antonelli_estimating_2020}{2020}). We demonstrate the construction of \(f\) in BSR by first assuming a two-dimensional case with exposures \(X_1\) and \(X_2\). We define
 \begin{gather*}
 f(X_1) = \widetilde{X}_1\boldsymbol{\beta}_1, \hspace{0.25in} f(X_2) = \widetilde{X}_2\boldsymbol{\beta}_2,\\
 f(X_1,X_2) = \widetilde{X}_1\boldsymbol{\beta}_1 + \widetilde{X}_2\boldsymbol{\beta}_2 + \widetilde{X}_{12}\boldsymbol{\beta}_{12},
@@ -762,7 +766,7 @@ f^{(h)}(\textbf{x}_i)= \sum_{m_1=1}^M\widetilde{x}_{im_1}\boldsymbol\beta_{m_1}^
 \hypertarget{sparsity-inducing-priors}{%
 \subsection{Sparsity inducing priors}\label{sparsity-inducing-priors}}
 
-In order to handle the overparameterization and non-identifiability of the model, BSR implements multivariate sparsity inducing priors. In this section, we follow the presentation provided in Antonelli et al. (2020).
+In order to handle the overparameterization and non-identifiability of the model, BSR implements multivariate sparsity inducing priors. In this section, we follow the presentation provided in Antonelli et al. (\protect\hyperlink{ref-antonelli_estimating_2020}{2020}).
 
 First, we define indicators \(\boldsymbol\zeta=\{\zeta_{mh}\}\) representing whether the \(m\)th exposure is included in the \(h\)th function:
 \begin{align*}
@@ -783,22 +787,22 @@ P(\boldsymbol\beta_S^{(h)}|\boldsymbol\zeta) &= \bigg(1-\prod_{m\in S}\zeta_{mh}
 \hypertarget{bsrprior}{%
 \subsection{Prior specification}\label{bsrprior}}
 
-In this section, we discuss the priors and their default specifications in BSR (Antonelli et al., 2020).
+In this section, we discuss the priors and their default specifications in BSR (\protect\hyperlink{ref-antonelli_estimating_2020}{Antonelli et al., 2020}).
 
-The priors on \(\boldsymbol\Sigma_{\boldsymbol\beta}\), the diagonal matrix with \(\sigma^2\sigma^2_{\boldsymbol\beta}\) on the diagonals, control the shrinkage of \(\boldsymbol\beta_S^{(h)}\). Variable selection is sensitive to the choice of prior on this parameter, so BSR implements an empirical Bayes strategy to obtain a prior distribution for \(\sigma^2_{\boldsymbol\beta}\) based on the data. While this is not a fully Bayesian approach, it has been shown that this strategy works better in practice (Antonelli et al., 2020). Additionally, the default prior for \(\sigma^2\) is assumed to follow a \(\textrm{Gamma}(0.001, 0.001)\) distribution.
+The priors on \(\boldsymbol\Sigma_{\boldsymbol\beta}\), the diagonal matrix with \(\sigma^2\sigma^2_{\boldsymbol\beta}\) on the diagonals, control the shrinkage of \(\boldsymbol\beta_S^{(h)}\). Variable selection is sensitive to the choice of prior on this parameter, so BSR implements an empirical Bayes strategy to obtain a prior distribution for \(\sigma^2_{\boldsymbol\beta}\) based on the data. While this is not a fully Bayesian approach, it has been shown that this strategy works better in practice (\protect\hyperlink{ref-antonelli_estimating_2020}{Antonelli et al., 2020}). Additionally, the default prior for \(\sigma^2\) is assumed to follow a \(\textrm{Gamma}(0.001, 0.001)\) distribution.
 
 However, when there is a weak relationship between the exposures and relationship, the estimated prior variance for the slab \(\sigma^2_{\boldsymbol\beta}\) can be very small. In this case, the shape of the slab approximates the point mass of 0 at the spike, and the PIPs become difficult to accurately estimate. BSR avoids this by imposing a lower bound on the variance. This is determined by establishing a constant value for \(\tau_h\), the prior probability of inclusion, for all \(h\) and then permuting the rows of \(Y\) (i.e., breaking up the relationship). Then, a grid of values for \(\sigma^2_{\boldsymbol\beta}\) are tested until some predefined threshold of the posterior probability of inclusion is obtained (e.g., 0.25 for a main effect and 0.05 for a two-way interaction). If the empirical Bayes estimate for \(\sigma^2_{\boldsymbol\beta}\) is less than this lower bound, then the lower bound is used instead.
 
-Finally, BSR assumes that \(\tau_h \sim \textrm{Beta}(L,\gamma)\), which defines the prior probability of including a predictor for all functions \(h\). If \(L\) is some predefined constant, and \(\gamma=m\), the number of predictors, then the prior amount of sparsity should increase as the number of predictors increases (Antonelli et al., 2020).
+Finally, BSR assumes that \(\tau_h \sim \textrm{Beta}(L,\gamma)\), which defines the prior probability of including a predictor for all functions \(h\). If \(L\) is some predefined constant, and \(\gamma=m\), the number of predictors, then the prior amount of sparsity should increase as the number of predictors increases (\protect\hyperlink{ref-antonelli_estimating_2020}{Antonelli et al., 2020}).
 
 \hypertarget{the-mcmc-algorithm-1}{%
 \subsection{The MCMC algorithm}\label{the-mcmc-algorithm-1}}
 
-We also briefly discuss the MCMC algorithm employed by BSR (Antonelli et al., 2020).
+We also briefly discuss the MCMC algorithm employed by BSR (\protect\hyperlink{ref-antonelli_estimating_2020}{Antonelli et al., 2020}).
 
 BSR uses an MCMC algorithm to obtain posterior distributions of \(\sigma^2\) and \(\tau_h\). In particular, Gibbs samplers are employed to sample \(\sigma^2\) and \(\tau_h\) from their full distributions and to update \(\boldsymbol\zeta\) and \(\boldsymbol\beta_S^{(h)}\). Every \(T\) MCMC iterations, BSR uses a Monte Carlo expectation maximization algorithm with a Gibbs sampler to update \(\sigma^2_{\boldsymbol\beta}\). The empirical Bayes estimate is obtained once \(\sigma^2_{\boldsymbol\beta}\) converges, at which point the MCMC runs conditional on this estimated variance.
 
-Notably, this algorithm must deal with the explicit specification of interaction terms in the model. Any additive univariate effect or lower-order interaction term is, by definition, a subset of some higher-order interaction term. As the MCMC algorithm searches the model space, it might accept a move to a higher-order interaction and get stuck in a local mode when, in reality, a simpler model should be preferred. BSR handles this challenge by imposing a constraint in the MCMC algorithm: if the inclusion of a \(p\)th order interaction term is being considered, then the algorithm must also evaluate all \((p-1)\)th order models. If the truth is some lower-order model, then this strategy avoids the undesirable convergence to a local mode. When the model is complex, maintaining reversibility of updates under this strategy can be computationally challenging with a Gibbs sampler; in this case, using a Metropolis Hastings sampler is computationally faster (Antonelli et al., 2020).
+Notably, this algorithm must deal with the explicit specification of interaction terms in the model. Any additive univariate effect or lower-order interaction term is, by definition, a subset of some higher-order interaction term. As the MCMC algorithm searches the model space, it might accept a move to a higher-order interaction and get stuck in a local mode when, in reality, a simpler model should be preferred. BSR handles this challenge by imposing a constraint in the MCMC algorithm: if the inclusion of a \(p\)th order interaction term is being considered, then the algorithm must also evaluate all \((p-1)\)th order models. If the truth is some lower-order model, then this strategy avoids the undesirable convergence to a local mode. When the model is complex, maintaining reversibility of updates under this strategy can be computationally challenging with a Gibbs sampler; in this case, using a Metropolis Hastings sampler is computationally faster (\protect\hyperlink{ref-antonelli_estimating_2020}{Antonelli et al., 2020}).
 
 \hypertarget{detecting-interactions}{%
 \section{Detecting interactions}\label{detecting-interactions}}
@@ -810,9 +814,9 @@ In Section \ref{motivation}, we highlighted the challenges of analytically testi
 
 Since the flexible \(h\) function in kernel machine regression allows us to forgo any assumptions about the nature of the relationship between the health outome and exposures, BKMR can potentially capture complex interactions between exposures The challenge with using BKMR to do this, however, is that there is no formal framework for conducting inference on the presence of interactions.
 
-Currently, the most common approach to detecting interactions is through a qualitative assessment of visual diagnostic plots (Bobb, 2017a). Two- or three-way interactions can be assessed by plotting the estimated exposure-response relation for one/two exposures at various quantiles of another exposure, while setting all other exposures at fixed quantile values. For instance, if we are interested in the interaction between \(X_1\) and \(X_2\), we can plot the estimated regression line against \(X_1\) at the 0.25, 0.5, and 0.75 quantiles of \(X_2\) and vice versa. In the three-way case of \(X_1\), \(X_2\), and \(X_3\), we can plot the estimated regression surface against \(X_1\) and \(X_2\) at the 0.25, 0.5, and 0.75 quantiles of \(X_3\). If the shape of the estimation changes meaningfully, then there might be evidence of an interaction.
+Currently, the most common approach to detecting interactions is through a qualitative assessment of visual diagnostic plots (\protect\hyperlink{ref-bobb_introduction_2017}{Bobb, 2017a}). Two- or three-way interactions can be assessed by plotting the estimated exposure-response relation for one/two exposures at various quantiles of another exposure, while setting all other exposures at fixed quantile values. For instance, if we are interested in the interaction between \(X_1\) and \(X_2\), we can plot the estimated regression line against \(X_1\) at the 0.25, 0.5, and 0.75 quantiles of \(X_2\) and vice versa. In the three-way case of \(X_1\), \(X_2\), and \(X_3\), we can plot the estimated regression surface against \(X_1\) and \(X_2\) at the 0.25, 0.5, and 0.75 quantiles of \(X_3\). If the shape of the estimation changes meaningfully, then there might be evidence of an interaction.
 
-A slightly more formal inferential approach for two-way interactions involves using summary statistics (Bobb, 2017a, 2017b). In this case, we can calculate the difference in estimated response values for \(X_1\) at two quantiles, say, 0.25 and 0.75, of \(X_2\) and then generate a confidence interval. If we observe that the interval does not contain 0, then there is evidence of an interaction. The choice of quantiles here is important. If there is a parachute-like regression surface between the response and two exposures, the summary statistics might mask the true nature of the relationship.
+A slightly more formal inferential approach for two-way interactions involves using summary statistics (\protect\hyperlink{ref-bobb_introduction_2017}{Bobb, 2017a}, \protect\hyperlink{ref-bobb_example_2017}{2017b}). In this case, we can calculate the difference in estimated response values for \(X_1\) at two quantiles, say, 0.25 and 0.75, of \(X_2\) and then generate a confidence interval. If we observe that the interval does not contain 0, then there is evidence of an interaction. The choice of quantiles here is important. If there is a parachute-like regression surface between the response and two exposures, the summary statistics might mask the true nature of the relationship.
 
 Notably, if we specify hierarchical variable selection to handle multicollinearity, then only one exposure in each a priori defined group can enter the model. If there exists some true interaction between exposures in one group, then BKMR will be unable to incorporate it into the final model. Moreover, interactions between exposures in separate groups can only be identified if both are selected into the final model based on their within-group PIPs. Hence, if detecting interactions is a goal when using BKMR with hierarchical variable selection, groups should be carefully selected, and the influence of group membership should be considered in model interpretation.
 
@@ -840,15 +844,15 @@ We also note that BKMR offers a hierarchical variable selection approach to deal
 \hypertarget{past-simulation-studies}{%
 \section{Past simulation studies}\label{past-simulation-studies}}
 
-Here, we preface our simulation with an overview of examples in the literature which compare various methods for exposure mixture studies using simulations. Taylor et al. (2016) conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Thus, for each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest.
+Here, we preface our simulation with an overview of examples in the literature which compare various methods for exposure mixture studies using simulations. Taylor et al. (\protect\hyperlink{ref-taylor_statistical_2016}{2016}) conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Thus, for each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest.
 
-Lazarevic et al. (2020) compare the performance of a broad range of methods for accurate variable selection of important exposures. They simulated exposure data using a multivariate copula based on real-world data and the response by specifying a regression model with only a subset of truly significant exposures and a normal error term. Two correlation structures were considered --- one with the original Spearman correlation matrix and one with the values halved --- as well as two signal-to-noise ratios --- one with an \(R^2\) for the true model at 10\% and one at 30\%. They found that BKMR, along with three other flexible regression methods that allow for nonlinearity, provided more accurate variable selection results compared to two machine learning methods. Moreover, they observed that, in general, low signal-to-noise ratios had a stronger impact on performance than did increasing multicollinearity.
+Lazarevic et al. (\protect\hyperlink{ref-lazarevic_performance_2020}{2020}) compare the performance of a broad range of methods for accurate variable selection of important exposures. They simulated exposure data using a multivariate copula based on real-world data and the response by specifying a regression model with only a subset of truly significant exposures and a normal error term. Two correlation structures were considered --- one with the original Spearman correlation matrix and one with the values halved --- as well as two signal-to-noise ratios --- one with an \(R^2\) for the true model at 10\% and one at 30\%. They found that BKMR, along with three other flexible regression methods that allow for nonlinearity, provided more accurate variable selection results compared to two machine learning methods. Moreover, they observed that, in general, low signal-to-noise ratios had a stronger impact on performance than did increasing multicollinearity.
 
-Hoskovec et al. (2021) compare Bayesian methods, including BKMR, while considering 4 research questions: accurate estimation, selection of important exposures, exclusion of unimportant exposures, and identification of interactions. They use observed exposure and covariate data to simulate response data using regression relationships; they considered three exposure-response scenarios of varying complexity and included two-way multiplicative interaction terms. For each simulated dataset, they randomly assigned exposures to be active components of the mixture to incorporate variability in the data. Overall, they found that Bayesian methods outperformed traditional linear regressions, and that BKMR performed best when the exposure-response function takes on a complex form.
+Hoskovec et al. (\protect\hyperlink{ref-hoskovec_model_2021}{2021}) compare Bayesian methods, including BKMR, while considering 4 research questions: accurate estimation, selection of important exposures, exclusion of unimportant exposures, and identification of interactions. They use observed exposure and covariate data to simulate response data using regression relationships; they considered three exposure-response scenarios of varying complexity and included two-way multiplicative interaction terms. For each simulated dataset, they randomly assigned exposures to be active components of the mixture to incorporate variability in the data. Overall, they found that Bayesian methods outperformed traditional linear regressions, and that BKMR performed best when the exposure-response function takes on a complex form.
 
-Most recently, Pesenti et al. (2023) compare BKMR, BSR, and the Bayesian Least Absolute Shrinkage and Selection Operator (LASSO) for variable selection. Data were generated using a multivariate normal with moderate and strong correlation structures specified manually by the researchers. They found that, in situations with additive and linear exposure-response relationships, Bayesian LASSO was appropriate. Across the other scenarios, BKMR generally performed best, while BSR selected exposures with high heterogeneity when the sample size was smaller due to the influence of the degrees of freedom, \(d\), tuning parameter. Notably, multicollinearity did not generally lead to spurious variable selection.
+Most recently, Pesenti et al. (\protect\hyperlink{ref-pesenti_comparative_2023}{2023}) compare BKMR, BSR, and the Bayesian Least Absolute Shrinkage and Selection Operator (LASSO) for variable selection. Data were generated using a multivariate normal with moderate and strong correlation structures specified manually by the researchers. They found that, in situations with additive and linear exposure-response relationships, Bayesian LASSO was appropriate. Across the other scenarios, BKMR generally performed best, while BSR selected exposures with high heterogeneity when the sample size was smaller due to the influence of the degrees of freedom, \(d\), tuning parameter. Notably, multicollinearity did not generally lead to spurious variable selection.
 
-Finally, we briefly comment on studies by Sun et al. (2013) and Barrera-Gómez et al. (2017), whose explicit goal is to compare methods for identifying interactions. Both studies generate exposure data using the correlation structure from an existing dataset; Sun et al. (2013) uses a multivariate lognormal, while Barrera-Gómez et al. (2017) uses a multivariate normal. Both only consider two-way, multiplicative interactions. While neither of these studies consider the methods used in this thesis, they find that, in general, models that formally allow for interaction effects perform better than models that only allow for univariate additive effects.
+Finally, we briefly comment on studies by Sun et al. (\protect\hyperlink{ref-sun_statistical_2013}{2013}) and Barrera-Gómez et al. (\protect\hyperlink{ref-barrera-gomez_systematic_2017}{2017}), whose explicit goal is to compare methods for identifying interactions. Both studies generate exposure data using the correlation structure from an existing dataset; Sun et al. (\protect\hyperlink{ref-sun_statistical_2013}{2013}) uses a multivariate lognormal, while Barrera-Gómez et al. (\protect\hyperlink{ref-barrera-gomez_systematic_2017}{2017}) uses a multivariate normal. Both only consider two-way, multiplicative interactions. While neither of these studies consider the methods used in this thesis, they find that, in general, models that formally allow for interaction effects perform better than models that only allow for univariate additive effects.
 
 \hypertarget{methods}{%
 \section{Methods}\label{methods}}
@@ -858,11 +862,11 @@ The goal of our simulation study is to provide guidance on the choice between BS
 \hypertarget{madres}{%
 \subsection{MADRES data}\label{madres}}
 
-In order to make our simulations comparable to real-world exposure mixture studies, we based our simulation data on the Maternal And Developmental Risks from Environmental and Social Stressors (MADRES) pregnancy cohort. The MADRES cohort is an ongoing, prospective pregnancy cohort of predominantly lower-income, Hispanic women in Los Angeles, California, which began in 2015 (Bastain et al., 2019). Urine samples were collected by participants at their first visit, and questionnaires were administered during their first visit, with follow-ups at the first, second, and third trimesters. See Bastain et al. (2019) for further details on study design.
+In order to make our simulations comparable to real-world exposure mixture studies, we based our simulation data on the Maternal And Developmental Risks from Environmental and Social Stressors (MADRES) pregnancy cohort. The MADRES cohort is an ongoing, prospective pregnancy cohort of predominantly lower-income, Hispanic women in Los Angeles, California, which began in 2015 (\protect\hyperlink{ref-bastain_study_2019}{Bastain et al., 2019}). Urine samples were collected by participants at their first visit, and questionnaires were administered during their first visit, with follow-ups at the first, second, and third trimesters. See Bastain et al. (\protect\hyperlink{ref-bastain_study_2019}{2019}) for further details on study design.
 
-Howe et al. (2020) previously examined the effect of prenatal metal mixtures of birth weight (BW) for gestational age (GA) in this cohort. They used BKMR to identify associations between metal mixtures and BW for GA, as well as BSR to conduct inference on interactions between metals. Briefly, using BKMR, they found that, of the metals in the mixture, mercury and nickel were most strongly associated with BW for GA. Moreover, BKMR results suggested that a potential interaction between mercury and nickel exists; however, when run through BSR, the PIP for this interaction was extremely small, despite being the highest of all two-way interactions.
+Howe et al. (\protect\hyperlink{ref-howe_prenatal_2020}{2020}) previously examined the effect of prenatal metal mixtures of birth weight (BW) for gestational age (GA) in this cohort. They used BKMR to identify associations between metal mixtures and BW for GA, as well as BSR to conduct inference on interactions between metals. Briefly, using BKMR, they found that, of the metals in the mixture, mercury and nickel were most strongly associated with BW for GA. Moreover, BKMR results suggested that a potential interaction between mercury and nickel exists; however, when run through BSR, the PIP for this interaction was extremely small, despite being the highest of all two-way interactions.
 
-Data from the study by Howe et al. (2020) were obtained from publicly available data in the Human Health Exposure Resource (HHEAR) Data Repository, which has been approved under Icahn School of Medicine at Mount Sinai IRB Protocol \#16-00947. The Digital Object Identifiers associated with the urinary trace element data and epidemiological data are 10.36043/1945\_159 and 10.36043/1945\_177, respectively. All analyses were conducted in R v4.3.2 (R Core Team, 2013).
+Data from the study by Howe et al. (\protect\hyperlink{ref-howe_prenatal_2020}{2020}) were obtained from publicly available data in the Human Health Exposure Resource (HHEAR) Data Repository, which has been approved under Icahn School of Medicine at Mount Sinai IRB Protocol \#16-00947. The Digital Object Identifiers associated with the urinary trace element data and epidemiological data are 10.36043/1945\_159 and 10.36043/1945\_177, respectively. All analyses were conducted in R v4.3.2 (\protect\hyperlink{ref-r_core_team_r_2013}{R Core Team, 2013}).
 \begin{figure}
 
 {\centering \includegraphics[width=0.9\linewidth]{figures/ch4_univlog} 
@@ -871,7 +875,7 @@ Data from the study by Howe et al. (2020) were obtained from publicly available 
 
 \caption{Distributions of original (a) and natural log transformed (b) concentrations of metals in MADRES cohort (n=252).}\label{fig:logtransf}
 \end{figure}
-We followed the approach by Howe et al. (2020) for preparing the data for analysis. This resulted in retaining 10 metals in analysis: arsenic (As), cadmium (Cd), cobalt (Co), mercury (Hg), nickel (Ni), molybdenum (Mo), lead (Pb), antimony (Sb), tin (Sn), and thallium (Tl). Howe et al. (2020) used speciated As, but this was not available in HHEAR, so we used total As. Metals were expressed in nanograms per milliliter (ng/mL) and natural log transformed to reduce right-skewness (Figure \ref{fig:logtransf}). Among the full range of covariates considered by Howe et al. (2020), we used the subset of 4 that were available in HHEAR: any smoke exposure during pregnancy, maternal prepregnancy body mass index (BMI), maternal age during firt trimester, and maternal race by ethnicity and birth place. We chose not to include study site, as there was a study site with only 1 participant. Race by ethnicity and birth place was collapsed into the following categories: non-Hispanic white, non-Hispanic black, non-Hispanic other, Hispanic born in the US, and Hispanic born outside the US. We observed 8 missing values for BMI in the data from HHEAR, which were not reported by Howe et al. (2020). We mean imputed these missing values. Distributions of covariates are shown in Figure \ref{fig:covdist}. Our final analytic dataset included 252 participants, which was 10 fewer than in Howe et al. (2020), likely due to small discrepancies in their dataset and the one made available in HHEAR.
+We followed the approach by Howe et al. (\protect\hyperlink{ref-howe_prenatal_2020}{2020}) for preparing the data for analysis. This resulted in retaining 10 metals in analysis: arsenic (As), cadmium (Cd), cobalt (Co), mercury (Hg), nickel (Ni), molybdenum (Mo), lead (Pb), antimony (Sb), tin (Sn), and thallium (Tl). Howe et al. (\protect\hyperlink{ref-howe_prenatal_2020}{2020}) used speciated As, but this was not available in HHEAR, so we used total As. Metals were expressed in nanograms per milliliter (ng/mL) and natural log transformed to reduce right-skewness (Figure \ref{fig:logtransf}). Among the full range of covariates considered by Howe et al. (\protect\hyperlink{ref-howe_prenatal_2020}{2020}), we used the subset of 4 that were available in HHEAR: any smoke exposure during pregnancy, maternal prepregnancy body mass index (BMI), maternal age during firt trimester, and maternal race by ethnicity and birth place. We chose not to include study site, as there was a study site with only 1 participant. Race by ethnicity and birth place was collapsed into the following categories: non-Hispanic white, non-Hispanic black, non-Hispanic other, Hispanic born in the US, and Hispanic born outside the US. We observed 8 missing values for BMI in the data from HHEAR, which were not reported by Howe et al. (\protect\hyperlink{ref-howe_prenatal_2020}{2020}). We mean imputed these missing values. Distributions of covariates are shown in Figure \ref{fig:covdist}. Our final analytic dataset included 252 participants, which was 10 fewer than in Howe et al. (\protect\hyperlink{ref-howe_prenatal_2020}{2020}), likely due to small discrepancies in their dataset and the one made available in HHEAR.
 \begin{figure}
 
 {\centering \includegraphics[width=0.75\linewidth]{figures/ch4_covdist} 
@@ -885,7 +889,7 @@ We followed the approach by Howe et al. (2020) for preparing the data for analys
 
 We simulated exposure and covariate data (hereafter referred to collectively as predictors) using a multivariate Gaussian copula fit on the 252 participants in the MADRES cohort. We used copulas as they can preserve both the correlation structure and marginal distributions from the observed data, allowing us to replicate conditions in a real-world scenario.
 
-First, we briefly introduce copulas in the context of their use in this simulation, based on the presentation in Nelsen (2006). Copulas are joint cumulative distribution functions (CDFs) defined on the unit cube \([0,1]^n\) that capture the dependence between \(n\) uniformly distributed marginals. Sklar's theorem allows us to apply copulas to our observed data. Sklar's theorem states that, if \(H(x_1, \dots x_n)\) is a joint CDF of the marginal CDFs \(F_1(x_1), \dots, F_n(x_n)\), then there exists a copula \(C\) such that, for all \((x_1, \dots, x_n)\) in \((X_1, \dots, X_n)\),
+First, we briefly introduce copulas in the context of their use in this simulation, based on the presentation in Nelsen (\protect\hyperlink{ref-nelsen_introduction_2006}{2006}). Copulas are joint cumulative distribution functions (CDFs) defined on the unit cube \([0,1]^n\) that capture the dependence between \(n\) uniformly distributed marginals. Sklar's theorem allows us to apply copulas to our observed data. Sklar's theorem states that, if \(H(x_1, \dots x_n)\) is a joint CDF of the marginal CDFs \(F_1(x_1), \dots, F_n(x_n)\), then there exists a copula \(C\) such that, for all \((x_1, \dots, x_n)\) in \((X_1, \dots, X_n)\),
 
 \[
 H(x_1, \dots x_n)=C(F_1(x_1), \dots, F_n(x_n)).
@@ -893,7 +897,7 @@ H(x_1, \dots x_n)=C(F_1(x_1), \dots, F_n(x_n)).
 
 \noindent Note that, by the probability integral transform, or the universality of the uniform, the CDFs \(F_1(x_1), \dots, F_n(x_n)\) are distributed uniformly.
 
-We used the \texttt{copula} package in R to fit copulas and generate random data (Hofert, Kojadinovic, Maechler, \& Yan, 2023). We transformed the observed continuous predictor values to uniform distributions based on their empirical marginal CDFs, a process called generating ``pseudo-random'' samples. We used the checkerboard copula approach for generating pseudo-random samples for smoke exposure, a binary variable (Genest \& Nešlehovà, 2007). We coded smoke exposure as 0's and 1's, generated a pseudo-random sample, and then ``jittered'' the values with uniform random noise. There is currently no widely accepted approach for generating pseudo-random samples from unordered categorical variables with more than two levels. Thus, we excluded race by ethnicity and birthplace from the copula model. While this means that our simulated datasets did not preserve any potential association between race and exposures, Figure \ref{fig:raceexp} suggests that there is little to no visible association between race and exposures in the observed dataset.
+We used the \texttt{copula} package in R to fit copulas and generate random data (\protect\hyperlink{ref-hofert_copula_2023}{Hofert, Kojadinovic, Maechler, \& Yan, 2023}). We transformed the observed continuous predictor values to uniform distributions based on their empirical marginal CDFs, a process called generating ``pseudo-random'' samples. We used the checkerboard copula approach for generating pseudo-random samples for smoke exposure, a binary variable (\protect\hyperlink{ref-genest_primer_2007}{Genest \& Nešlehovà, 2007}). We coded smoke exposure as 0's and 1's, generated a pseudo-random sample, and then ``jittered'' the values with uniform random noise. There is currently no widely accepted approach for generating pseudo-random samples from unordered categorical variables with more than two levels. Thus, we excluded race by ethnicity and birthplace from the copula model. While this means that our simulated datasets did not preserve any potential association between race and exposures, Figure \ref{fig:raceexp} suggests that there is little to no visible association between race and exposures in the observed dataset.
 \begin{figure}
 
 {\centering \includegraphics[width=0.75\linewidth]{figures/ch4_race_exp} 
@@ -902,7 +906,7 @@ We used the \texttt{copula} package in R to fit copulas and generate random data
 
 \caption{Association between race by ethnicity and birth place and metal exposures in the MADRES cohort (n=252).}\label{fig:raceexp}
 \end{figure}
-Various families of copulas have been described, each of which specifies a different shape for the dependence structure. We performed model selection to identify the copula that best approximates the dependence structure of our data. We fit the set of multivariate copulas used by Lazarevic et al. (2020) in their simulation study, which included the Gaussian, \(t\), Gumbel, Frank, Clayton, and Joe copulas. We fit two \(t\) copulas with 4 and 10 degrees of freedom, which controls dependence at the tails of the distributions, as well as a \(t\) copula where the degrees of freedom was determined during the fitting process. The Gumbel, Frank, Clayton, and Joe copulas require a \(\theta\) parameter, which controls dependence between the distributions. We fit two versions of these copulas with \(\theta=\{2, 4\}\). Among these, the Gaussian copula minimized the Akaike information criterion and maximized the likelihood, so we proceeded with this model. The Gaussian copula assumes a bivariate normal dependence structure between the marginal CDFs.
+Various families of copulas have been described, each of which specifies a different shape for the dependence structure. We performed model selection to identify the copula that best approximates the dependence structure of our data. We fit the set of multivariate copulas used by Lazarevic et al. (\protect\hyperlink{ref-lazarevic_performance_2020}{2020}) in their simulation study, which included the Gaussian, \(t\), Gumbel, Frank, Clayton, and Joe copulas. We fit two \(t\) copulas with 4 and 10 degrees of freedom, which controls dependence at the tails of the distributions, as well as a \(t\) copula where the degrees of freedom was determined during the fitting process. The Gumbel, Frank, Clayton, and Joe copulas require a \(\theta\) parameter, which controls dependence between the distributions. We fit two versions of these copulas with \(\theta=\{2, 4\}\). Among these, the Gaussian copula minimized the Akaike information criterion and maximized the likelihood, so we proceeded with this model. The Gaussian copula assumes a bivariate normal dependence structure between the marginal CDFs.
 \begin{figure}
 
 {\centering \includegraphics[width=0.75\linewidth]{figures/ch4_univ_exp_sim} 
@@ -928,7 +932,7 @@ We simulated predictor data by randomly sampling from the fitted multivariate Ga
 
 \caption{Spearman's correlation heat maps of exposures from observed data (a) and averaged from 2100 smaller size (n=252) simulated datasets (b).}\label{fig:corsimssm}
 \end{figure}
-We generated one set of simulated datasets with the same sample size as the observed dataset (n=252), which is typical in many cohort studies. We also generated another set of simulated datasets with a larger sample size (n=1000), which has become increasingly common with the rise of larger-scale studies. The goal of this choice was to inform sample size considerations in study design. We verified that the original structure of the observed dataset were preserved by visually comparing univariate distributions of exposures (Figure \ref{fig:univexpsim}) and covariates (Figure @(ref:univcovsim)), as well as the correlation structure using Spearman's \(\rho\) (Figure \ref{fig:corsimssm}). Distributions of Spearman's correlation were approximately normal (Figure \ref{fig:cordistsm}). Plots for the larger size simulated datasets were similar (Figures \ref{fig:univexplg}, \ref{fig:univcovlg}, and \ref{fig:corsimslg}).
+We generated one set of simulated datasets with the same sample size as the observed dataset (n=252), which is typical in many cohort studies. We also generated another set of simulated datasets with a larger sample size (n=1000), which has become increasingly common with the rise of larger-scale studies. The goal of this choice was to inform sample size considerations in study design. We verified that the original structure of the observed dataset were preserved by visually comparing univariate distributions of exposures (Figure \ref{fig:univexpsim}) and covariates (Figure @(fig:univcovsim)), as well as the correlation structure using Spearman's \(\rho\) (Figure \ref{fig:corsimssm}). Distributions of Spearman's correlation were approximately normal (Figure \ref{fig:cordistsm}). Plots for the larger size simulated datasets were similar (Figures \ref{fig:univexplg}, \ref{fig:univcovlg}, and \ref{fig:corsimslg}).
 
 \hypertarget{simresp}{%
 \subsection{Simulating predictor-response relationships}\label{simresp}}
@@ -938,9 +942,9 @@ Health outcome responses were simulated under several different scenarios, each 
 Y_i = \textrm{Hg}_i + \frac{3}{1+\textrm{exp}(-4\textrm{Ni}_i)} + \frac{1.5}{1+\textrm{exp}(-4\textrm{Sn}_i)} - \textrm{Sb}_i^2 + 0.5\textrm{Sb}_i\\
 + \textrm{age}_i + 0.5\textrm{bmi}_i + 0.5\textrm{race}_{\textrm{black}i} + 0.5\textrm{race}_{\textrm{hisp.non}i} + 1.5\textrm{smoke}_i + \varepsilon_i,
 \end{multline*}
-\noindent where \(\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0,5)\). This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb (Figure \ref{fig:univlines}). Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an \(R^2\) of around 0.1-0.3 in a multiple linear regression that included only the true functional form of the significant chemicals (Figure \ref{fig:rsqcheck}). This \(R^2\) range approximates realistic signal-to-noise ratios in exposure mixture studies (Lazarevic et al. (2020)).
+\noindent where \(\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0,5)\). This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb (Figure \ref{fig:univlines}). Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an \(R^2\) of around 0.1-0.3 in a multiple linear regression that included only the true functional form of the significant chemicals (Figure \ref{fig:rsqcheck}). This \(R^2\) range approximates realistic signal-to-noise ratios in exposure mixture studies (\protect\hyperlink{ref-lazarevic_performance_2020}{Lazarevic et al., 2020}).
 
-In subsequent scenarios, we added an additional interaction term to the base case model. First, we considered interactions between two exposures. We defined four cases of interest: a two-way interaction between exposures that are univariately significant, a two-way interaction between exposures that are univariately insignificant, a two-way interaction between exposures that are moderately collinear, and a three-way interaction. For each case, we considered two functional forms --- multiplicative and polynomial --- and a smaller and larger effect size, which we set by defining the weight on the interaction term in the model. The larger effect sizes were selected in order to achieve a power of approximately 0.5 at \(\alpha=0.05\) in the smaller sample size (n=252) case, using a multiple linear regression with the true functional form of the chemicals specified and the covariate terms included. The smaller effect sizes were set equal to half of the larger effect size. Table \ref{tab:scenarios} shows the specification of interaction terms. See Appendix \ref{suppmethods}, Figures \ref{fig:basesurf}-\ref{fig:cp2}, for 3D surfaces of the two-way interaction terms.
+In subsequent scenarios, we added an additional interaction term to the base case model. First, we considered interactions between two exposures. We defined four cases of interest: a two-way interaction between exposures that are univariately significant, a two-way interaction between exposures that are univariately insignificant, a two-way interaction between exposures that are moderately collinear, and a three-way interaction. For each case, we considered two functional forms --- multiplicative and polynomial --- and a lower and higher effect size, which we set by defining the weight on the interaction term in the model. The higher effect sizes were selected in order to achieve a power of approximately 0.5 at \(\alpha=0.05\) in the smaller sample size (n=252) case, using a multiple linear regression with the true functional form of the chemicals specified and the covariate terms included. The lower effect sizes were set equal to half of the higher effect size. Table \ref{tab:scenarios} shows the specification of interaction terms. See Appendix \ref{suppmethods}, Figures \ref{fig:basesurf}-\ref{fig:cp2}, for 3D surfaces of the two-way interaction terms.
 \begin{table}
 
 \caption{\label{tab:scenarios}Specification of interaction terms in simulations.}
@@ -970,7 +974,7 @@ In subsequent scenarios, we added an additional interaction term to the base cas
 \bottomrule
 \end{tabular}
 \end{table}
-Next, we considered interactions between the race by ethnicity and birthplace covariate (hereafter referred to as race for concision) and an exposure. We are interested in cases where the health effects of an exposure are higher in one group compared to the rest. In a real-world scenario, such interactions can arise from excess amounts of social stress experienced by a group due to racism. To model this, we increased the coefficient Hg in Non-Hispanic Black individuals (n=27 in the original MADRES cohort) for the first scenario, and in Hispanic individuals born outside the US (n=109 in the original MADRES cohort) for the second scenario. The goal of this choice was to assess the impact of group size on detectability of an interaction, and to quantify the potential value of oversampling the minority group. For each scenario, we specified a smaller effect size by increasing the coefficient on Hg by \(1.5\times\) (i.e.~from \(1*Hg\) to \(1.5*Hg\)) in the target group, and a larger effect size by increasing the coefficient on Hg by \(2\times\) (i.e.~from \(1*Hg\) to \(2*Hg\)).
+Next, we considered interactions between the race by ethnicity and birthplace covariate (hereafter referred to as race for concision) and an exposure. We are interested in cases where the health effects of an exposure are higher in one group compared to the rest. In a real-world scenario, such interactions can arise from excess amounts of social stress experienced by a group due to racism. To model this, we increased the coefficient Hg in Non-Hispanic Black individuals (n=27 in the original MADRES cohort) for the first scenario, and in Hispanic individuals born outside the US (n=109 in the original MADRES cohort) for the second scenario. The goal of this choice was to assess the impact of group size on detectability of an interaction, and to quantify the potential value of oversampling the minority group. For each scenario, we specified a lower effect size by increasing the coefficient on Hg by \(1.5\times\) (i.e.~from \(1*\)Hg to \(1.5*\)Hg) in the target group, and a higher effect size by increasing the coefficient on Hg by \(2\times\) (i.e.~from \(1*\)Hg to \(2*\)Hg).
 
 This resulted in a total of 42 scenarios ({[}1 base case + 5 interaction cases \(\times\) 2 effect sizes \(\times\) 2 functional forms{]} \(\times\) 2 sample sizes = 42). For each scenario, we generated 100 simulated datasets, resulting in a total of 4200 datasets.
 
@@ -981,9 +985,9 @@ We ran four methods on our simulated datasets. All metal concentrations and cont
 
 To get a baseline, we ran a multiple linear regression, including all exposures and covariates as linear, additive terms in the model. We refer to this model as the naive MLR. Then, we ran a multiple linear regression with the true model explicitly specified by excluding non-significant exposures and specifying the known form of non-linear terms and non-additive interactions. We refer to this model as the oracle MLR. In scenarios with an interaction between race and Hg, we collapsed race into a binary variable indicating whether or not the original race category was interacting with Hg before running oracle MLR's, in order to simplify the detection of the interaction.
 
-Next, we ran BKMR using the \texttt{bkmr} package in R Bobb (2022). We chose to implement component-wise variable selection rather than hierarchical selection to make simulation results more interpretable, and because there was only moderate multicollinearity in the observed and simulated data. We specified the default priors (Bobb et al., 2015, and as listed in Section \ref{bkmrprior}), which is common in the literature for BKMR Pesenti et al. (2023). We ran the MCMC sampler for 50,000 iterations, as recommended by Bobb et al. (2018), and discarded the first 25,000 iterations for burn-in. BKMR does not provide the option to run multiple chains or to thin chains. For larger size datasets, we sped up computations by employing a Gaussian predictive process on 100 knots specified evenly across the predictor space.
+Next, we ran BKMR using the \texttt{bkmr} package in R (\protect\hyperlink{ref-bobb_bkmr_2022}{Bobb, 2022}; \protect\hyperlink{ref-bobb_statistical_2018}{Bobb et al., 2018}). We chose to implement component-wise variable selection rather than hierarchical selection to make simulation results more interpretable, and because there was only moderate multicollinearity in the observed and simulated data. We specified the default priors (\protect\hyperlink{ref-bobb_bayesian_2015}{Bobb et al., 2015}, and as listed in Chapter \ref{bkmrprior}), which is common in the literature for BKMR Pesenti et al. (\protect\hyperlink{ref-pesenti_comparative_2023}{2023}). We ran the MCMC sampler for 50,000 iterations, as recommended by Bobb et al. (\protect\hyperlink{ref-bobb_statistical_2018}{2018}), and discarded the first 25,000 iterations for burn-in. BKMR does not provide the option to run multiple chains or to thin chains. For larger size datasets, we sped up computations by employing a Gaussian predictive process on 100 knots specified evenly across the predictor space.
 
-We ran BSR using the \texttt{NLinteraction} package in R (Antonelli, 2018). We specified the default priors (Antonelli et al., 2020, and as listed in \ref{bsrprior}), which is common in the literature for BSR Pesenti et al. (2023). Antonelli et al. (2020) suggests separately fitting models for degrees of freedom \(d=\{1, 2, 3, 4\}\) and selecting the value for \(d\) which minimizes WAIC. Due to time constraints in this thesis, we first fit BSR on the grid of values for \(d\) using 5,000 MCMC iterations to obtain the empirical Bayes estimate for \(\sigma^2_{\boldsymbol\beta}\) and then another 5,000 MCMC iterations to obtain the posterior distributions, discarding the first 2,500 iterations for burn-in each time. We selected \(d\) based on the WAIC criterion on these preliminary models. Then, we fit the full BSR model using 50,000 MCMC iterations to obtain the empirical Bayes estimate and then another 50,000 MCMC iterations to obtain the posterior distributions, discarding the first 25,000 iterations for burn-in each time. We ran two chains to very convergence, thinning each chains by selecting every 8th iteration to reduce autocorrelation based on default settings. In a small test run on five smaller size datasets for each scenario containing interactions between exposures, as well as the base case, we found that using 5,000 iterations selected the same degrees of freedom as using 50,000 iterations 86\% of the time (see Appendix \ref{suppmethods}, Figure \ref{fig:comparedf}).
+We ran BSR using the \texttt{NLinteraction} package in R (\protect\hyperlink{ref-antonelli_nlinteraction_2018}{Antonelli, 2018}). We specified the default priors (\protect\hyperlink{ref-antonelli_estimating_2020}{Antonelli et al., 2020}, and as listed in Chapter \ref{bsrprior}), which is common in the literature for BSR (e.g., \protect\hyperlink{ref-howe_prenatal_2020}{Howe et al., 2020}; \protect\hyperlink{ref-pesenti_comparative_2023}{Pesenti et al., 2023}). Antonelli et al. (\protect\hyperlink{ref-antonelli_estimating_2020}{2020}) suggests separately fitting models for degrees of freedom \(d=\{1, 2, 3, 4\}\) and selecting the value for \(d\) which minimizes WAIC. Due to time constraints in this thesis, we first fit BSR on the grid of values for \(d\) using 5,000 MCMC iterations to obtain the empirical Bayes estimate for \(\sigma^2_{\boldsymbol\beta}\) and then another 5,000 MCMC iterations to obtain the posterior distributions, discarding the first 2,500 iterations for burn-in each time. We selected \(d\) based on the WAIC criterion on these preliminary models. Then, we fit the full BSR model using 50,000 MCMC iterations to obtain the empirical Bayes estimate and then another 50,000 MCMC iterations to obtain the posterior distributions, discarding the first 25,000 iterations for burn-in each time. We ran two chains to very convergence, thinning each chains by selecting every 8th iteration to reduce autocorrelation based on default settings. In a small test run on five smaller size datasets for each scenario containing interactions between exposures, as well as the base case, we found that using 5,000 iterations selected the same degrees of freedom as using 50,000 iterations 86\% of the time (see Appendix \ref{suppmethods}, Figure \ref{fig:comparedf}).
 
 Finally, we ran stratified BKMR and BSR models in scenarios where we simulated an interaction between race and Hg. This involved running five separate models for each race category, each with the same settings specified above. For the smaller size datasets, we often observed convergence issues in BKMR within the smaller race categories. As such, for smaller size datasets, we also assess the impact of collapsing the three smaller race categories (Non-Hispanic white, black, and other) into one category before stratifying. This is a common practice in real-world studies where sample sizes for certain categories are low.
 
@@ -992,17 +996,17 @@ We checked convergence for a selection of BKMR and BSR models using trace plots 
 \hypertarget{model-assessment}{%
 \subsection{Model assessment}\label{model-assessment}}
 
-We assessed model performance based on detection of significant univariate chemicals as well as detection of interactions. For the naive and oracle MLRs, we considered a \(p\)-value less than 0.05 to indicate detection of a significant term. For BKMR and BSR, we used the median probability model, which considers a PIP greater than or equal to 0.5 to indicate detection of a significant term (Barbieri \& Berger, 2004).
+We assessed model performance based on detection of significant univariate chemicals as well as detection of interactions. For the naive and oracle MLRs, we considered a \(p\)-value less than 0.05 to indicate detection of a significant term. For BKMR and BSR, we used the median probability model, which considers a PIP greater than or equal to 0.5 to indicate detection of a significant term (\protect\hyperlink{ref-barbieri_optimal_2004}{Barbieri \& Berger, 2004}).
 
-While BSR provides PIP's to quantify detection of interactions, BKMR does not. As such, for BKMR, we considered formal detection of an interaction based on confidence intervals constructed around the estimated response. Specifically, we first calculated the difference in estimated response at a chemical's 0.25 and 0.75 quantiles. Then, we assessed whether this quantity differed at the 0.25 and 0.75 quantiles of one (or two, for three-way interactions) other chemicals in the interaction, while holding all other chemicals at their 0.5 quantiles, by constructing a confidence interval of the difference in differences. See {[}\emph{decide whether or not to include formulation}{]}.
+While BSR provides PIP's to quantify detection of interactions, BKMR does not. As such, for BKMR, we considered formal detection of an interaction based on confidence intervals constructed around the estimated response. Specifically, we first calculated the difference in estimated response at a chemical's 0.25 and 0.75 quantiles. Then, we assessed whether this quantity differed at the 0.25 and 0.75 quantiles of one (or two, for three-way interactions) other chemicals in the interaction, while holding all other chemicals at their 0.5 quantiles, by constructing a 95\% confidence interval of the difference in differences. We followed the code in the \texttt{SingVarIntSummaries()} function in the \texttt{bkmr} package for constructing confidence intervals (\protect\hyperlink{ref-bobb_bkmr_2022}{Bobb, 2022}).
 
-For both BKMR and BSR, we also visually assessed detection of interactions by plotting the estimated exposure-response surface for one chemical while fixing one (or two, for three-way interactions) other chemicals at their 0.1, 0.5, and 0.9 quantiles. In all scenarios, we calculate the sensitivity as the proportion of times a significant term is correctly detected.
+For both BKMR and BSR, we also visually assessed detection of interactions by plotting the estimated exposure-response surface for one chemical while fixing one (or two, for three-way interactions) other chemicals at their 0.1, 0.5, and 0.9 quantiles. In all scenarios, we calculated the sensitivity as the proportion of times a significant term was correctly detected. Due to time constraints in this thesis, we only calculated the false discovery rates, or, the proportion of times a significant term is incorrectly detected, for two-way interactions between chemicals. Future work should include the calculation of false discovery rates for all interactions.
 
-Finally, for stratified models, we
+Finally, for stratified models, we constructed a 95\% {[}\emph{do we have to do adjustment for multiple comparisons?}{]} confidence interval for the difference in estimated response at the 0.25 and 0.75 quantiles of Hg, for both BKMR and BSR on each subcategory of race. We refer to this as the estimated magnitude of response. Then, we considered an interaction as detected if at least one of the pair-wise comparisons between estimated magnitudes of response differed between two categories of race. For instance, if the confidence intervals for the estimated magnitude of response were all (-1, 1) for the first four categories, but the fifth category had a confidence interval of (2, 4), we would consider this to be a significant interaction.
 
-{[}\emph{include false discovery rate?}{]}
+{[}\emph{still need to figure out whether we can do this for bsr}{]}
 
-{[}\emph{increase threshold of PIP for interactions?}{]}
+Finally, we also visualized the estimated exposure-response relationship for Hg in each of the stratified models.
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
@@ -1060,7 +1064,7 @@ Hg Ni full output
 
 \caption{P-value (a) and PIP (b) distributions for univariate chemicals from all models in scenarios with an interaction between Hg and Ni.}\label{fig:hgniuniv}
 \end{figure}
-Table of everything
+Table of sensitivity and FDR across all models
 \begin{table}
 
 \caption{\label{tab:onewaytab}Sensitivity and false discovery rate (FDR) of chemicals in all scenarios with two-way interactions between exposures.}
@@ -1141,7 +1145,7 @@ Interaction type & Effect size & Oracle & BKMR & BSR & Oracle & BKMR & BSR\\
 \bottomrule
 \end{tabular}
 \end{table}
-Include a table of false discovery rates for BSR and BKMR
+Table of FDRs
 \begin{table}
 
 \caption{\label{tab:twowayfdrtab}False discovery rate of interactions in all scenarios with two-way interactions between exposures.}
@@ -1217,6 +1221,8 @@ Consider getting false discovery rates?
 \hypertarget{interactions-between-race-and-an-exposure}{%
 \subsection{Interactions between race and an exposure}\label{interactions-between-race-and-an-exposure}}
 
+blah
+
 \hypertarget{run-time-analysis}{%
 \subsection{Run-time analysis}\label{run-time-analysis}}
 \begin{table}
@@ -1251,6 +1257,11 @@ Model & Sample size & Base & Lower & Higher & Lower & Higher\\
 \bottomrule
 \end{tabular}
 \end{table}
+\hypertarget{discussion}{%
+\section{Discussion}\label{discussion}}
+
+Discuss results, link back to previous sim studies.
+
 \hypertarget{conclusion}{%
 \chapter*{Conclusion}\label{conclusion}}
 \addcontentsline{toc}{chapter}{Conclusion}
@@ -1456,6 +1467,7 @@ Full output for univariate
 
 }
 
+\caption{naive small univariate p-values.}\label{fig:nsmunivp}
 \end{figure}
 \begin{figure}
 
@@ -1463,6 +1475,7 @@ Full output for univariate
 
 }
 
+\caption{naive large univariate p-values.}\label{fig:nlgunivp}
 \end{figure}
 \begin{figure}
 
@@ -1470,6 +1483,7 @@ Full output for univariate
 
 }
 
+\caption{oracle small univariate p-values.}\label{fig:osmunivp}
 \end{figure}
 \begin{figure}
 
@@ -1477,6 +1491,7 @@ Full output for univariate
 
 }
 
+\caption{oracle large univariate p-values.}\label{fig:olgunivp}
 \end{figure}
 \begin{figure}
 
@@ -1484,6 +1499,7 @@ Full output for univariate
 
 }
 
+\caption{bkmr small univariate pip's.}\label{fig:ksmunivp}
 \end{figure}
 \begin{figure}
 
@@ -1491,6 +1507,7 @@ Full output for univariate
 
 }
 
+\caption{bkmr large univariate pip's.}\label{fig:klgunivp}
 \end{figure}
 \begin{figure}
 
@@ -1498,6 +1515,7 @@ Full output for univariate
 
 }
 
+\caption{bsr small univariate pip's.}\label{fig:ssmunivp}
 \end{figure}
 \begin{figure}
 
@@ -1505,6 +1523,7 @@ Full output for univariate
 
 }
 
+\caption{bsr large univariate pip's.}\label{fig:slgunivp}
 \end{figure}
 Full output for bivariate
 \begin{figure}
@@ -1513,6 +1532,7 @@ Full output for bivariate
 
 }
 
+\caption{oracle small detection of interactions.}\label{fig:osmbivp}
 \end{figure}
 \begin{figure}
 
@@ -1520,6 +1540,7 @@ Full output for bivariate
 
 }
 
+\caption{oracle large detection of interactions.}\label{fig:olgbivp}
 \end{figure}
 Exposure response surfaces
 \begin{figure}
@@ -1528,6 +1549,7 @@ Exposure response surfaces
 
 }
 
+\caption{cd-as bkmr small exposure response.}\label{fig:ksmcdas}
 \end{figure}
 \begin{figure}
 
@@ -1535,6 +1557,7 @@ Exposure response surfaces
 
 }
 
+\caption{cd-as bkmr large exposure response.}\label{fig:klgcdas}
 \end{figure}
 \begin{figure}
 
@@ -1542,6 +1565,7 @@ Exposure response surfaces
 
 }
 
+\caption{ni-co bkmr small exposure response.}\label{fig:ksmnico}
 \end{figure}
 \begin{figure}
 
@@ -1549,14 +1573,19 @@ Exposure response surfaces
 
 }
 
+\caption{ni-co bkmr large exposure-response.}\label{fig:klgnico}
 \end{figure}
+Still need to include BSR exposure-response surfaces
+
+Potentially also will include trivariate exposure-response surfaces here, too.
+
 \hypertarget{code}{%
 \chapter{Code}\label{code}}
 
 This second appendix includes all of the R chunks of code that were hidden throughout the document.
 
-\hypertarget{code-for-section-refbayes}{%
-\section{Code for Section \ref{bayes}:}\label{code-for-section-refbayes}}
+\hypertarget{code-for-chapter-refbayes}{%
+\section{Code for Chapter \ref{bayes}:}\label{code-for-chapter-refbayes}}
 
 The code for this section generates a toy example, used to demonstrate the kernel machine regression and spline regression techniques.
 
@@ -1790,13 +1819,13 @@ The code for this section generates a toy example, used to demonstrate the kerne
 \end{Shaded}
 \normalsize
 
-\hypertarget{code-for-section-refsims}{%
-\section{Code for Section \ref{sims}:}\label{code-for-section-refsims}}
+\hypertarget{code-for-chapter-refsims}{%
+\section{Code for Chapter \ref{sims}:}\label{code-for-chapter-refsims}}
 
 The code for this section prepares the data from the MADRES study, generates simulated data, fits multiple linear regressions, BKMR, and BSR on the simulated data, and produces model output.
 
-\hypertarget{code-for-section-refmadres}{%
-\subsection{Code for Section \ref{madres}:}\label{code-for-section-refmadres}}
+\hypertarget{code-for-chapter-refmadres}{%
+\subsection{Code for Chapter \ref{madres}:}\label{code-for-chapter-refmadres}}
 
 First, we clean the data from the MADRES study.
 
@@ -1926,8 +1955,8 @@ First, we clean the data from the MADRES study.
 \end{Shaded}
 \normalsize
 
-\hypertarget{code-for-section-refcopula}{%
-\subsection{Code for Section \ref{copula}:}\label{code-for-section-refcopula}}
+\hypertarget{code-for-chapter-refcopula}{%
+\subsection{Code for Chapter \ref{copula}:}\label{code-for-chapter-refcopula}}
 
 Next, we use copulas to simulate predictor data. We use the \texttt{copula} and \texttt{rslurm} packages in this section. This code was run on the Amherst HPC RStudio server.
 
@@ -2406,41 +2435,6 @@ Here, we visualize the observed and simulated predictor data.
     \FunctionTok{return}\NormalTok{(melt\_cor)}
 \NormalTok{  \})}
 
-\CommentTok{\# \# create function for breaks on density plot grid}
-\CommentTok{\# newbreaks \textless{}{-} function(lims) \{}
-\CommentTok{\#   range \textless{}{-} diff(lims)}
-\CommentTok{\#   return(c(lims[1] + range/5, mean(lims), lims[2] {-} range/5))}
-\CommentTok{\# \}}
-\CommentTok{\# }
-\CommentTok{\# \# density plot grid of spearman\textquotesingle{}s correlation in simulated data}
-\CommentTok{\# cors\_dens \textless{}{-} cors |\textgreater{} }
-\CommentTok{\#   group\_by(Var1, Var2) |\textgreater{} }
-\CommentTok{\#   mutate(mean = mean(value)) |\textgreater{} }
-\CommentTok{\#   ungroup() |\textgreater{} }
-\CommentTok{\#   ggplot(aes(x = value, fill = mean)) +}
-\CommentTok{\#   geom\_density() + }
-\CommentTok{\#   scale\_x\_continuous(breaks = newbreaks, }
-\CommentTok{\#                      labels = \textasciitilde{}round(.x, 2)) +}
-\CommentTok{\#   scale\_y\_continuous(position = "right") +}
-\CommentTok{\#   scale\_fill\_gradient2(}
-\CommentTok{\#     limit = c({-}0.6, 0.6), breaks = c({-}0.6, {-}0.3, 0, 0.3, 0.6),}
-\CommentTok{\#     low = "deepskyblue3", mid = "white", high = "darkorange", }
-\CommentTok{\#     na.value = NA) +}
-\CommentTok{\#   ggh4x::facet\_grid2(fct\_rev(Var2) \textasciitilde{} Var1, scales = "free", independent = "x", }
-\CommentTok{\#                      render\_empty = FALSE, switch = "both") +}
-\CommentTok{\#   labs(x = TeX(r"( Spearman\textquotesingle{}s $\textbackslash{}rho$ )")) +}
-\CommentTok{\#   theme(strip.placement = "outside", }
-\CommentTok{\#         strip.text.y.left = element\_text(angle = 0), }
-\CommentTok{\#         legend.justification = c(1, 0),}
-\CommentTok{\#         legend.position = c(0.9, 0.1),}
-\CommentTok{\#         legend.direction = "horizontal") +}
-\CommentTok{\#   guides(fill = guide\_colorbar(barwidth = 7, barheight = 1,}
-\CommentTok{\#                                title.position = "top", title.hjust = 0.5))}
-\CommentTok{\# }
-\CommentTok{\# \# plot and save}
-\CommentTok{\# cors\_dens}
-\CommentTok{\# ggsave("index/figures/ch4\_corr\_sim.png", width = 10, height = 7)}
-
 \CommentTok{\# correlation heatmap of average correlation in simulated data}
 \NormalTok{cor\_sim }\OtherTok{\textless{}{-}}\NormalTok{ cors }\SpecialCharTok{|\textgreater{}} 
   \FunctionTok{group\_by}\NormalTok{(Var1, Var2) }\SpecialCharTok{|\textgreater{}} 
@@ -2475,17 +2469,12 @@ Here, we visualize the observed and simulated predictor data.
                    \AttributeTok{nrow =} \DecValTok{1}\NormalTok{, }\AttributeTok{scale =} \FloatTok{0.95}\NormalTok{)}
 \NormalTok{top\_row}
 \FunctionTok{ggsave}\NormalTok{(}\StringTok{"index/figures/ch4\_corr\_sim+orig.png"}\NormalTok{, }\AttributeTok{width =} \DecValTok{10}\NormalTok{, }\AttributeTok{height =} \DecValTok{5}\NormalTok{)}
-
-\CommentTok{\# \# put original, simulated, and density plots of correlation together}
-\CommentTok{\# cowplot::plot\_grid(top\_row, cors\_dens, labels = c("", "c"), label\_size = 16, }
-\CommentTok{\#                    nrow = 2, rel\_heights = c(5, 7), scale = c(1, 0.95))}
-\CommentTok{\# ggsave("index/figures/ch4\_corr\_simorigdens.png", width = 10, height = 12)}
 \end{Highlighting}
 \end{Shaded}
 \normalsize
 
-\hypertarget{code-for-section-refsimresp}{%
-\subsection{Code for Section \ref{simresp}:}\label{code-for-section-refsimresp}}
+\hypertarget{code-for-chapter-refsimresp}{%
+\subsection{Code for Chapter \ref{simresp}:}\label{code-for-chapter-refsimresp}}
 
 Next, we simulate the response data. We use the \texttt{rslurm} package in this section. This code was run on the Amherst HPC RStudio server.
 
@@ -6459,6 +6448,9 @@ Bastain, T. M., Chavez, T., Habre, R., Girguis, M. S., Grubbs, B., Toledo-Corral
 \leavevmode\vadjust pre{\hypertarget{ref-bellavia_statistical_2021}{}}%
 Bellavia, A. (2021). \emph{Statistical {Methods} for {Environmental} {Mixtures}}. Retrieved from \url{https://bookdown.org/andreabellavia/mixtures/preface.html}
 
+\leavevmode\vadjust pre{\hypertarget{ref-bensaude-vincent_history_1996}{}}%
+Bensaude-Vincent, B., \& Stengers, I. (1996). \emph{A {History} of {Chemistry}}. Harvard University Press.
+
 \leavevmode\vadjust pre{\hypertarget{ref-bobb_introduction_2017}{}}%
 Bobb, J. F. (2017a, March). Introduction to {Bayesian} kernel machine regression and the bkmr {R} package. Retrieved from \url{https://jenfb.github.io/bkmr/overview.html}
 
@@ -6510,6 +6502,12 @@ Kannan, S., Misra, D. P., Dvonch, J. T., \& Krishnakumar, A. (2006). Exposures t
 \leavevmode\vadjust pre{\hypertarget{ref-kordas_interactions_2007}{}}%
 Kordas, K., Lönnerdal, B., \& Stoltzfus, R. J. (2007). Interactions between nutrition and environmental exposures: Effects on health outcomes in women and children. \emph{The Journal of Nutrition}, \emph{137}(12), 2794--2797. http://doi.org/\href{https://doi.org/10.1093/jn/137.12.2794}{10.1093/jn/137.12.2794}
 
+\leavevmode\vadjust pre{\hypertarget{ref-krieger_theories_2001}{}}%
+Krieger, N. (2001). Theories for social epidemiology in the 21st century: An ecosocial perspective. \emph{International Journal of Epidemiology}, \emph{30}(4), 668--677. http://doi.org/\href{https://doi.org/10.1093/ije/30.4.668}{10.1093/ije/30.4.668}
+
+\leavevmode\vadjust pre{\hypertarget{ref-krieger_epidemiology_2011}{}}%
+Krieger, N. (2011). \emph{Epidemiology and the {People}'s {Health}}. Oxford University Press. http://doi.org/\href{https://doi.org/10.1093/acprof:oso/9780195383874.001.0001}{10.1093/acprof:oso/9780195383874.001.0001}
+
 \leavevmode\vadjust pre{\hypertarget{ref-lazarevic_statistical_2019}{}}%
 Lazarevic, N., Barnett, A. G., Sly, P. D., \& Knibbs, L. D. (2019). Statistical {Methodology} in {Studies} of {Prenatal} {Exposure} to {Mixtures} of {Endocrine}-{Disrupting} {Chemicals}: {A} {Review} of {Existing} {Approaches} and {New} {Alternatives}. \emph{Environmental Health Perspectives}, \emph{127}(2), 026001. http://doi.org/\href{https://doi.org/10.1289/EHP2207}{10.1289/EHP2207}
 
@@ -6522,6 +6520,15 @@ Liu, D., Lin, X., \& Ghosh, D. (2007). Semiparametric {Regression} of {Multidime
 \leavevmode\vadjust pre{\hypertarget{ref-muller_weighted_1987}{}}%
 Müller, H.-G. (1987). Weighted {Local} {Regression} and {Kernel} {Methods} for {Nonparametric} {Curve} {Fitting}. \emph{Journal of the American Statistical Association}, \emph{82}(397), 231--238. http://doi.org/\href{https://doi.org/10.1080/01621459.1987.10478425}{10.1080/01621459.1987.10478425}
 
+\leavevmode\vadjust pre{\hypertarget{ref-murphy_uncertain_2004}{}}%
+Murphy, M. (2004). Uncertain {Exposures} and the {Privilege} of {Imperception}: {Activist} {Scientists} and {Race} at the {U}.{S}. {Environmental} {Protection} {Agency}. \emph{Osiris}, \emph{19}(1), 266--282. http://doi.org/\href{https://doi.org/10.1086/649406}{10.1086/649406}
+
+\leavevmode\vadjust pre{\hypertarget{ref-murphy_alterlife_2017}{}}%
+Murphy, M. (2017). Alterlife and {Decolonial} {Chemical} {Relations}. \emph{Cultural Anthropology}, \emph{32}(4), 494--503. http://doi.org/\href{https://doi.org/10.14506/ca32.4.02}{10.14506/ca32.4.02}
+
+\leavevmode\vadjust pre{\hypertarget{ref-myers_rendering_2015}{}}%
+Myers, N. (2015). \emph{Rendering {Life} {Molecular}: {Models}, {Modelers}, and {Excitable} {Matter}}. Duke University Press.
+
 \leavevmode\vadjust pre{\hypertarget{ref-nadaraya_estimating_1964}{}}%
 Nadaraya, E. A. (1964). On {Estimating} {Regression}. \emph{Theory of Probability \& Its Applications}, \emph{9}(1), 141--142. http://doi.org/\href{https://doi.org/10.1137/1109020}{10.1137/1109020}
 
@@ -6533,6 +6540,9 @@ National Academies of Sciences, Engineering, and Medicine, Division on Earth and
 
 \leavevmode\vadjust pre{\hypertarget{ref-nelsen_introduction_2006}{}}%
 Nelsen, R. B. (2006). \emph{An introduction to copulas} (2nd ed). New York: Springer.
+
+\leavevmode\vadjust pre{\hypertarget{ref-nguyen_breathless_2020}{}}%
+Nguyen, V. (2020). Breathless in {Beijing}: {Aerial} {Attunements} and {China}'s {New} {Respiratory} {Publics}. \emph{Engaging Science, Technology, and Society}, \emph{6}, 439--461. http://doi.org/\href{https://doi.org/10.17351/ests2020.437}{10.17351/ests2020.437}
 
 \leavevmode\vadjust pre{\hypertarget{ref-persson_outside_2022}{}}%
 Persson, L., Carney Almroth, B. M., Collins, C. D., Cornell, S., De Wit, C. A., Diamond, M. L., \ldots{} Hauschild, M. Z. (2022). Outside the {Safe} {Operating} {Space} of the {Planetary} {Boundary} for {Novel} {Entities}. \emph{Environmental Science \& Technology}, \emph{56}(3), 1510--1521. http://doi.org/\href{https://doi.org/10.1021/acs.est.1c04158}{10.1021/acs.est.1c04158}
@@ -6548,6 +6558,9 @@ R Core Team. (2013). \emph{R: A language and environment for statistical computi
 
 \leavevmode\vadjust pre{\hypertarget{ref-schulz_tutorial_2018}{}}%
 Schulz, E., Speekenbrink, M., \& Krause, A. (2018). A tutorial on {Gaussian} process regression: {Modelling}, exploring, and exploiting functions. \emph{Journal of Mathematical Psychology}, \emph{85}, 1--16. http://doi.org/\href{https://doi.org/10.1016/j.jmp.2018.03.001}{10.1016/j.jmp.2018.03.001}
+
+\leavevmode\vadjust pre{\hypertarget{ref-shapiro_attuning_2015}{}}%
+Shapiro, N. (2015). Attuning to the {Chemosphere}: {Domestic} {Formaldehyde}, {Bodily} {Reasoning}, and the {Chemical} {Sublime}. \emph{Cultural Anthropology}, \emph{30}(3), 368--393. http://doi.org/\href{https://doi.org/10.14506/ca30.3.02}{10.14506/ca30.3.02}
 
 \leavevmode\vadjust pre{\hypertarget{ref-siemiatycki_biological_1981}{}}%
 Siemiatycki, J., \& Thomas, D. C. (1981). Biological {Models} and {Statistical} {Interactions}: An {Example} from {Multistage} {Carcinogenesis}. \emph{International Journal of Epidemiology}, \emph{10}(4), 383--387. http://doi.org/\href{https://doi.org/10.1093/ije/10.4.383}{10.1093/ije/10.4.383}

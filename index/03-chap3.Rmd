@@ -59,7 +59,7 @@ In this section, we introduce the theory of BKMR. First, we define the notation 
 -   $h(\cdot)$ is the flexible function relating $\textbf{x}$ to $\textbf{Y}$
 -   $k$ is the kernel function, the Gaussian in this case
 -   $\textbf{K}$ is the $n \times n$ kernel matrix, with $(i, j)$th element $k(\textbf{x}_i, \textbf{x}_j)$
--   $\rho$ is the parameter which controls smoothnessm, associated with the kernel function
+-   $\rho$ is the parameter which controls smoothness, associated with the kernel function
 -   $\tau$ is the parameter multiplied by the kernel matrix to relate $\textbf{K}$ to $h$
 -   $\boldsymbol{\beta}_{\textbf{z}}$ is a vector of the weights on the covariates, and
 -   $\boldsymbol\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$ are the residuals of the response.
