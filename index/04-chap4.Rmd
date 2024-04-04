@@ -169,7 +169,11 @@ Finally, we also visualized the estimated exposure-response relationship for Hg 
 
 ### Base case
 
-We start by presenting results from models run on the base case scenario, in which the true relationship contained no interactions. 
+We start by presenting results from models run on the base case scenario, in which the true relationship contained no interactions. Figure \@ref(fig:basecasesig) displays the distribution of p-values and PIPs from this scenario, while Table \@ref(tab:basecasetab) summarizes the overall sensitivities and false discovery rates based on these values. Note that insignificant chemicals were not included in the oracle MLR, which is why their distributions are omitted from this output. 
+
+The naive MLR does the best job at picking up the effects of Hg, with a sensitivity of 0.8 and 1 in the smaller and larger size datasets, respectively. This is likely because Hg is the only linear term in the model. Ni and Sn have an S-shaped curve with higher and lower effect sizes, respectively, so the naive MLR detects a slight linear signal from them. Sb, which has a U-shaped curve, is the hardest to pick up. On the other hand, the oracle MLR consistently detects Hg, Ni, and Sb. The smaller size oracle MLRs only occasionally pick up Sn, likely due to the lower effect sisze. 
+
+This base case scenario confirms that the multiple regression and Bayesian models behave as expected. We also recognize that, for unvariate significance metrics, BKMR tends to produce higher false discovery rates
 
 ```{r basecasesig, fig.cap = "P-value distributions from smaller (a) and larger (b) size datasets and PIP distributions from smaller (c) and larger (d) size datasets.", out.width = '100%', echo = FALSE}
 include_graphics(path = "figures/ch4_basecasesig.png")

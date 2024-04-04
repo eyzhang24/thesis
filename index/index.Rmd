@@ -22,7 +22,7 @@ fig_width: 5.5
 # Update abstract and acknowledgments filenames below as needed
 abstract: |
   `r if(knitr:::is_latex_output()) 
-    paste(readLines("00a-abstract.Rmd"),
+    paste(readLines("00a-abstract.Rmd"), 
     collapse = '\n  ')`
 acknowledgments: |
   `r if(knitr:::is_latex_output()) 
