@@ -12,7 +12,7 @@ library(knitr)
 
 ## Motivation {#motivation}
 
-We are interested in using Bayesian regression techniques to characterize the nature of non-additive interactions in exposure mixture studies. We begin by reviewing definitions for what constitutes an interaction and why interactions are relevant from public health and biological relevance. 
+We are interested in using Bayesian regression techniques to characterize the nature of non-additive interactions in exposure mixture studies. We begin by reviewing definitions for what constitutes an interaction and why interactions are relevant from both a public health and biological viewpoint. 
 
 ### Interactions from a statistical perspective
 
@@ -21,10 +21,10 @@ First, we define additivity and non-additivity in the traditional statistical pa
 For our sake, when we refer to "interaction," we mean any non-additive interaction. We consider such non-additive interactions to be complex, meaning that they are difficult to detect. To see why, let us consider running a linear regression for $Y$ on $x_1$ and $x_2$. The theoretical model would be defined as
 
 $$
-Y = \beta_0+\beta_1x_1+\beta_2x_2 + \beta_{12}f(x_1, x_2),
+Y = \beta_0+\beta_1x_1+\beta_2x_2 + \beta_{12}f(x_1, x_2) + \varepsilon,
 $$
 
-\noindent where the $\beta$'s represent the effect sizes. We can see that the form of the interaction must be explicitly specified in the formulation of the model. Most commonly, a multiplicative interaction is assessed, where $f(x_1, x_2) = x_1*x_2$. However, a non-additive interaction can take on many different forms, the true nature of which is difficult to determine analytically. 
+\noindent where the $\beta$'s represent the effect sizes, and $\varepsilon$ has a normal distribution with mean 0 and variance equal to the residual variance. We can see that the form of the interaction must be explicitly specified in the formulation of the model. Most commonly, a multiplicative interaction is assessed, where $f(x_1, x_2) = x_1*x_2$. However, a non-additive interaction can take on many different forms, the true nature of which is difficult to determine analytically. 
 
 We used a two-predictor case above, but interactions can also exist between more variables (i.e., two-way by $f(x_1, x_2)$, three-way by $f(x_1, x_2, x_3)$, etc.). So, if we wanted to assess all possible interactions, the number to consider quickly becomes intractable in high-dimensional settings. For instance, consider modelling 10 predictors in the above linear regression setting. In order to be assessed, each interaction must be explicitly specified as a new term in the model. Even if we only considered one form for each interaction, including all possible two-way interactions would involve adding $\binom{10}{2} = 45$ additional terms to the model, and all possible three-way interactions would add $\binom{10}{3} = 120$ additional terms.
 
@@ -66,12 +66,12 @@ In this section, we introduce the theory of BKMR. First, we define the notation 
 
 And, we define the notation that we will be using specific to BKMR: 
 
--   $r_m=1/\rho_m$ is an augmented variable in $\textbf{r}$ in the kernel matrix, controlling smoothness
--   $\delta_m$ is an indicator variable in $\boldsymbol\delta$ which represents inclusion in the model
+-   $r_m=1/\rho_m$ is an augmented variable in $\textbf{r}$ in the kernel matrix, controlling smoothness of the exposure-response relationship
+-   $\delta_m$ is an indicator variable in $\boldsymbol\delta$ which represents inclusion of the corresponding exposure in the model
 -   $\mathcal{S}_g$ is a group of partitioned predictors with ${g=1,\dots,G}$
 -   $\{\delta_m|\textbf{x}_m \in{\mathcal{S}_g}\}$ is an indicator variable in $\boldsymbol\delta_{\mathcal{S}_g}$ which represents inclusion of a parameter in group $g$ in the model
 -   $\pi$ is the prior probability of inclusion of a predictor in the model, and
--   $\lambda \equiv \tau\sigma^{-2}$ is a convenient way to define the prior on $\tau$.
+-   $\lambda \equiv \tau\sigma^{-2}$ is used as a convenient way to define the prior on $\tau$.
 
 ### Kernel machine regression
 
@@ -91,7 +91,7 @@ $$
 Y_i = h(\textbf{x}_i) + \textbf{z}_i^\top \boldsymbol{\beta}_{\textbf{z}} + \varepsilon_i.
 $$
 
-\noindent Here, $h(\cdot)$ is represented by the function $k(\cdot, \cdot)$, a kernel. The kernel controls the covariance, or the similarity, between values of $h(\textbf{x})$ and as such ensures that points near each other on the prediction surface will have similar values --- or, in other words, that the prediction surface will be smooth. In the case of kernel machine regression, we define a positive definite kernel where $k: \mathbb{R}^M\times \mathbb{R}^M \rightarrow \mathbb{R}$. Note also that covariates are assumed to have a linear, non-additive effect on the response. 
+\noindent Here, $h(\cdot)$ is represented by the function $k(\cdot, \cdot)$, a kernel. The kernel controls the covariance, or the similarity, between values of $h(\textbf{x})$ and as such ensures that points near each other on the prediction surface will have similar values --- or, in other words, that the prediction surface will be smooth. In the case of kernel machine regression, we define a positive definite kernel where $k: \mathbb{R}^M\times \mathbb{R}^M \rightarrow \mathbb{R}$. Note also that covariates are assumed to have a linear, additive effect on the response. 
 
 There are many choices of functions for $k$. BKMR uses the Gaussian kernel, also known as the radial basis function or, sometimes, the squared exponential kernel. The Gaussian kernel is defined as
 
@@ -102,7 +102,7 @@ $$
 
 \noindent where $||\textbf{x}-\textbf{x}'||^2 = \sum_{m=1}^M{(x_{m}-x_{m}')^2}$ for a set of exposure values $\textbf{x}$ and the exposure values of another subject $\textbf{x}'$, and $\rho$ is a tuning parameter that controls the relationship between the correlation between two points and their distance. Greater values of $\rho$ will enforce more dependence between points and make the resulting function smoother. $h$ is related to $k$ by a multiplicative constant $\tau$, a tuning parameter which controls the vertical scale of $h$.
 
-Now that we have defined $h$ and $k$, we can think about how to characterize the relationship between our response and exposures Kernel machine regression is a nonparametric technique because it does not specify a functional form for this relationship. Hence, we will think about estimating the response at a particular query point. Operationally, @muller_weighted_1987 demonstrated that kernel machine regression uses a weighted average of all the observations in the dataset to estimate the response, defined as
+Now that we have defined $h$ and $k$, we can think about how to characterize the relationship between our response and exposures. Kernel machine regression is a nonparametric technique because it does not specify a functional form for this relationship. Hence, we will think about estimating the response at a particular query point. Operationally, @muller_weighted_1987 demonstrated that kernel machine regression uses a weighted average of all the observations in the dataset to estimate the response, defined as
 
 $$
 \bar{Y} = \frac{\sum_{i=1}^nw_iY_i}{\sum_{i=1}^nw_i},
@@ -150,7 +150,7 @@ $$
 
 ### Toy example {#bkmrtoy}
 
-In the following section, we illustrate kernel machine regression with a toy example.
+In the following section, we illustrate kernel machine regression with a simulated toy example.
 
 Consider the following case where we want to model the relationship between a single predictor and a response variable. Suppose the true relationship between $x$ and $Y$ is defined $Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})$. We simulate 51 equally spaced observations of $x$ from 0 to 25, with error $\varepsilon_i \overset{\text{iid}}\sim N(0, 0.25)$.
 
@@ -174,7 +174,7 @@ include_graphics(path = "figures/ch3_toy3.png")
 
 Now, we fit a kernel machine regression on this data with $\rho=2$ using the `stats` package in R. We can see in Figure \@ref(fig:toy3) that kernel machine regression captures the complex non-linear relationship between $Y$ and $x$ and closely follows the true relationship. We do note, though, that the estimation is less precise at the tails, where there is less information provided by local observations. We can also use this example to consider the effect of various values of $\rho$ on the smoothness of the $h$ function.
 
-```{r toyrho, fig.cap="Fitted kernel machine regression with $\\rho=0.02$ and $\\rho=50$.", out.width = '100%', echo = FALSE}
+```{r toyrho, fig.cap="Fitted kernel machine regression with $\\rho=0.02$ (undersmoothed) and $\\rho=50$ (oversmoothed).", out.width = '100%', echo = FALSE}
 include_graphics(path = "figures/ch3_toyrho.png")
 ```
 
@@ -192,7 +192,7 @@ $$
 
 \noindent where $\textbf{r}=[r_1,\dots,r_M]^\top$. We define $r_m=1/{\rho_m}$, the inverse of the tuning parameter $\rho_m$ for each $\textbf{x}_m$. Now, we can imagine that an exposure that is not closely associated with the response will be be assigned a value of $r_m$ close to 0, which corresponds to a larger value of $\rho_m$. This larger value of $\rho_m$ means that this exposure would contribute less to the exposure-response relationship, as depicted in the second panel of Figure \@ref(fig:toyrho).
 
-We now define the kernel matrix $\textbf{K}_{\textbf{X},\textbf{r}}$ as the $n\times n$ matrix with $(i,j)$th element $k(\textbf{x}, \textbf{x}'|\textbf{r})$. To allow $r_m$ to equal 0 with non-zero probability, we first define an indicator variable determining whether or not a predictor is included in the variable, which is distributed as
+We now define the kernel matrix $\textbf{K}_{\textbf{X},\textbf{r}}$ as the $n\times n$ matrix with $(i,j)$th element $k(\textbf{x}, \textbf{x}'|\textbf{r})$. To allow $r_m$ to equal 0 with non-zero probability, we first define an indicator variable determining whether or not a predictor is included in the variable, which is denoted and distributed as
 
 $$
 \delta_m \sim \text{Bernoulli}(\pi),
@@ -201,28 +201,28 @@ $$
 \noindent where $\pi$ is the prior probability of inclusion. Now, we can assume a "slab-and-spike" prior on $r_m$, distributed as
 
 $$
-r_m|\delta_m \sim \delta_mf(r_m) + (1-\delta_m)P_0,
+r_m|\delta_m \sim \delta_mf(r_m) + (1-\delta_m)P_0, 
 $$
 
 \noindent where $f(\cdot)$ is some pdf with support $\mathbb{R}^+$, and $P_0$ denotes the density with point mass at 0.
 
-While this process of component-wise variable selection works well in a typical multiple regression setting, it can lead to unreliable estimates in situations where the exposures are highly correlated with each other, which is common in exposure mixture studies. In this case, the correlated components contribute similar information to the model, and component-wise variable selection is not able to distinguish which exposure is important. BKMR deals with this problem by introducing hierarchical variable selection.
+While this process of component-wise variable selection works well in a typical multiple regression setting, it can lead to unreliable estimates in situations where the exposures are highly correlated with each other, which is common in exposure mixture studies. In this case, the correlated components contribute similar information to the model, and component-wise variable selection is not able to distinguish which exposure is important. BKMR deals with this problem by introducing hierarchical variable selection [@bobb_bayesian_2015].
 
-Hierarchical variable selection involves partitioning the predictors $\textbf{x}_1, \dots, \textbf{x}_M$ into $G$ groups, denoted $\mathcal{S}_g$ with $g = 1,\dots,G$. These groups should be selected by the user based on prior knowledge, with the aim of keeping within-group correlation high and between-group correlation low. For instance, consider a situation with 4 chemicals, Hg, Pb, As, and Sn. If Hg, Pb, and As were strongly correlated with each other and each weakly correlated with Sn, we might define $\mathcal{S}_1=\{\textrm{Hg, Pb, As}\}$ and $\mathcal{S}_1=\{\textrm{Sn}\}$.
+Hierarchical variable selection involves partitioning the predictors $\textbf{x}_1, \dots, \textbf{x}_M$ into $G$ groups, denoted $\mathcal{S}_g$ with $g = 1,\dots,G$. These groups should be selected by the user based on prior knowledge, with the aim of keeping within-group correlation high and between-group correlation low [@bobb_bayesian_2015]. For instance, consider a situation with 4 chemicals, Hg, Pb, As, and Sn. If Hg, Pb, and As were strongly correlated with each other and each weakly correlated with Sn, we might define $\mathcal{S}_1=\{\textrm{Hg, Pb, As}\}$ and $\mathcal{S}_1=\{\textrm{Sn}\}$.
 
 The indicators from $r_m|\delta_m$ are now distributed as
 
 \begin{gather*}
 \boldsymbol\delta_{\mathcal{S}_g} | \omega_g \sim 
-\text{Multinomial}(\omega_g, \boldsymbol\pi_{\mathcal{S}_g}), g=1,\dots,G,\\
+\text{Multinomial}(\omega_g, \boldsymbol\pi_{\mathcal{S}_g}), g=1,\dots,G, \text{ and}\\
 \omega_g \sim\text{Bernoulli}(\pi),
 \end{gather*}
 
-\noindent where $\boldsymbol\delta_{\mathcal{S}_g}=\{\delta_m|\textbf{x}_m \in{\mathcal{S}_g}\}$ and $\boldsymbol\pi_{\mathcal{S}_g}$ are vectors of indicator variables and prior probabilities, respectively, of a exposure $\textbf{x}_m$ in group $\mathcal{S}_g$ entering the model. By this approach, at most one exposure in each group is allowed to enter the model.
+\noindent where $\boldsymbol\delta_{\mathcal{S}_g}=\{\delta_m|\textbf{x}_m \in{\mathcal{S}_g}\}$ and $\boldsymbol\pi_{\mathcal{S}_g}$ are vectors of indicator variables and prior probabilities, respectively, of a exposure $\textbf{x}_m$ in group $\mathcal{S}_g$ entering the model. By this approach, at most one exposure in each group is allowed to enter the model [@bobb_bayesian_2015].
 
-While hierarchical variable selection resolves the issue of multicollinearity, it requires specifying subgroups of predictors a priori and assumes that one exposure in each group can capture the information of the rest. Hence, care should be taken to justify the partitioning of exposures when taking this approach. 
+While hierarchical variable selection resolves the issue of multicollinearity, it requires specifying subgroups of predictors a priori and assumes that one exposure in each group can capture the information of the rest. Hence, care should be taken to justify the partitioning of exposures when taking this approach [@bobb_bayesian_2015]. 
 
-Note also that the posterior means of $\delta_m$ generated from these variable selection procedures represent the posterior probability of inclusion of $\textbf{x}_m$. We can interpret these posterior inclusion probabilities (PIPs) as measures of the relative importance of each exposure These measures can be used to understand the contribution of each exposure to the health outcome of interest in the model.
+Note also that the posterior means of $\delta_m$ generated from these variable selection procedures represent the posterior probability of inclusion of $\textbf{x}_m$. We can interpret these posterior inclusion probabilities (PIPs) as measures of the relative importance of each exposure. These measures can be used to understand the contribution of each exposure to the health outcome of interest in the model [@bobb_bayesian_2015].
 
 ### Prior specification {#bkmrprior}
 
@@ -262,7 +262,7 @@ A major computational limitation of BKMR is that at each iteration of the MCMC a
 
 ## Bayesian semiparametric regression (BSR) {#bsr}
 
-In this section, we introduce the theory of BSR. First, we define the notation that we will be using for spline regression:
+In this section, we introduce the theory of BSR. First, we define the notation that we will be using for spline regression (much of it designed to be consistent with our BKMR presentation):
 
 - $X_m$ is a predictor variable in the predictor matrix $\textbf{X}$ with $m=1,\dots,M$, measuring exposure variables or covariates
 - $\textbf{x}_i$ is a vector of values for a single observation in $\textbf{X}$ with $i=1,\dots,n$
@@ -295,7 +295,7 @@ $$
 Y_i = f(\textbf{x}_i) + \textbf{z}_i^\top \boldsymbol{\beta}_{\textbf{z}} +\varepsilon_i,
 $$
 
-\noindent where $f$ is defined by a set of basis functions on the exposures, $\textbf{x}_i$, $\textbf{z}_i$ and $\boldsymbol{\beta}_{\textbf{z}}$ are the covariates and their associated weights, and $\varepsilon_i$ is a random variable from $\boldsymbol\varepsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$. BSR uses natural spline bases. In order to understand how these are constructed, we start with a broad definition of basis expansions, before exploring linear, cubic, and then natural spline bases. 
+\noindent where $f$ is defined by a set of basis functions on the exposures, $\textbf{x}_i$, $\textbf{z}_i$ and $\boldsymbol{\beta}_{\textbf{z}}$ are the covariates and their associated weights, and $\varepsilon_i$ is a random variable from $\boldsymbol\varepsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$. BSR uses natural spline bases [@antonelli_estimating_2020]. In order to understand how these are constructed, we start with a broad definition of basis expansions, before exploring linear, cubic, and then natural spline bases. 
 
 We determine the basis expansion by considering a piece-wise function of $X_m$ with some order $P$ and some set of $K$ knots defining $K+1$ disjoint intervals. BSR places knots at uniformly sized quantiles within the boundaries of $X_m$. The most commonly used orders are $P=1,2,\textrm{and } 4$, the constant, linear, and cubic splines, respectively. To begin, let us consider a continuous piece-wise linear spline basis (i.e., $P=2$) of a one-dimensional $X$ with two interior knots. In this case, we use the following four basis functions:
 
@@ -304,7 +304,7 @@ We determine the basis expansion by considering a piece-wise function of $X_m$ w
 b_1(X)=1, \hspace{0.25in} b_2(X)=X, \hspace{0.25in} b_3(X)=(X-\xi_1)_+, \hspace{0.25in} b_4(X)=(X-\xi_2)_+,
 \]
 
-\noindent where $\xi_1$ and $\xi_2$ are the two interior knots, and $t_+$ denotes the positive part. These bases are used to construct the regression model $f(X)=\sum_{j=1}^4\beta_jb_j(X)$, which requires estimating $K+P=4$ parameters. We can check the continuity restrictions at the knots by seeing that $f(\xi_1^-)=\beta_1 + \xi_1\beta_2$ and $f(\xi_1^+)= \beta_1 + \xi_1\beta_2+ (\xi_1-\xi_1)\beta_3$ are equal, and likewise at the second knot.
+\noindent where $\xi_1$ and $\xi_2$ are the two interior knots, and $t_+$ denotes the positive part. These bases are used to construct the regression model $f(X)=\sum_{j=1}^4\beta_jb_j(X)$, which requires estimating $K+P=4$ parameters. We can check the continuity restrictions at the knots by seeing that $f(\xi_1^-)=\beta_1 + \xi_1\beta_2$ and $f(\xi_1^+)= \beta_1 + \xi_1\beta_2+ (\xi_1-\xi_1)\beta_3$ are equal, and likewise at the second knot [@hastie_elements_2009].
 
 Now, in the case of exposure mixtures, we want smoother functions that can capture the non-linear relationship between the response and the predictors. We can achieve this by increasing the order to $P=4$ and using a cubic spline, with continuous first and second derivatives at the knots. The cubic spline is the lowest-order spline for which knot-discontinuity cannot be detected by the human eye. For example, for one $X$ with two interior knots, we use the following six basis functions: 
 
@@ -313,7 +313,7 @@ b_1(X)=1, \hspace{0.25in}b_2(X)=X, \hspace{0.25in}b_3(X)=X^2, \\
 b_4(X)=X^3, \hspace{0.25in} b_5(X)=(X-\xi_1)^3_+, \hspace{0.25in} b_6(X)=(X-\xi_2)^3_+.
 \end{gather*}
 
-\noindent Now, the regression model is defined as $f(X)= \sum_{j=1}^6\beta_jb_j(X)$ and requires estimating $K+P=6$ parameters. It can be shown that $f'(\xi_i^-)= f'(\xi_i^+)$ and $f''(\xi_i^-)= f''(\xi_i^+)$, and so forth. 
+\noindent Now, the regression model is defined as $f(X)= \sum_{j=1}^6\beta_jb_j(X)$ and requires estimating $K+P=6$ parameters. It can be shown that $f'(\xi_i^-)= f'(\xi_i^+)$ and $f''(\xi_i^-)= f''(\xi_i^+)$, and so forth [@hastie_elements_2009]. 
 
 However, the behavior of polynomials near the boundaries of $X$, where there is less information, can be erratic. Natural cubic splines, also referred to as just natural splines, address this by imposing an additional restriction of linearity at the boundaries of $X$. Paradoxically, this also leads to a simpler model with four fewer parameters to estimate. A general definition of the $K$ basis functions for a natural spline with interior knots $\xi_j$, $j=1,\dots,K$, is given by:
 
@@ -329,13 +329,13 @@ b_1(X)=1, \hspace{0.25in} b_2(X)=X, \hspace{0.25in} b_{k+2}(X)=d_k(X)-d_{K-1}(X)
 d_k(X)=\frac{(X-\xi_k)^3_+ - (X-\xi_K)^3_+}{\xi_K-\xi_k}.
 \end{gather*}
 
-\noindent Here, the regression model is defined as $f(X) = \sum_{j=1}^K\beta_jb_j(X)$, with $K$ parameters. BSR uses natural splines to specify the regression relationship. 
+\noindent Here, the regression model is defined as $f(X) = \sum_{j=1}^K\beta_jb_j(X)$, with $K$ parameters [@hastie_elements_2009]. BSR uses natural splines to specify the regression relationship. 
 
 ### Toy example
 
-In the following section, we illustrate spline regression using the same toy example used to introduce kernel machine regression. See Section \@ref(bkmrtoy) and Figure \@ref(fig:toy1) for details on the parameters used to generate simulated data. 
+In the following section, we illustrate spline regression using the same toy example used to introduce kernel machine regression. See Chapter \@ref(bkmrtoy) and Figure \@ref(fig:toy1) for details on the parameters used to generate simulated data. 
 
-As in Section \@ref(bkmrtoy), we consider a case where we want to model the relationship between a single exposure and a response variable, where the true relationship between $x$ and $Y$ is defined as $Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})$. We fit a series of linear, cubic, and then natural spline regressions to illustrate the general framework of a natural spline regression. 
+As in Chapter \@ref(bkmrtoy), we consider a case where we want to model the relationship between a single exposure and a response variable, where the true relationship between $x$ and $Y$ is defined as $Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})$. We fit a series of linear, cubic, and then natural spline regressions to illustrate the general framework of a natural spline regression. 
 
 ```{r toy4, fig.cap="Linear spline regression (blue) with four knots (dotted lines) compared to the true relationship (orange).", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch3_toy4.png")
@@ -353,7 +353,7 @@ include_graphics(path = "figures/ch3_toy6.png")
 
 However, this linear spline regression is still unable to fully estimate the nonlinearity in our example. Increasing the order to $P=4$ with a cubic spline regression offers additional flexibility. Figure \@ref(fig:toy5) illustrates the fit proposed by this model. Here, we can see the benefits of using a cubic polynomial relationship in a nonlinear setting: the estimated relationship is continuous at the knots, and the nonlinear relationship has been flexibly captured. 
 
-Our final modification involves imposing linearity constraints on the boundaries of $x$ to implement a natural spline regression. Figure \@ref(fig:toy6) shows that the fit estimated using a natural spline regression. The fitted line is only slightly different than that proposed by a cubic spline regression in Figure \@ref(fig:toy5). The most noticeable difference is that the slopes of the tails of the natural spline regression are less extreme than for the cubic spline regression. 
+Our final modification involves imposing linearity constraints on the boundaries of $x$ to implement a natural spline regression. Figure \@ref(fig:toy6) shows the fit estimated using a natural spline regression. The fitted line is only slightly different than that proposed by a cubic spline regression in Figure \@ref(fig:toy5). The most noticeable difference is that the slopes of the tails of the natural spline regression are less extreme than for the cubic spline regression. 
 
 ```{r toybounds, fig.cap="Natural and cubic spline regression (blue) compared to the true relationship (orange) extrapolated outside the bounds of $x$ (dotted lines).", out.width = '100%', echo = FALSE}
 include_graphics(path = "figures/ch3_toybounds.png")
@@ -451,9 +451,9 @@ The visualization and summary statistics approaches available in BKMR are also p
 
 We have explained how the inferential framework of BSR improves upon the BKMR approach for the detection of complex interactions. We also briefly compare general features of their model formulations. 
 
-While BKMR is a fully nonparametric approach, BSR is a semiparametric approach because it makes distributional assumptions about the data (i.e., that the relationship can be adequately captured by a $d$-dimensional natural spline basis expansion). As BKMR uses the kernel technique, its implementation can become computationally intensive for datasets with large $n$, as it scales with $n^2$, while BSR is able to scale with $n$. 
+While BKMR is a fully nonparametric approach, BSR is a semiparametric approach because it makes distributional assumptions about the data (i.e., that the relationship can be adequately captured by a $d$-dimensional natural spline basis expansion). As BKMR uses the kernel technique, its implementation can become computationally intensive for datasets with large $n$, as it scales with $n^2$, while BSR is able to scale with $n$ [@@antonelli_estimating_2020]. 
 
-BSR is highly sensitive to the choice of $d$, the degrees of freedom. While it employs a WAIC approach to selecting the best $d$, this parameter introduces an additional tuning step in the analysis. Both approaches can be highly sensitive to the specification of certain priors. BSR offers an empirical Bayes strategy for $\sigma^2_{\boldsymbol\beta}$, the variance of a exposure's probability of inclusion. On the other hand, the choice of prior on the influential smoothing parameter, $\rho$, in BKMR is up to the user. 
+BSR is highly sensitive to the choice of $d$, the degrees of freedom. While it employs a WAIC approach to selecting the best $d$, this parameter introduces an additional tuning step in the analysis. Both approaches can be highly sensitive to the specification of certain priors. BSR offers an empirical Bayes strategy to estimate $\sigma^2_{\boldsymbol\beta}$, the variance of a exposure's prior probability of inclusion. On the other hand, the choice of prior on the influential smoothing parameter, $\rho$, in BKMR is up to the user. 
 
 We also note that BKMR offers a hierarchical variable selection approach to dealing with collinearity between exposures. While this is an additional decision that must be specified by the user, it offers a formal approach to dealing with collinear exposures. BSR does not explicitly account for collinearity in its model formulation, which can lead to erroneous interpretations of variable importance if unaccounted for. 
 

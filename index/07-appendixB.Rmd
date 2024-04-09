@@ -1390,7 +1390,7 @@ out2_resp1_re <- out2_resp1_re[1701:2100]
 write_rds(out2_resp1_re, "sim/sim_resp_lg_re.RDS")
 ```
 
-### Code for Section \@ref(models):
+### Code for Chapter \@ref(models):
 
 Here, we fit the models to our simulated data. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. This code was run on the Amherst HPC RStudio server. 
 
@@ -2547,7 +2547,7 @@ wjob04 <- slurm_call(
 
 ```
 
-### Code for Section \@ref(results):
+### Code for Chapter \@ref(results):
 
 Here, we extract results from our simulation. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. This code was run on the Amherst HPC RStudio server. 
 
@@ -3763,6 +3763,14 @@ write_csv(slg_triv, "sim/bsr_lg/triv_expresp.csv")
 - present results
 - create tables
 - keep track of which results are actually going into the appendix
+
+Get some specific stats that are reported in results
+
+```{r}
+# significance of As, naive mlr large, case 9
+naive_sens |> filter(case == 9, size == "Large", var == "Cd")
+```
+
 
 Here, we visualize and summarize results from model output. 
 

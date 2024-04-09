@@ -13,7 +13,7 @@ library(tidyverse)
 
 ## Past simulation studies
 
-Here, we preface our simulation with an overview of examples in the literature which compare various methods for exposure mixture studies using simulations. @taylor_statistical_2016 conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Thus, for each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest. 
+Here, we preface our simulation study with an overview of examples in the literature which compare various methods for exposure mixture studies using simulations. @taylor_statistical_2016 conclude that, in general for exposure mixture studies, no single method consistently outperforms others across all situations and, importantly, that a method should be chosen based on the question of interest. Thus, for each study, we highlight not only the findings, but also the data-generating scenarios and the identified question of interest. 
 
 @lazarevic_performance_2020 compare the performance of a broad range of methods for accurate variable selection of important exposures. They simulated exposure data using a multivariate copula based on real-world data and the response by specifying a regression model with only a subset of truly significant exposures and a normal error term. Two correlation structures were considered — one with the original Spearman correlation matrix and one with the values halved — as well as two signal-to-noise ratios — one with an $R^2$ for the true model at 10\% and one at 30\%. They found that BKMR, along with three other flexible regression methods that allow for nonlinearity, provided more accurate variable selection results compared to two machine learning methods. Moreover, they observed that, in general, low signal-to-noise ratios had a stronger impact on performance than did increasing multicollinearity. 
 
@@ -31,7 +31,7 @@ The goal of our simulation study is to provide guidance on the choice between BS
 
 In order to make our simulations comparable to real-world exposure mixture studies, we based our simulation data on the Maternal And Developmental Risks from Environmental and Social Stressors (MADRES) pregnancy cohort. The MADRES cohort is an ongoing, prospective pregnancy cohort of predominantly lower-income, Hispanic women in Los Angeles, California, which began in 2015 [@bastain_study_2019]. Urine samples were collected by participants at their first visit, and questionnaires were administered during their first visit, with follow-ups at the first, second, and third trimesters. See @bastain_study_2019 for further details on study design. 
 
-@howe_prenatal_2020 previously examined the effect of prenatal metal mixtures of birth weight (BW) for gestational age (GA) in this cohort. They used BKMR to identify associations between metal mixtures and BW for GA, as well as BSR to conduct inference on interactions between metals. Briefly, using BKMR, they found that, of the metals in the mixture, mercury and nickel were most strongly associated with BW for GA. Moreover, BKMR results suggested that a potential interaction between mercury and nickel exists; however, when run through BSR, the PIP for this interaction was extremely small, despite being the highest of all two-way interactions. 
+@howe_prenatal_2020 previously examined the effect of prenatal metal mixtures of birth weight (BW) for gestational age (GA) in this cohort. They used BKMR to identify associations between metal mixtures and BW for GA, as well as BSR to conduct inference on interactions between metals. Using BKMR, they found that, of the metals in the mixture, mercury and nickel were most strongly associated with BW for GA. Moreover, BKMR results suggested that a potential interaction between mercury and nickel exists; however, when run through BSR, the PIP for this interaction was extremely small, despite being the highest of all two-way interactions. 
 
 Data from the study by @howe_prenatal_2020 were obtained from publicly available data in the Human Health Exposure Resource (HHEAR) Data Repository, which has been approved under Icahn School of Medicine at Mount Sinai IRB Protocol #16-00947. The Digital Object Identifiers associated with the urinary trace element data and epidemiological data are 10.36043/1945_159 and 10.36043/1945_177, respectively. All analyses were conducted in R v4.3.2 [@r_core_team_r_2013].
 
@@ -78,24 +78,24 @@ include_graphics(path = "figures/ch4_univ_cov_sim.png")
 
 We simulated predictor data by randomly sampling from the fitted multivariate Gaussian copula distribution. All pseudo-random samples were then back-transformed to their original distributions using empirical marginal CDFs. We simulated the race by ethnicity and birthplace variable by randomly assigning observations to each of the five categories based on proportions in the observed dataset. 
 
-```{r corsimssm, fig.cap = "Spearman's correlation heat maps of exposures from observed data (a) and averaged from 2100 smaller size (n=252) simulated datasets (b).", out.width = '100%', echo = FALSE}
+```{r corsimssm, fig.cap = "Spearman's correlation heat maps of exposures from observed data (a) and averaged across 2100 smaller size (n=252) simulated datasets (b).", out.width = '100%', echo = FALSE}
 include_graphics(path = "figures/ch4_corr_sim+orig.png")
 
 # , as well as distribution of correlations from smaller size simulated datasets (c)
 ```
 
-We generated one set of simulated datasets with the same sample size as the observed dataset (n=252), which is typical in many cohort studies. We also generated another set of simulated datasets with a larger sample size (n=1000), which has become increasingly common with the rise of larger-scale studies. The goal of this choice was to inform sample size considerations in study design. We verified that the original structure of the observed dataset were preserved by visually comparing univariate distributions of exposures (Figure \@ref(fig:univexpsim)) and covariates (Figure \@(fig:univcovsim)), as well as the correlation structure using Spearman's $\rho$ (Figure \@ref(fig:corsimssm)). Distributions of Spearman's correlation were approximately normal (Figure \@ref(fig:cordistsm)). Plots for the larger size simulated datasets were similar (Figures \@ref(fig:univexplg), \@ref(fig:univcovlg), and \@ref(fig:corsimslg)). 
+We generated one set of simulated datasets with the same sample size as the observed dataset (n=252), which is typical in many cohort studies. We also generated another set of simulated datasets with a larger sample size (n=1000), which has become increasingly common with the rise of larger-scale studies. The goal of this choice was to inform sample size considerations in study design. We verified that the original structure of the observed dataset were preserved by visually comparing univariate distributions of exposures (Figure \@ref(fig:univexpsim)) and covariates (Figure \@ref(fig:univcovsim)), as well as the correlation structure using Spearman's $\rho$ (Figure \@ref(fig:corsimssm)). Distributions of Spearman's correlation were approximately normal (Figure \@ref(fig:cordistsm)). Plots for the larger size simulated datasets were similar (Figures \@ref(fig:univexplg), \@ref(fig:univcovlg), and \@ref(fig:corsimslg)). 
 
 ### Simulating predictor-response relationships {#simresp}
 
 Health outcome responses were simulated under several different scenarios, each of which included different effect sizes and functional forms for the interactions. All scenarios were run for both the smaller (n=252) and larger (n=1000) sample sizes. In the first scenario, we specified a "base case" model:
 
 \begin{multline*}
-Y_i = \textrm{Hg}_i + \frac{3}{1+\textrm{exp}(-4\textrm{Ni}_i)} + \frac{1.5}{1+\textrm{exp}(-4\textrm{Sn}_i)} - \textrm{Sb}_i^2 + 0.5\textrm{Sb}_i\\
-+ \textrm{age}_i + 0.5\textrm{bmi}_i + 0.5\textrm{race}_{\textrm{black}i} + 0.5\textrm{race}_{\textrm{hisp.non}i} + 1.5\textrm{smoke}_i + \varepsilon_i,
+Y = \textrm{Hg} + \frac{3}{1+\textrm{exp}(-4\textrm{Ni})} + \frac{1.5}{1+\textrm{exp}(-4\textrm{Sn})} - \textrm{Sb}^2 + 0.5\textrm{Sb}\\
++ \textrm{age} + 0.5\textrm{bmi} + 0.5\textrm{race}_{\textrm{black}} + 0.5\textrm{race}_{\textrm{hisp.non}} + 1.5\textrm{smoke} + \varepsilon,
 \end{multline*}
 
-\noindent where $\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0,5)$. This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb (Figure \@ref(fig:univlines)). Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an $R^2$ of around 0.1-0.3 in a multiple linear regression that included only the true functional form of the significant chemicals (Figure \@ref(fig:rsqcheck)). This $R^2$ range approximates realistic signal-to-noise ratios in exposure mixture studies [@lazarevic_performance_2020]. 
+\noindent where $\varepsilon \overset{\mathrm{iid}}{\sim} N(0,5)$. This model includes a linear term for Hg, two S-shaped logistic terms for Ni and Sn with varying effect sizes, and a symmetric inverse U-shaped quadratic term for Sb (Figure \@ref(fig:univlines)). Moreover, we included covariate terms as linear effects in the model. We chose the standard deviation on the normal random error term in order to achieve an $R^2$ of around 0.1-0.3 in a multiple linear regression that included only the true functional form of the significant chemicals (Figure \@ref(fig:rsqcheck)). This $R^2$ range approximates realistic signal-to-noise ratios in exposure mixture studies [@lazarevic_performance_2020]. 
 
 In subsequent scenarios, we added an additional interaction term to the base case model. First, we considered interactions between two exposures. We defined four cases of interest: a two-way interaction between exposures that are univariately significant, a two-way interaction between exposures that are univariately insignificant, a two-way interaction between exposures that are moderately collinear, and a three-way interaction. For each case, we considered two functional forms — multiplicative and polynomial — and a lower and higher effect size, which we set by defining the weight on the interaction term in the model. The higher effect sizes were selected in order to achieve a power of approximately 0.5 at $\alpha=0.05$ in the smaller sample size (n=252) case, using a multiple linear regression with the true functional form of the chemicals specified and the covariate terms included. The lower effect sizes were set equal to half of the higher effect size. Table \@ref(tab:scenarios) shows the specification of interaction terms. See Appendix \@ref(suppmethods), Figures \@ref(fig:basesurf)-\@ref(fig:cp2), for 3D surfaces of the two-way interaction terms. 
 
@@ -130,7 +130,7 @@ equations |>
 
 Next, we considered interactions between the race by ethnicity and birthplace covariate (hereafter referred to as race for concision) and an exposure. We are interested in cases where the health effects of an exposure are higher in one group compared to the rest. In a real-world scenario, such interactions can arise from excess amounts of social stress experienced by a group due to racism. To model this, we increased the coefficient Hg in Non-Hispanic Black individuals (n=27 in the original MADRES cohort) for the first scenario, and in Hispanic individuals born outside the US (n=109 in the original MADRES cohort) for the second scenario. The goal of this choice was to assess the impact of group size on detectability of an interaction, and to quantify the potential value of oversampling the minority group. For each scenario, we specified a lower effect size by increasing the coefficient on Hg by $1.5\times$ (i.e. from $1*$Hg to $1.5*$Hg) in the target group, and a higher effect size by increasing the coefficient on Hg by $2\times$ (i.e. from $1*$Hg to $2*$Hg). 
 
-This resulted in a total of 42 scenarios ([1 base case + 5 interaction cases $\times$ 2 effect sizes $\times$ 2 functional forms] $\times$ 2 sample sizes = 42). For each scenario, we generated 100 simulated datasets, resulting in a total of 4200 datasets. 
+This resulted in a total of 42 scenarios ([1 base case + 5 interaction cases $\times$ 2 effect sizes $\times$ 2 functional forms] $\times$ 2 sample sizes = 42). For each scenario, we generated 100 simulated datasets to fit our models on, resulting in a total of 4200 datasets. 
 
 <!-- We hypothesize that... [*add hypothesis*] -->
 
@@ -142,7 +142,7 @@ To get a baseline, we ran a multiple linear regression, including all exposures 
 
 Next, we ran BKMR using the `bkmr` package in R [@bobb_statistical_2018; @bobb_bkmr_2022]. We chose to implement component-wise variable selection rather than hierarchical selection to make simulation results more interpretable, and because there was only moderate multicollinearity in the observed and simulated data. We specified the default priors [@bobb_bayesian_2015, and as listed in Chapter \@ref(bkmrprior)], which is common in the literature for BKMR [e.g., @lazarevic_statistical_2019, @howe_prenatal_2020, @pesenti_comparative_2023]. We ran the MCMC sampler for 50,000 iterations, as recommended by @bobb_statistical_2018, and discarded the first 25,000 iterations for burn-in. BKMR does not provide the option to run multiple chains or to thin chains. For larger size datasets, we sped up computations by employing a Gaussian predictive process on 100 knots specified evenly across the predictor space. 
 
-We ran BSR using the `NLinteraction` package in R [@antonelli_nlinteraction_2018]. We specified the default priors [@antonelli_estimating_2020, and as listed in Chapter \@ref(bsrprior)], which is common in the literature for BSR [e.g., @howe_prenatal_2020; @pesenti_comparative_2023]. @antonelli_estimating_2020 suggests separately fitting models for degrees of freedom $d=\{1, 2, 3, 4\}$ and selecting the value for $d$ which minimizes WAIC. Due to time constraints in this thesis, we first fit BSR on the grid of values for $d$ using 5,000 MCMC iterations to obtain the empirical Bayes estimate for $\sigma^2_{\boldsymbol\beta}$ and then another 5,000 MCMC iterations to obtain the posterior distributions, discarding the first 2,500 iterations for burn-in each time. We selected $d$ based on the WAIC criterion on these preliminary models. Then, we fit the full BSR model using 50,000 MCMC iterations to obtain the empirical Bayes estimate and then another 50,000 MCMC iterations to obtain the posterior distributions, discarding the first 25,000 iterations for burn-in each time. We ran two chains to very convergence, thinning each chains by selecting every 8th iteration to reduce autocorrelation based on default settings. In a small test run on five smaller size datasets for each scenario containing interactions between exposures, as well as the base case, we found that using 5,000 iterations selected the same degrees of freedom as using 50,000 iterations 86\% of the time (see Appendix \@ref(suppmethods), Figure \@ref(fig:comparedf)). 
+We ran BSR using the `NLinteraction` package in R [@antonelli_nlinteraction_2018]. We specified the default priors [@antonelli_estimating_2020, and as listed in Chapter \@ref(bsrprior)], which is common in the literature for BSR [e.g., @howe_prenatal_2020; @pesenti_comparative_2023]. @antonelli_estimating_2020 suggests separately fitting models for degrees of freedom $d=\{1, 2, 3, 4\}$ and selecting the value for $d$ which minimizes WAIC. Due to time constraints in this thesis, we first fit BSR on the grid of values for $d$ using 5,000 MCMC iterations to obtain the empirical Bayes estimate for $\sigma^2_{\boldsymbol\beta}$ and then another 5,000 MCMC iterations to obtain the posterior distributions, discarding the first 2,500 iterations for burn-in each time. We selected $d$ based on the WAIC criterion on these preliminary models. Then, we fit the full BSR model using 50,000 MCMC iterations to obtain the empirical Bayes estimate and then another 50,000 MCMC iterations to obtain the posterior distributions, discarding the first 25,000 iterations for burn-in each time. We ran two chains to verify convergence, thinning each chain by selecting every 8th iteration to reduce autocorrelation based on default settings. In a small test run on five smaller size datasets for each scenario containing interactions between exposures, as well as the base case, we found that using 5,000 iterations selected the same degrees of freedom as using 50,000 iterations 86\% of the time (see Appendix \@ref(suppmethods), Figure \@ref(fig:comparedf)). 
 
 Finally, we ran stratified BKMR and BSR models in scenarios where we simulated an interaction between race and Hg. This involved running five separate models for each race category, each with the same settings specified above. For the smaller size datasets, we often observed convergence issues in BKMR within the smaller race categories. As such, for smaller size datasets, we also assess the impact of collapsing the three smaller race categories (Non-Hispanic white, black, and other) into one category before stratifying. This is a common practice in real-world studies where sample sizes for certain categories are low. 
 
@@ -156,24 +156,26 @@ We assessed model performance based on detection of significant univariate chemi
 
 While BSR provides PIP's to quantify detection of interactions, BKMR does not. As such, for BKMR, we considered formal detection of an interaction based on confidence intervals constructed around the estimated response. Specifically, we first calculated the difference in estimated response at a chemical's 0.25 and 0.75 quantiles. Then, we assessed whether this quantity differed at the 0.25 and 0.75 quantiles of one (or two, for three-way interactions) other chemicals in the interaction, while holding all other chemicals at their 0.5 quantiles, by constructing a 95\% confidence interval of the difference in differences. We followed the code in the `SingVarIntSummaries()` function in the `bkmr` package for constructing confidence intervals [@bobb_bkmr_2022]. 
 
+[*is it necessary to provide an equation?*]
+
 For both BKMR and BSR, we also visually assessed detection of interactions by plotting the estimated exposure-response surface for one chemical while fixing one (or two, for three-way interactions) other chemicals at their 0.1, 0.5, and 0.9 quantiles. In all scenarios, we calculated the sensitivity as the proportion of times a significant term was correctly detected. Due to time constraints in this thesis, we only calculated the false discovery rates, or, the proportion of times a significant term is incorrectly detected, for two-way interactions between chemicals. Future work should include the calculation of false discovery rates for all interactions. 
 
-Finally, for stratified models, we constructed a 95\% [*do we have to do adjustment for multiple comparisons?*] confidence interval for the difference in estimated response at the 0.25 and 0.75 quantiles of Hg, for both BKMR and BSR on each subcategory of race. We refer to this as the estimated magnitude of response. Then, we considered an interaction as detected if at least one of the pair-wise comparisons between estimated magnitudes of response differed between two categories of race. For instance, if the confidence intervals for the estimated magnitude of response were all (-1, 1) for the first four categories, but the fifth category had a confidence interval of (2,  4), we would consider this to be a significant interaction. 
+For stratified models, we compared the estimated response across each separate model. Specifically, for BKMR, we computed a confidence interval for the difference in estimated response at the 0.25 and 0.75 quantiles of Hg on each subcategory of race. We adjust for multiple comparisons based on [*what procedure?*]. 
 
-[*still need to figure out whether we can do this for bsr*]
+by constructing __\% intervals to achieve an overall 95\% confidence level. 
 
-Finally, we also visualized the estimated exposure-response relationship for Hg in each of the stratified models. 
+We refer to this as the estimated magnitude of response. Then, we considered an interaction as detected if at least one of the pair-wise comparisons between estimated magnitudes of response differed between two categories of race. For instance, if the confidence intervals for the estimated magnitude of response were all (-1, 1) for the first four categories, but the fifth category had a confidence interval of (2, 4), we would consider the effect of Hg to be significantly higher in this group. 
+
+However, for BSR, we were not able to find a method in the literature for combining variances from estimated responses at two different sets of predictor values. Therefore, we visualized and compared the estimated exposure-response relationship in each of the stratified models as a qualitative way to assess for interactions. We also generated these diagnostic plots for BKMR. Future work should involve exploring methods for estimating contrasts along continuous predictors for a more formal method of inference on BSR output. 
+
+<!-- [*still need to figure out whether we can do this for bsr*] -->
 
 
 ## Results {#results}
 
 ### Base case
 
-We start by presenting results from models run on the base case scenario, in which the true relationship contained no interactions. Figure \@ref(fig:basecasesig) displays the distribution of p-values and PIPs from this scenario, while Table \@ref(tab:basecasetab) summarizes the overall sensitivities and false discovery rates based on these values. Note that insignificant chemicals were not included in the oracle MLR, which is why their distributions are omitted from this output. 
-
-The naive MLR does the best job at picking up the effects of Hg, with a sensitivity of 0.8 and 1 in the smaller and larger size datasets, respectively. This is likely because Hg is the only linear term in the model. Ni and Sn have an S-shaped curve with higher and lower effect sizes, respectively, so the naive MLR detects a slight linear signal from them. Sb, which has a U-shaped curve, is the hardest to pick up. On the other hand, the oracle MLR consistently detects Hg, Ni, and Sb. The smaller size oracle MLRs only occasionally pick up Sn, likely due to the lower effect sisze. 
-
-This base case scenario confirms that the multiple regression and Bayesian models behave as expected. We also recognize that, for unvariate significance metrics, BKMR tends to produce higher false discovery rates
+We start by presenting results from models run on the base case scenario, in which the true relationship contained no interactions. Figure \@ref(fig:basecasesig) displays the distribution of p-values and PIPs from this scenario, while Table \@ref(tab:basecasetab) summarizes model sensitivity and false discovery rates based on these values. Note that insignificant chemicals were not included in the oracle MLR, which is why their distributions are omitted from this output. 
 
 ```{r basecasesig, fig.cap = "P-value distributions from smaller (a) and larger (b) size datasets and PIP distributions from smaller (c) and larger (d) size datasets.", out.width = '100%', echo = FALSE}
 include_graphics(path = "figures/ch4_basecasesig.png")
@@ -203,16 +205,28 @@ base_sens2 |>
   pack_rows(index = base_mod_ord) 
 ```
 
+The naive MLR does the best job at picking up the effects of Hg, with a sensitivity of 0.8 and 1 in the smaller and larger size datasets, respectively. This is likely because Hg is the only linear term in the model. Ni and Sn have an S-shaped curve with higher and lower effect sizes, respectively, so the naive MLR detects a slight linear signal from them. Sb, which has a U-shaped curve, is the hardest to pick up. On the other hand, the oracle MLR consistently detects Hg, Ni, and Sb. The smaller size oracle MLRs only occasionally pick up Sn, likely due to the lower effect size. 
 
-### Univariate sensitivity 
+BKMR has similar sensitivity rates as the oracle MLR, ranging from 0.52 to 0.95 in the smaller size datasets and 0.77 to 1.00 in the larger size datasets. However, BKMR also has, by far, the highest false discovery rates, ranging from 0.30 to 0.41 in the smaller size datasets and 0.08 to 0.14 in the larger size datasets. This is likely due to the default choice of an inverse uniform distribution from 0 to 100 for the "slab" component on the "slab-and-spike" prior on $r_m$. Choosing a prior that assigns higher probability to smaller values of $r_m$ should reduce the false discovery rate. In contrast, BSR tends to have slightly lower sensitivity rates than BKMR, raning from 0.17 to 0.88 in the smaller size datasets and 0.62 to 1.00 in the larger size datasets, but the false discovery rates are much lower, ranging from 0.04 to 0.05 in the smaller size datasets and 0.00 to 0.03 in the larger size datasets. Together, this suggests that the default prior choices provided by BSR are likely a better fit for this scenario. 
 
-Hg Ni full output
+Overall, this base case scenario confirms that the multiple regression and Bayesian models behave as expected. We also recognize that, for univariate significance metrics, BKMR tends to produce higher sensitivity and false discovery rates, while the opposite is true for BSR. 
+
+### Univariate sensitivity {#univsenschap}
+
+Now, we provide a brief overview of univariate sensitivity metrics from all scenarios with an interaction between chemicals. We are particularly interested in cases where it appears that the inclusion of an interaction term influences the detection rate of univariate chemicals. 
+
+Figure \@ref(fig:hgniuniv)a and \@ref(fig:hgniuniv)b display the distribution of univariate p-values and PIPs, respectively, in scenarios with an interaction between Hg and Ni, which are themselves univariately significant. See Figures \@ref(fig:nsmunivp)-\@ref(fig:slgunivp) in Appendix \@ref(suppresults) for similar output for all other scenarios with interactions between chemicals. Overall, the distributions look similar to the base case, though there are slight differences in some cases for chemicals that participate in interactions.
+
 
 ```{r hgniuniv, fig.cap = "P-value (a) and PIP (b) distributions for univariate chemicals from all models in scenarios with an interaction between Hg and Ni.", out.width = '100%', echo = FALSE}
 include_graphics("figures/ch4_hgni_univ.png")
 ```
 
-Table of sensitivity and FDR across all models
+Table \@ref(tab:onewaytab) summarizes the sensitivity and false discovery rates of univariate chemicals in all scenarios with interactions between chemicals, comparing the form of interactions, effect sizes, size of datasets, and models. 
+
+In general, the detection rates of univariate chemicals in naive MLRs are not affected by the inclusion of interaction terms, in comparison to the base case. Though, in scenarios with a polynomial interaction between As and Cd, both of which are univariately insignificant, the larger size naive MLR detects a significant effect from Cd 67\% of the time. Figures
+
+[*turn this page horizontal!! or figure out a way to stack the tables. or put fdr's in appendix!*]
 
 ```{r onewaytab, echo = FALSE, message = FALSE}
 naive_sens <- read_csv("data/naive_sens.csv")
@@ -233,26 +247,44 @@ comb_sens <- bind_rows(
     sign = ifelse(mod == "Oracle MLR", TRUE, sign),
     new_sign = factor(ifelse(
       variable %in% c("Hg", "Ni", "Sb", "Sn"),
-      "Significant",
-      "Insignificant"
-    ))
+      "Sen",
+      "FDR"
+    ), levels = c("Sen", "FDR")), 
+    cond = case_when(
+      case %in% 2:5 ~ "Hg-Ni",
+      case %in% 6:9 ~ "Cd-As",
+      case %in% 10:13 ~ "Ni-Co", 
+      .default = "Hg-Ni-Tl"
+    ),
+    cond = factor(cond, levels = c("Hg-Ni", "Cd-As", "Ni-Co", "Hg-Ni-Tl")), 
+    inter_type = ifelse(case %% 4 %in% 1:2, "Mult.", "Poly."),
+    effect_size = factor(
+      ifelse(case %% 2 == 1, "Higher", "Lower"),
+      levels = c("Lower", "Higher")
+    )
   ) |>
-  group_by(mod, size, new_sign) |>
+  group_by(cond, inter_type, effect_size, mod, size, new_sign) |> 
   summarize(detection = mean(sensitivity)) |> 
-  pivot_wider(names_from = new_sign, values_from = detection) |> 
-  arrange(mod, desc(size)) |> 
+  arrange(new_sign, desc(size)) |> 
+  pivot_wider(names_from = c(mod, size, new_sign), values_from = detection, 
+              names_sep = " ") |> 
   ungroup()
 
-comb_sens_ord <- table(comb_sens$mod)
+comb_sens_ord <- table(comb_sens$cond)
 
-options(knitr.kable.NA = '-')
+# options(knitr.kable.NA = '-')
 comb_sens |> 
-  select(-mod) |> 
-  relocate(size, Significant, Insignificant) |> 
-  kbl(booktabs = TRUE, escape = FALSE, digits = 3, align = "lcc",
-      caption = "Sensitivity and false discovery rate (FDR) of chemicals in all scenarios with two-way interactions between exposures.", 
-      col.names = c("", "Sensitivity", "FDR")) |> 
-  column_spec(1, width = "6em") |>
+  select(-cond) |> 
+  kbl(booktabs = TRUE, digits = 2, #align = "lcc",
+      caption = "Sensitivity and false discovery rate (FDR) of univariate chemicals in all scenarios with interactions between exposures.", 
+      col.names = c("Type", "Effect size", 
+                    rep(c("Naive", "Oracle", "BKMR", "BSR"), 2),
+                    rep(c("Naive", "BKMR", "BSR"), 2))
+      ) |> 
+  add_header_above(header = c(" " = 2, "Small" = 4, "Large" = 4,
+                              "Small" = 3, "Large" = 3)) |>
+  add_header_above(header = c(" " = 2, "Sensitivity" = 8, "False discovery rate" = 6)) |> 
+  #column_spec(1, width = "6em") |>
   pack_rows(index = comb_sens_ord) 
 ```
 
@@ -404,3 +436,4 @@ times |>
 
 Discuss results, link back to previous sim studies. 
 
+[*remember to label figures in appendix + add code*]

@@ -112,8 +112,6 @@ include_graphics(path = "figures/test_waic2.png")
 
 <!-- Here, we describe the formula for calculating the confidence interval of the difference in difference of the estimated response at the 0.75 and 0.25 quantiles of one chemical, while holding one or two other chemicals at their 0.75 and 0.25 quantiles and the rest of the chemicals at their 0.5 quantiles.  -->
 
-[*figure this out at some points??*]
-
 ```{r traceplots, fig.cap = "Examples of trace plots from smaller size BKMR (a) and BSR (b) as well as larger size BKMR (c) and BSR (d) in scenarios with larger effect size interactions between Hg and Ni.", echo = FALSE, out.width = '100%'}
 include_graphics(path = "figures/traceplots/bksm_traceplotmerged.png")
 ```
@@ -122,7 +120,7 @@ include_graphics(path = "figures/traceplots/bksm_traceplotmerged.png")
 
 ## Results {#suppresults}
 
-Full output for univariate
+Figures \@ref(fig:nsmunivp)-\@ref(fig:slgunivp) display the full distributions of univariate p-values and PIPs for all models in scenarios with interactions between chemicals that were not included in Chapter \@ref(univsenschap). 
 
 ```{r nsmunivp, fig.cap = "naive small univariate p-values.", out.width = '75%', echo = FALSE}
 # naive small
@@ -171,7 +169,7 @@ include_graphics(path = "figures/ch4_ssm_univ_pips.png")
 include_graphics(path = "figures/ch4_slg_univ_pips.png")
 ```
 
-Full output for bivariate
+Figures \@ref(fig:osmbivp) and \@ref(fig:olgbivp) display the full p-value distributions on interaction terms between chemicals in the oracle MLR models. 
 
 ```{r osmbivp, fig.cap = "oracle small detection of interactions.", out.width = '75%', echo = FALSE}
 # oracle small
@@ -182,10 +180,14 @@ include_graphics(path = "figures/ch4_osm_biv_pval.png")
 include_graphics(path = "figures/ch4_olg_biv_pval.png")
 ```
 
-Exposure response surfaces
+Figures \@ref(fig:ksmcdas)-\@ref(fig:slgnico) display the estimated exposure-response surface for one chemical while fixing one (or two, for three-way interactions) other chemicals at their 0.1, 0.5, and 0.9 quantiles, for all scenarios not included in Chapter \@ref(univsenschap).
 
 ```{r ksmcdas, fig.cap = "cd-as bkmr small exposure response.", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch4_ksm_biv_expresp_2.png")
+```
+
+```{r ssmcdas, fig.cap = "cd-as bsr small exposure response.", out.width = '75%', echo = FALSE}
+include_graphics(path = "figures/ch4_ssm_biv_expresp_2.png")
 ```
 
 ```{r klgcdas, fig.cap = "cd-as bkmr large exposure response.", out.width = '75%', echo = FALSE}
@@ -193,15 +195,29 @@ include_graphics("figures/ch4_klg_biv_expresp_2.png")
 ```
 
 
+```{r slgcdas, fig.cap = "cd-as bsr large exposure response.", out.width = '75%', echo = FALSE}
+include_graphics("figures/ch4_slg_biv_expresp_2.png")
+```
+
+
 ```{r ksmnico, fig.cap = "ni-co bkmr small exposure response.", out.width = '75%', echo = FALSE}
 include_graphics("figures/ch4_ksm_biv_expresp_3.png")
+```
+
+```{r ssmnico, fig.cap = "ni-co bkmr small exposure response.", out.width = '75%', echo = FALSE}
+include_graphics("figures/ch4_ssm_biv_expresp_3.png")
 ```
 
 ```{r klgnico, fig.cap = "ni-co bkmr large exposure-response.", out.width = '75%', echo = FALSE}
 include_graphics("figures/ch4_klg_biv_expresp_3.png")
 ```
 
-Still need to include BSR exposure-response surfaces
+
+```{r slgnico, fig.cap = "ni-co bkmr large exposure-response.", out.width = '75%', echo = FALSE}
+include_graphics("figures/ch4_slg_biv_expresp_3.png")
+```
+
+
 
 Potentially also will include trivariate exposure-response surfaces here, too. 
 
