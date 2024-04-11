@@ -215,20 +215,19 @@ Overall, this base case scenario confirms that the multiple regression and Bayes
 
 Now, we provide a brief overview of univariate sensitivity metrics from all scenarios with an interaction between chemicals. We are particularly interested in cases where it appears that the inclusion of an interaction term influences the detection rate of univariate chemicals. 
 
-Figure \@ref(fig:hgniuniv)a and \@ref(fig:hgniuniv)b display the distribution of univariate p-values and PIPs, respectively, in scenarios with an interaction between Hg and Ni, which are themselves univariately significant. See Figures \@ref(fig:nsmunivp)-\@ref(fig:slgunivp) in Appendix \@ref(suppresults) for similar output for all other scenarios with interactions between chemicals. Overall, the distributions look similar to the base case, though there are slight differences in some cases for chemicals that participate in interactions.
+<!-- # ```{r hgniuniv, fig.cap = "P-value (a) and PIP (b) distributions for univariate chemicals from all models in scenarios with an interaction between Hg and Ni.", out.width = '100%', echo = FALSE} -->
+<!-- # include_graphics("figures/ch4_hgni_univ.png") -->
+<!-- # ``` -->
 
-
-```{r hgniuniv, fig.cap = "P-value (a) and PIP (b) distributions for univariate chemicals from all models in scenarios with an interaction between Hg and Ni.", out.width = '100%', echo = FALSE}
-include_graphics("figures/ch4_hgni_univ.png")
-```
-
-Table \@ref(tab:onewaytab) summarizes the sensitivity and false discovery rates of univariate chemicals in all scenarios with interactions between chemicals, comparing the form of interactions, effect sizes, size of datasets, and models. 
+Table \@ref(tab:onewaytabsens) summarizes the sensitivity and false discovery rates of univariate chemicals in all scenarios with interactions between chemicals, comparing the form of interactions, effect sizes, size of datasets, and models. 
 
 In general, the detection rates of univariate chemicals in naive MLRs are not affected by the inclusion of interaction terms, in comparison to the base case. Though, in scenarios with a polynomial interaction between As and Cd, both of which are univariately insignificant, the larger size naive MLR detects a significant effect from Cd 67\% of the time. Figures
 
+See Figures \@ref(fig:nsmunivp)-\@ref(fig:slgunivp) in Appendix \@ref(suppresults) for the full p-value and PIP distributions for all scenarios with interactions between chemicals. 
+
 [*turn this page horizontal!! or figure out a way to stack the tables. or put fdr's in appendix!*]
 
-```{r onewaytab, echo = FALSE, message = FALSE}
+```{r onewaytabsens, echo = FALSE, message = FALSE}
 naive_sens <- read_csv("data/naive_sens.csv")
 oracle_sens <- read_csv("data/oracle_sens.csv")
 bkmr_sens <- read_csv("data/bkmr_pip_sens.csv")
@@ -275,16 +274,29 @@ comb_sens_ord <- table(comb_sens$cond)
 # options(knitr.kable.NA = '-')
 comb_sens |> 
   select(-cond) |> 
+  select(1:10) |> 
   kbl(booktabs = TRUE, digits = 2, #align = "lcc",
-      caption = "Sensitivity and false discovery rate (FDR) of univariate chemicals in all scenarios with interactions between exposures.", 
+      caption = "Sensitivity of univariate chemicals in all scenarios with interactions between exposures.", 
       col.names = c("Type", "Effect size", 
-                    rep(c("Naive", "Oracle", "BKMR", "BSR"), 2),
+                    rep(c("Naive", "Oracle", "BKMR", "BSR"), 2))
+      ) |> 
+  add_header_above(header = c(" " = 2, "Small" = 4, "Large" = 4)) |>
+  pack_rows(index = comb_sens_ord) 
+```
+
+
+```{r onewaytabfdr, echo = FALSE, message = FALSE}
+# false discovery rates
+comb_sens |> 
+  select(-cond) |>
+  select(c(1, 2, 11:16)) |> 
+  kbl(booktabs = TRUE, digits = 2, #align = "lcc",
+      caption = "False discovery rate of univariate chemicals in all scenarios with interactions between exposures.", 
+      col.names = c("Type", "Effect size", 
                     rep(c("Naive", "BKMR", "BSR"), 2))
       ) |> 
-  add_header_above(header = c(" " = 2, "Small" = 4, "Large" = 4,
-                              "Small" = 3, "Large" = 3)) |>
-  add_header_above(header = c(" " = 2, "Sensitivity" = 8, "False discovery rate" = 6)) |> 
-  #column_spec(1, width = "6em") |>
+  add_header_above(header = c(" " = 2, "Small" = 3, "Large" = 3)) |>
+  # add_header_above(header = c(" " = 2, "Sensitivity" = 8, "False discovery rate" = 6)) |> 
   pack_rows(index = comb_sens_ord) 
 ```
 
