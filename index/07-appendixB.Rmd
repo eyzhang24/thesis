@@ -3775,7 +3775,7 @@ naive_sens |> filter(case == 9, size == "Large", var == "Cd")
 Here, we visualize and summarize results from model output. 
 
 
-### Code for Appendix \@ref(appa):
+## Code for Appendix \@ref(appa):
 
 Here, we create the supplemental output that is included in Appendix \@ref(appa). 
 
