@@ -1,6 +1,12 @@
 library(tidyverse)
 library(latex2exp)
 
+col2hex <- function(x, alpha = FALSE) {
+  args <- as.data.frame(t(col2rgb(x, alpha = alpha)))
+  args <- c(args, list(names = x, maxColorValue = 255))
+  do.call(rgb, args)
+}
+
 # set up ------------------------------------------------------------------
 
 # set theme for plots
@@ -13,6 +19,28 @@ theme_update(
 
 getsign_re <- function(chem) {
   return(chem %in% c("Hg", "Ni", "Sb", "Sn"))
+}
+
+which_race <- function(race) {
+  case_when(
+    race == 1 ~ "Non-Hisp. white", 
+    race == 2 ~ "Non-Hisp. black", 
+    race == 3 ~ "Non-Hisp. other", 
+    race == 4 ~ "Hispanic born in US", 
+    race == 5 ~ "Hispanic born outside US",
+    race == 6 ~ "Collapsed non-Hisp."
+  )
+}
+
+size_race <- function(race) {
+  case_when(
+    race == 1 ~ "16", 
+    race == 2 ~ "27", 
+    race == 3 ~ "13", 
+    race == 4 ~ "87", 
+    race == 5 ~ "109",
+    race == 6 ~ "56"
+  )
 }
 
 # naive -------------------------------------------------------------------
@@ -160,7 +188,7 @@ check_overlap <- function(data) {
 ksmre_ints <- read_csv("sim/re/ksmre_ints.csv")
 
 # uncollapsed
-ksmre_sens1 <- ksmre_ints |> 
+ksmre_det1 <- ksmre_ints |> 
   filter(race != 6) |> 
   mutate(lower = est - 2.57583*sd, 
          upper = est + 2.57583*sd, 
@@ -169,7 +197,7 @@ ksmre_sens1 <- ksmre_ints |>
   group_modify(~ check_overlap(.))
 
 # use collapsed
-ksmre_sens2 <- ksmre_ints |> 
+ksmre_det2 <- ksmre_ints |> 
   filter(race %in% c(4, 5, 6)) |> 
   mutate(lower = est - 2.57583*sd, 
          upper = est + 2.57583*sd, 
@@ -180,7 +208,7 @@ ksmre_sens2 <- ksmre_ints |>
 # large
 klgre_ints <- read_csv("sim/re/klgre_ints.csv")
 
-klgre_sens <- klgre_ints |> 
+klgre_det <- klgre_ints |> 
   mutate(lower = est - 2.57583*sd, 
          upper = est + 2.57583*sd, 
          sign = (case <= 2 & race == 2) | (case >= 3 & race == 5)) |> 
@@ -188,22 +216,349 @@ klgre_sens <- klgre_ints |>
   group_modify(~ check_overlap(.))
 
 # save the trials that produced significant results
-klgre_sens |> 
+klgre_det |> 
   filter(sig_overlaps != 4) |> 
   write_csv("sim/re/trials_klg_sig.csv")
 
+# get sensitivity
+ksmre_sens1 <- ksmre_det1 |> 
+  group_by(case) |> 
+  summarize(sens = sum((sig_overlaps/(4-num_na)) != 1 & insig_overlaps)/n()) |> 
+  mutate(size = "Small uncollapsed")
+ksmre_sens2 <- ksmre_det2 |> 
+  group_by(case) |> 
+  summarize(sens = sum((sig_overlaps/(2-num_na)) != 1 & insig_overlaps)/n()) |> 
+  mutate(size = "Small collapsed")
+# no trials that had a significant non-overlap AlSO had non-significant non-overlap
+klgre_sens <- klgre_det |> 
+  group_by(case) |> 
+  summarize(sens = sum(sig_overlaps != 4 & insig_overlaps)/n()) |> 
+  mutate(size = "Large")
+
+# combine sensitivities together
+bkmrre_senscomb <- bind_rows(ksmre_sens1, ksmre_sens2, klgre_sens) 
+write_csv(bkmrre_senscomb, "index/data/bkmr_re_sens.csv")
 
 # pip's
+ksmre_pips <- read_csv("sim/re/ksmre_pips.csv")
+klgre_pips <- read_csv("sim/re/klgre_pips.csv")
 
+# summarize pip's
+ksmre_pips2 <- ksmre_pips |> 
+  filter(is.na(variable) | variable == "Hg") |> 
+  group_by(case, race) |> 
+  summarize(num_na = sum(is.na(variable))/100, 
+            hg_detect = sum(PIP >= 0.5, na.rm = T)/100)
 
-# exposure-response relationship 
-  
+klgre_pips2 <- klgre_pips |> 
+  filter(is.na(variable) | variable == "Hg") |> 
+  group_by(case, race) |> 
+  summarize(num_na = sum(is.na(variable))/n(), 
+            hg_detect = sum(PIP >= 0.5, na.rm = T)/n())
+
+bkmrre_pipscomb <- bind_rows(
+  mutate(ksmre_pips2, size = "Small"), 
+  mutate(klgre_pips2, size = "Large")
+)  |> 
+  mutate(which_race = which_race(race), 
+         size_race = size_race(race))
+write_csv(bkmrre_pipscomb, "index/data/bkmr_re_pips.csv")
 
 
 # bsr ---------------------------------------------------------------------
 
+# pip's
 
+# pip's
+ssmre_pips <- read_csv("sim/re/ssmre_pips.csv")
+slgre_pips <- read_csv("sim/re/slgre_pips.csv")
+
+# summarize pip's
+ssmre_pips2 <- ssmre_pips |> 
+  filter(is.na(variable) | variable == "Hg") |> 
+  group_by(case, race) |> 
+  summarize(num_na = sum(is.na(variable))/100, 
+            hg_detect = sum(PIP >= 0.5, na.rm = T)/100)
+
+slgre_pips2 <- slgre_pips |> 
+  filter(is.na(variable) | variable == "Hg") |> 
+  group_by(case, race) |> 
+  summarize(num_na = sum(is.na(variable))/n(), 
+            hg_detect = sum(PIP >= 0.5, na.rm = T)/n())
+
+bsrre_pipscomb <- bind_rows(
+  mutate(ssmre_pips2, size = "Small"), 
+  mutate(slgre_pips2, size = "Large")
+)  |> 
+  mutate(which_race = which_race(race), 
+         size_race = size_race(race))
+write_csv(bsrre_pipscomb, "index/data/bsr_re_pips.csv")
+
+
+# exposure response relationship ------------------------------------------
+
+
+#### BKMR #####
+
+# small
+ksmre_expresp <- read_csv("sim/re/ksmre_expresp.csv")
+# large
+klgre_expresp <- read_csv("sim/re/klgre_expresp.csv")
+# combine
+bkmr_re_expresp <- bind_rows(
+  mutate(ksmre_expresp, size = "Small"), 
+  mutate(klgre_expresp, size = "Large")
+) |> 
+  filter(race != 6) 
+
+# first two cases
+kre12 <- bkmr_re_expresp |> 
+  filter(case <= 2) |> 
+  mutate(which_race = which_race(race), 
+         size_race = size_race(race), 
+         size = factor(size, levels = c("Small", "Large"))) 
+
+k12 <- kre12 |>
+  mutate(
+    race2 = case_when(race == 2 ~ 5,
+                      race == 5 ~ 2,
+                      .default = race),
+    race2 = factor(
+      race2,
+      levels = c(1, 2, 3, 4, 5),
+      labels = c(1, 5, 3, 4, 2)
+    ), 
+    case = factor(ifelse(case == 1, "Lower", "Higher"), 
+                  levels = c("Lower", "Higher"))
+  ) |> 
+  ggplot(aes(z1, est, color = race2)) +
+  geom_line(aes(group = interaction(trial, race2)), alpha = 0.15) +
+  ylim(-8, 8) + 
+  facet_grid(size ~ case) +
+  scale_color_manual(values = rev(c("#F8766D", "#A3A500", "#00BF7D", "#00B0F6", "#E76BF3")), 
+                     breaks = c(1, 2, 3, 4, 5)) +
+  guides(color = guide_legend(override.aes = list(alpha = 1))) +
+  labs(x = "Hg", y = "Estimate", subtitle = "BKMR, interaction in Non-Hisp. black")
+
+# second two cases
+kre34 <- bkmr_re_expresp |> 
+  filter(case > 2) |> 
+  mutate(which_race = which_race(race), 
+         size_race = size_race(race), 
+         size = factor(size, levels = c("Small", "Large"))) 
+
+k34 <- kre34 |>
+  mutate(
+    race2 = factor(
+      race,
+      levels = c(1, 2, 3, 4, 5),
+    ), 
+    case = factor(ifelse(case == 3, "Lower", "Higher"), 
+                  levels = c("Lower", "Higher"))
+  ) |> 
+  ggplot(aes(z1, est, color = race2)) +
+  geom_line(aes(group = interaction(trial, race2)), alpha = 0.15) +
+  ylim(-8, 8) + 
+  facet_grid(size ~ case) +
+  scale_color_manual(values = rev(c("#F8766D", "#A3A500", "#00BF7D", "#00B0F6", "#E76BF3")), 
+                     breaks = c(1, 2, 3, 4, 5)) +
+  guides(color = guide_legend(override.aes = list(alpha = 1))) +
+  labs(x = "Hg", y = "Estimate", subtitle = "BKMR, interaction in Hispanic born outside US")
+
+
+##### BSR ######
+
+# small
+ssmre_expresp <- read_csv("sim/re/ssmre_expresp.csv")
+# large
+slgre_expresp <- read_csv("sim/re/slgre_expresp.csv")
+# combine
+bsr_re_expresp <- bind_rows(
+  mutate(ssmre_expresp, size = "Small"), 
+  mutate(slgre_expresp, size = "Large")
+) |> 
+  filter(race != 6) 
+
+# first two cases
+sre12 <- bsr_re_expresp |> 
+  filter(case <= 2) |> 
+  mutate(which_race = which_race(race), 
+         size_race = size_race(race), 
+         size = factor(size, levels = c("Small", "Large"))) 
+
+s12 <- sre12 |>
+  mutate(
+    race2 = case_when(race == 2 ~ 5,
+                      race == 5 ~ 2,
+                      .default = race),
+    race2 = factor(
+      race2,
+      levels = c(1, 2, 3, 4, 5),
+      labels = c(1, 5, 3, 4, 2)
+    ), 
+    case = factor(ifelse(case == 1, "Lower", "Higher"), 
+                  levels = c("Lower", "Higher"))
+  ) |> 
+  ggplot(aes(j1val, est, color = race2)) +
+  geom_line(aes(group = interaction(trial, race2)), alpha = 0.15) +
+  ylim(-6, 12) +
+  facet_grid(size ~ case) +
+  scale_color_manual(values = rev(c("#F8766D", "#A3A500", "#00BF7D", "#00B0F6", "#E76BF3")), 
+                     breaks = c(1, 2, 3, 4, 5)) +
+  guides(color = guide_legend(override.aes = list(alpha = 1))) +
+  labs(x = "Hg", y = "Estimate", subtitle = "BSR, interaction in Non-Hisp. black")
+
+# second two cases
+sre34 <- bsr_re_expresp |> 
+  filter(case > 2) |> 
+  mutate(which_race = which_race(race), 
+         size_race = size_race(race), 
+         size = factor(size, levels = c("Small", "Large"))) 
+
+s34 <- sre34 |>
+  mutate(
+    race2 = factor(
+      race,
+      levels = c(1, 2, 3, 4, 5),
+      labels = c("Non-Hisp. white", "Non-Hisp. other", "Non-Hisp. black", 
+                 "Hispanic born outside US", "Hispanic born in US")
+    ), 
+    case = factor(ifelse(case == 3, "Lower", "Higher"), 
+                  levels = c("Lower", "Higher"))
+  ) |> 
+  ggplot(aes(j1val, est, color = race2)) +
+  geom_line(aes(group = interaction(trial, race2)), alpha = 0.15) +
+  ylim(-6, 12) +
+  facet_grid(size ~ case) +
+  scale_color_manual(values = rev(c("#F8766D", "#A3A500", "#00BF7D", "#00B0F6", "#E76BF3"))) +
+  guides(color = guide_legend(override.aes = list(alpha = 1))) +
+  labs(x = "Hg", y = "Estimate", color = "Race", 
+       subtitle = "BSR, interaction in Hispanic born outside US") +
+  theme(legend.position = "bottom")
+
+re_expresp <- cowplot::plot_grid(
+  k12 + theme(legend.position = "none"),
+  k34 + theme(legend.position = "none"),
+  s12 + theme(legend.position = "none"), 
+  s34 + theme(legend.position = "none"),
+  labels = "auto", nrow = 2
+)
+
+reerlegend <- cowplot::get_legend(s34)
+cowplot::plot_grid(re_expresp, reerlegend, rel_heights = c(5, 0.35), ncol = 1)
+ggsave("index/figures/ch4_re_expresp.png", width = 7.75, height = 6)
 
 # run time ----------------------------------------------------------------
 
+nsmre_times <- read_rds("sim/_mlr/mlr_mods_sm_re_times.RDS")
+nlgre_times <- read_rds("sim/_mlr/mlr_mods_lg_re_times.RDS")
+osmre_times <- read_rds("sim/_oracle/oracle_mods_sm_re_times.RDS")
+olgre_times <- read_rds("sim/_oracle/oracle_mods_lg_re_times.RDS")
+ksmre_times <- read_rds("sim/re/ksmre_times.RDS")
+klgre_times <- read_rds("sim/re/klgre_times.RDS")
+
+# change list to dataframe
+nsmre_times2 <- unlist(nsmre_times) |> 
+  as.data.frame(row.names = names(nsmre_times)) |> 
+  rename(time = 1) |> 
+  rownames_to_column(var = "case1") |> 
+  mutate(case = match(case1, unique(case1)), 
+         trial = 1:400, 
+         time = as.difftime(time, units = "secs")) |> 
+  select(-case1)
+nlgre_times2 <- unlist(nlgre_times) |> 
+  as.data.frame(row.names = names(nlgre_times)) |> 
+  rename(time = 1) |> 
+  rownames_to_column(var = "case1") |> 
+  mutate(case = match(case1, unique(case1)), 
+         trial = 1:400, 
+         time = as.difftime(time, units = "secs")) |> 
+  select(-case1)
+osmre_times2 <- unlist(osmre_times) |> 
+  as.data.frame(row.names = names(osmre_times)) |> 
+  rename(time = 1) |> 
+  rownames_to_column(var = "case1") |> 
+  mutate(case = match(case1, unique(case1)), 
+         trial = 1:400, 
+         time = as.difftime(time, units = "secs")) |> 
+  select(-case1)
+olgre_times2 <- unlist(olgre_times) |> 
+  as.data.frame(row.names = names(olgre_times)) |> 
+  rename(time = 1) |> 
+  rownames_to_column(var = "case1") |> 
+  mutate(case = match(case1, unique(case1)), 
+         trial = 1:400, 
+         time = as.difftime(time, units = "secs")) |> 
+  select(-case1)
+
+re_times <- bind_rows(
+  mutate(nsmre_times2, mod = "Naive", size = "Small", race = NA), 
+  mutate(nlgre_times2, mod = "Naive", size = "Large", race = NA), 
+  mutate(osmre_times2, mod = "Oracle", size = "Small", race = NA), 
+  mutate(olgre_times2, mod = "Oracle", size = "Large", race = NA), 
+  mutate(ksmre_times, mod = "BKMR", size = "Small", case = as.numeric(case)), 
+  mutate(klgre_times, mod = "BKMR", size = "Large", case = as.numeric(case))
+)
+
+# function to format difftime objects with appropriate units
+format_difftime <- function(difftime_obj) {
+  value <- as.numeric(difftime_obj)
+  # determine appropriate units
+  if (abs(value) < 60) {
+    duration <- as.numeric(difftime_obj, units = "secs")
+    result <- sprintf("%.2g %s", duration, "s")
+  } else if (abs(value) < 3600) {
+    duration <- as.numeric(difftime_obj, units = "mins")
+    result <- sprintf("%.2f %s", duration, "m")
+  } else if (abs(value) < 86400) {
+    duration <- as.numeric(difftime_obj, units = "hours")
+    result <- sprintf("%.2f %s", duration, "h")
+  } else {
+    duration <- as.numeric(difftime_obj, units = "days")
+    result <- sprintf("%.2f %s", duration, "d")
+  }
+  return(result)
+}
+
+# format into table of mean run-times
+retime_table <- re_times |> 
+  mutate(mod = factor(mod, levels = c("Naive", "Oracle", "BKMR")), 
+         size = factor(size, levels = c("Small", "Large")), 
+         case = as.numeric(case), 
+         scenario = ifelse(case %in% c(1, 2), 
+                           "Smaller race cat.", 
+                           "Larger race cat.")) |> 
+  group_by(mod, size, race, scenario) |> 
+  summarize(mean_time = mean(time)) |> 
+  ungroup() |> 
+  rowwise() |> 
+  mutate(mean_time = format_difftime(mean_time)) |> 
+  arrange(size, desc(scenario)) |> 
+  pivot_wider(names_from = c(size, scenario), values_from = mean_time, 
+              names_sep = " ") |> 
+  mutate(race = which_race(race))
+write_csv(retime_table, "index/data/time_re.csv")
+
+## OLD ##
+
+# # first, label exposure-response with whether it was significant
+# klgre_pipstojoin <- klgre_pips |> 
+#   filter(is.na(variable) | variable == "Hg") |> 
+#   mutate(sign = ifelse(is.na(PIP), FALSE, PIP >= 0.5)) |> 
+#   select(case, trial, race, sign)
+# klgre_expresp2 <- klgre_expresp |>
+#   left_join(klgre_pipstojoin, by = c("case", "trial", "race")) |> 
+#   mutate(which_race = which_race(race), 
+#          size_race = size_race(race))
+#"#A54657", #B084CC
+
+# klgre_expresp |> 
+#   mutate(race = factor(race),
+#          which_race = which_race(race), 
+#          size_race = size_race(race)) |> 
+#   ggplot(aes(z1, est, color = race)) +
+#   geom_line(aes(group = interaction(trial, race)), alpha = 0.2) +
+#   ylim(-8, 8) +
+#   facet_wrap(~case)  + 
+#   guides(color = guide_legend(override.aes = list(alpha = 1)))
 

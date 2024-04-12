@@ -1,0 +1,13 @@
+case,sens,size
+1,0,Small uncollapsed
+2,0,Small uncollapsed
+3,0,Small uncollapsed
+4,0.02,Small uncollapsed
+1,0,Small collapsed
+2,0,Small collapsed
+3,0,Small collapsed
+4,0.03,Small collapsed
+1,0.01,Large
+2,0.03,Large
+3,0.03,Large
+4,0.21,Large

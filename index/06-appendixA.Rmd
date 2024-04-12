@@ -180,6 +180,79 @@ include_graphics(path = "figures/ch4_osm_biv_pval.png")
 include_graphics(path = "figures/ch4_olg_biv_pval.png")
 ```
 
+```{r onewaytabsens, echo = FALSE, message = FALSE}
+naive_sens <- read_csv("data/naive_sens.csv")
+oracle_sens <- read_csv("data/oracle_sens.csv")
+bkmr_sens <- read_csv("data/bkmr_pip_sens.csv")
+bsr_sens <- read_csv("data/bsr_pip_sens.csv")
+
+comb_sens <- bind_rows(
+  rename(naive_sens, variable = var),
+  filter(select(oracle_sens,-var), variable != "Int"),
+  mutate(bkmr_sens, mod = "BKMR"),
+  mutate(bsr_sens, mod = "BSR")
+) |>
+  filter(case != 1) |>
+  mutate(
+    variable = gsub("[^[:alpha:]]", "", variable),
+    mod = factor(mod, levels = c("Naive MLR", "Oracle MLR", "BKMR", "BSR")) ,
+    sign = ifelse(mod == "Oracle MLR", TRUE, sign),
+    new_sign = factor(ifelse(
+      variable %in% c("Hg", "Ni", "Sb", "Sn"),
+      "Sen",
+      "FDR"
+    ), levels = c("Sen", "FDR")), 
+    cond = case_when(
+      case %in% 2:5 ~ "Hg-Ni",
+      case %in% 6:9 ~ "Cd-As",
+      case %in% 10:13 ~ "Ni-Co", 
+      .default = "Hg-Ni-Tl"
+    ),
+    cond = factor(cond, levels = c("Hg-Ni", "Cd-As", "Ni-Co", "Hg-Ni-Tl")), 
+    inter_type = ifelse(case %% 4 %in% 1:2, "Mult.", "Poly."),
+    effect_size = factor(
+      ifelse(case %% 2 == 1, "Higher", "Lower"),
+      levels = c("Lower", "Higher")
+    )
+  ) |>
+  group_by(cond, inter_type, effect_size, mod, size, new_sign) |> 
+  summarize(detection = mean(sensitivity)) |> 
+  arrange(new_sign, desc(size)) |> 
+  pivot_wider(names_from = c(mod, size, new_sign), values_from = detection, 
+              names_sep = " ") |> 
+  ungroup()
+
+comb_sens_ord <- table(comb_sens$cond)
+
+# options(knitr.kable.NA = '-')
+comb_sens |> 
+  select(-cond) |> 
+  select(1:10) |> 
+  kbl(booktabs = TRUE, digits = 2, #align = "lcc",
+      caption = "Sensitivity of univariate chemicals in all scenarios with interactions between exposures.", 
+      col.names = c("Type", "Effect size", 
+                    rep(c("Naive", "Oracle", "BKMR", "BSR"), 2))
+      ) |> 
+  add_header_above(header = c(" " = 2, "Small" = 4, "Large" = 4)) |>
+  pack_rows(index = comb_sens_ord) 
+```
+
+
+```{r onewaytabfdr, echo = FALSE, message = FALSE}
+# false discovery rates
+comb_sens |> 
+  select(-cond) |>
+  select(c(1, 2, 11:16)) |> 
+  kbl(booktabs = TRUE, digits = 2, #align = "lcc",
+      caption = "False discovery rate of univariate chemicals in all scenarios with interactions between exposures.", 
+      col.names = c("Type", "Effect size", 
+                    rep(c("Naive", "BKMR", "BSR"), 2))
+      ) |> 
+  add_header_above(header = c(" " = 2, "Small" = 3, "Large" = 3)) |>
+  # add_header_above(header = c(" " = 2, "Sensitivity" = 8, "False discovery rate" = 6)) |> 
+  pack_rows(index = comb_sens_ord) 
+```
+
 Figures \@ref(fig:ksmcdas)-\@ref(fig:slgnico) display the estimated exposure-response surface for one chemical while fixing one (or two, for three-way interactions) other chemicals at their 0.1, 0.5, and 0.9 quantiles, for all scenarios not included in Chapter \@ref(univsenschap).
 
 ```{r ksmcdas, fig.cap = "cd-as bkmr small exposure response.", out.width = '75%', echo = FALSE}
@@ -220,4 +293,74 @@ include_graphics("figures/ch4_slg_biv_expresp_3.png")
 
 
 Potentially also will include trivariate exposure-response surfaces here, too. 
+
+```{r ksmtri, fig.cap = "triv bkmr small exposure-resposnse.", out.width = '75%', echo = FALSE}
+include_graphics("figures/ch4_ksm_triv_expresp.png")
+```
+
+```{r klgtri, fig.cap = "triv bkmr large exposure-resposnse.", out.width = '75%', echo = FALSE}
+include_graphics("figures/ch4_klg_triv_expresp.png")
+```
+
+```{r ssmtri, fig.cap = "triv bsr small exposure-resposnse.", out.width = '75%', echo = FALSE}
+include_graphics("figures/ch4_ssm_triv_expresp.png")
+```
+
+```{r slgtri, fig.cap = "triv bsr large exposure-resposnse.", out.width = '75%', echo = FALSE}
+include_graphics("figures/ch4_slg_triv_expresp.png")
+```
+
+
+```{r reunivsens, echo = FALSE, message = FALSE}
+# read in data
+naive_re_sens <- read_csv("data/naive_re_sens.csv") |> 
+  filter(var == "Hg") |> 
+  select(-sign, -var)
+oracle_re_sens <- read_csv("data/oracle_re_sens.csv") |> 
+  filter(variable == "Hg") |> 
+  group_by(size, case) |> 
+  summarize(sensitivity = sum(p<0.05)/n())
+bkmr_re_pips <- read_csv("data/bkmr_re_pips.csv") |> 
+  rename(sensitivity = hg_detect) |> 
+  select(-num_na)
+bsr_re_pips <- read_csv("data/bsr_re_pips.csv") |> 
+  filter(size != "Large" | race != 6) |> 
+  rename(sensitivity = hg_detect) |> 
+  select(-num_na)
+
+# combine together
+univ_re_comb <- bind_rows(
+  naive_re_sens, 
+  mutate(oracle_re_sens, mod = "Oracle MLR"), 
+  mutate(bkmr_re_pips, mod = "BKMR"), 
+  mutate(bsr_re_pips, mod = "BSR")
+)
+
+# pivot wider
+univ_re_wide <- univ_re_comb |> 
+  arrange(desc(size)) |> 
+  pivot_wider(names_from = case, values_from = sensitivity) |> 
+  mutate(
+    which_race = gsub("Hispanic", "Hisp.", which_race), 
+    race = ifelse(is.na(which_race), NA, 
+                  paste0(which_race, " (n=", size_race, ")"))
+  ) |> 
+  select(-which_race, -size_race) |> 
+  relocate(size)
+
+# print
+univre_ord <- table(univ_re_wide$size)[c(2, 1)]
+options(knitr.kable.NA = '-')
+
+univ_re_wide |> 
+  select(-size) |> 
+  kbl(booktabs = TRUE, escape = FALSE, 
+      align = "llcccc", 
+      caption = "univariate re sensitivity.", 
+      col.names = c("Model", "Race", rep(c("Lower", "Higher"), 2))
+      ) |> 
+  add_header_above(header = c(" " = 2, "Small race cat." = 2, "Large race cat." = 2), bold = TRUE) |>
+  pack_rows(index = univre_ord) |> 
+  collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace")
+```
 

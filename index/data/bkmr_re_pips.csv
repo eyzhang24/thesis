@@ -1,0 +1,45 @@
+case,race,num_na,hg_detect,size,which_race,size_race
+1,1,0.31,0.52,Small,Non-Hisp. white,16
+1,2,0,0.6,Small,Non-Hisp. black,27
+1,3,0.62,0.3,Small,Non-Hisp. other,13
+1,4,0,0.56,Small,Hispanic born in US,87
+1,5,0,0.68,Small,Hispanic born outside US,109
+1,6,0,0.54,Small,Collapsed non-Hisp.,56
+2,1,0.36,0.47,Small,Non-Hisp. white,16
+2,2,0,0.69,Small,Non-Hisp. black,27
+2,3,0.64,0.27,Small,Non-Hisp. other,13
+2,4,0,0.5,Small,Hispanic born in US,87
+2,5,0,0.63,Small,Hispanic born outside US,109
+2,6,0,0.65,Small,Collapsed non-Hisp.,56
+3,1,0.41,0.42,Small,Non-Hisp. white,16
+3,2,0,0.5,Small,Non-Hisp. black,27
+3,3,0.62,0.27,Small,Non-Hisp. other,13
+3,4,0,0.57,Small,Hispanic born in US,87
+3,5,0,0.89,Small,Hispanic born outside US,109
+3,6,0,0.55,Small,Collapsed non-Hisp.,56
+4,1,0.31,0.51,Small,Non-Hisp. white,16
+4,2,0.01,0.56,Small,Non-Hisp. black,27
+4,3,0.75,0.2,Small,Non-Hisp. other,13
+4,4,0,0.6,Small,Hispanic born in US,87
+4,5,0,0.97,Small,Hispanic born outside US,109
+4,6,0,0.46,Small,Collapsed non-Hisp.,56
+1,1,0,0.45,Large,Non-Hisp. white,16
+1,2,0,0.88,Large,Non-Hisp. black,27
+1,3,0,0.55,Large,Non-Hisp. other,13
+1,4,0,0.9,Large,Hispanic born in US,87
+1,5,0,0.92,Large,Hispanic born outside US,109
+2,1,0,0.56,Large,Non-Hisp. white,16
+2,2,0,0.93,Large,Non-Hisp. black,27
+2,3,0,0.41,Large,Non-Hisp. other,13
+2,4,0,0.93,Large,Hispanic born in US,87
+2,5,0,0.94,Large,Hispanic born outside US,109
+3,1,0,0.5,Large,Non-Hisp. white,16
+3,2,0,0.59,Large,Non-Hisp. black,27
+3,3,0,0.52,Large,Non-Hisp. other,13
+3,4,0,0.88,Large,Hispanic born in US,87
+3,5,0,1,Large,Hispanic born outside US,109
+4,1,0,0.43,Large,Non-Hisp. white,16
+4,2,0,0.59,Large,Non-Hisp. black,27
+4,3,0,0.53,Large,Non-Hisp. other,13
+4,4,0,0.95,Large,Hispanic born in US,87
+4,5,0,1,Large,Hispanic born outside US,109

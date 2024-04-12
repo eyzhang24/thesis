@@ -2549,6 +2549,8 @@ wjob04 <- slurm_call(
 
 ### Code for Chapter \@ref(results):
 
+#### Extracting results
+
 Here, we extract results from our simulation. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. This code was run on the Amherst HPC RStudio server. 
 
 First, we extract p-values from the multiple linear regression models. 
@@ -3757,10 +3759,14 @@ slg_triv <- names(slg_paths)[14:17] |> # trivariate only
 write_csv(slg_triv, "sim/bsr_lg/triv_expresp.csv")
 ```
 
-[*what else to include?*]
+Next, we extract output from stratified models. 
 
-- extract results from r/e
-- present results
+Finally, we extract information on run-times. 
+
+#### Present results
+
+Here, we present results 
+
 - create tables
 - keep track of which results are actually going into the appendix
 

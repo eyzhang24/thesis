@@ -241,13 +241,17 @@ nsm_pvalc <- nsm_pval |>
 nsm_pvalc_sens <- nsm_pvalc |> 
   mutate(imp = p < 0.05) |> 
   group_by(case, var) |> 
-  summarize(sensitivity = sum(imp)/n())
+  summarize(sensitivity = weights::rd(sum(imp)/n(), 2), 
+            upper = quantile(p, 0.75))
 
 # line plot of p-values
 nsm_pvalc |> 
   filter(case != 1) |> 
   ggplot(aes(x = var, y = p)) +
   geom_hline(yintercept = 0.05, linetype = "dashed", color = "grey30") +
+  geom_label(data = filter(nsm_pvalc_sens, case != 1), 
+             mapping = aes(x = var, y = upper+0.1, label = sensitivity), 
+             size = 2, label.size = NA, label.padding = unit(0.05, "lines")) +
   geom_pointrange(aes(color = sign), 
                   stat = "summary",
                   fun.min = function(z) {quantile(z,0.25)},
@@ -276,13 +280,17 @@ nlg_pvalc <- nlg_pval |>
 nlg_pvalc_sens <- nlg_pvalc |> 
   mutate(imp = p < 0.05) |> 
   group_by(case, var) |> 
-  summarize(sensitivity = sum(imp)/n())
+  summarize(sensitivity = weights::rd(sum(imp)/n(), 2), 
+            upper = quantile(p, 0.75))
 
 # line plot of p-values
 nlg_pvalc |> 
   filter(case != 1) |> 
   ggplot(aes(x = var, y = p)) +
   geom_hline(yintercept = 0.05, linetype = "dashed", color = "grey30") +
+  geom_label(data = filter(nlg_pvalc_sens, case != 1), 
+           mapping = aes(x = var, y = upper+0.1, label = sensitivity), 
+           size = 2, label.size = NA, label.padding = unit(0.05, "lines")) +
   geom_pointrange(aes(color = sign), 
                   stat = "summary",
                   fun.min = function(z) {quantile(z,0.25)},
@@ -326,13 +334,17 @@ osm_pvalc <- osm_pval |>
 osm_pvalc_sens <- osm_pvalc |> 
   mutate(imp = p < 0.05) |> 
   group_by(case, var) |> 
-  summarize(sensitivity = sum(imp)/n())
+  summarize(sensitivity = weights::rd(sum(imp)/n(), 2), 
+            upper = quantile(p, 0.75))
 
 # line plot of p-values
 osm_pvalc |>
   filter(case != 1) |>
   ggplot(aes(x = var, y = p)) +
   geom_hline(yintercept = 0.05, linetype = "dashed", color = "grey30") +
+  geom_label(data = filter(osm_pvalc_sens, case != 1), 
+             mapping = aes(x = var, y = upper+0.12, label = sensitivity), 
+             size = 2, label.size = NA, label.padding = unit(0.05, "lines")) +
   geom_pointrange(aes(color = sign),
                   stat = "summary",
                   fun.min = function(z) {quantile(z,0.25)},
@@ -417,7 +429,8 @@ olg_pvalc <- olg_pval |>
 olg_pvalc_sens <- olg_pvalc |> 
   mutate(imp = p < 0.05) |> 
   group_by(case, var) |> 
-  summarize(sensitivity = sum(imp)/n())
+  summarize(sensitivity = weights::rd(sum(imp)/n(), 2), 
+            upper = quantile(p, 0.75))
 
 # line plot of p-values
 olg_pvalc |>
@@ -427,6 +440,9 @@ olg_pvalc |>
   # geom_bar(data = olg_pvalc_sens,
   #          aes(y = sensitivity),
   #          stat = "identity", fill = "grey85") +
+  geom_label(data = filter(olg_pvalc_sens, case != 1), 
+             mapping = aes(x = var, y = upper+0.1, label = sensitivity), 
+             size = 2, label.size = NA, label.padding = unit(0.05, "lines")) +
   geom_pointrange(stat = "summary",
                   fun.min = function(z) {quantile(z,0.25)},
                   fun.max = function(z) {quantile(z,0.75)},
@@ -514,13 +530,17 @@ ksm_pip_sig <- ksm_pips |>
 ksm_pip_sen <- ksm_pips |> 
   mutate(imp = PIP >= 0.5) |> 
   group_by(case, variable) |> 
-  summarize(sensitivity = sum(imp)/n())
+  summarize(sensitivity = weights::rd(sum(imp)/n(), 2), 
+            upper = quantile(PIP, 0.75))
 
 # point and lineplot
 ksm_pip_sig |> 
   filter(case != 1) |> 
   ggplot(aes(x = variable)) +
   geom_hline(yintercept = 0.5, linetype = "dashed", color = "grey30") +
+  geom_label(data = filter(ksm_pip_sen, case != 1), 
+             mapping = aes(x = variable, y = upper+0.1, label = sensitivity), 
+             size = 2, label.size = NA, label.padding = unit(0, "lines")) +
   geom_pointrange(aes(y = PIP, color = sign), 
                   stat = "summary",
                   fun.min = function(z) {quantile(z,0.25)},
@@ -617,7 +637,8 @@ ksm_triv |>
                                           reverse = TRUE)) +
   labs(x = "Chem 1 value",  
        y = "Estimated response", 
-       color = "Chem 2+3\nquantile")
+       color = "Chem 2+3\nquantile") +
+  theme(strip.text.x = element_text(size = 7))
 ggsave("index/figures/ch4_ksm_triv_expresp.png", width = 6, height = 4)
 
 # int vs. rest significant visualization
@@ -673,7 +694,8 @@ klg_pip_sig <- klg_pips |>
 klg_pip_sen <- klg_pips |> 
   mutate(imp = PIP >= 0.5) |> 
   group_by(case, variable) |> 
-  summarize(sensitivity = sum(imp)/n())
+  summarize(sensitivity = weights::rd(sum(imp)/n(), 2), 
+            upper = quantile(PIP, 0.75))
 
 # point and lineplot
 klg_pip_sig |> 
@@ -683,6 +705,9 @@ klg_pip_sig |>
   # geom_bar(data = klg_pip_sen, 
   #          aes(y = sensitivity), 
   #          stat = "identity", fill = "grey85") +
+  geom_label(data = filter(klg_pip_sen, case != 1), 
+             mapping = aes(x = variable, y = upper+0.1, label = sensitivity), 
+             size = 2, label.size = NA, label.padding = unit(.05, "lines")) +
   geom_pointrange(aes(y = PIP, color = sign), 
                   stat = "summary",
                   fun.min = function(z) {quantile(z,0.25)},
@@ -784,7 +809,8 @@ klg_triv |>
                                           reverse = TRUE)) +
   labs(x = "Chem 1 value",  
        y = "Estimated response", 
-       color = "Chem 2+3\nquantile")
+       color = "Chem 2+3\nquantile") +
+  theme(strip.text.x = element_text(size = 7))
 ggsave("index/figures/ch4_klg_triv_expresp.png", width = 6, height = 4)
 
 # int vs. rest significant visualization
@@ -862,7 +888,10 @@ ssm_pip_sig <- ssm_pips |>
 ssm_pip_sen <- ssm_pips |> 
   mutate(imp = PIP >= 0.5) |> 
   group_by(case, variable) |> 
-  summarize(sensitivity = sum(imp)/n())
+  summarize(sensitivity = weights::rd(sum(imp)/n(), 2, 
+                                      max = 2), 
+            upper = quantile(PIP, 0.75))
+
 
 # point and lineplot
 ssm_pip_sig |> 
@@ -872,6 +901,9 @@ ssm_pip_sig |>
   # geom_bar(data = ssm_pip_sen, 
   #          aes(y = sensitivity), 
   #          stat = "identity", fill = "grey85") +
+  geom_label(data = filter(ssm_pip_sen, case != 1), 
+             mapping = aes(x = variable, y = upper+0.1, label = sensitivity), 
+             size = 2, label.size = NA, label.padding = unit(0.05, "lines")) +
   geom_pointrange(aes(y = PIP, color = sign), 
                   stat = "summary",
                   fun.min = function(z) {quantile(z,0.25)},
@@ -1006,8 +1038,6 @@ ssm_triv <- ssm_triv |>
     j1 == "Tl" ~ "Tl by Hg + Ni"), 
     quantile = as.factor(j23quant)) 
 
-## WHAT TO DO ABOUT THIS?? ##
-
 ssm_triv |> 
   ggplot(aes(j1val, est, color = quantile)) +
   geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) + 
@@ -1019,8 +1049,9 @@ ssm_triv |>
                                           reverse = TRUE)) +
   labs(x = "Chem 1 value",  
        y = "Estimated response", 
-       color = "Chem 2+3\nquantile")
-# ggsave("index/figures/ch4_ssm_triv_expresp.png", width = 6, height = 4)
+       color = "Chem 2+3\nquantile") +
+  theme(strip.text.x = element_text(size = 7))
+ggsave("index/figures/ch4_ssm_triv_expresp.png", width = 6, height = 4)
 
 
 # larger size bsr ---------------------------------------------------------
@@ -1033,7 +1064,8 @@ slg_pip_sig <- slg_pips |>
 slg_pip_sen <- slg_pips |> 
   mutate(imp = PIP >= 0.5) |> 
   group_by(case, variable) |> 
-  summarize(sensitivity = sum(imp)/n())
+  summarize(sensitivity = weights::rd(sum(imp)/n(), 2, max = 0), 
+            upper = quantile(PIP, 0.75))
 
 # point and lineplot
 slg_pip_sig |> 
@@ -1043,6 +1075,9 @@ slg_pip_sig |>
   # geom_bar(data = slg_pip_sen, 
   #          aes(y = sensitivity), 
   #          stat = "identity", fill = "grey85") +
+  geom_label(data = filter(slg_pip_sen, case != 1), 
+             mapping = aes(x = variable, y = upper+0.1, label = sensitivity), 
+             size = 2, label.size = NA, label.padding = unit(0.05, "lines")) +
   geom_pointrange(aes(y = PIP, color = sign), 
                   stat = "summary",
                   fun.min = function(z) {quantile(z,0.25)},
@@ -1177,8 +1212,6 @@ slg_triv <- slg_triv |>
     j1 == "Tl" ~ "Tl by Hg + Ni"), 
     quantile = as.factor(j23quant)) 
 
-## WHAT TO DO ABOUT THIS?? ##
-
 slg_triv |> 
   ggplot(aes(j1val, est, color = quantile)) +
   geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) + 
@@ -1191,7 +1224,7 @@ slg_triv |>
   labs(x = "Chem 1 value",  
        y = "Estimated response", 
        color = "Chem 2+3\nquantile") +
-  theme(strip.text = element_text(size = 7))
+  theme(strip.text = element_text(size = 7)) 
 ggsave("index/figures/ch4_slg_triv_expresp.png", width = 6, height = 4)
 
 

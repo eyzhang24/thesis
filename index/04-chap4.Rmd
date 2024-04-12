@@ -222,80 +222,7 @@ In general, the detection rates of univariate chemicals in naive MLRs are not af
 
 See Figures \@ref(fig:nsmunivp)-\@ref(fig:slgunivp) in Appendix \@ref(suppresults) for the full p-value and PIP distributions for all scenarios with interactions between chemicals. 
 
-[*turn this page horizontal!! or figure out a way to stack the tables. or put fdr's in appendix!*]
 
-```{r onewaytabsens, echo = FALSE, message = FALSE}
-naive_sens <- read_csv("data/naive_sens.csv")
-oracle_sens <- read_csv("data/oracle_sens.csv")
-bkmr_sens <- read_csv("data/bkmr_pip_sens.csv")
-bsr_sens <- read_csv("data/bsr_pip_sens.csv")
-
-comb_sens <- bind_rows(
-  rename(naive_sens, variable = var),
-  filter(select(oracle_sens,-var), variable != "Int"),
-  mutate(bkmr_sens, mod = "BKMR"),
-  mutate(bsr_sens, mod = "BSR")
-) |>
-  filter(case != 1) |>
-  mutate(
-    variable = gsub("[^[:alpha:]]", "", variable),
-    mod = factor(mod, levels = c("Naive MLR", "Oracle MLR", "BKMR", "BSR")) ,
-    sign = ifelse(mod == "Oracle MLR", TRUE, sign),
-    new_sign = factor(ifelse(
-      variable %in% c("Hg", "Ni", "Sb", "Sn"),
-      "Sen",
-      "FDR"
-    ), levels = c("Sen", "FDR")), 
-    cond = case_when(
-      case %in% 2:5 ~ "Hg-Ni",
-      case %in% 6:9 ~ "Cd-As",
-      case %in% 10:13 ~ "Ni-Co", 
-      .default = "Hg-Ni-Tl"
-    ),
-    cond = factor(cond, levels = c("Hg-Ni", "Cd-As", "Ni-Co", "Hg-Ni-Tl")), 
-    inter_type = ifelse(case %% 4 %in% 1:2, "Mult.", "Poly."),
-    effect_size = factor(
-      ifelse(case %% 2 == 1, "Higher", "Lower"),
-      levels = c("Lower", "Higher")
-    )
-  ) |>
-  group_by(cond, inter_type, effect_size, mod, size, new_sign) |> 
-  summarize(detection = mean(sensitivity)) |> 
-  arrange(new_sign, desc(size)) |> 
-  pivot_wider(names_from = c(mod, size, new_sign), values_from = detection, 
-              names_sep = " ") |> 
-  ungroup()
-
-comb_sens_ord <- table(comb_sens$cond)
-
-# options(knitr.kable.NA = '-')
-comb_sens |> 
-  select(-cond) |> 
-  select(1:10) |> 
-  kbl(booktabs = TRUE, digits = 2, #align = "lcc",
-      caption = "Sensitivity of univariate chemicals in all scenarios with interactions between exposures.", 
-      col.names = c("Type", "Effect size", 
-                    rep(c("Naive", "Oracle", "BKMR", "BSR"), 2))
-      ) |> 
-  add_header_above(header = c(" " = 2, "Small" = 4, "Large" = 4)) |>
-  pack_rows(index = comb_sens_ord) 
-```
-
-
-```{r onewaytabfdr, echo = FALSE, message = FALSE}
-# false discovery rates
-comb_sens |> 
-  select(-cond) |>
-  select(c(1, 2, 11:16)) |> 
-  kbl(booktabs = TRUE, digits = 2, #align = "lcc",
-      caption = "False discovery rate of univariate chemicals in all scenarios with interactions between exposures.", 
-      col.names = c("Type", "Effect size", 
-                    rep(c("Naive", "BKMR", "BSR"), 2))
-      ) |> 
-  add_header_above(header = c(" " = 2, "Small" = 3, "Large" = 3)) |>
-  # add_header_above(header = c(" " = 2, "Sensitivity" = 8, "False discovery rate" = 6)) |> 
-  pack_rows(index = comb_sens_ord) 
-```
 
 Everything else is in appendix
 
@@ -352,7 +279,7 @@ comb_int |>
       align = "llcccccc", 
       caption = "Sensitivity to interactions in all scenarios with two-way interactions between exposures.", 
       col.names = c("Interaction type", "Effect size", rep(c("Oracle", "BKMR", "BSR"), 2))) |> 
-  add_header_above(header = c(" " = 2, "Small" = 3, "Large" = 3), bold = TRUE) |>
+  add_header_above(header = c(" " = 2, "Small (n=252)" = 3, "Large (n=1000)" = 3), bold = TRUE) |>
   pack_rows(index = comb_int_ord) |> 
   collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace")
 ```
@@ -387,10 +314,10 @@ fdr_ord <- table(fdr_comb2$cond)
 fdr_comb2 |> 
   select(-cond) |> 
   kbl(booktabs = TRUE, escape = FALSE, 
-      align = "llcccc", 
+      align = "llcccc", digits = 4, 
       caption = "False discovery rate of interactions in all scenarios with two-way interactions between exposures.", 
       col.names = c("Interaction type", "Effect size", rep(c("BKMR", "BSR"), 2))) |> 
-  add_header_above(header = c(" " = 2, "Small" = 2, "Large" = 2), bold = TRUE) |>
+  add_header_above(header = c(" " = 2, "Small (n=252)" = 2, "Large (n=1000)" = 2), bold = TRUE) |>
   pack_rows(index = fdr_ord) |> 
   collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace")
 ```
@@ -414,9 +341,9 @@ triv |>
   pivot_wider(names_from = c(mod, size), values_from = sensitivity) |> 
   relocate(1, 2, 4, 6, 8, 3, 5, 7) |> 
   kbl(booktabs = TRUE, 
-      caption = "Sensitivity to trivariate.", 
+      caption = "Sensitivity to trivariate interactions between Hg, Ni, and Tl.", 
       col.names = c("Interaction type", "Effect size", rep(c("Oracle", "BKMR", "BSR"), 2))) |> 
-  add_header_above(header = c(" " = 2, "Small" = 3, "Large" = 3), bold = TRUE) |>
+  add_header_above(header = c(" " = 2, "Small (n=252)" = 3, "Large (n=1000)" = 3), bold = TRUE) |>
   collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace")
 ```
 
@@ -424,7 +351,64 @@ Consider getting false discovery rates?
 
 ### Interactions between race and an exposure
 
-blah
+Figure of diagnostic plots
+
+```{r exprespre, fig.cap = "diagnostic plot of bkmr, bsr RE.", echo = FALSE, out.width = '100%'}
+# figure
+include_graphics("figures/ch4_re_expresp.png")
+```
+
+BKMR sensitivity
+
+```{r reintsens, echo = FALSE, message = FALSE}
+# table
+bkmr_re_sens <- read_csv("data/bkmr_re_sens.csv") |> 
+  rename(sensitivity = sens)
+oracle_re_int <- read_csv("data/oracle_re_sens.csv") |> 
+  filter(variable == "Int") |> 
+  group_by(size, case) |> 
+  summarize(sensitivity = sum(p<0.05)/n()) |> 
+  mutate(size = ifelse(size == "Small", "Small uncollapsed", size))
+
+re_ints <- bind_rows(
+  mutate(bkmr_re_sens, mod = "BKMR"), 
+  mutate(oracle_re_int, mod = "Oracle MLR")
+) |> 
+  arrange(desc(size), desc(mod)) |> 
+  pivot_wider(names_from = c(mod, size), values_from = sensitivity) |> 
+  mutate(effect_size = ifelse(case %in% c(1, 3), "Lower", "Higher"), 
+         case = ifelse(case %in% c(1, 2), 
+                       paste0("non-Hispanic black", footnote_marker_symbol(2)), 
+                       paste0("Hispanic born outside US", footnote_marker_symbol(3)))
+         ) |> 
+  relocate(case, effect_size)
+
+re_ints |> kbl(booktabs = TRUE, escape = FALSE, 
+      align = "llccccc", 
+      caption = "Sensitivity to interactions between the categorical race variable and Hg.", 
+      col.names = c("Interaction in", "Effect size", 
+                    "Oracle", "BKMR", "BKMR",
+                    "Oracle", "BKMR")
+      ) |> 
+  add_header_above(header = c(" " = 2, "Uncollapsed" = 2, 
+                              "Collapsed*" = 1, 
+                              " " = 2)) |> 
+  add_header_above(header = c(" " = 2, "Small (n=250)" = 3, "Large (n=1000)" = 2), 
+                   bold = TRUE) |>
+  collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace") |> 
+  # column_spec(7, width = "6em") |>
+  add_footnote(c("\"Collapsed\" refers to scenarios where the smallest three race categories are collapsed into \none stratified model.", "Original n=27", "Original n=109"), notation = "symbol")
+```
+
+
+In general, interactions between a categorical variable and a continuous variable are harder to detect, both in the typical multiple linear regression framework as well as using BKMR and BSR. Even when the effect of Hg is doubled in the largest race category, the oracle MLR 
+
+While BKMR and BSR are capable of detecting
+
+In particular, the flexibility of BKMR and BSR mean that it is not possible to directly conduct inference on the effect sizes of specific chemicals
+
+This section highlights the difficulty of using current methods for detecting 
+
 
 ### Run-time analysis
 
@@ -434,12 +418,27 @@ times <- read_csv("data/time1.csv")
 times |> 
   kbl(booktabs = TRUE, 
       align = "llcccc", 
-      caption = "Run-times.", 
+      caption = "Run-times in all scenarios with interactions between two or more chemicals, as well as the base case.", 
       col.names = c("Model", "Sample size", "Base", "Lower", "Higher", "Lower", "Higher")) |> 
   add_header_above(header = c(" " = 3, "Multiplicative" = 2, "Polynomial" = 2), bold = TRUE) |>
   # pack_rows(index = comb_int_ord) |> 
   collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace")
 ```
+
+```{r runtimesre, echo = FALSE, message = FALSE}
+retimes <- read_csv("data/time_re.csv")
+
+options(knitr.kable.NA = '-')
+
+retimes |> 
+  mutate(race = gsub("Hisp\\.", "Hispanic", race)) |> 
+  kbl(booktabs = TRUE, align = "llcccc", 
+      caption = "Run-times in scenarios with an interaction between the categorical race covariate and Hg. \"NH Bl\" and \"H b/o US\" represent scenarios in which the effect of Hg is increased in Non-Hisp. black and Hispanic born outside US categories, respectively.", 
+      col.names = c("Model", "Race", "NH Bl", "H b/o US", "NH Bl", "H b/o US")) |> 
+  add_header_above(header = c(" " = 2, "Small (n=252)" = 2, "Large (n=1000)" = 2)) |> 
+  add_footnote("Original sample sizes of race category are as follows: Non-Hispanic white (n=16), Non-Hispanic black (n=27), Non-Hispanic other (n=13), Hispanic born in US (n=87), Hispanic born outside US (n=109), and Collapsed non-Hispanic (n=56=16+27+13)")
+```
+
 
 ## Discussion
 

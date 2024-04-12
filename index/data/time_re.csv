@@ -1,0 +1,9 @@
+mod,race,Small Smaller race cat.,Small Larger race cat.,Large Smaller race cat.,Large Larger race cat.
+Naive,NA,0.0027 s,0.0015 s,0.0034 s,0.0037 s
+Oracle,NA,0.0016 s,0.0023 s,0.0026 s,0.0018 s
+BKMR,Non-Hisp. white,2.55 m,2.44 m,3.22 m,3.17 m
+BKMR,Non-Hisp. black,4.01 m,4.00 m,4.25 m,4.23 m
+BKMR,Non-Hisp. other,1.51 m,1.32 m,3.34 m,3.34 m
+BKMR,Hispanic born in US,5.38 m,5.36 m,29.36 m,29.11 m
+BKMR,Hispanic born outside US,5.64 m,5.65 m,53.43 m,50.97 m
+BKMR,Collapsed non-Hisp.,4.15 m,4.19 m,NA,NA
