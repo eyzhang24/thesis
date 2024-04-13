@@ -46,7 +46,7 @@ p1 <- ggplot(df, aes(x, Y)) +
                 linetype = "dashed", color = "darkorange") + 
   geom_vline(xintercept = 12.5, linetype = "dotted") +
   theme(legend.position = "none") +
-  scale_color_gradient(low = "deepskyblue2", high = "black")
+  scale_color_gradient(low = "lightblue", high = "black")
 
 # plot a curve of weights
 normcurv <- data.frame(x = seq(0, 25, length.out = 250)) 
@@ -54,7 +54,7 @@ normcurv$Weight <- dnorm(normcurv$x, mean = 12.5, sd = 1)
 p2 <- ggplot(normcurv, aes(x, Weight, color = Weight)) +
   geom_line() +
   scale_y_continuous(breaks = c(0, 0.2, 0.4)) +
-  scale_color_gradient(low = "deepskyblue2", high = "black") +
+  scale_color_gradient(low = "lightblue", high = "black") +
   theme(legend.position = "none") 
 
 # stitch plots together

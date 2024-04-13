@@ -338,7 +338,7 @@ k12 <- kre12 |>
   scale_color_manual(values = rev(c("#F8766D", "#A3A500", "#00BF7D", "#00B0F6", "#E76BF3")), 
                      breaks = c(1, 2, 3, 4, 5)) +
   guides(color = guide_legend(override.aes = list(alpha = 1))) +
-  labs(x = "Hg", y = "Estimate", subtitle = "BKMR, interaction in Non-Hisp. black")
+  labs(x = "Hg", y = "Estimate", subtitle = "BKMR, interaction in Non-Hispanic black")
 
 # second two cases
 kre34 <- bkmr_re_expresp |> 
@@ -406,7 +406,7 @@ s12 <- sre12 |>
   scale_color_manual(values = rev(c("#F8766D", "#A3A500", "#00BF7D", "#00B0F6", "#E76BF3")), 
                      breaks = c(1, 2, 3, 4, 5)) +
   guides(color = guide_legend(override.aes = list(alpha = 1))) +
-  labs(x = "Hg", y = "Estimate", subtitle = "BSR, interaction in Non-Hisp. black")
+  labs(x = "Hg", y = "Estimate", subtitle = "BSR, interaction in Non-Hispanic black")
 
 # second two cases
 sre34 <- bsr_re_expresp |> 
@@ -421,7 +421,7 @@ s34 <- sre34 |>
       race,
       levels = c(1, 2, 3, 4, 5),
       labels = c("Non-Hisp. white", "Non-Hisp. other", "Non-Hisp. black", 
-                 "Hispanic born outside US", "Hispanic born in US")
+                 "Hispanic born in US", "Hispanic born outside US")
     ), 
     case = factor(ifelse(case == 3, "Lower", "Higher"), 
                   levels = c("Lower", "Higher"))
@@ -441,7 +441,7 @@ re_expresp <- cowplot::plot_grid(
   k34 + theme(legend.position = "none"),
   s12 + theme(legend.position = "none"), 
   s34 + theme(legend.position = "none"),
-  labels = "auto", nrow = 2
+  nrow = 2
 )
 
 reerlegend <- cowplot::get_legend(s34)
@@ -528,13 +528,13 @@ retime_table <- re_times |>
          scenario = ifelse(case %in% c(1, 2), 
                            "Smaller race cat.", 
                            "Larger race cat.")) |> 
-  group_by(mod, size, race, scenario) |> 
+  group_by(mod, size, race) |> 
   summarize(mean_time = mean(time)) |> 
   ungroup() |> 
   rowwise() |> 
   mutate(mean_time = format_difftime(mean_time)) |> 
-  arrange(size, desc(scenario)) |> 
-  pivot_wider(names_from = c(size, scenario), values_from = mean_time, 
+  arrange(size) |> 
+  pivot_wider(names_from = size, values_from = mean_time, 
               names_sep = " ") |> 
   mutate(race = which_race(race))
 write_csv(retime_table, "index/data/time_re.csv")

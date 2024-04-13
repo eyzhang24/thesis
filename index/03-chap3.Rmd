@@ -152,11 +152,11 @@ $$
 
 In the following section, we illustrate kernel machine regression with a simulated toy example.
 
-Consider the following case where we want to model the relationship between a single predictor and a response variable. Suppose the true relationship between $x$ and $Y$ is defined $Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})$. We simulate 51 equally spaced observations of $x$ from 0 to 25, with error $\varepsilon_i \overset{\text{iid}}\sim N(0, 0.25)$.
-
 ```{r toy1, fig.cap = "Non-linear data with a true relationship (orange) and a fitted linear regression (blue).", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch3_toy1.png")
 ```
+
+Consider the following case where we want to model the relationship between a single predictor and a response variable. Suppose the true relationship between $x$ and $Y$ is defined $Y = e^{\frac{x}{10}} + 2\sin(\frac{x}{2})$. We simulate 51 equally spaced observations of $x$ from 0 to 25, with error $\varepsilon_i \overset{\text{iid}}\sim N(0, 0.25)$.
 
 Figure \@ref(fig:toy1) illustrates the shape of our simulated non-linear data and the fit proposed by a simple linear regression. We can observe that the linear regression fails to capture the true non-linear relationship. In this case, this would lead to an underestimation of the true association between $x$ and $Y$. Now, we will try to capture this relationship using kernel machine regression.
 

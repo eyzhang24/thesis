@@ -122,65 +122,68 @@ include_graphics(path = "figures/traceplots/bksm_traceplotmerged.png")
 
 Figures \@ref(fig:nsmunivp)-\@ref(fig:slgunivp) display the full distributions of univariate p-values and PIPs for all models in scenarios with interactions between chemicals that were not included in Chapter \@ref(univsenschap). 
 
-```{r nsmunivp, fig.cap = "naive small univariate p-values.", out.width = '75%', echo = FALSE}
+```{r nsmunivp, fig.cap = "P-value distributions of univariate chemicals from naive MLRs run on smaller size (n=252) datasets, in all scenarios with interactions between chemicals. Detection rates are displayed above a point-range with the median and first and third quartiles.", out.width = '80%', echo = FALSE}
 # naive small
 include_graphics(path = "figures/ch4_nsm_univ_pval.png")
 ```
 
 
-```{r nlgunivp, fig.cap = "naive large univariate p-values.", out.width = '75%', echo = FALSE}
+```{r nlgunivp, fig.cap = "P-value distributions of univariate chemicals from naive MLRs run on larger size (n=1000) datasets, in all scenarios with interactions between chemicals. Detection rates are displayed above a point-range with the median and first and third quartiles.", out.width = '80%', echo = FALSE}
 # naive large
 include_graphics(path = "figures/ch4_nlg_univ_pval.png")
 ```
 
 
-```{r osmunivp, fig.cap = "oracle small univariate p-values.", out.width = '75%', echo = FALSE}
+```{r osmunivp, fig.cap = "P-value distributions of univariate chemicals from oracle MLRs run on smaller size (n=252) datasets, in all scenarios with interactions between chemicals. Sensitivities are displayed above a point-range with the median and first and third quartiles.", out.width = '80%', echo = FALSE}
 # oracle small
 include_graphics(path = "figures/ch4_osm_univ_pval.png")
 ```
 
 
-```{r olgunivp, fig.cap = "oracle large univariate p-values.", out.width = '75%', echo = FALSE}
+```{r olgunivp, fig.cap = "P-value distributions of univariate chemicals from oracle MLRs run on larger size (n=1000) datasets, in all scenarios with interactions between chemicals. Sensitivities are displayed above a point-range with the median and first and third quartiles.", out.width = '80%', echo = FALSE}
 # oracle large
 include_graphics(path = "figures/ch4_olg_univ_pval.png")
 ```
 
 
-```{r ksmunivp, fig.cap = "bkmr small univariate pip's.", out.width = '75%', echo = FALSE}
+```{r ksmunivp, fig.cap = "PIP distributions of univariate chemicals from BKMR models run on smaller size (n=252) datasets, in all scenarios with interactions between chemicals. Detection rates are displayed above a point-range with the median and first and third quartiles.", out.width = '80%', echo = FALSE}
 # bkmr small
 include_graphics(path = "figures/ch4_ksm_univ_pips.png")
 ```
 
 
-```{r klgunivp, fig.cap = "bkmr large univariate pip's.", out.width = '75%', echo = FALSE}
+```{r klgunivp, fig.cap = "PIP distributions of univariate chemicals from BKMR models run on larger size (n=1000) datasets, in all scenarios with interactions between chemicals. Detection rates are displayed above a point-range with the median and first and third quartiles.", out.width = '80%', echo = FALSE}
 # bkmr large
 include_graphics(path = "figures/ch4_klg_univ_pips.png")
 ```
 
 
-```{r ssmunivp, fig.cap = "bsr small univariate pip's.", out.width = '75%', echo = FALSE}
+```{r ssmunivp, fig.cap = "PIP distributions of univariate chemicals from BSR models run on smaller size (n=252) datasets, in all scenarios with interactions between chemicals. Detection rates are displayed above a point-range with the median and first and third quartiles.", out.width = '80%', echo = FALSE}
 # bsr small
 include_graphics(path = "figures/ch4_ssm_univ_pips.png")
 ```
 
 
-```{r slgunivp, fig.cap = "bsr large univariate pip's.", out.width = '75%', echo = FALSE}
+```{r slgunivp, fig.cap = "PIP distributions of univariate chemicals from BKMR models run on larger size (n=252) datasets, in all scenarios with interactions between chemicals. Detection rates are displayed above a point-range with the median and first and third quartiles.", out.width = '80%', echo = FALSE}
 # bsr large
 include_graphics(path = "figures/ch4_slg_univ_pips.png")
 ```
 
 Figures \@ref(fig:osmbivp) and \@ref(fig:olgbivp) display the full p-value distributions on interaction terms between chemicals in the oracle MLR models. 
 
-```{r osmbivp, fig.cap = "oracle small detection of interactions.", out.width = '75%', echo = FALSE}
+```{r osmbivp, fig.cap = "P-value distributions of interaction terms from oracle MLRs run on smaller size (n=252) datasets, from all scenarios with interactions between chemicals.", out.width = '80%', echo = FALSE}
 # oracle small
 include_graphics(path = "figures/ch4_osm_biv_pval.png")
 ```
 
-```{r olgbivp, fig.cap = "oracle large detection of interactions.", out.width = '75%', echo = FALSE}
+```{r olgbivp, fig.cap = "P-value distributions of interaction terms from oracle MLRs run on larger size (n=1000) datasets, from all scenarios with interactions between chemicals.", out.width = '80%', echo = FALSE}
 include_graphics(path = "figures/ch4_olg_biv_pval.png")
 ```
 
-```{r onewaytabsens, echo = FALSE, message = FALSE}
+Table \@ref(tab:onewaytabfdr) summarizes the sensitivities and false discovery rates for univariate terms in scenarios with interactions between chemicals. 
+
+
+```{r onewaytabfdr, echo = FALSE, message = FALSE}
 naive_sens <- read_csv("data/naive_sens.csv")
 oracle_sens <- read_csv("data/oracle_sens.csv")
 bkmr_sens <- read_csv("data/bkmr_pip_sens.csv")
@@ -224,27 +227,12 @@ comb_sens <- bind_rows(
 
 comb_sens_ord <- table(comb_sens$cond)
 
-# options(knitr.kable.NA = '-')
-comb_sens |> 
-  select(-cond) |> 
-  select(1:10) |> 
-  kbl(booktabs = TRUE, digits = 2, #align = "lcc",
-      caption = "Sensitivity of univariate chemicals in all scenarios with interactions between exposures.", 
-      col.names = c("Type", "Effect size", 
-                    rep(c("Naive", "Oracle", "BKMR", "BSR"), 2))
-      ) |> 
-  add_header_above(header = c(" " = 2, "Small" = 4, "Large" = 4)) |>
-  pack_rows(index = comb_sens_ord) 
-```
-
-
-```{r onewaytabfdr, echo = FALSE, message = FALSE}
 # false discovery rates
 comb_sens |> 
   select(-cond) |>
   select(c(1, 2, 11:16)) |> 
   kbl(booktabs = TRUE, digits = 2, #align = "lcc",
-      caption = "False discovery rate of univariate chemicals in all scenarios with interactions between exposures.", 
+      caption = "Overall false discovery rate for univariate chemicals in all scenarios with interactions between chemicals.", 
       col.names = c("Type", "Effect size", 
                     rep(c("Naive", "BKMR", "BSR"), 2))
       ) |> 
@@ -253,63 +241,63 @@ comb_sens |>
   pack_rows(index = comb_sens_ord) 
 ```
 
-Figures \@ref(fig:ksmcdas)-\@ref(fig:slgnico) display the estimated exposure-response surface for one chemical while fixing one (or two, for three-way interactions) other chemicals at their 0.1, 0.5, and 0.9 quantiles, for all scenarios not included in Chapter \@ref(univsenschap).
+Figures \@ref(fig:ksmcdas)-\@ref(fig:slgtri) display the estimated exposure-response surface for one chemical while fixing one (or two, for three-way interactions) other chemicals at their 0.1, 0.5, and 0.9 quantiles, for all scenarios not included in Chapter \@ref(univsenschap).
 
-```{r ksmcdas, fig.cap = "cd-as bkmr small exposure response.", out.width = '75%', echo = FALSE}
+```{r ksmcdas, fig.cap = "Exposure-response relationships estimated by BKMR in smaller size (n=252) datasets, using the first chemical fixed at quantiles of another to assess interactions between Cd and As. All other chemicals are fixed at 0.5 quantiles.", out.width = '80%', echo = FALSE}
 include_graphics(path = "figures/ch4_ksm_biv_expresp_2.png")
 ```
 
-```{r ssmcdas, fig.cap = "cd-as bsr small exposure response.", out.width = '75%', echo = FALSE}
+```{r ssmcdas, fig.cap = "Exposure-response relationships estimated by BSR in smaller size (n=252) datasets, using the first chemical fixed at quantiles of another to assess interactions between Cd and As. All other chemicals are fixed at 0.5 quantiles.", out.width = '80%', echo = FALSE}
 include_graphics(path = "figures/ch4_ssm_biv_expresp_2.png")
 ```
 
-```{r klgcdas, fig.cap = "cd-as bkmr large exposure response.", out.width = '75%', echo = FALSE}
+```{r klgcdas, fig.cap = "Exposure-response relationships estimated by BKMR in larger size (n=1000) datasets, using the first chemical fixed at quantiles of another to assess interactions between Cd and As. All other chemicals are fixed at 0.5 quantiles.", out.width = '80%', echo = FALSE}
 include_graphics("figures/ch4_klg_biv_expresp_2.png")
 ```
 
 
-```{r slgcdas, fig.cap = "cd-as bsr large exposure response.", out.width = '75%', echo = FALSE}
+```{r slgcdas, fig.cap = "Exposure-response relationships estimated by BSR in larger size (n=1000) datasets, using the first chemical fixed at quantiles of another to assess interactions between Cd and As. All other chemicals are fixed at 0.5 quantiles.", out.width = '80%', echo = FALSE}
 include_graphics("figures/ch4_slg_biv_expresp_2.png")
 ```
 
 
-```{r ksmnico, fig.cap = "ni-co bkmr small exposure response.", out.width = '75%', echo = FALSE}
+```{r ksmnico, fig.cap = "Exposure-response relationships estimated by BKMR in smaller size (n=252) datasets, using the first chemical fixed at quantiles of another to assess interactions between Ni and Co. All other chemicals are fixed at 0.5 quantiles.", out.width = '80%', echo = FALSE}
 include_graphics("figures/ch4_ksm_biv_expresp_3.png")
 ```
 
-```{r ssmnico, fig.cap = "ni-co bkmr small exposure response.", out.width = '75%', echo = FALSE}
+```{r ssmnico, fig.cap = "Exposure-response relationships estimated by BSR in smaller size (n=252) datasets, using the first chemical fixed at quantiles of another to assess interactions between Ni and Co. All other chemicals are fixed at 0.5 quantiles.", out.width = '80%', echo = FALSE}
 include_graphics("figures/ch4_ssm_biv_expresp_3.png")
 ```
 
-```{r klgnico, fig.cap = "ni-co bkmr large exposure-response.", out.width = '75%', echo = FALSE}
+```{r klgnico, fig.cap = "Exposure-response relationships estimated by BKMR in larger size (n=1000) datasets, using the first chemical fixed at quantiles of another to assess interactions between Ni and Co. All other chemicals are fixed at 0.5 quantiles.", out.width = '80%', echo = FALSE}
 include_graphics("figures/ch4_klg_biv_expresp_3.png")
 ```
 
 
-```{r slgnico, fig.cap = "ni-co bkmr large exposure-response.", out.width = '75%', echo = FALSE}
+```{r slgnico, fig.cap = "Exposure-response relationships estimated by BSR in larger size (n=1000) datasets, using the first chemical fixed at quantiles of another to assess interactions between Ni and Co. All other chemicals are fixed at 0.5 quantiles.", out.width = '80%', echo = FALSE}
 include_graphics("figures/ch4_slg_biv_expresp_3.png")
 ```
 
 
-
-Potentially also will include trivariate exposure-response surfaces here, too. 
-
-```{r ksmtri, fig.cap = "triv bkmr small exposure-resposnse.", out.width = '75%', echo = FALSE}
+```{r ksmtri, fig.cap = "Exposure-response relationships estimated by BKMR in smaller size (n=252) datasets, using the first chemical fixed at quantiles of two others to assess interactions between Ni, Hg, and Tl. All other chemicals are fixed at 0.5 quantiles.", out.width = '80%', echo = FALSE}
 include_graphics("figures/ch4_ksm_triv_expresp.png")
 ```
 
-```{r klgtri, fig.cap = "triv bkmr large exposure-resposnse.", out.width = '75%', echo = FALSE}
-include_graphics("figures/ch4_klg_triv_expresp.png")
-```
-
-```{r ssmtri, fig.cap = "triv bsr small exposure-resposnse.", out.width = '75%', echo = FALSE}
+```{r ssmtri, fig.cap = "Exposure-response relationships estimated by BSR in smaller size (n=252) datasets, using the first chemical fixed at quantiles of two others to assess interactions between Ni, Hg, and Tl. All other chemicals are fixed at 0.5 quantiles.", out.width = '80%', echo = FALSE}
 include_graphics("figures/ch4_ssm_triv_expresp.png")
 ```
 
-```{r slgtri, fig.cap = "triv bsr large exposure-resposnse.", out.width = '75%', echo = FALSE}
+```{r klgtri, fig.cap = "Exposure-response relationships estimated by BKMR in larger size (n=1000) datasets, using the first chemical fixed at quantiles of two others to assess interactions between Ni, Hg, and Tl. All other chemicals are fixed at 0.5 quantiles.", out.width = '80%', echo = FALSE}
+include_graphics("figures/ch4_klg_triv_expresp.png")
+```
+
+
+
+```{r slgtri, fig.cap = "Exposure-response relationships estimated by BSR in larger size (n=1000) datasets, using the first chemical fixed at quantiles of two others to assess interactions between Ni, Hg, and Tl. All other chemicals are fixed at 0.5 quantiles.", out.width = '80%', echo = FALSE}
 include_graphics("figures/ch4_slg_triv_expresp.png")
 ```
 
+Table \@ref(tab:reunivsens) summarizes the sensitivities for Hg in scenarios with interactions between the categorical race covariate and Hg. Note that the naive and oracle MLRs do not have an associated race category, because we did not stratify them in our analysis. 
 
 ```{r reunivsens, echo = FALSE, message = FALSE}
 # read in data
@@ -356,7 +344,7 @@ univ_re_wide |>
   select(-size) |> 
   kbl(booktabs = TRUE, escape = FALSE, 
       align = "llcccc", 
-      caption = "univariate re sensitivity.", 
+      caption = "Sensitivity for the univariate Hg term in all scenarios with an interaction between the categorical race covariate and Hg. Sensitivities for BKMR and BSR models are stratified by race.", 
       col.names = c("Model", "Race", rep(c("Lower", "Higher"), 2))
       ) |> 
   add_header_above(header = c(" " = 2, "Small race cat." = 2, "Large race cat." = 2), bold = TRUE) |>
