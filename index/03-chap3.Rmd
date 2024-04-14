@@ -451,7 +451,7 @@ The visualization and summary statistics approaches available in BKMR are also p
 
 We have explained how the inferential framework of BSR improves upon the BKMR approach for the detection of complex interactions. We also briefly compare general features of their model formulations. 
 
-While BKMR is a fully nonparametric approach, BSR is a semiparametric approach because it makes distributional assumptions about the data (i.e., that the relationship can be adequately captured by a $d$-dimensional natural spline basis expansion). As BKMR uses the kernel technique, its implementation can become computationally intensive for datasets with large $n$, as it scales with $n^2$, while BSR is able to scale with $n$ [@@antonelli_estimating_2020]. 
+While BKMR is a fully nonparametric approach, BSR is a semiparametric approach because it makes distributional assumptions about the data (i.e., that the relationship can be adequately captured by a $d$-dimensional natural spline basis expansion). As BKMR uses the kernel technique, its implementation can become computationally intensive for datasets with large $n$, as it scales with $n^2$, while BSR is able to scale with $n$ [@antonelli_estimating_2020]. 
 
 BSR is highly sensitive to the choice of $d$, the degrees of freedom. While it employs a WAIC approach to selecting the best $d$, this parameter introduces an additional tuning step in the analysis. Both approaches can be highly sensitive to the specification of certain priors. BSR offers an empirical Bayes strategy to estimate $\sigma^2_{\boldsymbol\beta}$, the variance of a exposure's prior probability of inclusion. On the other hand, the choice of prior on the influential smoothing parameter, $\rho$, in BKMR is up to the user. 
 

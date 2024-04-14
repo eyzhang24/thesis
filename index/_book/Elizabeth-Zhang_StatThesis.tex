@@ -140,9 +140,11 @@ In our modern world, we are constantly exposed to toxins, permeating our bodies 
 }
 
 \Acknowledgments{
-Use this space to thank those who have helped you in the thesis process (professors, staff, friends, family, etc.). If you had special funding to conduct your thesis work, that should be acknowledged here as well.
+First, this work was performed in part using high-performance computing equipment at Amherst College obtained under National Science Foundation Grant Number 2117377. The data used for simulations in this thesis was supported by the National Institute of Environmental Health Sciences of the National Institutes of Health under Award Numbers U2CES026555 and U2CES026553. The content is solely the responsibility of the author and does not necessarily represent the official views of the National Science Foundation or the National Institutes of Health.
 
-This work was performed in part using high-performance computing equipment at Amherst College obtained under National Science Foundation Grant Number 2117377. The data used for simulations in this thesis was supported by the National Institute of Environmental Health Sciences of the National Institutes of Health under Award Numbers U2CES026555 and U2CES026553. The content is solely the responsibility of the author and does not necessarily represent the official views of the National Science Foundation or the National Institutes of Health.
+Next, I am indebted to so many people, without whom this thesis would not have been possible. Thank you so much to my thesis advisor, Amy Wagaman, for her tireless support. Your encouragement, feedback, and guidance gave me the confidence to see this project through. Thank you to Alex Keil for first inspiring my interest in exposure mixture studies and thereafter providing invaluable advice on my ideas. Thank you to Shu-Min Liao for her advice on copulas, and to Victoria Nguyen for her guidance on how to think humanistically about toxicity. Thank you to Doug Hall for troubleshooting my code for the cluster with me. I would also like to acknowledge Brittney Bailey, whose early support encouraged me to first, pursue a statistics major, and then, to write this thesis. And to everyone in the Department of Mathematics and Statistics --- the faculty, staff, and my peers --- thank you for shaping the wonderful journey that I've taken through statistics at Amherst.
+
+Finally, I want to express my gratitude for my family for their love and support. I would not be here without you. Thank you to my mom for believing in me and giving me the opportunity to grow and take risks. Thank you to my friends for all their support and for listening to me talk on and on about statistics. And to Sara, I am so grateful for you, for always encouraging me to keep going. Thank you for sticking by my side through it all.
 }
 
 \Dedication{
@@ -272,9 +274,11 @@ This work was performed in part using high-performance computing equipment at Am
     In our modern world, we are constantly exposed to toxins, permeating our bodies through our food, skin, and lungs. Studies of environmental hazards have typically focused on identifying the health effects of single exposures. However, humans are invariably exposed to whole mixtures of exposures, and analyses of their joint effects can provide more accurate estimates of true health risk. The study of mixtures presents unique statistical challenges, though. This thesis explores the theory of emerging Bayesian regression techniques for quantifying the health risks of mixtures of pollutants. We use simulation studies to assess how modern statistical methods can detect interactions between multiple pollutants, and between pollutants and sociodemographic factors. We are keenly interested in combating habits of thought that associate outcomes with single, isolated causes, and progressing toward a study of health that acknowledges the relationality of our bodies to the environment and to each other.
   \end{abstract}
   \begin{acknowledgments}
-    Use this space to thank those who have helped you in the thesis process (professors, staff, friends, family, etc.). If you had special funding to conduct your thesis work, that should be acknowledged here as well.
+    First, this work was performed in part using high-performance computing equipment at Amherst College obtained under National Science Foundation Grant Number 2117377. The data used for simulations in this thesis was supported by the National Institute of Environmental Health Sciences of the National Institutes of Health under Award Numbers U2CES026555 and U2CES026553. The content is solely the responsibility of the author and does not necessarily represent the official views of the National Science Foundation or the National Institutes of Health.
 
-    This work was performed in part using high-performance computing equipment at Amherst College obtained under National Science Foundation Grant Number 2117377. The data used for simulations in this thesis was supported by the National Institute of Environmental Health Sciences of the National Institutes of Health under Award Numbers U2CES026555 and U2CES026553. The content is solely the responsibility of the author and does not necessarily represent the official views of the National Science Foundation or the National Institutes of Health.
+    Next, I am indebted to so many people, without whom this thesis would not have been possible. Thank you so much to my thesis advisor, Amy Wagaman, for her tireless support. Your encouragement, feedback, and guidance gave me the confidence to see this project through. Thank you to Alex Keil for first inspiring my interest in exposure mixture studies and thereafter providing invaluable advice on my ideas. Thank you to Shu-Min Liao for her advice on copulas, and to Victoria Nguyen for her guidance on how to think humanistically about toxicity. Thank you to Doug Hall for troubleshooting my code for the cluster with me. I would also like to acknowledge Brittney Bailey, whose early support encouraged me to first, pursue a statistics major, and then, to write this thesis. And to everyone in the Department of Mathematics and Statistics --- the faculty, staff, and my peers --- thank you for shaping the wonderful journey that I've taken through statistics at Amherst.
+
+    Finally, I want to express my gratitude for my family for their love and support. I would not be here without you. Thank you to my mom for believing in me and giving me the opportunity to grow and take risks. Thank you to my friends for all their support and for listening to me talk on and on about statistics. And to Sara, I am so grateful for you, for always encouraging me to keep going. Thank you for sticking by my side through it all.
   \end{acknowledgments}
 
   \hypersetup{linkcolor=black}
@@ -1064,29 +1068,60 @@ Overall, this base case scenario confirms that the multiple regression and Bayes
 
 Now, we provide a brief overview of univariate sensitivity metrics from all scenarios with an interaction between chemicals. We are particularly interested in cases where it appears that the inclusion of an interaction term influences the detection rate of univariate chemicals.
 
-Table \ref{tab:onewaytabsens} summarizes the sensitivity and false discovery rates of univariate chemicals in all scenarios with interactions between chemicals, comparing the form of interactions, effect sizes, size of datasets, and models.
+Table \ref{tab:onewaytabsens} summarizes the sensitivity of univariate chemicals in all scenarios with interactions between chemicals, comparing the form of interactions, effect sizes, size of datasets, and models. See Table \ref{tab:onewaytabfdr} in Appendix \ref{suppresults} for false discovery rates, as well as Figures \ref{fig:nsmunivp}-\ref{fig:slgunivp} in Appendix \ref{suppresults} for the full p-value and PIP distributions for all scenarios with interactions between chemicals.
+\begin{table}
 
-In general, the detection rates of univariate chemicals in naive MLRs are not affected by the inclusion of interaction terms, in comparison to the base case. Though, in scenarios with a polynomial interaction between As and Cd, both of which are univariately insignificant, the larger size naive MLR detects a significant effect from Cd 67\% of the time (Figure \ref{fig:nlgunivp}). Figures
+\caption{\label{tab:onewaytabsens}Overall sensitivity for univariate chemicals in all scenarios with interactions between chemicals.}
+\centering
+\begin{tabular}[t]{llrrrrrrrr}
+\toprule
+\multicolumn{2}{c}{ } & \multicolumn{4}{c}{Small} & \multicolumn{4}{c}{Large} \\
+\cmidrule(l{3pt}r{3pt}){3-6} \cmidrule(l{3pt}r{3pt}){7-10}
+Type & Effect size & Naive & Oracle & BKMR & BSR & Naive & Oracle & BKMR & BSR\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{10}{l}{\textbf{Hg-Ni}}\\
+\hspace{1em}Mult. & Lower & 0.48 & 0.62 & 0.86 & 0.58 & 0.80 & 0.84 & 0.94 & 0.91\\
+\hspace{1em}Mult. & Higher & 0.50 & 0.70 & 0.82 & 0.68 & 0.80 & 0.95 & 0.91 & 0.92\\
+\hspace{1em}Poly. & Lower & 0.50 & 0.70 & 0.87 & 0.64 & 0.80 & 0.92 & 0.93 & 0.92\\
+\hspace{1em}Poly. & Higher & 0.46 & 0.62 & 0.80 & 0.57 & 0.80 & 0.88 & 0.92 & 0.93\\
+\addlinespace[0.3em]
+\multicolumn{10}{l}{\textbf{Cd-As}}\\
+\hspace{1em}Mult. & Lower & 0.46 & 0.78 & 0.81 & 0.56 & 0.78 & 0.94 & 0.94 & 0.92\\
+\hspace{1em}Mult. & Higher & 0.43 & 0.80 & 0.84 & 0.55 & 0.80 & 0.95 & 0.97 & 0.93\\
+\hspace{1em}Poly. & Lower & 0.46 & 0.78 & 0.78 & 0.56 & 0.82 & 0.94 & 0.96 & 0.92\\
+\hspace{1em}Poly. & Higher & 0.46 & 0.76 & 0.82 & 0.52 & 0.78 & 0.93 & 0.94 & 0.90\\
+\addlinespace[0.3em]
+\multicolumn{10}{l}{\textbf{Ni-Co}}\\
+\hspace{1em}Mult. & Lower & 0.49 & 0.65 & 0.85 & 0.60 & 0.80 & 0.84 & 0.95 & 0.92\\
+\hspace{1em}Mult. & Higher & 0.52 & 0.73 & 0.81 & 0.60 & 0.79 & 0.94 & 0.93 & 0.91\\
+\hspace{1em}Poly. & Lower & 0.52 & 0.67 & 0.85 & 0.64 & 0.80 & 0.89 & 0.93 & 0.89\\
+\hspace{1em}Poly. & Higher & 0.45 & 0.60 & 0.78 & 0.56 & 0.85 & 0.88 & 0.93 & 0.92\\
+\addlinespace[0.3em]
+\multicolumn{10}{l}{\textbf{Hg-Ni-Tl}}\\
+\hspace{1em}Mult. & Lower & 0.48 & 0.69 & 0.84 & 0.58 & 0.81 & 0.90 & 0.93 & 0.91\\
+\hspace{1em}Mult. & Higher & 0.44 & 0.73 & 0.80 & 0.56 & 0.82 & 0.94 & 0.95 & 0.92\\
+\hspace{1em}Poly. & Lower & 0.44 & 0.68 & 0.84 & 0.55 & 0.79 & 0.89 & 0.95 & 0.92\\
+\hspace{1em}Poly. & Higher & 0.48 & 0.73 & 0.80 & 0.62 & 0.77 & 0.94 & 0.92 & 0.92\\
+\bottomrule
+\end{tabular}
+\end{table}
+In general, the detection rates of univariate chemicals that participate in an interaction differ in comparison to the base case. First, we briefly note that the sensitivity for univariate chemicals that participate in interactions is reduced for oracle MLRs, compared to the base case (Table \ref{tab:onewaytabses} and Figures \ref{fig:osmunivp} and \ref{fig:olgunivp}). However, as the oracle MLRs contain explicit interaction terms, the p-values for univariate terms that participate in an interaction are not interpretable.
 
-See Figures \ref{fig:nsmunivp}-\ref{fig:slgunivp} in Appendix \ref{suppresults} for the full p-value and PIP distributions for all scenarios with interactions between chemicals.
+Now, for the naive MLR, BKMR, and BSR, chemicals that are marginally insignificant but participate in an interaction can occasionally be detected, depending on their form, effect size, and the sample size of the data. For instance, in scenarios with a higher effect polynomial interaction between As and Cd, both of which are univariately insignificant, the larger size naive MLR has a sensitivity of 0.67 for Cd (Figure \ref{fig:nlgunivp}), BKMR 0.78, and BSR 0.55. In comparison, the sensitivities are all lower in scenarios with the higher effect multiplicative interaction between As and Cd. This is likely because, in the theoretical model for this scenario, Cd exhibits a strong positive relationship with the health response at lower levels of As, which is then attenuated at higher levels of As (Figure \ref{fig:bp2}). On the other hand, in the case of a multiplicative interaction, the positive relationship between Cd and the health response at lower levels of As becomes inverted at higher levels of As (Figure \ref{fig:bm2}), which would be more difficult to detect when only considering additive effects. This demonstrates that non-additive interactions may occasionally be detected through univariate terms depending on their form, and when the effect size and sample size are large enough.
 
-Everything else is in appendix
+Finally, univariate sensitivity for chemicals that are marginally significant --- in our case, Hg and Ni --- are not noticably affected by participation in an interaction. For instance, the naive MLR, BKMR, and BSR had sensitivities of 0.80, 0.86, and 0.51, respectively, for Hg in the base case with the smaller size dataset. In scenarios with a higher effect size multiplicative interaction between Hg and Ni, the sensitivities were 0.77, 0.88, and 0.58 for the naive MLR, BKMR, and BSR, respectively. As such, we confirm that participation in an interaction does not affect univariate sensitivity, in our simulation scenarios.
+
+The findings from this section suggest the impact of interpreting univariate effects from models without considering potential interactions. If a chemical participates in an interaction but is, itself, not significant, then it can occasionally be detected as significant, depending on the form of the interaction, its effect size, and the sample size. On the other hand, if the chemical is itself significant, the detection of its effect should not be affected by the presence of the interaction.
 
 \hypertarget{two-way-interactions-between-chemicals}{%
 \subsection{Two-way interactions between chemicals}\label{two-way-interactions-between-chemicals}}
 
-Probably only include false discovery rates for BKMR for, again, Hg and Ni to reduce complexity and run-time, note that future work would involve getting FDR's for all models
+This section describes the ability of BKMR and BSR to detect two-way interactions between chemicals, using results from the oracle MLR as a baseline. We recall that sensitivities for BKMR were generated by the confidence interval approach, which required an arbitrary choice of the 0.75 and 0.25 quantiles for comparing the estimated response. On the other hand, sensitivities for BSR were based on the PIPs that it provides for interaction terms.
 
-Hg Ni full output
-\begin{figure}
+Table \ref{tab:twowaytab} summarizes the sensitivity of the oracle MLR, BKMR, and BSR for two-way interactions. The oracle MLR consistently has much greater sensitivity for interactions than both BKMR and BSR. In smaller size datasets, we designed the higher effect size of interactions such that the oracle MLR would have a sensitivity of around 0.5, which is confirmed in these results. In comparison, {[}\emph{finish this!}{]}
 
-{\centering \includegraphics[width=1\linewidth]{figures/ch4_hgni_biv} 
-
-}
-
-\caption{Exposure-response relationships estimated by BKMR in small (a) and large (b) datasets and BSR in small (c) and large (d) datasets, using the first chemical fixed at quantiles of another to assess interactions between Hg and Ni. All other chemicals are fixed at 0.5 quantiles.}\label{fig:hgnibiv}
-\end{figure}
-Table of all sensitivities
+Neither BKMR nor BSR consistently outperforms the other.
 \begin{table}
 
 \caption{\label{tab:twowaytab}Sensitivity to interactions in all scenarios with two-way interactions between exposures.}
@@ -1129,7 +1164,7 @@ Interaction type & Effect size & Oracle & BKMR & BSR & Oracle & BKMR & BSR\\
 \bottomrule
 \end{tabular}
 \end{table}
-Table of FDRs
+Table \ref{tab:twowayfdrtab} summarizes the false discovery rate of BKMR and BSR for two-way interactions. Both methods perform well in all scenarios, with false discovery rates below 0.02. For smaller size datasets, both BKMR and BSR have almost negligible false discovery rates, ranging from 0.0002 to 0.0025 for BKMR and 0.0009 to 0.0034 for BSR. In larger size datasets, false discovery rates increase slightly for BSR, ranging from 0.0016 to 0.0064. On the other hand, false discovery rates increase dramatically for BSR in the larger size datasets, ranging from 0.012 to 0.018. Therefore, we caution that false discovery rates, while still low, should be taken into consideration for BSR with larger sample sizes. Overall, though, we can confirm that the above results for sensitivity of BKMR and BSR are not happening by chance.
 \begin{table}
 
 \caption{\label{tab:twowayfdrtab}False discovery rate of interactions in all scenarios with two-way interactions between exposures.}
@@ -1172,14 +1207,33 @@ Interaction type & Effect size & BKMR & BSR & BKMR & BSR\\
 \bottomrule
 \end{tabular}
 \end{table}
-Everything else is in appendix
+In exposure mixture studies, a visual assessment of the estimated exposure-response relationship is often used to characterize the form of a potential interaction, and a common choice for diagnostic plots involves estimating the exposure-response relationship for one chemical at various quantiles of the second (e.g., \protect\hyperlink{ref-howe_prenatal_2020}{Howe et al., 2020}; \protect\hyperlink{ref-valeri_joint_2017}{Valeri et al., 2017}). Figure \ref{fig:hgnibiv} depicts such plots for {[}\emph{finish this!}{]}
+\begin{figure}
 
+{\centering \includegraphics[width=1\linewidth]{figures/ch4_hgni_biv} 
+
+}
+
+\caption{Exposure-response relationships estimated by BKMR in small (a) and large (b) datasets and BSR in small (c) and large (d) datasets, using the first chemical fixed at quantiles of another to assess interactions between Hg and Ni. All other chemicals are fixed at 0.5 quantiles.}\label{fig:hgnibiv}
+\end{figure}
+The sensitivities in Table \ref{tab:twowaytab} are reflected by the patterns in the diagnostic plots. For instance, the second column of Figures \ref{fig:hgnibiv}b and \ref{fig:hgnibiv}d visualizes the higher effect size, multiplicative interaction between Hg and Ni estimated by BKMR and BSR, respectively. Both models had a sensitivity of 0.76 for this interaction, which is confirmed by the clear difference in the exposure-response relationship between various quantiles of the second chemical. Moreover, the exposure-response relationships are shaped similarly to their associated cross-sections in the 3D theoretical model displayed in Figure \ref{fig:ap2}.
+
+Assessing both directions of the pairwise comparison in these plots (e.g., Hg at quantiles of Ni, as well as Ni at quantiles of Hg) is important as, depending on the true form of the interaction, one direction may have more separation between the estimated relationship at various quantiles. For instance, in the aforementioned example with Hg and Ni, it appears that assessing the relationship between Hg and the health outcome at quantiles of Ni leads to clearer separation than the other way around.
+
+Similar diagnostic plots for all other scenarios, which have similar patterns as those discussed here for Hg and Ni, are shown in Figures \ref{fig:ksmcdas}-\ref{fig:slgnico} in Appendix \ref{suppresults}. In particular, we confirm that
+\begin{itemize}
+\tightlist
+\item
+  most of Ni Co and Cd As don't appear to be significant
+\item
+  the two cases of BKMR large picking them do appear significant. they aren't significant for BSR though.
+\end{itemize}
 \hypertarget{three-way-interactions-between-chemicals}{%
 \subsection{Three-way interactions between chemicals}\label{three-way-interactions-between-chemicals}}
 
 Decide whether or not to include a figure???
 
-Table of sensitivities (try alternative ways of thresholding BSR???)
+Table of sensitivities
 \begin{table}
 
 \caption{\label{tab:threewaysens}Sensitivity to trivariate interactions between Hg, Ni, and Tl.}
@@ -1200,7 +1254,7 @@ Interaction type & Effect size & Oracle & BKMR & BSR & Oracle & BKMR & BSR\\
 \bottomrule
 \end{tabular}
 \end{table}
-Consider getting false discovery rates?
+Visual plots of the estimated exposure response relationship for one chemical, while holding the two others in the interaction at their 0.1, 0.5, and 0.9 quuantiles, are shown in Figures \ref{fig:ksmtri}-\ref{fig:slgtri}.
 
 \hypertarget{interactions-between-race-and-an-exposure}{%
 \subsection{Interactions between race and an exposure}\label{interactions-between-race-and-an-exposure}}
@@ -1235,7 +1289,7 @@ Interaction in & Effect size & Oracle & BKMR & BKMR & Oracle & BKMR\\
 
 \multirow{-2}{*}{\raggedright\arraybackslash Hisp. born outside US\textsuperscript{\ddag}} & Higher & 0.24 & 0.02 & 0.03 & 0.83 & 0.21\\
 \bottomrule
-\multicolumn{7}{l}{\textsuperscript{*} \makecell[l]{"Collapsed" refers to scenarios where the smallest three race categories are collapsed into \\one stratified model.}}\\
+\multicolumn{7}{l}{\textsuperscript{*} \makecell[l]{"Collapsed" refers to scenarios where the smallest three race categories are collapsed\\into one stratified model.}}\\
 \multicolumn{7}{l}{\textsuperscript{\dag} Original n=27}\\
 \multicolumn{7}{l}{\textsuperscript{\ddag} Original n=109}\\
 \end{tabular}
@@ -1518,7 +1572,7 @@ Figure \ref{fig:comparedf} compares the degrees of freedom selected using the WA
 Figures \ref{fig:nsmunivp}-\ref{fig:slgunivp} display the full distributions of univariate p-values and PIPs for all models in scenarios with interactions between chemicals that were not included in Chapter \ref{univsenschap}.
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_nsm_univ_pval} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_nsm_univ_pval} 
 
 }
 
@@ -1526,7 +1580,7 @@ Figures \ref{fig:nsmunivp}-\ref{fig:slgunivp} display the full distributions of 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_nlg_univ_pval} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_nlg_univ_pval} 
 
 }
 
@@ -1534,7 +1588,7 @@ Figures \ref{fig:nsmunivp}-\ref{fig:slgunivp} display the full distributions of 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_osm_univ_pval} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_osm_univ_pval} 
 
 }
 
@@ -1542,7 +1596,7 @@ Figures \ref{fig:nsmunivp}-\ref{fig:slgunivp} display the full distributions of 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_olg_univ_pval} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_olg_univ_pval} 
 
 }
 
@@ -1550,7 +1604,7 @@ Figures \ref{fig:nsmunivp}-\ref{fig:slgunivp} display the full distributions of 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_ksm_univ_pips} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_ksm_univ_pips} 
 
 }
 
@@ -1558,7 +1612,7 @@ Figures \ref{fig:nsmunivp}-\ref{fig:slgunivp} display the full distributions of 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_klg_univ_pips} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_klg_univ_pips} 
 
 }
 
@@ -1566,7 +1620,7 @@ Figures \ref{fig:nsmunivp}-\ref{fig:slgunivp} display the full distributions of 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_ssm_univ_pips} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_ssm_univ_pips} 
 
 }
 
@@ -1574,16 +1628,16 @@ Figures \ref{fig:nsmunivp}-\ref{fig:slgunivp} display the full distributions of 
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_slg_univ_pips} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_slg_univ_pips} 
 
 }
 
-\caption{PIP distributions of univariate chemicals from BKMR models run on larger size (n=252) datasets, in all scenarios with interactions between chemicals. Detection rates are displayed above a point-range with the median and first and third quartiles.}\label{fig:slgunivp}
+\caption{PIP distributions of univariate chemicals from BSR models run on larger size (n=252) datasets, in all scenarios with interactions between chemicals. Detection rates are displayed above a point-range with the median and first and third quartiles.}\label{fig:slgunivp}
 \end{figure}
 Figures \ref{fig:osmbivp} and \ref{fig:olgbivp} display the full p-value distributions on interaction terms between chemicals in the oracle MLR models.
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_osm_biv_pval} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_osm_biv_pval} 
 
 }
 
@@ -1591,50 +1645,13 @@ Figures \ref{fig:osmbivp} and \ref{fig:olgbivp} display the full p-value distrib
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_olg_biv_pval} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_olg_biv_pval} 
 
 }
 
 \caption{P-value distributions of interaction terms from oracle MLRs run on larger size (n=1000) datasets, from all scenarios with interactions between chemicals.}\label{fig:olgbivp}
 \end{figure}
-Tables \ref{tab:onewaytabsens} and \ref{tab:onewaytabfdr} summarize the sensitivities and false discovery rates for univariate terms in scenarios with interactions between chemicals.
-\begin{table}
-
-\caption{\label{tab:onewaytabsens}Overall sensitivity for univariate chemicals in all scenarios with interactions between chemicals.}
-\centering
-\begin{tabular}[t]{llrrrrrrrr}
-\toprule
-\multicolumn{2}{c}{ } & \multicolumn{4}{c}{Small} & \multicolumn{4}{c}{Large} \\
-\cmidrule(l{3pt}r{3pt}){3-6} \cmidrule(l{3pt}r{3pt}){7-10}
-Type & Effect size & Naive & Oracle & BKMR & BSR & Naive & Oracle & BKMR & BSR\\
-\midrule
-\addlinespace[0.3em]
-\multicolumn{10}{l}{\textbf{Hg-Ni}}\\
-\hspace{1em}Mult. & Lower & 0.48 & 0.62 & 0.86 & 0.58 & 0.80 & 0.84 & 0.94 & 0.91\\
-\hspace{1em}Mult. & Higher & 0.50 & 0.70 & 0.82 & 0.68 & 0.80 & 0.95 & 0.91 & 0.92\\
-\hspace{1em}Poly. & Lower & 0.50 & 0.70 & 0.87 & 0.64 & 0.80 & 0.92 & 0.93 & 0.92\\
-\hspace{1em}Poly. & Higher & 0.46 & 0.62 & 0.80 & 0.57 & 0.80 & 0.88 & 0.92 & 0.93\\
-\addlinespace[0.3em]
-\multicolumn{10}{l}{\textbf{Cd-As}}\\
-\hspace{1em}Mult. & Lower & 0.46 & 0.78 & 0.81 & 0.56 & 0.78 & 0.94 & 0.94 & 0.92\\
-\hspace{1em}Mult. & Higher & 0.43 & 0.80 & 0.84 & 0.55 & 0.80 & 0.95 & 0.97 & 0.93\\
-\hspace{1em}Poly. & Lower & 0.46 & 0.78 & 0.78 & 0.56 & 0.82 & 0.94 & 0.96 & 0.92\\
-\hspace{1em}Poly. & Higher & 0.46 & 0.76 & 0.82 & 0.52 & 0.78 & 0.93 & 0.94 & 0.90\\
-\addlinespace[0.3em]
-\multicolumn{10}{l}{\textbf{Ni-Co}}\\
-\hspace{1em}Mult. & Lower & 0.49 & 0.65 & 0.85 & 0.60 & 0.80 & 0.84 & 0.95 & 0.92\\
-\hspace{1em}Mult. & Higher & 0.52 & 0.73 & 0.81 & 0.60 & 0.79 & 0.94 & 0.93 & 0.91\\
-\hspace{1em}Poly. & Lower & 0.52 & 0.67 & 0.85 & 0.64 & 0.80 & 0.89 & 0.93 & 0.89\\
-\hspace{1em}Poly. & Higher & 0.45 & 0.60 & 0.78 & 0.56 & 0.85 & 0.88 & 0.93 & 0.92\\
-\addlinespace[0.3em]
-\multicolumn{10}{l}{\textbf{Hg-Ni-Tl}}\\
-\hspace{1em}Mult. & Lower & 0.48 & 0.69 & 0.84 & 0.58 & 0.81 & 0.90 & 0.93 & 0.91\\
-\hspace{1em}Mult. & Higher & 0.44 & 0.73 & 0.80 & 0.56 & 0.82 & 0.94 & 0.95 & 0.92\\
-\hspace{1em}Poly. & Lower & 0.44 & 0.68 & 0.84 & 0.55 & 0.79 & 0.89 & 0.95 & 0.92\\
-\hspace{1em}Poly. & Higher & 0.48 & 0.73 & 0.80 & 0.62 & 0.77 & 0.94 & 0.92 & 0.92\\
-\bottomrule
-\end{tabular}
-\end{table}
+Table \ref{tab:onewaytabfdr} summarizes the sensitivities and false discovery rates for univariate terms in scenarios with interactions between chemicals.
 \begin{table}
 
 \caption{\label{tab:onewaytabfdr}Overall false discovery rate for univariate chemicals in all scenarios with interactions between chemicals.}
@@ -1675,7 +1692,7 @@ Type & Effect size & Naive & BKMR & BSR & Naive & BKMR & BSR\\
 Figures \ref{fig:ksmcdas}-\ref{fig:slgtri} display the estimated exposure-response surface for one chemical while fixing one (or two, for three-way interactions) other chemicals at their 0.1, 0.5, and 0.9 quantiles, for all scenarios not included in Chapter \ref{univsenschap}.
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_ksm_biv_expresp_2} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_ksm_biv_expresp_2} 
 
 }
 
@@ -1683,7 +1700,7 @@ Figures \ref{fig:ksmcdas}-\ref{fig:slgtri} display the estimated exposure-respon
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_ssm_biv_expresp_2} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_ssm_biv_expresp_2} 
 
 }
 
@@ -1691,7 +1708,7 @@ Figures \ref{fig:ksmcdas}-\ref{fig:slgtri} display the estimated exposure-respon
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_klg_biv_expresp_2} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_klg_biv_expresp_2} 
 
 }
 
@@ -1699,7 +1716,7 @@ Figures \ref{fig:ksmcdas}-\ref{fig:slgtri} display the estimated exposure-respon
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_slg_biv_expresp_2} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_slg_biv_expresp_2} 
 
 }
 
@@ -1707,7 +1724,7 @@ Figures \ref{fig:ksmcdas}-\ref{fig:slgtri} display the estimated exposure-respon
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_ksm_biv_expresp_3} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_ksm_biv_expresp_3} 
 
 }
 
@@ -1715,7 +1732,7 @@ Figures \ref{fig:ksmcdas}-\ref{fig:slgtri} display the estimated exposure-respon
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_ssm_biv_expresp_3} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_ssm_biv_expresp_3} 
 
 }
 
@@ -1723,7 +1740,7 @@ Figures \ref{fig:ksmcdas}-\ref{fig:slgtri} display the estimated exposure-respon
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_klg_biv_expresp_3} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_klg_biv_expresp_3} 
 
 }
 
@@ -1731,7 +1748,7 @@ Figures \ref{fig:ksmcdas}-\ref{fig:slgtri} display the estimated exposure-respon
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_slg_biv_expresp_3} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_slg_biv_expresp_3} 
 
 }
 
@@ -1739,7 +1756,7 @@ Figures \ref{fig:ksmcdas}-\ref{fig:slgtri} display the estimated exposure-respon
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_ksm_triv_expresp} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_ksm_triv_expresp} 
 
 }
 
@@ -1747,7 +1764,7 @@ Figures \ref{fig:ksmcdas}-\ref{fig:slgtri} display the estimated exposure-respon
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_ssm_triv_expresp} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_ssm_triv_expresp} 
 
 }
 
@@ -1755,7 +1772,7 @@ Figures \ref{fig:ksmcdas}-\ref{fig:slgtri} display the estimated exposure-respon
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_klg_triv_expresp} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_klg_triv_expresp} 
 
 }
 
@@ -1763,7 +1780,7 @@ Figures \ref{fig:ksmcdas}-\ref{fig:slgtri} display the estimated exposure-respon
 \end{figure}
 \begin{figure}
 
-{\centering \includegraphics[width=0.85\linewidth]{figures/ch4_slg_triv_expresp} 
+{\centering \includegraphics[width=0.8\linewidth]{figures/ch4_slg_triv_expresp} 
 
 }
 
@@ -6861,6 +6878,9 @@ Sun, Z., Tao, Y., Li, S., Ferguson, K. K., Meeker, J. D., Park, S. K., \ldots{} 
 
 \leavevmode\vadjust pre{\hypertarget{ref-taylor_statistical_2016}{}}%
 Taylor, K. W., Joubert, B. R., Braun, J. M., Dilworth, C., Gennings, C., Hauser, R., \ldots{} Carlin, D. J. (2016). Statistical {Approaches} for {Assessing} {Health} {Effects} of {Environmental} {Chemical} {Mixtures} in {Epidemiology}: {Lessons} from an {Innovative} {Workshop}. \emph{Environmental Health Perspectives}, \emph{124}(12), A227--A229. http://doi.org/\href{https://doi.org/10.1289/EHP547}{10.1289/EHP547}
+
+\leavevmode\vadjust pre{\hypertarget{ref-valeri_joint_2017}{}}%
+Valeri, L., Mazumdar, M. M., Bobb, J. F., Claus Henn, B., Rodrigues, E., Sharif, O. I. A., \ldots{} Wright, R. O. (2017). The {Joint} {Effect} of {Prenatal} {Exposure} to {Metal} {Mixtures} on {Neurodevelopmental} {Outcomes} at 20--40 {Months} of {Age}: {Evidence} from {Rural} {Bangladesh}. \emph{Environmental Health Perspectives}, \emph{125}(6), 067015. http://doi.org/\href{https://doi.org/10.1289/EHP614}{10.1289/EHP614}
 
 \leavevmode\vadjust pre{\hypertarget{ref-vanderweele_tutorial_2014}{}}%
 VanderWeele, Tyler J., \& Knol, M. J. (2014). A {Tutorial} on {Interaction}. \emph{Epidemiologic Methods}, \emph{3}(1), 33--72. http://doi.org/\href{https://doi.org/10.1515/em-2013-0005}{10.1515/em-2013-0005}

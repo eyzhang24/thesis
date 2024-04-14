@@ -164,7 +164,7 @@ include_graphics(path = "figures/ch4_ssm_univ_pips.png")
 ```
 
 
-```{r slgunivp, fig.cap = "PIP distributions of univariate chemicals from BKMR models run on larger size (n=252) datasets, in all scenarios with interactions between chemicals. Detection rates are displayed above a point-range with the median and first and third quartiles.", out.width = '80%', echo = FALSE}
+```{r slgunivp, fig.cap = "PIP distributions of univariate chemicals from BSR models run on larger size (n=252) datasets, in all scenarios with interactions between chemicals. Detection rates are displayed above a point-range with the median and first and third quartiles.", out.width = '80%', echo = FALSE}
 # bsr large
 include_graphics(path = "figures/ch4_slg_univ_pips.png")
 ```

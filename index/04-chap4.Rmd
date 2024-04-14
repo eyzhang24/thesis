@@ -275,28 +275,24 @@ comb_sens |>
   pack_rows(index = comb_sens_ord) 
 ```
 
-In general, the detection rates of univariate chemicals that participate in an interaction differ in comparison to the base case. First, we note that the sensitivity for univariate chemicals that participate in interactions is reduced for oracle MLRs, compared to the base case (Table \@ref(tab:onewaytabses) and Figures \@ref(fig:osmunivp) and \@ref(fig:olgunivp)). However, this pattern is unique to the oracle MLR, as they contain explicit interaction terms, so p-values for univariate terms that participate in an interaction are not interpretable. 
+In general, the detection rates of univariate chemicals that participate in an interaction differ in comparison to the base case. First, we briefly note that the sensitivity for univariate chemicals that participate in interactions is reduced for oracle MLRs, compared to the base case (Table \@ref(tab:onewaytabses) and Figures \@ref(fig:osmunivp) and \@ref(fig:olgunivp)). However, as the oracle MLRs contain explicit interaction terms, the p-values for univariate terms that participate in an interaction are not interpretable. 
 
 <!-- In general, the detection rates of univariate chemicals in naive MLRs are not affected by the inclusion of interaction terms, in comparison to the base case (Table \@ref(tab:onewaytabsens) and Figures \@ref(fig:nsmunivp) and \@ref(fig:nlgunivp)).  -->
 
-Now, for the naive MLR, BKMR, and BSR, chemicals that are marginally insignificant but participate in an interaction can occasionally be detected, depending on their form, effect size, and the sample size of the data. For instance, in scenarios with a higher effect polynomial interaction between As and Cd, both of which are univariately insignificant, the larger size naive MLR has a sensitivity of 0.67 for Cd (Figure \@ref(fig:nlgunivp)), BKMR 0.78, and BSR 0.55. In comparison, the sensitivities are all lower in scenarios with the higher effect multiplicative interaction between As and Cd. This is likely because, in the theoretical model for this scenario, Cd has a strong positive relationship with the health response at lower levels of As and a weak relationship at higher levels of As (Figure \@ref(fig:bp2)). On the other hand, the relationship between Cd and the health response inverts at lower versus higher levels of As (Figure \@ref(fig:bm2)), which would be more difficult to detect when only considering additive effects. This demonstrates that non-additive interactions may occasionally be detected through linear, univariate terms, depending on their form, and when the effect size and sample size are large enough.  
+Now, for the naive MLR, BKMR, and BSR, chemicals that are marginally insignificant but participate in an interaction can occasionally be detected, depending on their form, effect size, and the sample size of the data. For instance, in scenarios with a higher effect polynomial interaction between As and Cd, both of which are univariately insignificant, the larger size naive MLR has a sensitivity of 0.67 for Cd (Figure \@ref(fig:nlgunivp)), BKMR 0.78, and BSR 0.55. In comparison, the sensitivities are all lower in scenarios with the higher effect multiplicative interaction between As and Cd. This is likely because, in the theoretical model for this scenario, Cd exhibits a strong positive relationship with the health response at lower levels of As, which is then attenuated at higher levels of As (Figure \@ref(fig:bp2)). On the other hand, in the case of a multiplicative interaction, the positive relationship between Cd and the health response at lower levels of As becomes inverted at higher levels of As (Figure \@ref(fig:bm2)), which would be more difficult to detect when only considering additive effects. This demonstrates that non-additive interactions may occasionally be detected through univariate terms depending on their form, and when the effect size and sample size are large enough.
 
-Chemicals that are marginally significant — in our case, Hg and Ni — and participate in an interaction may be detected slightly less often via their univariate effects. 
+Finally, univariate sensitivity for chemicals that are marginally significant — in our case, Hg and Ni — are not noticably affected by participation in an interaction. For instance, the naive MLR, BKMR, and BSR had sensitivities of 0.80, 0.86, and 0.51, respectively, for Hg in the base case with the smaller size dataset. In scenarios with a higher effect size multiplicative interaction between Hg and Ni, the sensitivities were 0.77, 0.88, and 0.58 for the naive MLR, BKMR, and BSR, respectively. As such, we confirm that participation in an interaction does not affect univariate sensitivity, in our simulation scenarios. 
+
+The findings from this section suggest the impact of interpreting univariate effects from models without considering potential interactions. If a chemical participates in an interaction but is, itself, not significant, then it can occasionally be detected as significant, depending on the form of the interaction, its effect size, and the sample size. On the other hand, if the chemical is itself significant, the detection of its effect should not be affected by the presence of the interaction. 
 
 ### Two-way interactions between chemicals
 
-This section describes the ability of BKMR and BSR to detect two-way interactions between chemicals, using results from the oracle MLR as a baseline. 
+This section describes the ability of BKMR and BSR to detect two-way interactions between chemicals, using results from the oracle MLR as a baseline. We recall that sensitivities for BKMR were generated by the confidence interval approach, which required an arbitrary choice of the 0.75 and 0.25 quantiles for comparing the estimated response. On the other hand, sensitivities for BSR were based on the PIPs that it provides for interaction terms. 
 
-First, we include the full output of 
+Table \@ref(tab:twowaytab) summarizes the sensitivity of the oracle MLR, BKMR, and BSR for two-way interactions. The oracle MLR consistently has much greater sensitivity for interactions than both BKMR and BSR. In smaller size datasets, we designed the higher effect size of interactions such that the oracle MLR would have a sensitivity of around 0.5, which is confirmed in these results. In comparison, [*finish this!*]
 
-In exposure mixture studies, a visual assessment of such diagnostic plots is often the first 
+Neither BKMR nor BSR consistently outperforms the other. 
 
-```{r hgnibiv, fig.cap = "Exposure-response relationships estimated by BKMR in small (a) and large (b) datasets and BSR in small (c) and large (d) datasets, using the first chemical fixed at quantiles of another to assess interactions between Hg and Ni. All other chemicals are fixed at 0.5 quantiles.", echo = FALSE, out.width = '100%'}
-include_graphics("figures/ch4_hgni_biv.png")
-```
-
-
-Table of all sensitivities
 
 ```{r twowaytab, echo = FALSE, message = FALSE}
 oracle_comb <- read_csv("data/oracle_sens.csv")
@@ -321,7 +317,7 @@ comb_int <- bind_rows(
            .default = cond
          ), 
          cond = factor(cond, levels = c("Hg-Ni", "Cd-As", "Ni-Co")), 
-         inter_type = ifelse(case %% 4 %in% 1:2, "Multiplicative", "Polynomial"), 
+         inter_type = ifelse(case %in% c(2, 3, 6, 7, 10, 11), "Multiplicative", "Polynomial"), 
          effect_size = factor(ifelse(case %% 2 == 1, "Higher", "Lower"), 
                               levels = c("Lower", "Higher"))) |> 
   select(-case) |>
@@ -343,7 +339,8 @@ comb_int |>
   collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace")
 ```
 
-Table of FDRs
+Table \@ref(tab:twowayfdrtab) summarizes the false discovery rate of BKMR and BSR for two-way interactions. Both methods perform well in all scenarios, with false discovery rates below 0.02. For smaller size datasets, both BKMR and BSR have almost negligible false discovery rates, ranging from 0.0002 to 0.0025 for BKMR and 0.0009 to 0.0034 for BSR. In larger size datasets, false discovery rates increase slightly for BSR, ranging from 0.0016 to 0.0064. On the other hand, false discovery rates increase dramatically for BSR in the larger size datasets, ranging from 0.012 to 0.018. Therefore, false discovery rates, while still low, should be taken into consideration for BSR with larger sample sizes. Overall, though, we can confirm that the above results for sensitivity of BKMR and BSR are not happening by chance. 
+
 
 ```{r twowayfdrtab, echo = FALSE, message = FALSE}
 fdr_comb <- read_csv("data/comb_int_fdr.csv")
@@ -357,7 +354,7 @@ fdr_comb2 <- fdr_comb |>
       case %in% 10:13 ~ "Ni-Co"
     ),
     cond = factor(cond, levels = c("Hg-Ni", "Cd-As", "Ni-Co")), 
-    inter_type = ifelse(case %% 4 %in% 1:2, "Multiplicative", "Polynomial"),
+    inter_type = ifelse(case %in% c(2, 3, 6, 7, 10, 11), "Multiplicative", "Polynomial"),
     effect_size = factor(
       ifelse(case %% 2 == 1, "Higher", "Lower"),
       levels = c("Lower", "Higher")
@@ -382,8 +379,20 @@ fdr_comb2 |>
 ```
 
 
-Everything else is in appendix
+In exposure mixture studies, a visual assessment of the estimated exposure-response relationship is often used to characterize the form of a potential interaction, and a common choice for diagnostic plots involves estimating the exposure-response relationship for one chemical at various quantiles of the second [e.g., @howe_prenatal_2020; @valeri_joint_2017]. Figure \@ref(fig:hgnibiv) depicts such plots for all scenarios with interactions between Hg and Ni. 
 
+
+```{r hgnibiv, fig.cap = "Exposure-response relationships estimated by BKMR in small (a) and large (b) datasets and BSR in small (c) and large (d) datasets, using the first chemical fixed at quantiles of another to assess interactions between Hg and Ni. All other chemicals are fixed at 0.5 quantiles.", echo = FALSE, out.width = '100%'}
+include_graphics("figures/ch4_hgni_biv.png")
+```
+
+The sensitivities in Table \@ref(tab:twowaytab) are reflected by the patterns in the diagnostic plots. For instance, the second column of Figures \@ref(fig:hgnibiv)b and \@ref(fig:hgnibiv)d visualizes the higher effect size, multiplicative interaction between Hg and Ni estimated by BKMR and BSR, respectively. Both models had a sensitivity of 0.76 for this interaction, which is confirmed by the clear difference in the exposure-response relationship between various quantiles of the second chemical. Moreover, the exposure-response relationships are shaped similarly to their associated cross-sections in the 3D theoretical model displayed in Figure \@ref(fig:ap2). 
+
+Assessing both directions of the pairwise comparison in these plots (e.g., Hg at quantiles of Ni, as well as Ni at quantiles of Hg) is important as, depending on the true form of the interaction, one direction may have more separation between the estimated relationship at various quantiles. For instance, in the aforementioned example with Hg and Ni, it appears that assessing the relationship between Hg and the health outcome at quantiles of Ni leads to clearer separation than the other way around. 
+
+<!-- The choice of quantiles can also be important for the same reason — depending on the true form of the interaction.  -->
+
+Similar diagnostic plots for all other scenarios, which have similar patterns as those discussed here for Hg and Ni, are shown in Figures \@ref(fig:ksmcdas)-\@ref(fig:slgnico) in Appendix \@ref(suppresults). In particular, we confirm that the low sensitivities observed in scenarios with interactions between Cd and As, as well as Ni and Co are reflected by estimated exposure-response relationships that do not appear to be associated with interactions. Moreover, it appears that, in Figures \@ref(fig:klgcdas) and \@ref(fig:klgnico), the higher effect size, polynomial interactions between Cd and As and Ni and Co are somewhat captured by BKMR, which reflects their associated sensitivities of 0.57 and 0.52, respectively. 
 
 ### Three-way interactions between chemicals
 
@@ -406,6 +415,7 @@ triv |>
   collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace")
 ```
 
+Visual plots of the estimated exposure response relationship for one chemical, while holding the two others in the interaction at their 0.1, 0.5, and 0.9 quuantiles, are shown in Figures \@ref(fig:ksmtri)-\@ref(fig:slgtri). 
 
 ### Interactions between race and an exposure
 
@@ -455,7 +465,7 @@ re_ints |> kbl(booktabs = TRUE, escape = FALSE,
                    bold = TRUE) |>
   collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace") |> 
   # column_spec(7, width = "6em") |>
-  add_footnote(c("\"Collapsed\" refers to scenarios where the smallest three race categories are collapsed into \none stratified model.", "Original n=27", "Original n=109"), notation = "symbol")
+  add_footnote(c("\"Collapsed\" refers to scenarios where the smallest three race categories are collapsed\ninto one stratified model.", "Original n=27", "Original n=109"), notation = "symbol")
 ```
 
 
