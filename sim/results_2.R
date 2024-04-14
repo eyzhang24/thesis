@@ -1258,12 +1258,12 @@ write_csv(bsr_comb, "index/data/bsr_int_sens.csv")
 
 # bivar FDR ---------------------------------------------------------------
 
-bsr_comb <- read_csv("index/data/bsr_int_sens.csv")
+bsr_comb_fdr <- read_csv("index/data/bsr_int_sens.csv")
 
 ksmfdr<- read_csv("sim/bkmr_sm/int_bivarfull.csv")
 klgfdr <- read_csv("sim/bkmr_lg/int_bivarfull.csv")
 
-bkmr_comb <- bind_rows(
+bkmr_comb_fdr <- bind_rows(
   mutate(ksmfdr, size = "Small"), 
   mutate(klgfdr, size = "Large")
 ) |> 
@@ -1282,8 +1282,8 @@ bkmr_comb <- bind_rows(
   summarize(sensitivity = sum(signif)/n())
 
 fdr_comb <- bind_rows(
-  mutate(bkmr_comb, mod = "BKMR"), 
-  mutate(bsr_comb, mod = "BSR")
+  mutate(bkmr_comb_fdr, mod = "BKMR"), 
+  mutate(bsr_comb_fdr, mod = "BSR")
 ) |> 
   relocate(mod)
 
@@ -1656,17 +1656,18 @@ oracle_senst <- bind_rows(
   filter(mutate(osm_comb, size = "Small"), case %in% 14:17), 
   filter(mutate(olg_comb, size = "Large"), case %in% 14:17)
 ) |> 
+  filter(variable == "Int") |> 
   group_by(case, size) |> 
   summarize(sensitivity = sum(p < 0.05)/n()) |> 
   mutate(mod = "Oracle") |> 
   relocate(mod)
 bkmr_senst <- bkmr_comb |> 
   filter(case %in% 14:17) |> 
-  pivot_wider(names_from = cond, values_from = signif) |> 
-  mutate(signif = unname(pick(4) | pick(5) | pick(6))) |> 
-  rename(signif = 7) |> 
-  group_by(case, size) |> 
-  summarize(sensitivity = sum(signif)/n()) |> 
+  pivot_wider(names_from = cond, values_from = signif) |>
+  mutate(signif = unname(pick(4) | pick(5) | pick(6))) |>
+  rename(signif = 7) |>
+  group_by(case, size) |>
+  summarize(sensitivity = sum(signif)/n()) |>
   mutate(mod = "BKMR") |> 
   relocate(mod)
 bsr_senst <- bind_rows(
@@ -1677,6 +1678,13 @@ bsr_senst <- bind_rows(
   summarize(sensitivity = sum(PIP >= 0.5)/n()) |> 
   mutate(mod = "BSR") |> 
   relocate(mod)
+
+# temp <- read_csv("index/data/triv_sens.csv")
+# temp2 <- temp |> 
+#   left_join(rename(oracle_senst, sens2 = sensitivity), 
+#             by = c("mod", "case", "size")) |> 
+#   mutate(sensitivity = ifelse(!is.na(sens2), sens2, sensitivity)) |> 
+#   select(-sens2)
 
 all_senst <- bind_rows(oracle_senst, bkmr_senst, bsr_senst) |> 
   mutate(inter_type = ifelse(case %in% c(14, 15), "Multiplicative", "Polynomial"), 

@@ -196,6 +196,9 @@ ksmre_det1 <- ksmre_ints |>
   group_by(case, trial) |> 
   group_modify(~ check_overlap(.))
 
+# check number of models where at least one was unable to be fitted
+table(ksmre_det1$num_na != 0)
+
 # use collapsed
 ksmre_det2 <- ksmre_ints |> 
   filter(race %in% c(4, 5, 6)) |> 
@@ -438,8 +441,8 @@ s34 <- sre34 |>
 
 re_expresp <- cowplot::plot_grid(
   k12 + theme(legend.position = "none"),
-  k34 + theme(legend.position = "none"),
   s12 + theme(legend.position = "none"), 
+  k34 + theme(legend.position = "none"),
   s34 + theme(legend.position = "none"),
   nrow = 2
 )
