@@ -148,7 +148,7 @@ Finally, we ran stratified BKMR and BSR models in scenarios where we simulated a
 
 <!-- - expect that there will be less power to detect these interactions, especially in smaller size datasets -->
 
-We checked convergence for a selection of BKMR and BSR models using trace plots (Appendix \@ref(suppresults), Figure \@ref(fig:traceplots)). 
+For all models, we saved run-times for the fitting process on the high-performance computing cluster. Due to an error in our code and time constraints in this thesis, we were not able to obtain run times for stratified BSR models. We checked convergence for a selection of BKMR and BSR models using trace plots (Appendix \@ref(suppresults), Figure \@ref(fig:traceplots)). 
 
 ### Model assessment 
 
@@ -204,7 +204,7 @@ base_sens2 |>
 
 The naive MLR does the best job at picking up the effects of Hg, with a sensitivity of 0.8 and 1 in the smaller and larger size datasets, respectively. This is likely because Hg is the only linear term in the model. Ni and Sn have an S-shaped curve with higher and lower effect sizes, respectively, so the naive MLR detects a slight linear signal from them. Sb, which has a U-shaped curve, is the hardest to pick up. On the other hand, the oracle MLR consistently detects Hg, Ni, and Sb. The smaller size oracle MLRs only occasionally pick up Sn, likely due to the lower effect size. 
 
-BKMR has similar sensitivity rates as the oracle MLR, ranging from 0.52 to 0.95 in the smaller size datasets and 0.77 to 1.00 in the larger size datasets. However, BKMR also has, by far, the highest false discovery rates, ranging from 0.30 to 0.41 in the smaller size datasets and 0.08 to 0.14 in the larger size datasets. This is likely due to the default choice of an inverse uniform distribution from 0 to 100 for the "slab" component on the "slab-and-spike" prior on $r_m$. Choosing a prior that assigns higher probability to smaller values of $r_m$ should reduce the false discovery rate. In contrast, BSR tends to have slightly lower sensitivity rates than BKMR, raning from 0.17 to 0.88 in the smaller size datasets and 0.62 to 1.00 in the larger size datasets, but the false discovery rates are much lower, ranging from 0.04 to 0.05 in the smaller size datasets and 0.00 to 0.03 in the larger size datasets. Together, this suggests that the default prior choices provided by BSR are likely a better fit for this scenario. 
+BKMR has similar sensitivity rates as the oracle MLR, ranging from 0.52-0.95 in the smaller size datasets and 0.77-1.00 in the larger size datasets. However, BKMR also has, by far, the highest false discovery rates, ranging from 0.30-0.41 in the smaller size datasets and 0.08-0.14 in the larger size datasets. This is likely due to the default choice of an inverse uniform distribution from 0 to 100 for the "slab" component on the "slab-and-spike" prior on $r_m$. Choosing a prior that assigns higher probability to smaller values of $r_m$ should reduce the false discovery rate. In contrast, BSR tends to have slightly lower sensitivity rates than BKMR, raning from 0.17 to 0.88 in the smaller size datasets and 0.62-1.00 in the larger size datasets, but the false discovery rates are much lower, ranging from 0.04-0.05 in the smaller size datasets and 0-0.03 in the larger size datasets. Together, this suggests that the default prior choices provided by BSR are likely a better fit for this scenario. 
 
 Overall, this base case scenario confirms that the multiple regression and Bayesian models behave as expected. We also recognize that, for univariate significance metrics, BKMR tends to produce higher sensitivity and false discovery rates, while the opposite is true for BSR. 
 
@@ -283,15 +283,13 @@ Now, for the naive MLR, BKMR, and BSR, chemicals that are marginally insignifica
 
 Finally, univariate sensitivity for chemicals that are marginally significant — in our case, Hg and Ni — are not noticably affected by participation in an interaction. For instance, the naive MLR, BKMR, and BSR had sensitivities of 0.80, 0.86, and 0.51, respectively, for Hg in the base case with the smaller size dataset. In scenarios with a higher effect size multiplicative interaction between Hg and Ni, the sensitivities were 0.77, 0.88, and 0.58 for the naive MLR, BKMR, and BSR, respectively. As such, we confirm that participation in an interaction does not affect univariate sensitivity, in our simulation scenarios. 
 
-The findings from this section suggest the impact of interpreting univariate effects from models without considering potential interactions. If a chemical participates in an interaction but is, itself, not significant, then it can occasionally be detected as significant, depending on the form of the interaction, its effect size, and the sample size. On the other hand, if the chemical is itself significant, the detection of its effect should not be affected by the presence of the interaction. 
+The findings from this section suggest the impact of interpreting univariate effects from models without considering potential interactions. If a chemical participates in an interaction but is, itself, not significant, then it can occasionally be detected as significant, depending on the form of the interaction, its effect size, and the sample size. On the other hand, if the chemical is itself significant, the detection of its effect should not be affected by the presence of an interaction. 
 
 ### Two-way interactions between chemicals
 
 This section describes the ability of BKMR and BSR to detect two-way interactions between chemicals, using results from the oracle MLR as a baseline. We recall that sensitivities for BKMR were generated by the confidence interval approach, which required an arbitrary choice of the 0.75 and 0.25 quantiles for comparing the estimated response. On the other hand, sensitivities for BSR were based on the PIPs that it provides for interaction terms. 
 
-Table \@ref(tab:twowaytab) summarizes the sensitivity of the oracle MLR, BKMR, and BSR for two-way interactions. The oracle MLR consistently has much greater sensitivity for interactions than both BKMR and BSR. In smaller size datasets, we designed the higher effect size of interactions such that the oracle MLR would have a sensitivity of around 0.5, which is confirmed in these results. In comparison, [*finish this!*]
-
-Neither BKMR nor BSR consistently outperforms the other. 
+Table \@ref(tab:twowaytab) summarizes the sensitivity of the oracle MLR, BKMR, and BSR for two-way interactions. The oracle MLR consistently has much greater sensitivity for interactions than both BKMR and BSR. First, we discuss smaller size datasets. At the lower effect size of interactions, the oracle MLR has sensitivities of 0.15-0.24, while BKMR and BSR have much lower sensitivities of 0-0.03, excluding BSR's sensitivity of 0.07 for the multiplicative interaction between Hg and Ni. Now, for the higher effect size interactions in the smaller size datasets, the oracle MLR has a sensitivity of around 0.5, which is as we designed. In comparison, for Hg and Ni, BKMR has sensitivities of only 0.11 and 0.03 for the multiplicative and polynomial interactions, respectively, while BSR has sensitivities of only 0.10 and 0.14. For interactions between Cd and As, and between Ni and Co, BKMR and BSR have sensitivities ranging from only 0-0.02. Therefore, in smaller size datasets, it is very difficult for BKMR and BSR to detect interactions, particularly when the effect size is low, or both chemicals are not marginally significant (which is the case for Cd and As and Ni and Co). 
 
 
 ```{r twowaytab, echo = FALSE, message = FALSE}
@@ -339,7 +337,14 @@ comb_int |>
   collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace")
 ```
 
-Table \@ref(tab:twowayfdrtab) summarizes the false discovery rate of BKMR and BSR for two-way interactions. Both methods perform well in all scenarios, with false discovery rates below 0.02. For smaller size datasets, both BKMR and BSR have almost negligible false discovery rates, ranging from 0.0002 to 0.0025 for BKMR and 0.0009 to 0.0034 for BSR. In larger size datasets, false discovery rates increase slightly for BSR, ranging from 0.0016 to 0.0064. On the other hand, false discovery rates increase dramatically for BSR in the larger size datasets, ranging from 0.012 to 0.018. Therefore, false discovery rates, while still low, should be taken into consideration for BSR with larger sample sizes. Overall, though, we can confirm that the above results for sensitivity of BKMR and BSR are not happening by chance. 
+
+Now, in larger size datasets, interactions are detected much more frequently by BKMR and BSR. In general, for interactions between Hg and Ni, the sensitivities of BKMR and BSR have values around 0.2-0.3 less than those for the oracle MLR. As a result, for the higher effect size interactions, BKMR and BSR have relatively high sensitivites ranging from 0.76-0.88. While both do not achieve the sensitivity of 1 that the oracle MLR does, they can still detect these interactions relatively reliably. We also note that neither BKMR nor BSR consistently outperforms the other in this case — BSR would thus be more preferable as it has a more formal framework for conducting inference. 
+
+In comparison, for interactions between Cd and As, which are both marginally insignificant, BKMR and BSR still struggle to detect a significant effect even in the larger size datasets. At the lower effect size, sensitivities range from 0-0.04, though at the higher effect size, sensitivities range from 0.03-0.57. We note that cases where the sensitivities for interactions are high (e.g., the higher effect size multiplicative interaction) are associated with higher univariate detection rates for Cd and As in both BKMR (Figure \@ref(fig:klgunivp)) and BSR (Figure \@ref(fig:slgunivp)). Thus, we suggest that detection of interactions is associated with detection of univariate effects. Interactions between Hg and Ni are easier to detect because they are, themselves, marginally significant. However, interactions between marginally insignificant chemicals are likely to only be detected if the form and effect size of the interaction are such that the chemicals can also be detected marginally. 
+
+BKMR and BSR's sensitivities for Ni and Co, which have moderate to strong multicollinearity, are similar to their sensitivities for Cd and As in the larger size dataset. Since Co is not marginally significant, it is difficult to determine whether low detection rates for this case are due to Co's univariate insignificance or its multicollinearity. We do note, though, that while BKMR has similar sensitivities of around 0.5 for the higher effect multiplicative interaction between Cd and As (both of which are marginally insignificant) and between Ni and Co, BSR has a 0.39 sensitivity for Cd and As and a much lower 0.09 sensitivity for Ni and Co. Thus, BSR may have lower sensitivity for interactions between collinear chemicals compared to BKMR, but more simulations are necessary in order to verify this. 
+
+Next, Table \@ref(tab:twowayfdrtab) summarizes the false discovery rate of BKMR and BSR for two-way interactions. Both methods perform well in all scenarios, with false discovery rates below 0.02. This confirms that the above results for sensitivity did not occur by chance. For smaller size datasets, both BKMR and BSR have almost negligible false discovery rates, ranging from 0.0002-0.0025 for BKMR and 0.0009-0.0034 for BSR. In larger size datasets, false discovery rates increase slightly for BKMR, ranging from 0.0016-0.0064. On the other hand, false discovery rates increase notably for BSR in the larger size datasets, ranging from 0.012-0.018. Therefore, false discovery rates for interactions, while still low, should be taken into consideration for BSR with larger sample sizes. 
 
 
 ```{r twowayfdrtab, echo = FALSE, message = FALSE}
@@ -386,17 +391,19 @@ In exposure mixture studies, a visual assessment of the estimated exposure-respo
 include_graphics("figures/ch4_hgni_biv.png")
 ```
 
-The sensitivities in Table \@ref(tab:twowaytab) are reflected by the patterns in the diagnostic plots. For instance, the second column of Figures \@ref(fig:hgnibiv)b and \@ref(fig:hgnibiv)d visualizes the higher effect size, multiplicative interaction between Hg and Ni estimated by BKMR and BSR, respectively. Both models had a sensitivity of 0.76 for this interaction, which is confirmed by the clear difference in the exposure-response relationship between various quantiles of the second chemical. Moreover, the exposure-response relationships are shaped similarly to their associated cross-sections in the 3D theoretical model displayed in Figure \@ref(fig:ap2). 
+The sensitivities in Table \@ref(tab:twowaytab) are reflected by the patterns in the diagnostic plots. For instance, the second column of Figures \@ref(fig:hgnibiv)b and \@ref(fig:hgnibiv)d visualizes the higher effect size, multiplicative interaction between Hg and Ni estimated by BKMR and BSR, respectively. Both models have a sensitivity of 0.76 for this interaction, which is confirmed by the clear difference in the exposure-response relationship between various quantiles of the second chemical. Moreover, the exposure-response relationships are shaped similarly to their associated cross-sections in the 3D theoretical model displayed in Figure \@ref(fig:ap2). 
 
 Assessing both directions of the pairwise comparison in these plots (e.g., Hg at quantiles of Ni, as well as Ni at quantiles of Hg) is important as, depending on the true form of the interaction, one direction may have more separation between the estimated relationship at various quantiles. For instance, in the aforementioned example with Hg and Ni, it appears that assessing the relationship between Hg and the health outcome at quantiles of Ni leads to clearer separation than the other way around. 
 
 <!-- The choice of quantiles can also be important for the same reason — depending on the true form of the interaction.  -->
 
-Similar diagnostic plots for all other scenarios, which have similar patterns as those discussed here for Hg and Ni, are shown in Figures \@ref(fig:ksmcdas)-\@ref(fig:slgnico) in Appendix \@ref(suppresults). In particular, we confirm that the low sensitivities observed in scenarios with interactions between Cd and As, as well as Ni and Co are reflected by estimated exposure-response relationships that do not appear to be associated with interactions. Moreover, it appears that, in Figures \@ref(fig:klgcdas) and \@ref(fig:klgnico), the higher effect size, polynomial interactions between Cd and As and Ni and Co are somewhat captured by BKMR, which reflects their associated sensitivities of 0.57 and 0.52, respectively. 
+Similar diagnostic plots for all other scenarios, which have similar patterns as those discussed here for Hg and Ni, are shown in Figures \@ref(fig:ksmcdas)-\@ref(fig:slgnico) in Appendix \@ref(suppresults). In particular, we confirm that the low sensitivities observed in scenarios with interactions between Cd and As, as well as Ni and Co are reflected by estimated exposure-response relationships that do not appear to be associated with interactions. Moreover, it appears that, in Figures \@ref(fig:klgcdas) and \@ref(fig:klgnico), the higher effect size, polynomial interactions between Cd and As and Ni and Co are somewhat captured by BKMR, which reflects their associated sensitivities of 0.57 and 0.52, respectively. Overall, we confirm that patterns in visual diagnostic plots reflect metrics of importance for interactions in both BKMR and BSR. 
 
 ### Three-way interactions between chemicals
 
-Decide whether or not to include a figure???
+[*finish this*]
+
+Next, we discuss 
 
 Table of sensitivities 
 
@@ -419,14 +426,7 @@ Visual plots of the estimated exposure response relationship for one chemical, w
 
 ### Interactions between race and an exposure
 
-Figure of diagnostic plots
-
-```{r exprespre, fig.cap = "Relationship between Hg and response estimated by stratified BKMR and BSR models in smaller and larger datasets. All other chemicals are fixed at 0.5 quan-les.", echo = FALSE, out.width = '100%'}
-# figure
-include_graphics("figures/ch4_re_expresp.png")
-```
-
-BKMR sensitivity
+BKMR sensitivity. Note number of times BKMR failed to fit for each of 1, 2, and 3 race categories. 
 
 ```{r reintsens, echo = FALSE, message = FALSE}
 # table
@@ -471,6 +471,13 @@ re_ints |> kbl(booktabs = TRUE, escape = FALSE,
 
 In general, interactions between a categorical variable and a continuous variable are harder to detect, both in the typical multiple linear regression framework as well as using BKMR and BSR. Even when the effect of Hg is doubled in the largest race category, the oracle MLR 
 
+Figure of diagnostic plots
+
+```{r exprespre, fig.cap = "Relationship between Hg and response estimated by stratified BKMR and BSR models in smaller and larger datasets. All other chemicals are fixed at 0.5 quantiles.", echo = FALSE, out.width = '100%'}
+# figure
+include_graphics("figures/ch4_re_expresp.png")
+```
+
 While BKMR and BSR are capable of detecting
 
 In particular, the flexibility of BKMR and BSR mean that it is not possible to directly conduct inference on the effect sizes of specific chemicals
@@ -480,18 +487,35 @@ This section highlights the difficulty of using current methods for detecting
 
 ### Run-time analysis
 
+Finally, we comment on run-times for fitting models on the high-performance computing cluster. 
+
+Table \@ref(tab:runtimes) summarizes the average run-time for each model and sample size, under different interaction scenarios (i.e., various effect sizes and forms of interactions). For model fitting, we used 50,000 MCMC iterations. "BSR df" refers to the process for determining the optimal degrees of freedom for the spline regression, while "BSR mod" refers to model fitting process. We determined the degrees of freedom in BSR by fitting a grid of four values, each with 1/10 of the MCMC iterations we used for the full model. However, in a full analysis, one should determine the degrees of freedom using more MCMC iterations, so the full run-time for BSR would be approximately five times that reported in the "BSR mod" row. We also note that BKMR was fit using a Gaussian predictive process with 100 knots in the larger size datasets to increase computational speed.
+
+The naive and oracle MLRs take a fraction of a second to run, in both the smaller and larger size datasets, while run-times range from around 15 minutes for BKMR in the smaller size datasets to around 4 hours for BSR (which includes the degrees of freedom selection process) in the larger size datasets. As both BKMR and BSR are Bayesian techniques that use MCMC algorithms, it is computationally intensive to arrive at a solution. This can be a major limitation, particularly when datasets are large, or access to high-performance computing equipment is limited. Moreover, BKMR and BSR require prior specifications that can affect the model fit. It would be time-intensive for a researcher to fit a grid of prior settings in order to assess the impact of, say, the influential $r$ parameter in BKMR on PIP values. 
+
+While both techniques are slow, BKMR is still faster than BSR, even when BSR's lengthy degrees of freedom selection process is not factored in. In the smaller size datasets, BKMR takes about 1/6 of the time BSR does, and in the larger size datasets, BKMR takes about 1/2 of the time BSR does. BKMR's speed in comparison to BSR is more pronounced in the smaller size datasets, as BKMR scales with $n^2$, while BSR scales with $n$. The Gaussian predictive process likely improves BKMR's speed in the larger size datasets by a wide margin. Moreover, BSR's time may also be attributed to the empirical Baye's strategy for estimating the influential $\sigma^2_{\boldsymbol\beta}$ parameter, which requires a second set of 50,000 MCMC iterations to run. Overall, BKMR may be a slightly better choice, particularly in settings with smaller datasets, if computational burden is a limiting factor. 
+
+
 ```{r runtimes, echo = FALSE, message = FALSE}
 times <- read_csv("data/time1.csv")
 
 times |> 
   kbl(booktabs = TRUE, 
       align = "llcccc", 
-      caption = "Run-times in all scenarios with interactions between two or more chemicals, as well as the base case.", 
+      caption = "Average run-times in all scenarios with interactions between two or more chemicals, as well as the base case.", 
       col.names = c("Model", "Sample size", "Base", "Lower", "Higher", "Lower", "Higher")) |> 
   add_header_above(header = c(" " = 3, "Multiplicative" = 2, "Polynomial" = 2), bold = TRUE) |>
   # pack_rows(index = comb_int_ord) |> 
   collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace")
 ```
+
+[*finish this*]
+
+Table \@ref(tab:runtimesre) summarizes the average run-times of the naive MLR, oracle MLR, and stratified BKMR in scenarios with an interaction between race and Hg. 
+
+Models 
+
+Again, we note that we were unable to get run-times for BSR within the timeframe of this thesis. However, based on observations of stratified BSR in the high-performance computing cluster, we estimate that it took around 20 hours for all stratified models on one smaller size dataset to run, and 15 hours for one larger size dataset. 
 
 ```{r runtimesre, echo = FALSE, message = FALSE}
 retimes <- read_csv("data/time_re.csv")
@@ -501,15 +525,26 @@ options(knitr.kable.NA = '-')
 retimes |> 
   mutate(race = gsub("Hisp\\.", "Hispanic", race)) |> 
   kbl(booktabs = TRUE, align = "llcccc", 
-      caption = "Run-times in scenarios with an interaction between the categorical race covariate and Hg.", 
-      col.names = c("Model", "Race", "Smaller size", "Larger size")) |> 
+      caption = "Average run-times in scenarios with an interaction between the categorical race covariate and Hg.", 
+      col.names = c("Model", "Race", "Smaller size (n=", "Larger size")) |> 
   collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace") |> 
-  add_footnote("Original sample sizes of race category: Non-Hispanic white (n=16), Non-Hispanic black (n=27), Non-Hispanic other (n=13), Hispanic born in US (n=87), Hispanic born outside US (n=109), and Collapsed non-Hispanic (n=56=16+27+13)")
+  add_footnote("Original sample sizes of race category: Non-Hispanic white (n=16), Non-Hispanic\nblack (n=27), Non-Hispanic other (n=13), Hispanic born in US (n=87),\nHispanic born outside US (n=109), and Collapsed non-Hispanic (n=56=16+27+13)")
 ```
 
 
 ## Discussion
 
 Discuss results, link back to previous sim studies. 
+
+- base case confirms that BKMR and BSR behave as expected
+- if you don't search for interactions, sometimes, they can be picked up as univariate effects. but the interaciton shouldn't reduce univariate significance
+- difficult to detect interactions, especially in smaller size datasets and when they are not marginally significant
+- it may be the case that Ni and Co were difficult to detect because Co was not significant, and not because of multicollinearity
+- similar story for three-way interactions and Tl
+- run time analysis
+
+- going forward, should try three-way interactions and multicollinearity on cases where the chemicals themselves are significant
+- figure out method of formal inference for BSR
+- continue to explore how studies of exposure can best protect the health and well-being of communities who live and experience the effects of toxicity
 
 [*remember to label figures in appendix + add code*]

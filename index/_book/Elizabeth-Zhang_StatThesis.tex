@@ -142,9 +142,9 @@ In our modern world, we are constantly exposed to toxins, permeating our bodies 
 \Acknowledgments{
 First, this work was performed in part using high-performance computing equipment at Amherst College obtained under National Science Foundation Grant Number 2117377. The data used for simulations in this thesis was supported by the National Institute of Environmental Health Sciences of the National Institutes of Health under Award Numbers U2CES026555 and U2CES026553. The content is solely the responsibility of the author and does not necessarily represent the official views of the National Science Foundation or the National Institutes of Health.
 
-Next, I am indebted to so many people, without whom this thesis would not have been possible. Thank you so much to my thesis advisor, Amy Wagaman, for her tireless support. Your encouragement, feedback, and guidance gave me the confidence to see this project through. Thank you to Alex Keil for first inspiring my interest in exposure mixture studies and thereafter providing invaluable advice on my ideas. Thank you to Shu-Min Liao for her advice on copulas, and to Victoria Nguyen for her guidance on how to think humanistically about toxicity. Thank you to Doug Hall for troubleshooting my code for the cluster with me. I would also like to acknowledge Brittney Bailey, whose early support encouraged me to first, pursue a statistics major, and then, to write this thesis. And to everyone in the Department of Mathematics and Statistics --- the faculty, staff, and my peers --- thank you for shaping the wonderful journey that I've taken through statistics at Amherst.
+Next, I am indebted to so many people, without whom this thesis would not have been possible. Thank you so much to my thesis advisor, Amy Wagaman, for her tireless support. Your encouragement, feedback, and guidance gave me the confidence to see this project through. Thank you to Alex Keil for first inspiring my interest in exposure mixture studies and thereafter providing invaluable advice on my ideas. Thank you to Shu-Min Liao for her advice on copulas, and to Victoria Nguyen for her guidance on how to think humanistically about toxicity. Thank you to Doug Hall for troubleshooting my code for the cluster with me. I would also like to acknowledge Brittney Bailey, whose early support encouraged me to first pursue a statistics major, and then to write this thesis. And to everyone in the Department of Mathematics and Statistics --- the faculty, staff, and my peers --- thank you for shaping the wonderful journey that I've taken through statistics at Amherst.
 
-Finally, I want to express my gratitude for my family for their love and support. I would not be here without you. Thank you to my mom for believing in me and giving me the opportunity to grow and take risks. Thank you to my friends for all their support and for listening to me talk on and on about statistics. And to Sara, I am so grateful for you, for always encouraging me to keep going. Thank you for sticking by my side through it all.
+Finally, I want to express my gratitude for my family for their love and support. I would not be here without you. Thank you to my mom for believing in me and giving me the opportunity to grow and take risks. Thank you to my friends for all their support and for listening to me talk on and on about statistics. And to Sara, I am so grateful to you for always encouraging me to keep going. Thank you for sticking by my side through it all.
 }
 
 \Dedication{
@@ -276,9 +276,9 @@ Finally, I want to express my gratitude for my family for their love and support
   \begin{acknowledgments}
     First, this work was performed in part using high-performance computing equipment at Amherst College obtained under National Science Foundation Grant Number 2117377. The data used for simulations in this thesis was supported by the National Institute of Environmental Health Sciences of the National Institutes of Health under Award Numbers U2CES026555 and U2CES026553. The content is solely the responsibility of the author and does not necessarily represent the official views of the National Science Foundation or the National Institutes of Health.
 
-    Next, I am indebted to so many people, without whom this thesis would not have been possible. Thank you so much to my thesis advisor, Amy Wagaman, for her tireless support. Your encouragement, feedback, and guidance gave me the confidence to see this project through. Thank you to Alex Keil for first inspiring my interest in exposure mixture studies and thereafter providing invaluable advice on my ideas. Thank you to Shu-Min Liao for her advice on copulas, and to Victoria Nguyen for her guidance on how to think humanistically about toxicity. Thank you to Doug Hall for troubleshooting my code for the cluster with me. I would also like to acknowledge Brittney Bailey, whose early support encouraged me to first, pursue a statistics major, and then, to write this thesis. And to everyone in the Department of Mathematics and Statistics --- the faculty, staff, and my peers --- thank you for shaping the wonderful journey that I've taken through statistics at Amherst.
+    Next, I am indebted to so many people, without whom this thesis would not have been possible. Thank you so much to my thesis advisor, Amy Wagaman, for her tireless support. Your encouragement, feedback, and guidance gave me the confidence to see this project through. Thank you to Alex Keil for first inspiring my interest in exposure mixture studies and thereafter providing invaluable advice on my ideas. Thank you to Shu-Min Liao for her advice on copulas, and to Victoria Nguyen for her guidance on how to think humanistically about toxicity. Thank you to Doug Hall for troubleshooting my code for the cluster with me. I would also like to acknowledge Brittney Bailey, whose early support encouraged me to first pursue a statistics major, and then to write this thesis. And to everyone in the Department of Mathematics and Statistics --- the faculty, staff, and my peers --- thank you for shaping the wonderful journey that I've taken through statistics at Amherst.
 
-    Finally, I want to express my gratitude for my family for their love and support. I would not be here without you. Thank you to my mom for believing in me and giving me the opportunity to grow and take risks. Thank you to my friends for all their support and for listening to me talk on and on about statistics. And to Sara, I am so grateful for you, for always encouraging me to keep going. Thank you for sticking by my side through it all.
+    Finally, I want to express my gratitude for my family for their love and support. I would not be here without you. Thank you to my mom for believing in me and giving me the opportunity to grow and take risks. Thank you to my friends for all their support and for listening to me talk on and on about statistics. And to Sara, I am so grateful to you for always encouraging me to keep going. Thank you for sticking by my side through it all.
   \end{acknowledgments}
 
   \hypersetup{linkcolor=black}
@@ -299,9 +299,9 @@ Finally, I want to express my gratitude for my family for their love and support
 
 Rapid industrial development has created conditions of cumulative chronic toxicity which pose an acute risk to the wellbeing of humans and our living environment. In fact, it has been estimated that, globally, human activity releases chemicals at a rate of 220 billion tons per annum (\protect\hyperlink{ref-cribb_surviving_2016}{Cribb, 2016}). These staggering levels of pollution have led scholars to formally declare that humanity has surpassed the safe operating space of the planetary boundary for novel entities (\protect\hyperlink{ref-persson_outside_2022}{Persson et al., 2022}). As a result, exposure to low levels of pollutants has become an inevitable peril of daily life (\protect\hyperlink{ref-naidu_chemical_2021}{Naidu et al., 2021}; \protect\hyperlink{ref-vineis_john_2018}{Vineis, 2018}). In this new era of pervasive toxicity, understanding the nature and severity of health effects associated with chemical exposures is especially timely.
 
-For this, we turn to epidemiological studies. The broad field of preventive epidemiology involves the identification of potentially modifiable risk factors that contribute to the burden of disease within human populations. Environmental epidemiology, in particular, considers the effect of environmental exposures --- chemical or otherwise. However, studies concerning chemical pollutants in environmental epidemiology have historically focused on elucidating the effect and mechanisms of exposures to a single pollutant. In reality, humans are invariably exposed to numerous complex exposure mixtures which together contribute to the progression of adverse health outcomes. Therefore, risk assessments of single pollutants likely fail to capture the true consequences of these complex exposures (\protect\hyperlink{ref-heys_risk_2016}{Heys, Shore, Pereira, Jones, \& Martin, 2016}). Assessing mixtures of chemicals can also have more direct implications for public health interventions. The United States Environmental Protection Agency (U.S. EPA) currently passes regulations for individual pollutants. In practice, though, regulation occurs by controlling the source of pollution, which is responsible for the production of a whole mixture of chemicals with specific joint effects on human health. As a result, the National Academies of Science has advocated for a multipollutant regulatory approach, which is likely to be more protective of human health (NASEM et al., \protect\hyperlink{ref-national_academies_of_sciences_engineering_and_medicine_using_2017}{2017}).
+For this, we turn to epidemiological studies. The broad field of preventive epidemiology involves the identification of potentially modifiable risk factors that contribute to the burden of disease within human populations. Environmental epidemiology, in particular, considers the effect of environmental exposures --- chemical or otherwise. However, studies concerning chemical pollutants in environmental epidemiology have historically focused on elucidating the effect and mechanisms of exposures to a single pollutant. In reality, humans are invariably exposed to numerous complex exposure mixtures which together contribute to the progression of adverse health outcomes. Therefore, risk assessments of single pollutants likely fail to capture the true consequences of these complex exposures (\protect\hyperlink{ref-heys_risk_2016}{Heys, Shore, Pereira, Jones, \& Martin, 2016}). Assessing mixtures of chemicals can also have more direct implications for public health interventions. The United States Environmental Protection Agency (U.S. EPA) currently passes regulations for individual pollutants. In practice, though, regulation occurs by controlling the source of pollution, which is responsible for the production of a whole mixture of chemicals with specific joint effects on human health. As a result, the National Academies of Science (NAS) has advocated for a multipollutant regulatory approach, which is likely to be more protective of human health (NAS et al., \protect\hyperlink{ref-national_academies_of_sciences_engineering_and_medicine_using_2017}{2017}).
 
-There are clear practical motivations for studies that examine the health effects of exposure to co-occurring mixtures of chemicals, hereafter referred to as exposure mixtures. However, expanding the focus of analysis from one exposure to multiple exposures introduces unique statistical challenges. In addition to a common issue of small effect sizes and small sample sizes present in most exposure analyses, multiple exposure analyses must also contend with high-dimensionality, collinearity, non-linear effects, and non-additive interactions (\protect\hyperlink{ref-yu_review_2022}{Yu et al., 2022}). In particular, data with numerous pollutants, or predictors, require exponentially greater levels of complexity and time cost in analysis. Collinearity between exposures is common when analyzing pollutants from a single source and can lead to unstable estimates in a generalized linear model if left unaccounted for. Finally, exposures can have both non-linear single effects and non-additive interaction effects, which are difficult to capture unless explicitly specified in the model.
+There are clear practical motivations for studies that examine the health effects of exposure to co-occurring mixtures of chemicals, hereafter referred to as exposure mixtures. However, expanding the focus of analysis from one exposure to multiple exposures introduces unique statistical challenges (\protect\hyperlink{ref-dominici_protecting_2010}{Dominici, Peng, Barr, \& Bell, 2010}). In addition to a common issue of small effect sizes and small sample sizes present in most exposure analyses, multiple exposure analyses must also contend with high-dimensionality, collinearity, non-linear effects, and non-additive interactions (\protect\hyperlink{ref-yu_review_2022}{Yu et al., 2022}). In particular, data with numerous pollutants, or predictors, require exponentially greater levels of complexity and time cost in analysis. Collinearity between exposures is common when analyzing pollutants from a single source and can lead to unstable estimates in a generalized linear model if left unaccounted for. Finally, exposures can have both non-linear single effects and non-additive interaction effects, which are difficult to capture unless explicitly specified in the model.
 
 The classic multiple linear regression framework often fails to capture the true effects in this setting. In the past few years, a wide variety of statistical methods have been developed to overcome these challenges (see reviews, \protect\hyperlink{ref-gibson_overview_2019}{Gibson et al., 2019}; \protect\hyperlink{ref-yu_review_2022}{Yu et al., 2022}), which have been accompanied by a host of comparative simulation studies for general mixture scenarios (e.g., \protect\hyperlink{ref-hoskovec_model_2021}{Hoskovec, Benka-Coker, Severson, Magzamen, \& Wilson, 2021}; \protect\hyperlink{ref-lazarevic_performance_2020}{Lazarevic, Knibbs, Sly, \& Barnett, 2020}; \protect\hyperlink{ref-pesenti_comparative_2023}{Pesenti et al., 2023}). However, to our knowledge, there has yet to be a simulation study which provides conclusive guidance about the ability of recently developed methods to conduct inference on non-additive interactions between exposures when the nature and effect sizes of these interactions vary. Moreover, there is no guidance in the literature on assessing interactions between covariates and exposures in exposure mixtures, including the potential of stratified models for detecting such interactions.
 
@@ -839,7 +839,7 @@ The visualization and summary statistics approaches available in BKMR are also p
 
 We have explained how the inferential framework of BSR improves upon the BKMR approach for the detection of complex interactions. We also briefly compare general features of their model formulations.
 
-While BKMR is a fully nonparametric approach, BSR is a semiparametric approach because it makes distributional assumptions about the data (i.e., that the relationship can be adequately captured by a \(d\)-dimensional natural spline basis expansion). As BKMR uses the kernel technique, its implementation can become computationally intensive for datasets with large \(n\), as it scales with \(n^2\), while BSR is able to scale with \(n\) (@ \protect\hyperlink{ref-antonelli_estimating_2020}{Antonelli et al., 2020}).
+While BKMR is a fully nonparametric approach, BSR is a semiparametric approach because it makes distributional assumptions about the data (i.e., that the relationship can be adequately captured by a \(d\)-dimensional natural spline basis expansion). As BKMR uses the kernel technique, its implementation can become computationally intensive for datasets with large \(n\), as it scales with \(n^2\), while BSR is able to scale with \(n\) (\protect\hyperlink{ref-antonelli_estimating_2020}{Antonelli et al., 2020}).
 
 BSR is highly sensitive to the choice of \(d\), the degrees of freedom. While it employs a WAIC approach to selecting the best \(d\), this parameter introduces an additional tuning step in the analysis. Both approaches can be highly sensitive to the specification of certain priors. BSR offers an empirical Bayes strategy to estimate \(\sigma^2_{\boldsymbol\beta}\), the variance of a exposure's prior probability of inclusion. On the other hand, the choice of prior on the influential smoothing parameter, \(\rho\), in BKMR is up to the user.
 
@@ -998,7 +998,7 @@ We ran BSR using the \texttt{NLinteraction} package in R (\protect\hyperlink{ref
 
 Finally, we ran stratified BKMR and BSR models in scenarios where we simulated an interaction between race and Hg. This involved running five separate models for each race category, each with the same settings specified above. For the smaller size datasets, we often observed convergence issues in BKMR within the smaller race categories. As such, for smaller size datasets, we also assess the impact of collapsing the three smaller race categories (Non-Hispanic white, black, and other) into one category before stratifying. This is a common practice in real-world studies where sample sizes for certain categories are low.
 
-We checked convergence for a selection of BKMR and BSR models using trace plots (Appendix \ref{suppresults}, Figure \ref{fig:traceplots}).
+For all models, we saved run-times for the fitting process on the high-performance computing cluster. Due to an error in our code and time constraints in this thesis, we were not able to obtain run times for stratified BSR models. We checked convergence for a selection of BKMR and BSR models using trace plots (Appendix \ref{suppresults}, Figure \ref{fig:traceplots}).
 
 \hypertarget{model-assessment}{%
 \subsection{Model assessment}\label{model-assessment}}
@@ -1112,7 +1112,7 @@ Now, for the naive MLR, BKMR, and BSR, chemicals that are marginally insignifica
 
 Finally, univariate sensitivity for chemicals that are marginally significant --- in our case, Hg and Ni --- are not noticably affected by participation in an interaction. For instance, the naive MLR, BKMR, and BSR had sensitivities of 0.80, 0.86, and 0.51, respectively, for Hg in the base case with the smaller size dataset. In scenarios with a higher effect size multiplicative interaction between Hg and Ni, the sensitivities were 0.77, 0.88, and 0.58 for the naive MLR, BKMR, and BSR, respectively. As such, we confirm that participation in an interaction does not affect univariate sensitivity, in our simulation scenarios.
 
-The findings from this section suggest the impact of interpreting univariate effects from models without considering potential interactions. If a chemical participates in an interaction but is, itself, not significant, then it can occasionally be detected as significant, depending on the form of the interaction, its effect size, and the sample size. On the other hand, if the chemical is itself significant, the detection of its effect should not be affected by the presence of the interaction.
+The findings from this section suggest the impact of interpreting univariate effects from models without considering potential interactions. If a chemical participates in an interaction but is, itself, not significant, then it can occasionally be detected as significant, depending on the form of the interaction, its effect size, and the sample size. On the other hand, if the chemical is itself significant, the detection of its effect should not be affected by the presence of an interaction.
 
 \hypertarget{two-way-interactions-between-chemicals}{%
 \subsection{Two-way interactions between chemicals}\label{two-way-interactions-between-chemicals}}
@@ -1136,35 +1136,35 @@ Interaction type & Effect size & Oracle & BKMR & BSR & Oracle & BKMR & BSR\\
 \multicolumn{8}{l}{\textbf{Hg-Ni}}\\
  & Lower & 0.24 & 0.01 & 0.07 & 0.48 & 0.21 & 0.28\\
 
-\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.48 & 0.03 & 0.14 & 1.00 & 0.76 & 0.76\\
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.50 & 0.11 & 0.10 & 1.00 & 0.88 & 0.77\\
 \addlinespace
  & Lower & 0.14 & 0.01 & 0.03 & 0.54 & 0.18 & 0.27\\
 
-\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.50 & 0.11 & 0.10 & 1.00 & 0.88 & 0.77\\
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.48 & 0.03 & 0.14 & 1.00 & 0.76 & 0.76\\
 \addlinespace
 \addlinespace[0.3em]
 \multicolumn{8}{l}{\textbf{Cd-As}}\\
  & Lower & 0.15 & 0.00 & 0.00 & 0.59 & 0.04 & 0.01\\
 
-\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.52 & 0.00 & 0.00 & 0.99 & 0.03 & 0.21\\
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.52 & 0.01 & 0.02 & 0.99 & 0.57 & 0.39\\
 \addlinespace
  & Lower & 0.18 & 0.00 & 0.00 & 0.57 & 0.00 & 0.00\\
 
-\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.52 & 0.01 & 0.02 & 0.99 & 0.57 & 0.39\\
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.52 & 0.00 & 0.00 & 0.99 & 0.03 & 0.21\\
 \addlinespace
 \addlinespace[0.3em]
 \multicolumn{8}{l}{\textbf{Ni-Co}}\\
  & Lower & 0.18 & 0.01 & 0.01 & 0.52 & 0.03 & 0.00\\
 
-\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.54 & 0.00 & 0.02 & 0.97 & 0.05 & 0.05\\
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.50 & 0.02 & 0.01 & 0.98 & 0.52 & 0.09\\
 \addlinespace
  & Lower & 0.16 & 0.00 & 0.00 & 0.53 & 0.00 & 0.00\\
 
-\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.50 & 0.02 & 0.01 & 0.98 & 0.52 & 0.09\\
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.54 & 0.00 & 0.02 & 0.97 & 0.05 & 0.05\\
 \bottomrule
 \end{tabular}
 \end{table}
-Table \ref{tab:twowayfdrtab} summarizes the false discovery rate of BKMR and BSR for two-way interactions. Both methods perform well in all scenarios, with false discovery rates below 0.02. For smaller size datasets, both BKMR and BSR have almost negligible false discovery rates, ranging from 0.0002 to 0.0025 for BKMR and 0.0009 to 0.0034 for BSR. In larger size datasets, false discovery rates increase slightly for BSR, ranging from 0.0016 to 0.0064. On the other hand, false discovery rates increase dramatically for BSR in the larger size datasets, ranging from 0.012 to 0.018. Therefore, we caution that false discovery rates, while still low, should be taken into consideration for BSR with larger sample sizes. Overall, though, we can confirm that the above results for sensitivity of BKMR and BSR are not happening by chance.
+Table \ref{tab:twowayfdrtab} summarizes the false discovery rate of BKMR and BSR for two-way interactions. Both methods perform well in all scenarios, with false discovery rates below 0.02. For smaller size datasets, both BKMR and BSR have almost negligible false discovery rates, ranging from 0.0002 to 0.0025 for BKMR and 0.0009 to 0.0034 for BSR. In larger size datasets, false discovery rates increase slightly for BSR, ranging from 0.0016 to 0.0064. On the other hand, false discovery rates increase dramatically for BSR in the larger size datasets, ranging from 0.012 to 0.018. Therefore, false discovery rates, while still low, should be taken into consideration for BSR with larger sample sizes. Overall, though, we can confirm that the above results for sensitivity of BKMR and BSR are not happening by chance.
 \begin{table}
 
 \caption{\label{tab:twowayfdrtab}False discovery rate of interactions in all scenarios with two-way interactions between exposures.}
@@ -1179,35 +1179,35 @@ Interaction type & Effect size & BKMR & BSR & BKMR & BSR\\
 \multicolumn{6}{l}{\textbf{Hg-Ni}}\\
  & Lower & 0.0011 & 0.0030 & 0.0034 & 0.0125\\
 
-\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.0009 & 0.0032 & 0.0064 & 0.0180\\
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.0020 & 0.0020 & 0.0048 & 0.0159\\
 \addlinespace
  & Lower & 0.0014 & 0.0014 & 0.0034 & 0.0148\\
 
-\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.0020 & 0.0020 & 0.0048 & 0.0159\\
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.0009 & 0.0032 & 0.0064 & 0.0180\\
 \addlinespace
 \addlinespace[0.3em]
 \multicolumn{6}{l}{\textbf{Cd-As}}\\
  & Lower & 0.0011 & 0.0032 & 0.0039 & 0.0123\\
 
-\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.0002 & 0.0018 & 0.0034 & 0.0168\\
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.0018 & 0.0020 & 0.0059 & 0.0150\\
 \addlinespace
  & Lower & 0.0025 & 0.0016 & 0.0036 & 0.0136\\
 
-\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.0018 & 0.0020 & 0.0059 & 0.0150\\
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.0002 & 0.0018 & 0.0034 & 0.0168\\
 \addlinespace
 \addlinespace[0.3em]
 \multicolumn{6}{l}{\textbf{Ni-Co}}\\
  & Lower & 0.0009 & 0.0023 & 0.0025 & 0.0120\\
 
-\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.0011 & 0.0030 & 0.0016 & 0.0173\\
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Multiplicative} & Higher & 0.0011 & 0.0009 & 0.0025 & 0.0150\\
 \addlinespace
  & Lower & 0.0020 & 0.0034 & 0.0036 & 0.0141\\
 
-\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.0011 & 0.0009 & 0.0025 & 0.0150\\
+\multirow{-2}{*}{\raggedright\arraybackslash \hspace{1em}Polynomial} & Higher & 0.0011 & 0.0030 & 0.0016 & 0.0173\\
 \bottomrule
 \end{tabular}
 \end{table}
-In exposure mixture studies, a visual assessment of the estimated exposure-response relationship is often used to characterize the form of a potential interaction, and a common choice for diagnostic plots involves estimating the exposure-response relationship for one chemical at various quantiles of the second (e.g., \protect\hyperlink{ref-howe_prenatal_2020}{Howe et al., 2020}; \protect\hyperlink{ref-valeri_joint_2017}{Valeri et al., 2017}). Figure \ref{fig:hgnibiv} depicts such plots for {[}\emph{finish this!}{]}
+In exposure mixture studies, a visual assessment of the estimated exposure-response relationship is often used to characterize the form of a potential interaction, and a common choice for diagnostic plots involves estimating the exposure-response relationship for one chemical at various quantiles of the second (e.g., \protect\hyperlink{ref-howe_prenatal_2020}{Howe et al., 2020}; \protect\hyperlink{ref-valeri_joint_2017}{Valeri et al., 2017}). Figure \ref{fig:hgnibiv} depicts such plots for all scenarios with interactions between Hg and Ni.
 \begin{figure}
 
 {\centering \includegraphics[width=1\linewidth]{figures/ch4_hgni_biv} 
@@ -1220,14 +1220,8 @@ The sensitivities in Table \ref{tab:twowaytab} are reflected by the patterns in 
 
 Assessing both directions of the pairwise comparison in these plots (e.g., Hg at quantiles of Ni, as well as Ni at quantiles of Hg) is important as, depending on the true form of the interaction, one direction may have more separation between the estimated relationship at various quantiles. For instance, in the aforementioned example with Hg and Ni, it appears that assessing the relationship between Hg and the health outcome at quantiles of Ni leads to clearer separation than the other way around.
 
-Similar diagnostic plots for all other scenarios, which have similar patterns as those discussed here for Hg and Ni, are shown in Figures \ref{fig:ksmcdas}-\ref{fig:slgnico} in Appendix \ref{suppresults}. In particular, we confirm that
-\begin{itemize}
-\tightlist
-\item
-  most of Ni Co and Cd As don't appear to be significant
-\item
-  the two cases of BKMR large picking them do appear significant. they aren't significant for BSR though.
-\end{itemize}
+Similar diagnostic plots for all other scenarios, which have similar patterns as those discussed here for Hg and Ni, are shown in Figures \ref{fig:ksmcdas}-\ref{fig:slgnico} in Appendix \ref{suppresults}. In particular, we confirm that the low sensitivities observed in scenarios with interactions between Cd and As, as well as Ni and Co are reflected by estimated exposure-response relationships that do not appear to be associated with interactions. Moreover, it appears that, in Figures \ref{fig:klgcdas} and \ref{fig:klgnico}, the higher effect size, polynomial interactions between Cd and As and Ni and Co are somewhat captured by BKMR, which reflects their associated sensitivities of 0.57 and 0.52, respectively.
+
 \hypertarget{three-way-interactions-between-chemicals}{%
 \subsection{Three-way interactions between chemicals}\label{three-way-interactions-between-chemicals}}
 
@@ -1259,16 +1253,7 @@ Visual plots of the estimated exposure response relationship for one chemical, w
 \hypertarget{interactions-between-race-and-an-exposure}{%
 \subsection{Interactions between race and an exposure}\label{interactions-between-race-and-an-exposure}}
 
-Figure of diagnostic plots
-\begin{figure}
-
-{\centering \includegraphics[width=1\linewidth]{figures/ch4_re_expresp} 
-
-}
-
-\caption{Relationship between Hg and response estimated by stratified BKMR and BSR models in smaller and larger datasets. All other chemicals are fixed at 0.5 quan-les.}\label{fig:exprespre}
-\end{figure}
-BKMR sensitivity
+BKMR sensitivity. Note number of times BKMR failed to fit for each of 1, 2, and 3 race categories.
 \begin{table}
 
 \caption{\label{tab:reintsens}Sensitivity to interactions between the categorical race variable and Hg.}
@@ -1296,6 +1281,15 @@ Interaction in & Effect size & Oracle & BKMR & BKMR & Oracle & BKMR\\
 \end{table}
 In general, interactions between a categorical variable and a continuous variable are harder to detect, both in the typical multiple linear regression framework as well as using BKMR and BSR. Even when the effect of Hg is doubled in the largest race category, the oracle MLR
 
+Figure of diagnostic plots
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{figures/ch4_re_expresp} 
+
+}
+
+\caption{Relationship between Hg and response estimated by stratified BKMR and BSR models in smaller and larger datasets. All other chemicals are fixed at 0.5 quan-les.}\label{fig:exprespre}
+\end{figure}
 While BKMR and BSR are capable of detecting
 
 In particular, the flexibility of BKMR and BSR mean that it is not possible to directly conduct inference on the effect sizes of specific chemicals
@@ -1304,9 +1298,17 @@ This section highlights the difficulty of using current methods for detecting
 
 \hypertarget{run-time-analysis}{%
 \subsection{Run-time analysis}\label{run-time-analysis}}
+
+Finally, we comment on run-times for fitting models on the high-performance computing cluster.
+
+Table \ref{tab:runtimes} summarizes the average run-time for each model and sample size, under different interaction scenarios (i.e., various effect sizes and forms of interactions). For model fitting, we used 50,000 MCMC iterations. ``BSR df'' refers to the process for determining the optimal degrees of freedom for the spline regression, while ``BSR mod'' refers to model fitting process. We determined the degrees of freedom in BSR by fitting a grid of four values, each with 1/10 of the MCMC iterations we used for the full model. However, in a full analysis, one should determine the degrees of freedom using more MCMC iterations, so the full run-time for BSR would be approximately five times that reported in the ``BSR mod'' row. We also note that BKMR was fit using a Gaussian predictive process with 100 knots in the larger size datasets to increase computational speed.
+
+The naive and oracle MLRs take a fraction of a second to run, in both the smaller and larger size datasets, while run-times range from around 15 minutes for BKMR in the smaller size datasets to around 4 hours for BSR (which includes the degrees of freedom selection process) in the larger size datasets. As both BKMR and BSR are Bayesian techniques that use MCMC algorithms, it is computationally intensive to arrive at a solution. This can be a major limitation, particularly when datasets are large, or access to high-performance computing equipment is limited. Moreover, BKMR and BSR require prior specifications that can affect the model fit. It would be time-intensive for a researcher to fit a grid of prior settings in order to assess the impact of, say, the influential \(r\) parameter in BKMR on PIP values.
+
+While both techniques are slow, BKMR is still faster than BSR, even when BSR's lengthy degrees of freedom selection process is not factored in. In the smaller size datasets, BKMR takes about 1/6 of the time BSR does, and in the larger size datasets, BKMR takes about 1/2 of the time BSR does. BKMR's speed in comparison to BSR is more pronounced in the smaller size datasets, as BKMR scales with \(n^2\), while BSR scales with \(n\). The Gaussian predictive process likely improves BKMR's speed in the larger size datasets by a wide margin. Moreover, BSR's time may also be attributed to the empirical Baye's strategy for estimating the influential \(\sigma^2_{\boldsymbol\beta}\) parameter, which requires a second set of 50,000 MCMC iterations to run. Overall, BKMR may be a slightly better choice, particularly in settings with smaller datasets, if computational burden is a limiting factor.
 \begin{table}
 
-\caption{\label{tab:runtimes}Run-times in all scenarios with interactions between two or more chemicals, as well as the base case.}
+\caption{\label{tab:runtimes}Average run-times in all scenarios with interactions between two or more chemicals, as well as the base case.}
 \centering
 \begin{tabular}[t]{llccccl}
 \toprule
@@ -1336,9 +1338,14 @@ Model & Sample size & Base & Lower & Higher & Lower & Higher\\
 \bottomrule
 \end{tabular}
 \end{table}
+Table \ref{tab:runtimesre} summarizes the average run-times of the naive MLR, oracle MLR, and stratified BKMR in scenarios with an interaction between race and Hg.
+
+Models
+
+Again, we note that we were unable to get run-times for BSR within the timeframe of this thesis. However, based on observations of stratified BSR in the high-performance computing cluster, we estimate that it took around 20 hours for all stratified models on one smaller size dataset to run, and 15 hours for one larger size dataset.
 \begin{table}
 
-\caption{\label{tab:runtimesre}Run-times in scenarios with an interaction between the categorical race covariate and Hg.}
+\caption{\label{tab:runtimesre}Average run-times in scenarios with an interaction between the categorical race covariate and Hg.}
 \centering
 \begin{tabular}[t]{llcc}
 \toprule
@@ -6773,6 +6780,9 @@ Bobb, J. F., Valeri, L., Claus Henn, B., Christiani, D. C., Wright, R. O., Mazum
 
 \leavevmode\vadjust pre{\hypertarget{ref-cribb_surviving_2016}{}}%
 Cribb, J. (2016). \emph{Surviving the 21st century: {Humanity}'s ten great challenges and how we can overcome them}. Springer.
+
+\leavevmode\vadjust pre{\hypertarget{ref-dominici_protecting_2010}{}}%
+Dominici, F., Peng, R. D., Barr, C. D., \& Bell, M. L. (2010). Protecting {Human} {Health} {From} {Air} {Pollution}: {Shifting} {From} a {Single}-pollutant to a {Multipollutant} {Approach}. \emph{Epidemiology}, \emph{21}(2), 187. http://doi.org/\href{https://doi.org/10.1097/EDE.0b013e3181cc86e8}{10.1097/EDE.0b013e3181cc86e8}
 
 \leavevmode\vadjust pre{\hypertarget{ref-dunn_multiple_1961}{}}%
 Dunn, O. J. (1961). Multiple {Comparisons} among {Means}. \emph{Journal of the American Statistical Association}, \emph{56}(293), 52--64. http://doi.org/\href{https://doi.org/10.1080/01621459.1961.10482090}{10.1080/01621459.1961.10482090}

@@ -236,7 +236,7 @@ The code for this section prepares the data from the MADRES study, generates sim
 
 ### Code for Chapter \@ref(madres):
 
-First, we clean the data from the MADRES study. 
+First, we clean the data from the MADRES study. Note that this code requires two publicly available datasets, available from the HHEAR Data Repository, as outlined in Chapter \@ref(madres). 
 
 ```{r}
 # load packages

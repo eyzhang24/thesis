@@ -1,7 +1,7 @@
 ---
 title: 'Flexible Bayesian Regression Models for Quantifying Complex Interactions in Exposure Mixture Studies'
 author: 'Elizabeth Zhang'
-date: 'April DD, 20YY'
+date: 'April 19, 2024'
 institution: 'Amherst College'
 advisor: 'Amy Wagaman'
 # Delete altadvisor line if you only have one advisor
