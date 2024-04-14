@@ -154,7 +154,7 @@ For all models, we saved run-times for the fitting process on the high-performan
 
 We assessed model performance based on detection of significant univariate chemicals as well as detection of interactions. For the naive and oracle MLRs, we considered a $p$-value less than 0.05 to indicate detection of a significant term. For BKMR and BSR, we used the median probability model, which considers a PIP greater than or equal to 0.5 to indicate detection of a significant term [@barbieri_optimal_2004]. 
 
-While BSR provides PIP's to quantify detection of interactions, BKMR does not. As such, for BKMR, we considered formal detection of an interaction based on confidence intervals constructed around the estimated response. Specifically, we first calculated the difference in estimated response at a chemical's 0.25 and 0.75 quantiles. Then, we assessed whether this quantity differed at the 0.25 and 0.75 quantiles of one (or two, for three-way interactions) other chemicals in the interaction, while holding all other chemicals at their 0.5 quantiles, by constructing a 95\% confidence interval of the difference in differences. We followed the code in the `SingVarIntSummaries()` function in the `bkmr` package for constructing confidence intervals [@bobb_bkmr_2022]. 
+While BSR provides PIP's to quantify detection of interactions, BKMR does not. As such, for BKMR, we considered formal detection of an interaction based on confidence intervals constructed around the estimated response. Specifically, we first calculated the difference in estimated response at a chemical's 0.25 and 0.75 quantiles. Then, we assessed whether this quantity differed at the 0.25 and 0.75 quantiles of one (or two, for three-way interactions) other chemicals in the interaction, while holding all other chemicals at their 0.5 quantiles, by constructing a 95\% confidence interval of the difference in differences. We followed the code in the `SingVarIntSummaries()` function in the `bkmr` package for constructing confidence intervals [@bobb_bkmr_2022]. Notably, for two-way interactions, the ordering of the chemicals in this comparison does not matter. To see why, see \@ref(eq:confinteq) in Appendix \@ref(suppmethods). However, for three-way interactions, the order does matter. Thus, we considered a three-way interaction to be detected if at least one of the three confidence intervals was significantly greater than zero. We used the Bonferroni correction to adjust for multiple comparisons, creating 98.3\% confidence intervals to achieve an overall 95\% confidence level [@dunn_multiple_1961; @vanderweele_desirable_2019]. 
 
 For both BKMR and BSR, we also visually assessed detection of interactions by plotting the estimated exposure-response surface for one chemical while fixing one (or two, for three-way interactions) other chemicals at their 0.1, 0.5, and 0.9 quantiles. In all scenarios, we calculated the sensitivity as the proportion of times a significant term was correctly detected. Due to time constraints in this thesis, we only calculated the false discovery rates, or, the proportion of times a significant term is incorrectly detected, for two-way interactions between chemicals. Future work should include the calculation of false discovery rates for all interactions. 
 
@@ -271,11 +271,11 @@ comb_sens |>
       col.names = c("Type", "Effect size", 
                     rep(c("Naive", "Oracle", "BKMR", "BSR"), 2))
       ) |> 
-  add_header_above(header = c(" " = 2, "Small" = 4, "Large" = 4)) |>
+  add_header_above(header = c(" " = 2, "Small (n=252)" = 4, "Large (n=1000)" = 4), bold = TRUE) |>
   pack_rows(index = comb_sens_ord) 
 ```
 
-In general, the detection rates of univariate chemicals that participate in an interaction differ in comparison to the base case. First, we briefly note that the sensitivity for univariate chemicals that participate in interactions is reduced for oracle MLRs, compared to the base case (Table \@ref(tab:onewaytabses) and Figures \@ref(fig:osmunivp) and \@ref(fig:olgunivp)). However, as the oracle MLRs contain explicit interaction terms, the p-values for univariate terms that participate in an interaction are not interpretable. 
+In general, the detection rates of univariate chemicals that participate in an interaction differ in comparison to the base case. First, we briefly note that the sensitivity for univariate chemicals that participate in interactions is reduced for oracle MLRs, compared to the base case (Table \@ref(tab:onewaytabsens) and Figures \@ref(fig:osmunivp) and \@ref(fig:olgunivp)). However, as the oracle MLRs contain explicit interaction terms, the p-values for univariate terms that participate in an interaction are not interpretable. 
 
 <!-- In general, the detection rates of univariate chemicals in naive MLRs are not affected by the inclusion of interaction terms, in comparison to the base case (Table \@ref(tab:onewaytabsens) and Figures \@ref(fig:nsmunivp) and \@ref(fig:nlgunivp)).  -->
 
@@ -403,17 +403,7 @@ Similar diagnostic plots for all other scenarios, which have similar patterns as
 
 ### Three-way interactions between chemicals
 
-[*finish this*]
-
 Next, we discuss the ability of BKMR and BSR to detect three-way interactions between chemicals. Table \@ref(tab:threewaysens) summarizes the sensitivity of the oracle MLR, BKMR, and BSR for three-way interactions between Hg, Ni, and Tl. Visual plots of the estimated exposure response relationship for one chemical, while holding the two others in the interaction at their 0.1, 0.5, and 0.9 quantiles, are shown in Figures \@ref(fig:ksmtri)-\@ref(fig:slgtri). Due to time constraints, we did not obtain false discovery rates for these interactions. 
-
-The oracle MLR sensitivities are similar to the two-way scenarios. As in the case of two-way interactions with marginally insignificant chemicals, BKMR and BSR are generally unable to detect these interactions, with sensitivities ranging from 0-0.02. The only exception is the higher effect size polynomial interaction in the larger size dataset, for which BKMR had a sensitivity of 0.13. 
-
-Similar to the Ni-Co case, it is difficult to determine whether these patterns are due to 
-
-[*potentially get two way interactions for HgNi*]
-
-[*discuss in methods how we got the confidence intervals*]
 
 ```{r threewaysens, echo = FALSE, message = FALSE}
 triv <- read_csv("data/triv_sens.csv")
@@ -429,6 +419,9 @@ triv |>
   collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace")
 ```
 
+The oracle MLR sensitivities are similar to the two-way scenarios. As in the case of two-way interactions with marginally insignificant chemicals, BKMR and BSR are generally unable to detect these interactions, with sensitivities ranging from 0-0.05. While Hg and Ni are both marginally significant, Tl is not. Similar to the Ni-Co case, it is difficult to determine whether these patterns are due to inherent difficulties in detecting three-way interactions, or the marginal insignificance of Tl. Therefore, future work should involve assessing three-way interactions between three chemicals that are, themselves, all univariately significant. 
+
+<!-- [*potentially get two way interactions for HgNi*] -->
 
 ### Interactions between race and an exposure
 
@@ -471,11 +464,11 @@ re_ints |> kbl(booktabs = TRUE, escape = FALSE,
   add_header_above(header = c(" " = 2, "Uncollapsed" = 2, 
                               "Collapsed*" = 1, 
                               " " = 2)) |> 
-  add_header_above(header = c(" " = 2, "Small (n=250)" = 3, "Large (n=1000)" = 2), 
+  add_header_above(header = c(" " = 2, "Small (n=252)" = 3, "Large (n=1000)" = 2), 
                    bold = TRUE) |>
   collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace") |> 
   # column_spec(7, width = "6em") |>
-  add_footnote(c("\"Collapsed\" refers to scenarios where the smallest three race categories are\ncollapsed into one stratified model.", "Original n=27", "Original n=109"), notation = "symbol")
+  add_footnote(c("\"Collapsed\" refers to scenarios where the smallest three race categories are collapsed into one stratified model.", "Original n=27", "Original n=109"), notation = "symbol", threeparttable = TRUE)
 ```
 
 In general, interactions between a categorical variable and a continuous variable are harder to detect. Even in larger datasets where the effect of Hg was doubled in the largest race category (i.e., Hispanic born outside US), the oracle MLR had a sensitivity of 0.83, while BKMR had a much lower sensitivity of 0.21. This is the only scenario in which BKMR's sensitivity exceeded 0.03. Thus, BKMR is generally not able to detect interactions with high sensitivity. 
@@ -490,7 +483,7 @@ In some cases, it appears that some degree of interaction is being detected by B
 include_graphics("figures/ch4_re_expresp.png")
 ```
 
-Therefore, while stratified BKMR and BSR models are, in theory, capable of detecting interactions between a categorical covariate and an exposure, it is hard to use them for this purpose in practice. The flexibility of BKMR and BSR means that it is not possible to directly conduct inference on the effect sizes of specific chemicals. For BKMR, we are able to construct confidence intervals around the difference of the estimated response at two quantiles of a chemical, and to then compare these confidence intervals between race categories. However, this is a more informal method of inference, as the choice of quantiles is relatively arbitrary. Moreover, for both BKMR and BSR, it is likely that the reduced sample sizes in each stratified model significantly under-power the model for accurately estimating the exposure-response relationship. 
+Therefore, while stratified BKMR and BSR models are, in theory, capable of detecting interactions between a categorical covariate and an exposure, it is difficult to use them for this purpose in practice. The flexibility of BKMR and BSR means that it is not possible to directly conduct inference on the effect sizes of specific chemicals. For BKMR, we are able to construct confidence intervals around the difference of the estimated response at two quantiles of a chemical, and to then compare these confidence intervals between race categories. However, this is a more informal method of inference, as the choice of quantiles is relatively arbitrary. Moreover, for both BKMR and BSR, it is likely that the reduced sample sizes in each stratified model significantly under-power the model for accurately estimating the exposure-response relationship. 
 
 Thus, this section highlights the difficulty of using current flexible Bayesian regression methods for detecting interactions between a categorical covariate and a chemical in exposure mixture studies. 
 
@@ -529,15 +522,17 @@ retimes |>
   mutate(race = gsub("Hisp\\.", "Hispanic", race)) |> 
   kbl(booktabs = TRUE, align = "llcccc", 
       caption = "Average run-times in scenarios with an interaction between the categorical race covariate and Hg.", 
-      col.names = c("Model", "Race", "Smaller size (n=", "Larger size")) |> 
+      col.names = c("Model", "Race", "Small (n=250)", "Large (n=1000)")) |> 
   collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace") |> 
-  add_footnote("Original sample sizes of race category: Non-Hispanic white (n=16), Non-Hispanic\nblack (n=27), Non-Hispanic other (n=13), Hispanic born in US (n=87),\nHispanic born outside US (n=109), and Collapsed non-Hispanic (n=56=16+27+13)")
+  footnote("Original sample sizes of race category: Non-Hispanic white (n=16), Non-Hispanic black (n=27), Non-Hispanic other (n=13), Hispanic born in US (n=87), Hispanic born outside US (n=109), and Collapsed non-Hispanic (n=56=16+27+13).", threeparttable = TRUE)
 ```
 
 
 As in the previous case, the MLRs took a fraction of a second to run. The average run-time for BKMR on the smaller size dataset, when added up across all stratified models, is just slightly higher than for the unstratified models. The average run-time for BKMR on the larger size dataset, again added up across all stratified models, is slightly lower than the for the unstratified models. This demonstrates the dependency of BKMR's run-time on $n^2$, as we did not use a Gaussian predictive process to speed up the stratified models. Finally, based on rough observations of BSR, it was clear that the stratified BSR models took much longer to run than the unstratified BSR models, likely due to challenges with the MCMC algorithm in the reduced sample size. This is a limitation of using stratified BSR models. 
 
 ## Discussion
+
+[*finish this*]
 
 Discuss results, link back to previous sim studies. 
 

@@ -8,6 +8,8 @@ The first appendix must start with the above text. Do not remove!
 ```{r, include = FALSE}
 # knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 library(knitr)
+library(kableExtra)
+library(tidyverse)
 ```
 
 # Supplemental output {#appa} 
@@ -116,7 +118,26 @@ include_graphics(path = "figures/test_waic2.png")
 include_graphics(path = "figures/traceplots/bksm_traceplotmerged.png")
 ```
 
+Finally, we show why the order of chemicals in the confidence intervalas we use to assess two-way interactions in BKMR do not matter. Let $\widehat{Y}(X1_a,X2_b)$ be the estimated response at the $a$th quantile of $X1$, the first chemical, the $b$th quantile of $X2$, the second chemical, while holding all other chemicals at their 0.5 quantiles. Then, the estimated confidence interval of the difference in the response $X_1$'s 0.75 and 0.25 quantiles, at both the 0.75 and 0.25 quantiles of $X_2$, can be shown to be equivalent to swapping the order of $X1$ and $X2$: 
 
+\begin{multline}
+[\widehat{Y}(X1_{0.75},X2_{0.75})-\widehat{Y}(X1_{0.25},X2_{0.75})] - [\widehat{Y}(X1_{0.75},X2_{0.25})-\widehat{Y}(X1_{0.25},X2_{0.25})] \\
+= \widehat{Y}(X1_{0.75},X2_{0.75})-\widehat{Y}(X1_{0.25},X2_{0.75}) - \widehat{Y}(X1_{0.75},X2_{0.25})+\widehat{Y}(X1_{0.25},X2_{0.25}) \\
+= [\widehat{Y}(X1_{0.75},X2_{0.75})-\widehat{Y}(X1_{0.75},X2_{0.25})] - [\widehat{Y}(X1_{0.25},X2_{0.75})-\widehat{Y}(X1_{0.25},X2_{0.25})] \\
+= \widehat{Y}(X1_{0.75},X2_{0.75})- \widehat{Y}(X1_{0.75},X2_{0.25})
+-\widehat{Y}(X1_{0.25},X2_{0.75}) +\widehat{Y}(X1_{0.25},X2_{0.25})
+  (\#eq:confinteq)
+\end{multline}
+
+
+<!-- $$[\widehat{Y}(X1_{0.75},X2_{0.75})-\widehat{Y}(X1_{0.25},X2_{0.75})] - [\widehat{Y}(X1_{0.75},X2_{0.25})-\widehat{Y}(X1_{0.25},X2_{0.25})]$$ -->
+
+<!-- $$=\widehat{Y}(X1_{0.75},X2_{0.75})-\widehat{Y}(X1_{0.25},X2_{0.75}) - \widehat{Y}(X1_{0.75},X2_{0.25})+\widehat{Y}(X1_{0.25},X2_{0.25})$$.  -->
+
+<!-- $$\widehat{Y}(X1_{0.75},X2_{0.75})- \widehat{Y}(X1_{0.75},X2_{0.25}) -->
+<!-- -\widehat{Y}(X1_{0.25},X2_{0.75}) +\widehat{Y}(X1_{0.25},X2_{0.25})$$ -->
+
+<!-- This is equivalent to swapping $X_1$ and $X_2$: $[\widehat{Y}(X1_{0.75},X2_{0.75})-\widehat{Y}(X1_{0.75},X2_{0.25})] - [\widehat{Y}(X1_{0.25},X2_{0.75})-\widehat{Y}(X1_{0.25},X2_{0.25})]$ -->
 
 ## Results {#suppresults}
 

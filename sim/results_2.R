@@ -670,7 +670,7 @@ ksm_intt <- ksm_intt |>
   mutate(cond = paste0(variable, " by ", fixedat1, "+", fixedat2)) |> 
   rowwise() |> 
   mutate(signif = ifelse(
-    between(0, est - 1.96*sd, est + 1.96*sd), FALSE, TRUE
+    between(0, est - 2.39398*sd, est + 2.39398*sd), FALSE, TRUE
   ))
 
 
@@ -845,7 +845,7 @@ klg_intt <- klg_intt |>
   mutate(cond = paste0(variable, " by ", fixedat1, "+", fixedat2)) |> 
   rowwise() |> 
   mutate(signif = ifelse(
-    between(0, est - 1.96*sd, est + 1.96*sd), FALSE, TRUE
+    between(0, est - 2.39398*sd, est + 2.39398*sd), FALSE, TRUE
   ))
 
 # bivar and trivar together
@@ -1680,10 +1680,10 @@ bsr_senst <- bind_rows(
   relocate(mod)
 
 # temp <- read_csv("index/data/triv_sens.csv")
-# temp2 <- temp |> 
-#   left_join(rename(oracle_senst, sens2 = sensitivity), 
-#             by = c("mod", "case", "size")) |> 
-#   mutate(sensitivity = ifelse(!is.na(sens2), sens2, sensitivity)) |> 
+# temp2 <- temp |>
+#   left_join(rename(bkmr_senst, sens2 = sensitivity),
+#             by = c("mod", "case", "size")) |>
+#   mutate(sensitivity = ifelse(!is.na(sens2), sens2, sensitivity)) |>
 #   select(-sens2)
 
 all_senst <- bind_rows(oracle_senst, bkmr_senst, bsr_senst) |> 
