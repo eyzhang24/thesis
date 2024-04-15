@@ -10,6 +10,10 @@ Our simulation study in Chapter \@ref(sims) illustrates the challenges of detect
 
 There can be differences in the performance of BKMR and BSR, but neither consistently outperforms the other. Thus, as BKMR is generally more reliable for univariate effects, and also computationally less intensive, we recommend BKMR for 
 
+We conclude that BKMR and BSR were generally comparable for detecting interactions between chemicals, as neither consistently outperformed the other in sensitivity for interactions. For the future study of interactions in exposure mixture studies, we recommend using BKMR first to identify both univariate effects and potential interactions with visual diagnostic plots. Then, we recommend using BSR to verify these results, as it tends to have lower false discovery rates for univariate effects and also provides a more formal framework of inference for interactions. As most interactions were only detected when the chemicals were also univariately significant, limiting the search for interactions to those chemicals with univariate PIPs greater than 0.5 should generally be sufficient. 
+
+- minority group often experiences social effects of stress. important to oversample the minority group 
+
 This thesis summarizes the current capabilities of modern Bayesian statistical methods for characterizing complex interactions in exposure mixture studies. In particular, we highlight that such methods are under-powered for detecting potential interactions between 
 
 Future work...

@@ -1540,7 +1540,9 @@ cowplot::plot_grid(hgnitwo, hgnilegend2, nrow = 2, rel_heights = c(5, 0.4))
 ggsave("index/figures/ch4_hgni_biv.png", width = 9, height = 6)
 
 
-# Cd-As flow chart --------------------------------------------------------
+# flow chart -------------------------------------------------------------
+
+# Cd-As
 
 # pull out from bkmr
 bkmr_comb1 <- bkmr_comb |> 
@@ -1593,12 +1595,11 @@ all_cdas <- bind_rows(bkmr_cdas, bsr_cdas) |>
   pivot_wider(names_from = variable, values_from = sign) |> 
   mutate(univ = case_when(
     As & Cd ~ "As & Cd", 
-    As ~ "As only", 
-    Cd ~ "Cd only", 
+    As | Cd~ "As only/\nCd only", 
     .default = "Neither"
   )) |> 
   rename(interaction = 5) |> 
-  mutate(univ = factor(univ, levels = c("As & Cd", "As only", "Cd only", "Neither")), 
+  mutate(univ = factor(univ, levels = c("As & Cd", "As only/\nCd only", "Neither")), 
          interaction = factor(interaction, levels = c(TRUE, FALSE)))
 
 library(ggalluvial)
@@ -1608,31 +1609,105 @@ large_cdas <- all_cdas |>
   filter(size == "Large") |> 
   group_by(mod, univ, interaction) |> 
   count()
-large_cdas |> 
+cdasp <- large_cdas |> 
   rename(Univariate = univ, Interaction = interaction)  |> 
   ggplot(aes(axis1 = Univariate, axis2 = Interaction, y = n)) +
-  geom_alluvium(aes(fill = mod), alpha = 0.4) +
-  geom_stratum(color = "gray50") +
-  geom_text(stat = "stratum", aes(label = after_stat(stratum))) +
+  ggalluvial::geom_alluvium(aes(fill = mod), alpha = 0.4) +
+  ggalluvial::geom_stratum(color = "gray50") +
+  geom_text(stat = "stratum", aes(label = after_stat(stratum)), 
+            lineheight = 0.75) +
   scale_x_discrete(limits = c("Univariate", "Interaction"), expand = c(0.2, 0.05)) +
   scale_fill_manual(values = c("deepskyblue3", "darkorange")) +
   labs(fill = "Model")
-ggsave("index/figures/ch4_cdasflowchart.png", width = 5, height = 5)
+cdasp
+ggsave("index/figures/ch4_cdasflowchart.png", width = 5, height = 4)
 
-# # small size alluvial plot
-# small_cdas <- all_cdas |> 
-#   filter(size == "Small") |> 
-#   group_by(mod, univ, interaction) |> 
-#   count()
-# small_cdas |> 
-#   rename(Univariate = univ, Interaction = interaction)  |> 
-#   ggplot(aes(axis1 = Univariate, axis2 = Interaction, y = n)) +
-#   geom_alluvium(aes(fill = mod), alpha = 0.4) +
-#   geom_stratum() +
-#   geom_text(stat = "stratum", aes(label = after_stat(stratum))) +
-#   scale_x_discrete(limits = c("Univariate", "Interaction"), expand = c(0.2, 0.05)) +
-#   scale_fill_manual(values = c("deepskyblue3", "darkorange")) +
-#   labs(fill = "Model")
+
+# Ni-Co
+
+# pull out from bkmr
+bkmr_comb2 <- bkmr_comb |> 
+  filter(cond == "Co+Ni", case == 11) |> 
+  select(case, size, trial, sign = signif, variable = cond)
+ksm_pip_nico <- ksm_pip_sig |>
+  filter(case == 11, variable %in% c("Ni", "Co")) |> 
+  mutate(size = "Small") |> 
+  select(case, size, trial, PIP, variable) 
+klg_pip_nico <- klg_pip_sig |> 
+  filter(case == 11, variable %in% c("Ni", "Co")) |> 
+  mutate(size = "Large") |> 
+  select(case, size, trial, PIP, variable) 
+
+bkmr_nico <- bind_rows(bkmr_comb2, ksm_pip_nico, klg_pip_nico) |> 
+  mutate(mod = "BKMR") 
+
+# bsr
+# interactions
+bsr_comb2 <- bind_rows(
+  mutate(ssm_pipb, size = "Small"), 
+  mutate(slg_pipb, size = "Large")
+) |> 
+  mutate(sign = get_sign_bsr(case, Var1) & get_sign_bsr(case, Var2), 
+         v1 = cnames[Var1], v2 = cnames[Var2], 
+         inter = paste0(v1, "-", v2)) |> 
+  mutate(inter2 = ifelse(sign, inter, "none")) 
+
+# univariate
+ssm_pip_nico <- ssm_pip_sig |> 
+  filter(case == 11, variable %in% c("Ni", "Co")) |> 
+  mutate(mod = "BSR", size = "Small") |> 
+  select(case, size, trial, PIP, variable)
+slg_pip_nico <- slg_pip_sig |> 
+  filter(case == 11, variable %in% c("Ni", "Co")) |> 
+  mutate(mod = "BSR", size = "Large") |> 
+  select(case, size, trial, PIP, variable)
+
+bsr_nico <- bsr_comb2 |> 
+  filter(inter2 == "Co-Ni", case == 11) |> 
+  select(case, size, trial, PIP, variable = inter2) |> 
+  bind_rows(ssm_pip_nico, slg_pip_nico) |> 
+  mutate(mod = "BSR")
+
+# bind together
+all_nico <- bind_rows(bkmr_nico, bsr_nico) |> 
+  mutate(sign = ifelse(is.na(PIP), sign, PIP >= 0.5), 
+         variable = gsub("\\+", "-", variable)) |> 
+  select(-PIP) |> 
+  pivot_wider(names_from = variable, values_from = sign) |> 
+  mutate(univ = case_when(
+    Ni & Co ~ "Ni & Co", 
+    Ni ~ "Ni only", 
+    Co ~ "Co only",
+    .default = "Neither"
+  )) |> 
+  rename(interaction = 5) |> 
+  mutate(univ = factor(univ, levels = c("Ni & Co", "Ni only", "Co only", "Neither")), 
+         interaction = factor(interaction, levels = c(TRUE, FALSE)))
+
+library(ggalluvial)
+
+# large size alluvial plot
+large_nico <- all_nico |> 
+  filter(size == "Large") |> 
+  group_by(mod, univ, interaction) |> 
+  count()
+nicop <- large_nico |> 
+  rename(Univariate = univ, Interaction = interaction)  |> 
+  ggplot(aes(axis1 = Univariate, axis2 = Interaction, y = n)) +
+  ggalluvial::geom_alluvium(aes(fill = mod), alpha = 0.4) +
+  ggalluvial::geom_stratum(color = "gray50") +
+  geom_text(stat = "stratum", aes(label = after_stat(stratum)), 
+            lineheight = 0.75) +
+  scale_x_discrete(limits = c("Univariate", "Interaction"), expand = c(0.2, 0.05)) +
+  scale_fill_manual(values = c("deepskyblue3", "darkorange")) +
+  labs(fill = "Model")
+nicop
+ggsave("index/figures/ch4_nicoflowchart.png", width = 5, height = 4)
+
+# combine nico and cdas together
+cowplot::plot_grid(cdasp + theme(legend.position = "none"),
+                   nicop, rel_widths = c(4.5, 6), labels = "auto")
+ggsave("index/figures/ch4_flowchartboth.png", width = 8, height = 4)
 
 # run times ---------------------------------------------------------------
 

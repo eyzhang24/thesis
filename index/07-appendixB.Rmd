@@ -347,7 +347,7 @@ write_csv(comb_small, "madres_data/base_data.csv")
 
 ### Code for Chapter \@ref(copula):
 
-Next, we use copulas to simulate predictor data. We use the `copula` and `rslurm` packages in this section. This code was run on the Amherst HPC RStudio server. 
+Next, we use copulas to simulate predictor data. We use the `copula` and `rslurm` packages in this section. This code was run on FrostByte, the Amherst high-performance computing cluster (HPC) RStudio server. 
 
 ```{r}
 # load packages
@@ -2549,121 +2549,14 @@ wjob04 <- slurm_call(
 
 ### Code for Chapter \@ref(results):
 
-#### Extracting results
+#### Extracting results {#extractresults}
 
 Here, we extract results from our simulation. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. This code was run on the Amherst HPC RStudio server. 
 
-First, we extract p-values from the multiple linear regression models. 
+First, we write custom functions to extract output from BKMR and BSR models. These functions are stored in the `extract_fxns.R` file and loaded in later in analysis. 
 
 ```{r}
-# naive small, chemxchem models
-mlr_sm <- read_rds("sim/mlr_mods_sm.RDS")
-
-mlrsm_pval <- 1:1700 |> 
-  map_df(\(x) {
-    mod <- mlr_sm[[x]]
-    data.frame(summary(mod)$coefficients) |> 
-      rownames_to_column(var = "var") |> 
-      select(var, p = 5) |> 
-      mutate(case = x)
-  })
-write_csv(mlrsm_pval, "sim/_mlr/pvalsm.csv")
-
-# naive large, chemxchem models
-mlr_lg <- read_rds("sim/mlr_mods_lg.RDS")
-
-mlrlg_pval <- 1:1700 |> 
-  map_df(\(x) {
-    mod <- mlr_lg[[x]]
-    data.frame(summary(mod)$coefficients) |> 
-      rownames_to_column(var = "var") |> 
-      select(var, p = 5) |> 
-      mutate(case = x)
-  })
-write_csv(mlrlg_pval, "sim/_mlr/pvallg.csv")
-
-# oracle small, chemxchem models
-orac_sm <- read_rds("sim/oracle_mods_sm.RDS")
-
-oracsm_pval <- 1:1700 |> 
-  map_df(\(x) {
-    mod <- orac_sm[[x]]
-    data.frame(summary(mod)$coefficients) |> 
-      rownames_to_column(var = "var") |> 
-      select(var, p = 5) |> 
-      mutate(case = x)
-  })
-write_csv(oracsm_pval, "sim/_oracle/pvalsm.csv")
-
-# oracle large, chemxchem models
-orac_lg <- read_rds("sim/oracle_mods_lg.RDS")
-
-oraclg_pval <- 1:1700 |> 
-  map_df(\(x) {
-    mod <- orac_lg[[x]]
-    data.frame(summary(mod)$coefficients) |> 
-      rownames_to_column(var = "var") |> 
-      select(var, p = 5) |> 
-      mutate(case = x)
-  })
-write_csv(oraclg_pval, "sim/_oracle/pvallg.csv")
-
-# naive small, chemxcov models
-mlr_sm_re <- read_rds("sim/mlr_mods_sm_re.RDS")
-
-mlrsmre_pval <- 1:400 |> 
-  map_df(\(x) {
-    mod <- mlr_sm_re[[x]]
-    data.frame(summary(mod)$coefficients) |> 
-      rownames_to_column(var = "var") |> 
-      select(var, p = 5) |> 
-      mutate(case = x)
-  })
-write_csv(mlrsmre_pval, "sim/_mlr/pvalsmre.csv")
-
-# naive large, chemxcov models
-mlr_lg_re <- read_rds("sim/mlr_mods_lg_re.RDS")
-
-mlrlgre_pval <- 1:400 |> 
-  map_df(\(x) {
-    mod <- mlr_lg_re[[x]]
-    data.frame(summary(mod)$coefficients) |> 
-      rownames_to_column(var = "var") |> 
-      select(var, p = 5) |> 
-      mutate(case = x)
-  })
-write_csv(mlrlgre_pval, "sim/_mlr/pvallgre.csv")
-
-# oracle small, chemxcov models
-orac_sm_re <- read_rds("sim/oracle_mods_sm_re.RDS")
-
-oracsmre_pval <- 1:400 |> 
-  map_df(\(x) {
-    mod <- orac_sm_re[[x]]
-    data.frame(summary(mod)$coefficients) |> 
-      rownames_to_column(var = "var") |> 
-      select(var, p = 5) |> 
-      mutate(case = x)
-  })
-write_csv(oracsmre_pval, "sim/_oracle/pvalsmre.csv")
-
-# oracle large, chemxcov models
-orac_lg_re <- read_rds("sim/oracle_mods_lg_re.RDS")
-
-oraclgre_pval <- 1:400 |> 
-  map_df(\(x) {
-    mod <- orac_lg_re[[x]]
-    data.frame(summary(mod)$coefficients) |> 
-      rownames_to_column(var = "var") |> 
-      select(var, p = 5) |> 
-      mutate(case = x)
-  })
-write_csv(oraclgre_pval, "sim/_oracle/pvallgre.csv")
-```
-
-Now, we write some functions to extract output from BKMR and BSR models. 
-
-```{r}
+# this function calculates confidence intervals for two-way interactions in BKMR
 bivarinter_bkmr <- function(fit, z1, z2, qs.diff = c(0.25, 0.75), 
                             qs.fixed = c(0.25, 0.75), q.rest = 0.5) {
   #' fit = bkmr model
@@ -2673,7 +2566,7 @@ bivarinter_bkmr <- function(fit, z1, z2, qs.diff = c(0.25, 0.75),
   #' qs.fixed = quantiles to fix other chemical at
   #' q.rest = quantile to fix rest of chemicals at
   #' 
-  #' note that order of z1 and z2 don't matter
+  #' NOTE that order of z1 and z2 does not matter
   
   # extract fit
   y <- fit$y
@@ -2713,6 +2606,7 @@ bivarinter_bkmr <- function(fit, z1, z2, qs.diff = c(0.25, 0.75),
                     est = ints["est"], sd = ints["sd"], row.names = NULL))
 }
 
+# this function calculates confidence intervals for three-way interactions in BKMR
 trivarinter_bkmr <- function(fit, z1, z2, z3, qs.diff = c(0.25, 0.75), 
                              qs.fixed = c(0.25, 0.75), q.rest = 0.5) {
   #' fit = bkmr model
@@ -2723,7 +2617,7 @@ trivarinter_bkmr <- function(fit, z1, z2, z3, qs.diff = c(0.25, 0.75),
   #' qs.fixed = quantiles to fix other chemical at
   #' q.rest = quantile to fix rest of chemicals at
   #' 
-  #' note that order of z1, z2, z3 don't matter
+  #' NOTE that order of z1, z2, z3 does not matter
   
   # extract fit
   y <- fit$y
@@ -2780,6 +2674,8 @@ trivarinter_bkmr <- function(fit, z1, z2, z3, qs.diff = c(0.25, 0.75),
  return(df)
 }
 
+# this function generates estimated exposure-response relationships 
+# to assess three-way interactions in BKMR
 trivarsurf_bkmr <- function(fit, z1, z2, z3, qs.diff = c(0.1, 0.5, 0.9), 
                             q.fixed = 0.5, ngrid = 50) {
   #' fit = bkmr model
@@ -2789,7 +2685,7 @@ trivarsurf_bkmr <- function(fit, z1, z2, z3, qs.diff = c(0.1, 0.5, 0.9),
   #' qs.diff = quantiles to calculate response diff for
   #' q.fixed = quantiles to fix rest of chemicals at
   #' 
-  #' note that order of z1, z2, z3 don't matter
+  #' NOTE that order of z1, z2, z3 does not matter
 
   # call from fit
   y <- fit$y
@@ -2842,6 +2738,85 @@ trivarsurf_bkmr <- function(fit, z1, z2, z3, qs.diff = c(0.1, 0.5, 0.9),
   return(df)
 }
 
+# this function estimates exposure-response relationship for one chemical in BSR
+univarsurf_bsr <- function(NLmod, X, C, j1, gridLength = 50, 
+                           quantile_rest = 0.5) {
+  #' NLmod = bsr model
+  #' X = matrix or dataframe of chemical values used to fit model
+  #' C = matrix or dataframe of covariate values used to fit model
+  #' gridLength = number of points to estimate response at
+  #' j1 = index of chemical
+  #' quantile_rest = quantile to fix other chemicals at
+  
+  # define parameters
+  n  <-  dim(X)[1]
+  ns <- NLmod$ns
+  k <- NLmod$k
+  p <- dim(X)[2]
+  Xstar <- array(NA, dim = c(n, p, ns + 1))
+  Xstar[, , 1] <- 1
+  for (j in 1:p) {
+    Xstar[, j, 2:(ns + 1)] <- scale(splines::ns(X[, j], df = ns))
+  }
+  
+  # define posteriors
+  zetaPost <- NLmod$posterior$zeta
+  betaList <- NLmod$posterior$beta
+  betaCPost <- NLmod$posterior$betaC
+  totalScans <- dim(NLmod$posterior$betaC)[2]
+  nChains <- dim(NLmod$posterior$betaC)[1]
+  
+  # create design of covariates
+  pc <- dim(C)[2]
+  NewDesignC <- matrix(NA, gridLength, pc + 1)
+  NewDesignC[, 1] <- 1
+  for (jc in 1:pc) {
+    NewDesignC[, jc + 1] <- mean(C[, jc])
+  }
+  
+  # create design of chemicals
+  n <- dim(X)[1]
+  NewDesignMat <- matrix(NA, gridLength, p)
+  for (j in 1:p) {
+    NewDesignMat[, j] <- quantile(X[, j], quantile_rest)
+  }
+  NewDesignMat[, j1] <- seq(quantile(X[, j1], 0.025),
+                            quantile(X[, j1], 0.975), length = gridLength)
+  NewDesign <- array(NA, dim = c(gridLength, p, ns + 1))
+  NewDesign[, , 1] <- 1
+  for (j in 1:p) {
+    temp_ns_object <- splines::ns(X[, j], df = ns)
+    temp_sds <- apply(temp_ns_object, 2, sd)
+    temp_means <- apply(temp_ns_object, 2, mean)
+    NewDesign[, j, 2:(ns + 1)] <- t((t(
+      predict(temp_ns_object,
+              NewDesignMat[, j])
+    ) - temp_means) / temp_sds)
+  }
+  
+  # generate predictions
+  predictions <- NLinteraction:::PredictionsMixture(
+    XstarOld = Xstar,
+    XstarNew = NewDesign,
+    designC = NewDesignC,
+    totalScans = totalScans,
+    nChains = nChains,
+    zetaPost = zetaPost,
+    betaList = betaList,
+    betaCPost = betaCPost,
+    k = k,
+    ns = ns
+  )
+  
+  return(data.frame(
+    j1val = NewDesignMat[, j1], 
+    est = apply(predictions$PredictedPost, 3, mean), 
+    lower = apply(predictions$PredictedPost, 3, quantile, 0.025), 
+    upper = apply(predictions$PredictedPost, 3, quantile, 0.975)))
+}
+
+# this function generates estimated exposure-response relationships 
+# to assess two-way interactions in BSR
 bivarsurf_bsr <- function(NLmod, X, C, j1, j2, gridLength = 50, 
                           quantile_j2 = c(0.1, 0.5, 0.9), quantile_rest = 0.5) {
   #' NLmod = bsr model
@@ -2853,7 +2828,7 @@ bivarsurf_bsr <- function(NLmod, X, C, j1, j2, gridLength = 50,
   #' quantile_j2 = vector of quantiles to fix second chemical at
   #' quantile_rest = quantile to fix other chemicals at
   #' 
-  #' NOTE order of j1 and j2 doesn't matter
+  #' NOTE order of j1 and j2 does not matter
   
   # define parameters
   n  <-  dim(X)[1]
@@ -2921,6 +2896,8 @@ bivarsurf_bsr <- function(NLmod, X, C, j1, j2, gridLength = 50,
   return(df)
 }
 
+# this function generates estimated exposure-response relationships 
+# to assess three-way interactions in BSR
 trivarsurf_bsr <- function(NLmod, X, C, j1, j2, j3, gridLength = 50, 
                            quantile_j23 = c(0.1, 0.5, 0.9), quantile_rest = 0.5) {
   #' NLmod = bsr model
@@ -3001,6 +2978,62 @@ trivarsurf_bsr <- function(NLmod, X, C, j1, j2, j3, gridLength = 50,
   })
   return(df)
 }
+```
+
+First, we extract p-values from the multiple linear regression models. 
+
+```{r}
+# naive small, chemxchem models
+mlr_sm <- read_rds("sim/mlr_mods_sm.RDS")
+
+mlrsm_pval <- 1:1700 |> 
+  map_df(\(x) {
+    mod <- mlr_sm[[x]]
+    data.frame(summary(mod)$coefficients) |> 
+      rownames_to_column(var = "var") |> 
+      select(var, p = 5) |> 
+      mutate(case = x)
+  })
+write_csv(mlrsm_pval, "sim/_mlr/pvalsm.csv")
+
+# naive large, chemxchem models
+mlr_lg <- read_rds("sim/mlr_mods_lg.RDS")
+
+mlrlg_pval <- 1:1700 |> 
+  map_df(\(x) {
+    mod <- mlr_lg[[x]]
+    data.frame(summary(mod)$coefficients) |> 
+      rownames_to_column(var = "var") |> 
+      select(var, p = 5) |> 
+      mutate(case = x)
+  })
+write_csv(mlrlg_pval, "sim/_mlr/pvallg.csv")
+
+# oracle small, chemxchem models
+orac_sm <- read_rds("sim/oracle_mods_sm.RDS")
+
+oracsm_pval <- 1:1700 |> 
+  map_df(\(x) {
+    mod <- orac_sm[[x]]
+    data.frame(summary(mod)$coefficients) |> 
+      rownames_to_column(var = "var") |> 
+      select(var, p = 5) |> 
+      mutate(case = x)
+  })
+write_csv(oracsm_pval, "sim/_oracle/pvalsm.csv")
+
+# oracle large, chemxchem models
+orac_lg <- read_rds("sim/oracle_mods_lg.RDS")
+
+oraclg_pval <- 1:1700 |> 
+  map_df(\(x) {
+    mod <- orac_lg[[x]]
+    data.frame(summary(mod)$coefficients) |> 
+      rownames_to_column(var = "var") |> 
+      select(var, p = 5) |> 
+      mutate(case = x)
+  })
+write_csv(oraclg_pval, "sim/_oracle/pvallg.csv")
 ```
 
 Next, we extract output from BKMR models run on smaller and larger size simulated datasets, including the base case and models with interactions between chemicals. 
@@ -3169,6 +3202,58 @@ ksm_intb <- names(ksm_paths)[2:13] |> # only for two-way
       mutate(case = x)
   })
 write_csv(ksm_intb, "sim/bkmr_sm/int_bivar.csv")
+
+# FDR for Hg-Ni
+indices <- t(combn(1:10, 2))
+ksm_intb_hgni <- names(ksm_paths)[2:5] |> # only for Hg-Ni
+  purrr::map_df(\(x) {
+    message("starting ", x)
+    ksm_paths[[x]] |> 
+      purrr::map_df(\(y) {
+        bkmr <- read_rds(y)
+        result <- 1:45 |> 
+          purrr::map_df(\(z) {
+            ints <- bivarinter_bkmr(bkmr, 
+                                    z1 = indices[z, ][1], 
+                                    z2 = indices[z, ][2], 
+                                    qs.diff = c(0.25, 0.75), 
+                                    qs.fixed = c(0.25, 0.75),
+                                    q.rest = 0.5)
+            data.frame(ints)
+          }) |> 
+          mutate(trial = as.numeric(sub(".*_(\\d+)\\.RDS", "\\1", y)))
+        rm(bkmr)
+        return(result)
+      }) |> 
+      mutate(case = x)
+  })
+write_csv(ksm_intb_hgni, "sim/bkmr_sm/int_bivar_fullhgni.csv")
+
+# FDR for rest
+indices <- t(combn(1:10, 2))
+ksm_intb_rest <- names(ksm_paths)[6:13] |> # for rest
+  purrr::map_df(\(x) {
+    message("starting ", x)
+    ksm_paths[[x]] |> 
+      purrr::map_df(\(y) {
+        bkmr <- read_rds(y)
+        result <- 1:45 |> 
+          purrr::map_df(\(z) {
+            ints <- bivarinter_bkmr(bkmr, 
+                                    z1 = indices[z, ][1], 
+                                    z2 = indices[z, ][2], 
+                                    qs.diff = c(0.25, 0.75), 
+                                    qs.fixed = c(0.25, 0.75),
+                                    q.rest = 0.5)
+            data.frame(ints)
+          }) |> 
+          mutate(trial = as.numeric(sub(".*_(\\d+)\\.RDS", "\\1", y)))
+        rm(bkmr)
+        return(result)
+      }) |> 
+      mutate(case = x)
+  })
+write_csv(ksm_intb_rest, "sim/bkmr_sm/int_bivar_fullrest.csv")
 
 # extract one vs. 2 others trivariate interactions
 ksm_intt <- names(ksm_paths)[14:17] |> # only for three-way
@@ -3355,6 +3440,58 @@ klg_intb <- names(klg_paths)[2:13] |> # only for two-way
   })
 write_csv(klg_intb, "sim/bkmr_lg/int_bivar.csv")
 
+# FDR for Hg-Ni
+indices <- t(combn(1:10, 2))
+klg_intb_hgni <- names(klg_paths)[2:5] |> # only for Hg-Ni
+  purrr::map_df(\(x) {
+    message("starting ", x)
+    klg_paths[[x]] |> 
+      purrr::map_df(\(y) {
+        bkmr <- read_rds(y)
+        result <- 1:45 |> 
+          purrr::map_df(\(z) {
+            ints <- bivarinter_bkmr(bkmr, 
+                                    z1 = indices[z, ][1], 
+                                    z2 = indices[z, ][2], 
+                                    qs.diff = c(0.25, 0.75), 
+                                    qs.fixed = c(0.25, 0.75),
+                                    q.rest = 0.5)
+            data.frame(ints)
+          }) |> 
+          mutate(trial = as.numeric(sub(".*_(\\d+)\\.RDS", "\\1", y)))
+        rm(bkmr)
+        return(result)
+      }) |> 
+      mutate(case = x)
+  })
+write_csv(klg_intb_hgni, "sim/bkmr_lg/int_bivar_fullhgni.csv")
+
+# FDR for rest
+indices <- t(combn(1:10, 2))
+klg_intb_rest <- names(klg_paths)[6:13] |> # for Cd-As and Ni-Co
+  purrr::map_df(\(x) {
+    message("starting ", x)
+    klg_paths[[x]] |> 
+      purrr::map_df(\(y) {
+        bkmr <- read_rds(y)
+        result <- 1:45 |> 
+          purrr::map_df(\(z) {
+            ints <- bivarinter_bkmr(bkmr, 
+                                    z1 = indices[z, ][1], 
+                                    z2 = indices[z, ][2], 
+                                    qs.diff = c(0.25, 0.75), 
+                                    qs.fixed = c(0.25, 0.75),
+                                    q.rest = 0.5)
+            data.frame(ints)
+          }) |> 
+          mutate(trial = as.numeric(sub(".*_(\\d+)\\.RDS", "\\1", y)))
+        rm(bkmr)
+        return(result)
+      }) |> 
+      mutate(case = x)
+  })
+write_csv(klg_intb_rest, "sim/bkmr_lg/int_bivar_fullrest.csv")
+
 # extract one vs. 2 others trivariate interactions
 klg_intt <- names(klg_paths)[14:17] |> # only for three-way
   purrr::map_df(\(x) {
@@ -3465,6 +3602,8 @@ write_csv(ssm_pip_triv, "sim/bsr_sm/pip_triv.csv")
 
 # read back in data
 out1_resp1 <- read_rds("sim/sim_resp_sm_a.RDS")
+
+# load in functions for extracting results
 source("extract_fxns.R")
 
 # extract bivariate relationships
@@ -3761,21 +3900,798 @@ write_csv(slg_triv, "sim/bsr_lg/triv_expresp.csv")
 
 Next, we extract output from stratified models. 
 
-Finally, we extract information on run-times. 
+```{r}
+# naive small, chemxcov models
+mlr_sm_re <- read_rds("sim/mlr_mods_sm_re.RDS")
 
-#### Present results
+mlrsmre_pval <- 1:400 |> 
+  map_df(\(x) {
+    mod <- mlr_sm_re[[x]]
+    data.frame(summary(mod)$coefficients) |> 
+      rownames_to_column(var = "var") |> 
+      select(var, p = 5) |> 
+      mutate(case = x)
+  })
+write_csv(mlrsmre_pval, "sim/_mlr/pvalsmre.csv")
 
-Here, we present results 
+# naive large, chemxcov models
+mlr_lg_re <- read_rds("sim/mlr_mods_lg_re.RDS")
+
+mlrlgre_pval <- 1:400 |> 
+  map_df(\(x) {
+    mod <- mlr_lg_re[[x]]
+    data.frame(summary(mod)$coefficients) |> 
+      rownames_to_column(var = "var") |> 
+      select(var, p = 5) |> 
+      mutate(case = x)
+  })
+write_csv(mlrlgre_pval, "sim/_mlr/pvallgre.csv")
+
+# oracle small, chemxcov models
+orac_sm_re <- read_rds("sim/oracle_mods_sm_re.RDS")
+
+oracsmre_pval <- 1:400 |> 
+  map_df(\(x) {
+    mod <- orac_sm_re[[x]]
+    data.frame(summary(mod)$coefficients) |> 
+      rownames_to_column(var = "var") |> 
+      select(var, p = 5) |> 
+      mutate(case = x)
+  })
+write_csv(oracsmre_pval, "sim/_oracle/pvalsmre.csv")
+
+# oracle large, chemxcov models
+orac_lg_re <- read_rds("sim/oracle_mods_lg_re.RDS")
+
+oraclgre_pval <- 1:400 |> 
+  map_df(\(x) {
+    mod <- orac_lg_re[[x]]
+    data.frame(summary(mod)$coefficients) |> 
+      rownames_to_column(var = "var") |> 
+      select(var, p = 5) |> 
+      mutate(case = x)
+  })
+write_csv(oraclgre_pval, "sim/_oracle/pvallgre.csv")
+```
+
+```{r}
+#########
+# extract bkmr stratified
+#########
+
+## small ##
+
+list_files <- list.dirs(".", full.names = FALSE, recursive = FALSE)
+list_ksmre <- list_files[grepl("_rslurm_ksmre", list_files)]
+
+ksmre_subf <- list.dirs(list_ksmre, full.names = TRUE, recursive = TRUE)
+ksmre_mod <- ksmre_subf[grepl("mods", ksmre_subf)]
+
+ksmre_labels <- gsub("\\D", "", ksmre_mod)
+ksmre_labels <- ifelse(ksmre_labels == "", 1, as.numeric(ksmre_labels))
+
+# get paths
+ksmre_paths <- ksmre_mod |> 
+  purrr::map(\(x) {
+    list.files(x, full.names = TRUE)
+  }) |> 
+  setNames(nm = ksmre_labels)
+
+one <- read_rds(ksmre_paths[[1]][[1]])
+oney <- SingVarRiskSummaries(one[[2]], q.fixed = 0.5)
+onex <- SingVarRiskSummaries(one[[2]], which.z = 4, q.fixed = 0.5)
+onez <- PredictorResponseUnivar(one[[2]], which.z = 4)
+
+# extract PIPs
+ksmre_pips <- names(ksmre_paths) |> 
+  purrr::map_df(\(x) { # for each case
+    message("starting ", x)
+    ksmre_paths[[x]] |> 
+      purrr::map_df(\(y) { # for each trial
+        list_mod <- read_rds(y)
+        1:6 |> # for each stratified model
+          purrr::map_df(\(z) {
+            mod <- list_mod[[z]]
+            if(class(mod)[1] == "logical") { # if output failed
+              df <- data.frame(variable = NA, PIP = NA, race = z)
+            } else { 
+              # get pips
+              df <- ExtractPIPs(mod) |> 
+                mutate(race = z)
+            }
+            # print(df)
+            return(df)
+          }) |> 
+          mutate(trial = as.numeric(sub(".*_(\\d+)\\.RDS", "\\1", y)))
+      }) |> 
+      mutate(case = x)
+  })
+write_csv(ksmre_pips, "sim/re/ksmre_pips.csv")
+
+# get confidence intervals
+ksmre_ints <- names(ksmre_paths) |> 
+  purrr::map_df(\(x) { # for each case
+    ksmre_paths[[x]] |> 
+      purrr::map_df(\(y) { # for each trial
+        list_mod <- read_rds(y)
+        1:6 |> # for each stratified model
+          purrr::map_df(\(z) {
+            mod <- list_mod[[z]]
+            if(class(mod)[1] == "logical") { # if output failed
+              df <- data.frame(est = NA, sd = NA, race = z)
+            } else { 
+              # compute estimate of 0.75 vs. 0.25 quantiles
+              df <- SingVarRiskSummaries(mod, which.z = 4, q.fixed = 0.5) |> 
+                select(est, sd) |> 
+                mutate(race = z)
+            }
+            # print(df)
+            return(df)
+          }) |> 
+          mutate(trial = as.numeric(sub(".*_(\\d+)\\.RDS", "\\1", y)))
+      }) |> 
+      mutate(case = x)
+  })
+write_csv(ksmre_ints, "sim/re/ksmre_ints.csv")
+
+# get exposure response relationships
+ksmre_univ <- names(ksmre_paths) |> 
+  purrr::map_df(\(x) { # for each case
+    message("starting ", x)
+    ksmre_paths[[x]] |> 
+      purrr::map_df(\(y) { # for each trial
+        list_mod <- read_rds(y)
+        1:6 |> # for each stratified model
+          purrr::map_df(\(z) {
+            mod <- list_mod[[z]]
+            if(class(mod)[1] == "logical") { # if output failed
+              df <- data.frame(z1 = NA, est = NA, se = NA, race = z)
+            } else { 
+              # compute estimated Hg-response relationship
+              df <- PredictorResponseUnivar(mod, which.z = 4) |> 
+                select(z1 = z, est, se) |> 
+                mutate(race = z)
+            }
+            # print(df)
+            return(df)
+          }) |> 
+          mutate(trial = as.numeric(sub(".*_(\\d+)\\.RDS", "\\1", y)))
+      }) |> 
+      mutate(case = x)
+  })
+write_csv(ksmre_univ, "sim/re/ksmre_expresp.csv")  
+
+## large ##
+
+# file names
+list_files <- list.dirs(".", full.names = FALSE, recursive = FALSE)
+list_klgre <- list_files[grepl("_rslurm_klgre", list_files)]
+
+klgre_subf <- list.dirs(list_klgre, full.names = TRUE, recursive = TRUE)
+klgre_mod <- klgre_subf[grepl("mods", klgre_subf)]
+
+klgre_labels <- gsub("\\D", "", klgre_mod)
+klgre_labels <- ifelse(klgre_labels == "", 1, as.numeric(klgre_labels))
+
+# get paths
+klgre_paths <- klgre_mod |> 
+  purrr::map(\(x) {
+    list.files(x, full.names = TRUE)
+  }) |> 
+  setNames(nm = klgre_labels)
+
+# get pips
+klgre_pips <- names(klgre_paths) |> 
+  purrr::map_df(\(x) { # for each case
+    message("starting ", x)
+    klgre_paths[[x]] |> 
+      purrr::map_df(\(y) { # for each trial
+        list_mod <- read_rds(y)
+        1:5 |> # for each stratified model
+          purrr::map_df(\(z) {
+            mod <- list_mod[[z]]
+            if(class(mod)[1] == "logical") { # if output failed
+              df <- data.frame(variable = NA, PIP = NA, race = z)
+            } else { 
+              # get pips
+              df <- ExtractPIPs(mod) |> 
+                mutate(race = z)
+            }
+            # print(df)
+            return(df)
+          }) |> 
+          mutate(trial = as.numeric(sub(".*_(\\d+)\\.RDS", "\\1", y)))
+      }) |> 
+      mutate(case = x)
+  })
+write_csv(klgre_pips, "sim/re/klgre_pips.csv")
+
+# get confidence intervals
+klgre_ints <- names(klgre_paths) |> 
+  purrr::map_df(\(x) { # for each case
+    message("starting ", x)
+    klgre_paths[[x]] |> 
+      purrr::map_df(\(y) { # for each trial
+        list_mod <- read_rds(y)
+        1:5 |> # for each stratified model
+          purrr::map_df(\(z) {
+            mod <- list_mod[[z]]
+            if(class(mod)[1] == "logical") { # if output failed
+              df <- data.frame(est = NA, sd = NA, race = z)
+            } else { 
+              # compute estimate of 0.75 vs. 0.25 quantiles
+              df <- SingVarRiskSummaries(mod, which.z = 4, q.fixed = 0.5) |> 
+                select(est, sd) |> 
+                mutate(race = z)
+            }
+            # print(df)
+            return(df)
+          }) |> 
+          mutate(trial = as.numeric(sub(".*_(\\d+)\\.RDS", "\\1", y)))
+      }) |> 
+      mutate(case = x)
+  })
+write_csv(klgre_ints, "sim/re/klgre_ints.csv")
+
+# get exposure response relationships
+klgre_univ <- names(klgre_paths) |> 
+  purrr::map_df(\(x) { # for each case
+    message("starting ", x)
+    klgre_paths[[x]] |> 
+      purrr::map_df(\(y) { # for each trial
+        list_mod <- read_rds(y)
+        1:5 |> # for each stratified model
+          purrr::map_df(\(z) {
+            mod <- list_mod[[z]]
+            if(class(mod)[1] == "logical") { # if output failed
+              df <- data.frame(z1 = NA, est = NA, se = NA, race = z)
+            } else { 
+              # compute estimated Hg-response relationship
+              df <- PredictorResponseUnivar(mod, which.z = 4) |> 
+                select(z1 = z, est, se) |> 
+                mutate(race = z)
+            }
+            # print(df)
+            return(df)
+          }) |> 
+          mutate(trial = as.numeric(sub(".*_(\\d+)\\.RDS", "\\1", y)))
+      }) |> 
+      mutate(case = x)
+  })
+write_csv(klgre_univ, "sim/re/klgre_expresp.csv")  
+```
+
+```{r}
+######
+# extract bsr stratified
+#######
+
+# first, move all stratified models into one folder
+# because we ran each model as one separate job
+
+## small ##
+
+# extracting file names
+list_files <- list.dirs(".", full.names = FALSE, recursive = FALSE)
+list_bsri <- list_files[grepl("_rslurm_ssmre(\\d+)_", list_files)]
+
+bsri_subf <- list.dirs(list_bsri, full.names = TRUE, recursive = TRUE)
+bsri_mod <- bsri_subf[grepl("mods", bsri_subf)]
+bsri_time <- bsri_subf[grepl("times", bsri_subf)]
+
+# copy mods to correct folder 
+for (f in bsri_mod) {
+  file.copy(from = list.files(f, full.names = TRUE),
+            to   = paste0(substr(f, 1, 15), "/mods"))
+}
+
+## large ##
+list_files <- list.dirs(".", full.names = FALSE, recursive = FALSE)
+list_bsri <- list_files[grepl("_rslurm_slgre(\\d+)_", list_files)]
+
+bsri_subf <- list.dirs(list_bsri, full.names = TRUE, recursive = TRUE)
+bsri_mod <- bsri_subf[grepl("mods", bsri_subf)]
+bsri_time <- bsri_subf[grepl("times", bsri_subf)]
+
+# copy mods to correct folder
+for (f in bsri_mod) {
+  file.copy(from = list.files(f, full.names = TRUE),
+            to   = paste0(substr(f, 1, 15), "/mods"))
+}
+
+# next, extract results
+
+# load in functions for extracting results
+source("extract_fxns.R")
+
+## small ##
+
+# read back in data
+out1_resp1_re <- read_rds("sim/sim_resp_sm_re.RDS")
+
+# file names
+list_files <- list.dirs(".", full.names = FALSE, recursive = FALSE)
+list_ssmre <- list_files[grepl("_rslurm_ssmre", list_files)]
+
+ssmre_subf <- list.dirs(list_ssmre, full.names = TRUE, recursive = TRUE)
+ssmre_mod <- ssmre_subf[grepl("mods", ssmre_subf)]
+
+ssmre_labels <- gsub("\\D", "", ssmre_mod)
+ssmre_labels <- ifelse(ssmre_labels == "", 1, as.numeric(ssmre_labels))
+
+# get paths
+ssmre_paths <- ssmre_mod |> 
+  purrr::map(\(x) {
+    list.files(x, full.names = TRUE)
+  }) |> 
+  setNames(nm = ssmre_labels)
+
+# extract PIPs
+ssmre_pips <- names(ssmre_paths) |> 
+  purrr::map_df(\(x) { # for each case
+    message("starting ", x)
+    ssmre_paths[[x]] |> 
+      purrr::map_df(\(y) { # for each trial
+        list_mod <- read_rds(y)
+        
+        1:6 |> # for each stratified model
+          purrr::map_df(\(z) {
+            mod <- list_mod[[z]]
+            if(class(mod) == "logical") {
+              result <- data.frame(variable = NA, PIP = NA, 
+                                   df = NA, race = z)
+            } else {
+              result <- data.frame(variable = cnames, PIP = mod$MainPIP) |>
+                mutate(df = mod$ns, race = z)
+            }
+            return(result)
+          }) |> 
+          mutate(trial = as.numeric(sub(".+_(.+)d.+", "\\1", y)))
+      }) |> 
+      mutate(case = x)
+  })
+write_csv(ssmre_pips, "sim/re/ssmre_pips.csv")
+write.csv(ssmre_pips, "sim/re/ssmre_pips.csv")
+
+# get exposure response relationships
+ssmre_univ <- names(ssmre_paths) |> 
+  purrr::map_df(\(x) { # for each case
+    message("starting ", x)
+    ssmre_paths[[x]] |> 
+      purrr::map_df(\(y) { # for each trial
+        trial <- as.numeric(sub(".+_(.+)d.+", "\\1", y))
+        if(trial %% 10 == 0) message("index ", y)
+        df <- out1_resp1_re[[trial]]
+        X <- df |> 
+          select(As:Sn) |> 
+          as.matrix.data.frame()
+        C <- df |> 
+          select(smoke:bmi) |> 
+          as.matrix.data.frame()
+        Y <- df$y
+        
+        list_mod <- read_rds(y)
+        1:6 |> # for each stratified model
+          purrr::map_df(\(z) {
+            mod <- list_mod[[z]]
+            if(class(mod)[1] == "logical") { # if output failed
+              df <- data.frame(j1val = NA, est = NA, 
+                               lower = NA, upper = NA, race = z)
+            } else { 
+              # compute estimated Hg-response relationship
+              df <- univarsurf_bsr(mod, X, C, j1 = 4) |> 
+                mutate(race = z)
+            }
+            # print(df)
+            return(df)
+          }) |> 
+          mutate(trial = as.numeric(sub(".+_(.+)d.+", "\\1", y)))
+      }) |> 
+      mutate(case = x)
+  })
+write_csv(ssmre_univ, "sim/re/ssmre_expresp.csv")  
+
+## large ##
+
+# read back in data
+out2_resp1_re <- read_rds("sim/sim_resp_lg_re.RDS")
+
+list_files <- list.dirs(".", full.names = FALSE, recursive = FALSE)
+list_slgre <- list_files[grepl("_rslurm_slgre", list_files)]
+
+slgre_subf <- list.dirs(list_slgre, full.names = TRUE, recursive = TRUE)
+slgre_mod <- slgre_subf[grepl("mods", slgre_subf)]
+
+slgre_labels <- gsub("\\D", "", slgre_mod)
+slgre_labels <- ifelse(slgre_labels == "", 1, as.numeric(slgre_labels))
+
+# get paths
+slgre_paths <- slgre_mod |> 
+  purrr::map(\(x) {
+    list.files(x, full.names = TRUE)
+  }) |> 
+  setNames(nm = slgre_labels)
+
+# extract PIPs
+slgre_pips <- names(slgre_paths) |> 
+  purrr::map_df(\(x) { # for each case
+    message("starting ", x)
+    slgre_paths[[x]] |> 
+      purrr::map_df(\(y) { # for each trial
+        list_mod <- read_rds(y)
+        1:6 |> # for each stratified model
+          purrr::map_df(\(z) {
+            mod <- list_mod[[z]]
+            if(class(mod) == "logical") {
+              result <- data.frame(variable = NA, PIP = NA, 
+                                   df = NA, race = z)
+            } else {
+              result <- data.frame(variable = cnames, PIP = mod$MainPIP) |>
+                mutate(df = mod$ns, race = z)
+            }
+            return(result)
+          }) |> 
+          mutate(trial = as.numeric(sub(".+_(.+)d.+", "\\1", y)))
+      }) |> 
+      mutate(case = x)
+  })
+write_csv(slgre_pips, "sim/re/slgre_pips.csv")
+
+# get exposure response relationships
+slgre_univ <- names(slgre_paths) |> 
+  purrr::map_df(\(x) { # for each case
+    message("starting ", x)
+    slgre_paths[[x]] |> 
+      purrr::map_df(\(y) { # for each trial
+        trial <- as.numeric(sub(".+_(.+)d.+", "\\1", y))
+        if(trial %% 10 == 0) message("index ", y)
+        df <- out2_resp1_re[[trial]]
+        X <- df |> 
+          select(As:Sn) |> 
+          as.matrix.data.frame()
+        C <- df |> 
+          select(smoke:bmi) |> 
+          as.matrix.data.frame()
+        Y <- df$y
+        
+        list_mod <- read_rds(y)
+        1:5 |> # for each stratified model
+          purrr::map_df(\(z) {
+            mod <- list_mod[[z]]
+            if(class(mod)[1] == "logical") { # if output failed
+              df <- data.frame(j1val = NA, est = NA, 
+                               lower = NA, upper = NA, race = z)
+            } else { 
+              # compute estimated Hg-response relationship
+              df <- univarsurf_bsr(mod, X, C, j1 = 4) |> 
+                mutate(race = z)
+            }
+            # print(df)
+            return(df)
+          }) |> 
+          mutate(trial = as.numeric(sub(".+_(.+)d.+", "\\1", y)))
+      }) |> 
+      mutate(case = x)
+  })
+write_csv(slgre_univ, "sim/re/slgre_expresp.csv")  
+```
+
+Finally, we extract information on run-times for BKMR and BSR. Note that run-times for MLRs were already combined in one file earlier, as they were all run on one job sent to the HPC. 
+
+```{r}
+######
+# BKMR run times
+#####
+
+## small ##
+
+# file names
+list_files <- list.dirs(".", full.names = FALSE, recursive = FALSE)
+list_ksm <- list_files[grepl("_rslurm_bkmr_sm", list_files)]
+
+ksm_subf <- list.dirs(list_ksm, full.names = TRUE, recursive = TRUE)
+ksm_times <- ksm_subf[grepl("times", ksm_subf)]
+
+ksm_labelt <- gsub("\\D", "", ksm_times)
+ksm_labelt <- ifelse(ksm_labelt == "", 1, as.numeric(ksm_labelt))
+
+# get paths
+ksm_patht <- ksm_times |> 
+  purrr::map(\(x) {
+    list.files(x, full.names = TRUE)
+  }) |> 
+  setNames(nm = ksm_labelt)
+
+times <- names(ksm_patht) |> 
+  map_df(\(x) {
+    ksm_patht[[x]] |> 
+      map_df(\(y) {
+        # time = read_rds(y)
+        # print(time)
+        return(data.frame(
+          time = read_rds(y),
+          trial = as.numeric(sub(".*_(\\d+)\\.RDS", "\\1", y))))
+      }) |> 
+      mutate(case = x)
+  })
+
+write_rds(times, "sim/bkmr_sm/times.RDS")
+
+## large ##
+
+# file names
+list_files <- list.dirs(".", full.names = FALSE, recursive = FALSE)
+list_klg <- list_files[grepl("_rslurm_bkmr_lg", list_files)]
+
+klg_subf <- list.dirs(list_klg, full.names = TRUE, recursive = TRUE)
+klg_times <- klg_subf[grepl("times", klg_subf)]
+
+klg_labelt <- gsub("\\D", "", klg_times)
+klg_labelt <- ifelse(klg_labelt == "", 1, as.numeric(klg_labelt))
+
+# get paths
+klg_patht <- klg_times |> 
+  purrr::map(\(x) {
+    list.files(x, full.names = TRUE)
+  }) |> 
+  setNames(nm = klg_labelt)
+
+times <- names(klg_patht) |> 
+  map_df(\(x) {
+    klg_patht[[x]] |> 
+      map_df(\(y) {
+        # time = read_rds(y)
+        # print(time)
+        return(data.frame(
+          time = read_rds(y),
+          trial = as.numeric(sub(".*_(\\d+)\\.RDS", "\\1", y))))
+      }) |> 
+      mutate(case = x)
+  })
+
+write_rds(times, "sim/bkmr_lg/times.RDS")
+
+######
+# BSR run times
+######
+
+## small ##
+
+# file names
+list_files <- list.dirs(".", full.names = FALSE, recursive = FALSE)
+list_ssm <- list_files[grepl("_rslurm_bsr_sm", list_files)]
+
+ssm_subf <- list.dirs(list_ssm, full.names = TRUE, recursive = TRUE)
+ssm_times <- ssm_subf[grepl("times", ssm_subf)]
+
+ssm_labelt <- gsub("\\D", "", ssm_times)
+ssm_labelt <- ifelse(ssm_labelt == "", 1, as.numeric(ssm_labelt))
+
+# get paths
+ssm_patht <- ssm_times |> 
+  purrr::map(\(x) {
+    list.files(x, full.names = TRUE)
+  }) |> 
+  setNames(nm = ssm_labelt)
+
+times <- names(ssm_patht) |> 
+  map_df(\(x) {
+    ssm_patht[[x]] |> 
+      map_df(\(y) {
+        time = read_rds(y)
+        # print(time)
+        return(data.frame(
+          time_selection = time[[1]],
+          time = time[[2]], 
+          trial = as.numeric(sub(".+_(.+)d.+", "\\1", y))))
+      }) |> 
+      mutate(case = x)
+  })
+
+write_rds(times, "sim/bsr_sm/times.RDS")
+
+## large ##
+
+# file names
+list_files <- list.dirs(".", full.names = FALSE, recursive = FALSE)
+list_slg <- list_files[grepl("_rslurm_bsr_lg", list_files)]
+
+slg_subf <- list.dirs(list_slg, full.names = TRUE, recursive = TRUE)
+slg_times <- slg_subf[grepl("times", slg_subf)]
+
+slg_labelt <- gsub("\\D", "", slg_times)
+slg_labelt <- ifelse(slg_labelt == "", 1, as.numeric(slg_labelt))
+
+# get paths
+slg_patht <- slg_times |> 
+  purrr::map(\(x) {
+    list.files(x, full.names = TRUE)
+  }) |> 
+  setNames(nm = slg_labelt)
+
+times <- names(slg_patht) |> 
+  map_df(\(x) {
+    slg_patht[[x]] |> 
+      map_df(\(y) {
+        time = read_rds(y)
+        # print(time)
+        return(data.frame(
+          time_selection = time[[1]],
+          time = time[[2]], 
+          trial = as.numeric(sub(".+_(.+)d.+", "\\1", y))))
+      }) |> 
+      mutate(case = x)
+  })
+write_rds(times, "sim/bsr_lg/times.RDS")
+
+######
+# BKMR stratified run times
+######
+
+## small ##
+
+# extract run times
+list_files <- list.dirs(".", full.names = FALSE, recursive = FALSE)
+list_ksmre <- list_files[grepl("_rslurm_ksmre", list_files)]
+
+ksmre_subf <- list.dirs(list_ksmre, full.names = TRUE, recursive = TRUE)
+ksmre_times <- ksmre_subf[grepl("times", ksmre_subf)]
+
+ksmre_labelt <- gsub("\\D", "", ksmre_times)
+ksmre_labelt <- ifelse(ksmre_labelt == "", 1, as.numeric(ksmre_labelt))
+
+# get paths
+ksmre_patht <- ksmre_times |> 
+  purrr::map(\(x) {
+    list.files(x, full.names = TRUE)
+  }) |> 
+  setNames(nm = ksmre_labelt)
+
+times <- names(ksmre_patht) |> 
+  map_df(\(x) {
+    ksmre_patht[[x]] |> 
+      map_df(\(y) {
+        list_time <- read_rds(y)
+        df <- 1:6 |> 
+          map_df(\(z) {
+            data.frame(time = list_time[[z]], 
+                       race = z)
+          })
+        return(mutate(df, trial = as.numeric(sub(".*_(\\d+)\\.RDS", "\\1", y))))
+      }) |> 
+      mutate(case = x)
+  })
+
+write_rds(times, "sim/re/ksmre_times.RDS")
+
+## large ##
+
+# file names
+list_files <- list.dirs(".", full.names = FALSE, recursive = FALSE)
+list_slgre <- list_files[grepl("_rslurm_slgre", list_files)]
+
+klgre_subf <- list.dirs(list_klgre, full.names = TRUE, recursive = TRUE)
+klgre_times <- klgre_subf[grepl("times", klgre_subf)]
+
+klgre_labelt <- gsub("\\D", "", klgre_times)
+klgre_labelt <- ifelse(klgre_labelt == "", 1, as.numeric(klgre_labelt))
+
+# get paths
+klgre_patht <- klgre_times |> 
+  purrr::map(\(x) {
+    list.files(x, full.names = TRUE)
+  }) |> 
+  setNames(nm = klgre_labelt)
+
+t <- read_rds(klgre_patht[[1]][1])
+
+times <- names(klgre_patht) |> 
+  map_df(\(x) {
+    klgre_patht[[x]] |> 
+      map_df(\(y) {
+        # time = read_rds(y)
+        # print(time)
+        list_time <- read_rds(y)
+        df <- 1:5 |> 
+          map_df(\(z) {
+            data.frame(time = list_time[[z]], 
+                       race = z)
+          })
+        return(mutate(df, trial = as.numeric(sub(".*_(\\d+)\\.RDS", "\\1", y))))
+      }) |> 
+      mutate(case = x)
+  })
+
+write_rds(times, "sim/re/klgre_times.RDS")
+
+########
+# BSR stratified run-times
+#######
+
+## small ##
+
+# file names
+list_files <- list.dirs(".", full.names = FALSE, recursive = FALSE)
+list_ssmre <- list_files[grepl("_rslurm_ssmre", list_files)]
+
+ssmre_subf <- list.dirs(list_ssmre, full.names = TRUE, recursive = TRUE)
+ssmre_times <- ssmre_subf[grepl("times", ssmre_subf)]
+
+ssmre_labelt <- gsub("\\D", "", ssmre_times)
+ssmre_labelt <- ifelse(ssmre_labelt == "", 1, as.numeric(ssmre_labelt))
+
+# get paths
+ssmre_patht <- ssmre_times |> 
+  purrr::map(\(x) {
+    list.files(x, full.names = TRUE)
+  }) |> 
+  setNames(nm = ssmre_labelt)
+
+times <- names(ssmre_patht) |> 
+  map_df(\(x) {
+    ssmre_patht[[x]] |> 
+      map_df(\(y) {
+        list_time = read_rds(y)
+        df <- 1:5 |> 
+          map_df(\(z) {
+            data.frame(time_selection = list_time[[z]][[1]], 
+                       time = list_time[[z]][[2]], 
+                       race = z)
+          }) |> 
+          mutate(trial = as.numeric(sub(".+_(.+)d.+", "\\1", y)))
+        return(df)
+      }) |> 
+      mutate(case = x)
+  })
+
+write_rds(times, "sim/re/ssmre_times.RDS")
+
+## large ##
+
+# file names
+list_files <- list.dirs(".", full.names = FALSE, recursive = FALSE)
+list_slgre <- list_files[grepl("_rslurm_slgre", list_files)]
+
+slgre_subf <- list.dirs(list_slgre, full.names = TRUE, recursive = TRUE)
+slgre_times <- slgre_subf[grepl("times", slgre_subf)]
+
+slgre_labelt <- gsub("\\D", "", slgre_times)
+slgre_labelt <- ifelse(slgre_labelt == "", 1, as.numeric(slgre_labelt))
+
+# get paths
+slgre_patht <- slgre_times |> 
+  purrr::map(\(x) {
+    list.files(x, full.names = TRUE)
+  }) |> 
+  setNames(nm = slgre_labelt)
+
+times <- names(slgre_patht) |> 
+  map_df(\(x) {
+    slgre_patht[[x]] |> 
+      map_df(\(y) {
+        list_time = read_rds(y)
+        df <- 1:5 |> 
+          map_df(\(z) {
+            data.frame(time_selection = list_time[[z]][[1]], 
+                       time = list_time[[z]][[2]], 
+                       race = z)
+          }) |> 
+          mutate(trial = as.numeric(sub(".+_(.+)d.+", "\\1", y)))
+        return(df)
+      }) |> 
+      mutate(case = x)
+  })
+
+write_rds(times, "sim/re/slgre_times.RDS")
+```
+
+
+#### Presenting results
+
+Here, we create the tables and figures presented in Chapter \@ref(results)
 
 - create tables
 - keep track of which results are actually going into the appendix
-
-Get some specific stats that are reported in results
-
-```{r}
-# significance of As, naive mlr large, case 9
-naive_sens |> filter(case == 9, size == "Large", var == "Cd")
-```
 
 
 Here, we visualize and summarize results from model output. 

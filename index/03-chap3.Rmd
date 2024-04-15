@@ -429,7 +429,7 @@ Notably, this algorithm must deal with the explicit specification of interaction
 
 ## Detecting interactions
 
-In Section \@ref(motivation), we highlighted the challenges of analytically testing for the presence of interactions in exposure mixture studies. These challenges motivated a theoretical exploration of BKMR and BSR in Sections \@ref(bkmr) and \@ref(bsr). Now, we discuss and compare the options that BKMR and BSR provide for inference on the presence of interactions. We also include discussion on theoretical advantages and disadvantages to each. Importantly, we note that it is not possible to detect interactions between a covariate and an exposure within the model specifications of BKMR or BSR. 
+In Chapter \@ref(motivation), we highlighted the challenges of analytically testing for the presence of interactions in exposure mixture studies. These challenges motivated a theoretical exploration of BKMR and BSR in Sections \@ref(bkmr) and \@ref(bsr). Now, we discuss and compare the options that BKMR and BSR provide for inference on the presence of interactions. We also include discussion on theoretical advantages and disadvantages to each. Importantly, we note that it is not possible to detect interactions between a covariate and an exposure within the model specifications of BKMR or BSR. 
 
 ### BKMR
 
