@@ -2,11 +2,6 @@
 
 This second appendix includes all of the R chunks of code that were hidden throughout the document.
 
-<!-- ## In the main file \@ref(ref-labels): -->
-
-<!-- ```{r ref.label = 'include_packages', results = 'hide', echo = TRUE} -->
-<!-- ``` -->
-
 ```{r, include = FALSE}
 def.chunk.hook  <- knitr::knit_hooks$get("chunk")
 knitr::knit_hooks$set(chunk = function(x, options) {
@@ -21,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE, size = 'scriptsize')
 The code for this section generates a toy example, used to demonstrate the kernel machine regression and spline regression techniques. 
 
 ```{r}
-#load packages
+# load packages
 library(tidyverse)
 library(stats)
 library(splines)
