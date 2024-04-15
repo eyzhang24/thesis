@@ -1,8 +1,24 @@
 # Conclusion {-}
 
-If we don't want the conclusion to have a chapter number next to it, we can add the `{-}` attribute.
+We will continue to encounter novel chemical entities in our day-to-day lives. 
 
-**More info**
+Statistical studies of the health risks associated with exposure to chemical pollutants are critical for making modern toxic landscapes more habitable. 
 
-And here's some other random info: the first paragraph after a chapter title or section head _shouldn't be_ indented, because indents are to tell the reader that you're starting a new paragraph. Since that's obvious after a chapter or section title, proper typesetting doesn't add an indent there.
+As discussed in Chapter \@ref(humanistic), 
 
+Our simulation study in Chapter \@ref(sims) illustrates the challenges of detecting interactions. Still, we were able to achieve high sensitivities using BKMR and BSR to detect interactions between marginally significant chemicals. For 
+
+There can be differences in the performance of BKMR and BSR, but neither consistently outperforms the other. Thus, as BKMR is generally more reliable for univariate effects, and also computationally less intensive, we recommend BKMR for 
+
+This thesis summarizes the current capabilities of modern Bayesian statistical methods for characterizing complex interactions in exposure mixture studies. In particular, we highlight that such methods are under-powered for detecting potential interactions between 
+
+Future work...
+
+- analyses would be improved if three-way fdr's were included and BSR run-times recorded
+- going forward, change design of simulations study should try three-way interactions and multicollinearity on cases where the chemicals themselves are significant
+- figure out method of formal inference for BSR
+- identify difficulty of detecting interactions between race and exposure
+- continue to explore how studies of exposure can best protect the health and well-being of communities who live and experience the effects of toxicity
+- see what happens with even more chemicals
+
+Progressing toward a study of exposure that considers how bodies are related to the environment and to each other. As blah blah said, something something entanglement. But this is better!
