@@ -16,7 +16,7 @@ knitr::knit_hooks$set(chunk = function(x, options) {
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE, size = 'scriptsize')
 ```
 
-## Code for Chapter \@ref(bayes):
+## Code for Chapter \@ref(bayes)
 
 The code for this section generates a toy example, used to demonstrate the kernel machine regression and spline regression techniques. 
 
@@ -230,11 +230,11 @@ ggsave("index/figures/ch3_toybounds.png", plot = qbounds,
        device = "png", width = 7, height = 3)
 ```
 
-## Code for Chapter \@ref(sims):
+## Code for Chapter \@ref(methods)
 
-The code for this section prepares the data from the MADRES study, generates simulated data, fits multiple linear regressions, BKMR, and BSR on the simulated data, and produces model output. 
+The code for this section prepares the data from the MADRES study, generates simulated data, and fits multiple linear regressions, BKMR, and BSR on the simulated data. 
 
-### Code for Chapter \@ref(madres):
+### Cleaning MADRES data
 
 First, we clean the data from the MADRES study. Note that this code requires two publicly available datasets, available from the HHEAR Data Repository, as outlined in Chapter \@ref(madres). 
 
@@ -345,9 +345,9 @@ write_csv(comb_small, "madres_data/base_data.csv")
 ```
 
 
-### Code for Chapter \@ref(copula):
+### Simulating predictor data
 
-Next, we use copulas to simulate predictor data. We use the `copula` and `rslurm` packages in this section. This code was run on FrostByte, the Amherst high-performance computing cluster (HPC) RStudio server. 
+Next, we use copulas to simulate predictor data, as described in Chapter \@ref(copula). We use the `copula` and `rslurm` packages in this section. This code was run on FrostByte, the Amherst high-performance computing cluster (HPC) RStudio server. 
 
 ```{r}
 # load packages
@@ -818,9 +818,9 @@ ggsave("index/figures/ch4_corr_sim+orig.png", width = 10, height = 5)
 ```
 
 
-### Code for Chapter \@ref(simresp):
+### Simulating response data
 
-Next, we simulate the response data. We use the `rslurm` package in this section. This code was run on the Amherst HPC RStudio server. 
+Next, we simulate the response data, as described in Chapter \@ref(simresp. We use the `rslurm` package in this section. This code was run on the Amherst HPC RStudio server. 
 
 ```{r}
 # load packages
@@ -1390,9 +1390,9 @@ out2_resp1_re <- out2_resp1_re[1701:2100]
 write_rds(out2_resp1_re, "sim/sim_resp_lg_re.RDS")
 ```
 
-### Code for Chapter \@ref(models):
+### Fitting models
 
-Here, we fit the models to our simulated data. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. This code was run on the Amherst HPC RStudio server. 
+Here, we fit the models to our simulated data, as described in Chapter \@ref(models). We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. This code was run on the Amherst HPC RStudio server. 
 
 ```{r}
 # load packages 
@@ -2547,9 +2547,11 @@ wjob04 <- slurm_call(
 
 ```
 
-### Code for Chapter \@ref(results):
+## Code for Chapter \@ref(results) and Appendix \@ref(suppresults)
 
-#### Extracting results {#extractresults}
+This section includes code for extracting and presenting results in Chapter \@ref(results) and the supplemental results, Appendix \@ref(suppresults). 
+
+### Extracting results {#extractresults}
 
 Here, we extract results from our simulation. We use the `rslurm`, `bkmr`, and `NLinteraction` packages in this section. This code was run on the Amherst HPC RStudio server. 
 
@@ -2980,7 +2982,7 @@ trivarsurf_bsr <- function(NLmod, X, C, j1, j2, j3, gridLength = 50,
 }
 ```
 
-First, we extract p-values from the multiple linear regression models. 
+Now, we extract p-values from the multiple linear regression models. 
 
 ```{r}
 # naive small, chemxchem models
@@ -4686,20 +4688,2289 @@ write_rds(times, "sim/re/slgre_times.RDS")
 ```
 
 
-#### Presenting results
+### Presenting results
 
-Here, we create the tables and figures presented in Chapter \@ref(results)
+Here, we create the tables and figures presented in Chapter \@ref(results). Code for supplemental results included in Appendix \@ref(suppresults) are also included in this section. 
 
-- create tables
-- keep track of which results are actually going into the appendix
+We start with some setup. 
+
+```{r}
+library(tidyverse)
+library(latex2exp)
+
+# set up ------------------------------------------------------------------
+
+# set theme for plots
+theme_set(theme_light())
+theme_update(
+  panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+  strip.background = element_rect(color="gray", fill="white"), 
+  strip.text = element_text(color = "gray30")
+)
+
+# create labeller
+equations1 <-  c(TeX("No inter", output = "character"), 
+                 TeX("0.35Hg$*$Ni"), TeX("0.13Hg$*($Ni$-1)^2$"), 
+                 TeX("0.35Cd$*$As"), TeX("0.125Cd$*($As$-1)^2$"), 
+                 TeX("0.3Ni$*$Co"), TeX("0.1Ni$*($Co$-1)^2$"), 
+                 TeX("0.3Hg$*$Ni$*$Tl"), TeX("0.09Hg$*($Ni$-1)^2*$Tl"), 
+                 TeX("0.7Hg$*$Ni"), TeX("0.26Hg$*($Ni$-1)^2$"), 
+                 TeX("0.7Cd$*$As"), TeX("0.25Cd$*($As$-1)^2$"), 
+                 TeX("0.6Ni$*$Co"), TeX("0.2Ni$*($Co$-1)^2$"), 
+                 TeX("0.6Hg$*$Ni$*$Tl"), TeX("0.18Hg$*($Ni$-1)^2*$Tl"))
+namesa <- c(1, 2, 4, 6, 8, 10, 12, 14, 16, 3, 5, 7, 9, 11, 13, 15, 17)
+appendera <- function(string) {
+  return(equations1[match(string, namesa)])
+}
+
+# identify true significance based on variable name
+get_sign <- function(case, chem) {
+  case_when(
+    chem %in% c("Hg", "Ni", "Sb", "Sn") ~ TRUE, 
+    case %in% 6:9 & chem %in% c("Cd", "As") ~ TRUE, 
+    case %in% 10:13 & chem == "Co" ~ TRUE, 
+    case %in% 14:17 & chem == "Tl" ~ TRUE, 
+    .default = FALSE
+  )
+}
+
+# identify true significance based on index (BSR)
+get_sign_bsr <- function(case, chem) {
+  case_when(
+    case %in% 2:5 & chem %in% c(4, 5) ~ TRUE, 
+    case %in% 6:9 & chem %in% c(1, 2) ~ TRUE, 
+    case %in% 10:13 & chem %in% c(3, 5) ~ TRUE, 
+    case %in% 14:17 & chem %in% c(4, 5, 6) ~ TRUE, 
+    .default = FALSE
+  )
+}
+
+# identify true significance for race by ethnicity models
+getsign_re <- function(chem) {
+  return(chem %in% c("Hg", "Ni", "Sb", "Sn"))
+}
+
+# go from index of race to name
+which_race <- function(race) {
+  case_when(
+    race == 1 ~ "Non-Hisp. white", 
+    race == 2 ~ "Non-Hisp. black", 
+    race == 3 ~ "Non-Hisp. other", 
+    race == 4 ~ "Hispanic born in US", 
+    race == 5 ~ "Hispanic born outside US",
+    race == 6 ~ "Collapsed non-Hisp."
+  )
+}
+
+# go from index of race to size of category
+size_race <- function(race) {
+  case_when(
+    race == 1 ~ "16", 
+    race == 2 ~ "27", 
+    race == 3 ~ "13", 
+    race == 4 ~ "87", 
+    race == 5 ~ "109",
+    race == 6 ~ "56"
+  )
+}
+```
+
+This code creates output for the base case. 
+
+```{r}
+# base case ---------------------------------------------------------------
+
+# smaller size
+nsm_pval <- read_csv("sim/_mlr/pvalsm.csv")
+osm_pval <- read_csv("sim/_oracle/pvalsm.csv")
+ksm_pips <- read_csv("sim/bkmr_sm/pips.csv")
+ssm_pips <- read_csv("sim/bsr_sm/pips.csv")
+
+# p-value visualization
+osm_pvalc <- osm_pval |> 
+  mutate(var = case_when(
+    grepl("Ni", var) ~ "Ni*", 
+    grepl("Sn", var) ~ "Sn*", 
+    grepl("I\\(Sb", var) ~ "Sb^2", 
+    .default = var
+  )) |> 
+  filter(var %in% c("Hg", "Ni*", "Tl", "Pb", "Mo", "Sn*", "Sb^2")) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = TRUE, 
+         mod = "Oracle MLR")
+nsm_pvalc <- nsm_pval |> 
+  filter(var %in% c("As", "Cd", "Co", "Hg", "Ni", 
+                    "Tl", "Pb", "Mo", "Sb", "Sn")) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = get_sign(case, var), 
+         mod = "Naive MLR")
+
+base_mlrs <- bind_rows(nsm_pvalc, osm_pvalc) |> 
+  filter(case == 1)
+
+p1 <- base_mlrs |> 
+  ggplot(aes(var, p)) +
+  geom_hline(yintercept = 0.05, linetype = "dashed", color = "grey30") +
+  geom_pointrange(aes(color = sign), 
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
+  labs(y = "p-value distribution", 
+       color = "Truly\nsignificant", 
+       x = "Chemical") +
+  facet_grid(.~mod, scales = "free_x", space = "free") 
+
+# pip visualization
+base_pips <- bind_rows(
+  mutate(ksm_pips, mod = "BKMR"), 
+  mutate(ssm_pips, mod = "BSR")
+) |> 
+  filter(case == 1) |> 
+  mutate(sign = get_sign(case, variable))
+
+p2 <- base_pips |> 
+  ggplot(aes(variable, PIP)) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "grey30") +
+  geom_pointrange(aes(color = sign), 
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
+  labs(y = "PIP distribution", 
+       color = "Truly significant", 
+       x = "Chemical") +
+  facet_wrap(~mod, scales = "free_x") 
 
 
-Here, we visualize and summarize results from model output. 
+# larger size
+nlg_pval <- read_csv("sim/_mlr/pvallg.csv")
+olg_pval <- read_csv("sim/_oracle/pvallg.csv")
+klg_pips <- read_csv("sim/bkmr_lg/pips.csv")
+slg_pips <- read_csv("sim/bsr_lg/pips.csv")
+
+# p-val visualization
+nlg_pvalc <- nlg_pval |> 
+  filter(var %in% c("As", "Cd", "Co", "Hg", "Ni", 
+                    "Tl", "Pb", "Mo", "Sb", "Sn")) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = get_sign(case, var), 
+         mod = "Naive MLR")
+olg_pvalc <- olg_pval |> 
+  mutate(var = case_when(
+    grepl("Ni", var) ~ "Ni*", 
+    grepl("Sn", var) ~ "Sn*", 
+    grepl("I\\(Sb", var) ~ "Sb^2", 
+    .default = var
+  )) |> 
+  filter(var %in% c("Hg", "Ni*", "Tl", "Pb", "Mo", "Sn*", "Sb^2")) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = TRUE, 
+         mod = "Oracle MLR")
+
+base_mlrl <- bind_rows(nlg_pvalc, olg_pvalc) |> 
+  filter(case == 1)
+
+p3 <- base_mlrl |> 
+  ggplot(aes(var, p)) +
+  geom_hline(yintercept = 0.05, linetype = "dashed", color = "grey30") +
+  geom_pointrange(aes(color = sign), 
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
+  labs(y = "p-value distribution", 
+       color = "Truly significant", 
+       x = "Chemical") +
+  facet_grid(.~mod, scales = "free_x", space = "free") 
+
+# pip visualization
+base_pipl <- bind_rows(
+  mutate(klg_pips, mod = "BKMR"), 
+  mutate(slg_pips, mod = "BSR")
+) |> 
+  filter(case == 1) |> 
+  mutate(sign = get_sign(case, variable))
+
+p4 <- base_pipl |> 
+  ggplot(aes(variable, PIP)) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "grey30") +
+  geom_pointrange(aes(color = sign), 
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
+  labs(y = "PIP distribution", 
+       color = "Truly significant", 
+       x = "Chemical") +
+  facet_wrap(~mod, scales = "free_x") 
+
+# plot grid
+pone <- cowplot::plot_grid(
+  p1 + theme(legend.position = "none"),
+  p2 + theme(legend.position = "none"),
+  p3 + theme(legend.position = "none"),
+  p4 + theme(legend.position = "none"), 
+  labels = c("a", "c", "b", "d"), nrow = 2, rel_widths = c(4, 5)
+)
+pone
+
+legend <- cowplot::get_legend(p1)
+
+# stitch together
+cowplot::plot_grid(pone, legend, rel_widths = c(5, 0.5))
+ggsave("index/figures/ch4_basecasesig.png", width = 9, height = 5)
+```
+
+```{r}
+# create table of sensitivities
+base_mlr <- bind_rows(
+  mutate(base_mlrs, size = "Small"), 
+  mutate(base_mlrl, size = "Large")
+)
+
+sum_base_mlr <- base_mlr |> 
+  group_by(mod, size, var, sign) |> 
+  summarize(sensitivity = sum(p < 0.05)/n())
+
+base_bay <- bind_rows(
+  mutate(base_pips, size = "Small"), 
+  mutate(base_pipl, size = "Large")
+)
+
+sum_base_bay <- base_bay |> 
+  rename(var = variable) |> 
+  group_by(mod, size, var, sign) |> 
+  summarize(sensitivity = sum(PIP >= 0.5)/n()) 
+
+sum_base <- bind_rows(sum_base_mlr, sum_base_bay)
+write_csv(sum_base, "index/data/base_sens.csv")
+
+base_sens <- read_csv("data/base_sens.csv")
+
+base_sens2 <- base_sens |> 
+  mutate(var = gsub("[^[:alpha:]]","", var), 
+         mod = factor(mod, levels = c("Naive MLR", "Oracle MLR", "BKMR", "BSR"))) |> 
+  arrange(desc(sign), var, mod, desc(size)) |> 
+  select(-sign) |> 
+  pivot_wider(names_from = var, values_from = sensitivity)
+
+base_mod_ord <- table(base_sens2$mod)
+
+options(knitr.kable.NA = '-')
+base_sens2 |> 
+  select(-mod) |> 
+  kbl(booktabs = TRUE, escape = FALSE, 
+      col.names = c("", names(base_sens2)[3:12]),
+      align = "lcccccccccc",
+      caption = "Sensitivity and false discovery rate (FDR) of chemicals in base case scenario.") |> 
+  column_spec(1, width = "6em") |>
+  add_header_above(header = c(" " = 1, "Sensitivity" = 4, "FDR" = 6)) |>
+  pack_rows(index = base_mod_ord) 
+```
+
+This code formats results for the naive MLR on scenarios with interactions between chemicals.
+
+```{r}
+# naive mlr ---------------------------------------------------------------
+
+# p-values small
+nsm_pval <- read_csv("sim/_mlr/pvalsm.csv")
+nsm_pvalc <- nsm_pval |> 
+  filter(var %in% c("As", "Cd", "Co", "Hg", "Ni", 
+                    "Tl", "Pb", "Mo", "Sb", "Sn")) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = get_sign(case, var), 
+         mod = "Naive MLR")
+nsm_pvalc_sens <- nsm_pvalc |> 
+  mutate(imp = p < 0.05) |> 
+  group_by(case, var) |> 
+  summarize(sensitivity = weights::rd(sum(imp)/n(), 2), 
+            upper = quantile(p, 0.75))
+
+# line plot of p-values
+nsm_pvalc |> 
+  filter(case != 1) |> 
+  ggplot(aes(x = var, y = p)) +
+  geom_hline(yintercept = 0.05, linetype = "dashed", color = "grey30") +
+  geom_label(data = filter(nsm_pvalc_sens, case != 1), 
+             mapping = aes(x = var, y = upper+0.1, label = sensitivity), 
+             size = 2, label.size = NA, label.padding = unit(0.05, "lines")) +
+  geom_pointrange(aes(color = sign), 
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(y = "p-value distribution", 
+       color = "Truly\nsignificant", 
+       x = "Chemical") +
+  facet_wrap(~case, 
+             labeller = labeller(
+               case = as_labeller(appendera, default = label_parsed))) 
+ggsave("index/figures/ch4_nsm_univ_pval.png", width = 7.5, height = 5)
+
+# p-values large
+nlg_pval <- read_csv("sim/_mlr/pvallg.csv")
+nlg_pvalc <- nlg_pval |> 
+  filter(var %in% c("As", "Cd", "Co", "Hg", "Ni", 
+                    "Tl", "Pb", "Mo", "Sb", "Sn")) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = get_sign(case, var), 
+         mod = "Naive MLR")
+nlg_pvalc_sens <- nlg_pvalc |> 
+  mutate(imp = p < 0.05) |> 
+  group_by(case, var) |> 
+  summarize(sensitivity = weights::rd(sum(imp)/n(), 2), 
+            upper = quantile(p, 0.75))
+
+# line plot of p-values
+nlg_pvalc |> 
+  filter(case != 1) |> 
+  ggplot(aes(x = var, y = p)) +
+  geom_hline(yintercept = 0.05, linetype = "dashed", color = "grey30") +
+  geom_label(data = filter(nlg_pvalc_sens, case != 1), 
+           mapping = aes(x = var, y = upper+0.1, label = sensitivity), 
+           size = 2, label.size = NA, label.padding = unit(0.05, "lines")) +
+  geom_pointrange(aes(color = sign), 
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(y = "p-value distribution", 
+       color = "Truly\nsignificant", 
+       x = "Chemical") +
+  facet_wrap(~case, 
+             labeller = labeller(
+               case = as_labeller(appendera, default = label_parsed))) 
+ggsave("index/figures/ch4_nlg_univ_pval.png", width = 7.5, height = 5)
+
+# save sensitivity as table
+naive_all <- bind_rows(
+  mutate(nsm_pvalc, size = "Small", mod = "Naive MLR"),
+  mutate(nlg_pvalc, size = "Large", mod = "Naive MLR")
+) |> 
+  group_by(mod, case, size, var, sign) |> 
+  summarize(sensitivity = sum(p < 0.05)/n())
+write_csv(naive_all, "index/data/naive_sens.csv")
+```
+
+This code formats results for the oracle MLR in scenarios with interactions between chemicals. 
+
+```{r}
+# oracle mlr --------------------------------------------------------------
+
+# p-values small
+osm_pval <- read_csv("sim/_oracle/pvalsm.csv")
+osm_pvalc <- osm_pval |> 
+  mutate(var = case_when(
+    grepl("Ni", var) ~ "Ni*", 
+    grepl("Sn", var) ~ "Sn*", 
+    grepl("I\\(Sb", var) ~ "Sb^2", 
+    .default = var
+  )) |> 
+  filter(var %in% c("Hg", "Ni*", "Tl", "Pb", "Mo", "Sn*", "Sb^2")) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = TRUE)
+osm_pvalc_sens <- osm_pvalc |> 
+  mutate(imp = p < 0.05) |> 
+  group_by(case, var) |> 
+  summarize(sensitivity = weights::rd(sum(imp)/n(), 2), 
+            upper = quantile(p, 0.75))
+
+# line plot of p-values
+osm_pvalc |>
+  filter(case != 1) |>
+  ggplot(aes(x = var, y = p)) +
+  geom_hline(yintercept = 0.05, linetype = "dashed", color = "grey30") +
+  geom_label(data = filter(osm_pvalc_sens, case != 1), 
+             mapping = aes(x = var, y = upper+0.12, label = sensitivity), 
+             size = 2, label.size = NA, label.padding = unit(0.05, "lines")) +
+  geom_pointrange(aes(color = sign),
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median,
+                  size = 0.2, color = "darkorange2") +
+  labs(y = "p-value distribution",
+       color = "Truly\nsignificant",
+       x = "Chemical") +
+  facet_wrap(~case,
+             labeller = labeller(
+               case = as_labeller(appendera, default = label_parsed)))
+ggsave("index/figures/ch4_osm_univ_pval.png", width = 7.5, height = 5)
+
+# interactions
+
+keepnames <- c('(Intercept)', 'Hg', 'Sb', 'I(1/(1 + exp(-4 * Ni)))', 'Ni', 
+               'I(Sb^2)', 'I(1/(1 + exp(-4 * Sn)))', 'age', 'bmi', 
+               'race2', 'race3', 'race4', 'race5', 'smoke1', 'Cd', 'As', 'Co')
+
+osm_pvali <- osm_pval |> 
+  filter(!(var %in% keepnames)) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = get_sign(case, var))
+osm_pvali_sens <- osm_pvali |> 
+  mutate(imp = p < 0.05) |> 
+  group_by(case, var) |> 
+  summarize(sensitivity = sum(imp)/n())
+
+# density plot of p-values
+osm_pvali |>
+  ggplot(aes(x = p)) +
+  geom_density(color = "darkorange2", fill = "darkorange", alpha = 0.1) +
+  geom_vline(xintercept = 0.05, linetype = "dashed", color = "grey30") +
+  labs(x = "p-value distribution") +
+  facet_wrap(~case, scales = "free_y", 
+             labeller = labeller(
+               case = as_labeller(appendera, default = label_parsed)))
+ggsave("index/figures/ch4_osm_biv_pval.png", width = 7.5, height = 5)
+
+# put interactions and univ together
+osm_comb <- bind_rows(
+  mutate(osm_pvali, variable = "Int"), 
+  mutate(osm_pvalc[osm_pvalc$case != 1, ], variable = var)
+)
+
+osm_comb |> 
+  mutate(variable = factor(variable, levels = c(unique(osm_pvalc$var), "Int")), 
+         interaction = (variable == "Int")) |> 
+  ggplot(aes(x = variable, y = p, color = interaction)) +
+  geom_hline(yintercept = 0.05, linetype = "dashed", color = "grey30") +
+  geom_pointrange(stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  scale_color_manual(values = c("deepskyblue3", "darkorange2"))+
+  labs(y = "p-value distribution", 
+       color = "Interaction", 
+       x = "Term") +
+  facet_wrap(~case, 
+             labeller = labeller(
+               case = as_labeller(appendera, default = label_parsed))) 
+ggsave("index/figures/ch4_osm_pval.png", width = 7.5, height = 5)
+
+# p-values large
+olg_pval <- read_csv("sim/_oracle/pvallg.csv")
+olg_pvalc <- olg_pval |> 
+  mutate(var = case_when(
+    grepl("Ni", var) ~ "Ni*", 
+    grepl("Sn", var) ~ "Sn*", 
+    grepl("I\\(Sb", var) ~ "Sb^2", 
+    .default = var
+  )) |> 
+  filter(var %in% c("Hg", "Ni*", "Tl", "Pb", "Mo", "Sn*", "Sb^2")) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = get_sign(case, var))
+olg_pvalc_sens <- olg_pvalc |> 
+  mutate(imp = p < 0.05) |> 
+  group_by(case, var) |> 
+  summarize(sensitivity = weights::rd(sum(imp)/n(), 2), 
+            upper = quantile(p, 0.75))
+
+# line plot of p-values
+olg_pvalc |>
+  filter(case != 1) |> 
+  ggplot(aes(x = var, y = p)) +
+  geom_hline(yintercept = 0.05, linetype = "dashed", color = "grey30") +
+  geom_label(data = filter(olg_pvalc_sens, case != 1), 
+             mapping = aes(x = var, y = upper+0.1, label = sensitivity), 
+             size = 2, label.size = NA, label.padding = unit(0.05, "lines")) +
+  geom_pointrange(stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median,
+                  size = 0.2, color = "darkorange2") +
+  labs(y = "p-value distribution",
+       color = "Truly significant",
+       x = "Chemical") +
+  facet_wrap(~case,
+             labeller = labeller(
+               case = as_labeller(appendera, default = label_parsed)))
+ggsave("index/figures/ch4_olg_univ_pval.png", width = 7.5, height = 5)
+
+# interactions
+
+keepnames <- c('(Intercept)', 'Hg', 'Sb', 'I(1/(1 + exp(-4 * Ni)))', 'Ni', 
+               'I(Sb^2)', 'I(1/(1 + exp(-4 * Sn)))', 'age', 'bmi', 
+               'race2', 'race3', 'race4', 'race5', 'smoke1', 'Cd', 'As', 'Co')
+
+olg_pvali <- olg_pval |> 
+  filter(!(var %in% keepnames)) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = get_sign(case, var))
+olg_pvali_sens <- olg_pvali |> 
+  mutate(imp = p < 0.05) |> 
+  group_by(case, var) |> 
+  summarize(sensitivity = sum(imp)/n())
+
+# density plot of p-values
+olg_pvali |>
+  ggplot(aes(x = p)) +
+  geom_density(color = "darkorange2", fill = "darkorange", alpha = 0.1) +
+  geom_vline(xintercept = 0.05, linetype = "dashed", color = "grey30") +
+  labs(x = "p-value distribution") +
+  facet_wrap(~case, scales = "free_y", 
+             labeller = labeller(
+               case = as_labeller(appendera, default = label_parsed)))
+ggsave("index/figures/ch4_olg_biv_pval.png", width = 7.5, height = 5)
+
+# put together
+olg_comb <- bind_rows(
+  mutate(olg_pvali, variable = "Int"), 
+  mutate(olg_pvalc[olg_pvalc$case != 1, ], variable = var)
+)
+
+olg_comb |> 
+  mutate(variable = factor(variable, levels = c(unique(olg_pvalc$var), "Int")), 
+         interaction = (variable == "Int")) |> 
+  ggplot(aes(x = variable, y = p, color = interaction)) +
+  geom_hline(yintercept = 0.05, linetype = "dashed", color = "grey30") +
+  geom_pointrange(stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  scale_color_manual(values = c("deepskyblue3", "darkorange2"))+
+  labs(y = "p-value distribution", 
+       color = "Interaction", 
+       x = "Term") +
+  facet_wrap(~case, 
+             labeller = labeller(
+               case = as_labeller(appendera, default = label_parsed))) 
+ggsave("index/figures/ch4_olg_pval.png", width = 7.5, height = 5)
+
+# save sensitivity as table
+oracle_all <- bind_rows(
+  mutate(osm_comb, size = "Small", mod = "Oracle MLR"),
+  mutate(olg_comb, size = "Large", mod = "Oracle MLR")
+) |> 
+  group_by(mod, case, size, var, variable) |> 
+  summarize(sensitivity = sum(p < 0.05)/n())
+write_csv(oracle_all, "index/data/oracle_sens.csv")
+```
+
+This code formats results from BKMR models in scenarios with interactions between chemicals. 
+
+```{r}
+# smaller size bkmr -------------------------------------------------------
+
+# plot pips bkmr small
+ksm_pips <- read_csv("sim/bkmr_sm/pips.csv")
+
+ksm_pip_sig <- ksm_pips |> 
+  mutate(sign = get_sign(case, variable))
+ksm_pip_sen <- ksm_pips |> 
+  mutate(imp = PIP >= 0.5) |> 
+  group_by(case, variable) |> 
+  summarize(sensitivity = weights::rd(sum(imp)/n(), 2), 
+            upper = quantile(PIP, 0.75))
+
+# point and lineplot
+ksm_pip_sig |> 
+  filter(case != 1) |> 
+  ggplot(aes(x = variable)) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "grey30") +
+  geom_label(data = filter(ksm_pip_sen, case != 1), 
+             mapping = aes(x = variable, y = upper+0.1, label = sensitivity), 
+             size = 2, label.size = NA, label.padding = unit(0, "lines")) +
+  geom_pointrange(aes(y = PIP, color = sign), 
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  facet_wrap(~case,
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) + 
+  labs(y = "PIP value distribution", 
+       color = "Truly\nsignificant", 
+       x = "Chemical")
+ggsave("index/figures/ch4_ksm_univ_pips.png", width = 7.5, height = 5)
+
+# plot bivariate relationships bkmr small
+ksm_biv <- read_csv("sim/bkmr_sm/biv_expresp.csv")
+
+# plot Hg and Ni
+ksm_biv |> 
+  filter(case %in% 2:5) |> 
+  mutate(variable1 = ifelse(variable1 == "Hg", "Hg by Ni", "Ni by Hg"), 
+         quantile = as.factor(quantile)) |> 
+  ggplot(aes(z1, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  ylim(-6, 6) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_ksm_biv_expresp_1.png", width = 6, height = 4)
+
+# plot Cd and As
+ksm_biv |> 
+  filter(case %in% 6:9) |> 
+  mutate(variable1 = ifelse(variable1 == "Cd", "Cd by As", "As by Cd"), 
+         quantile = as.factor(quantile)) |> 
+  ggplot(aes(z1, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  ylim(-4, 4) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_ksm_biv_expresp_2.png", width = 6, height = 4)
+
+# plot Ni and Co
+ksm_biv |> 
+  filter(case %in% 10:13) |> 
+  mutate(variable1 = ifelse(variable1 == "Ni", "Ni by Co", "Co by Ni"), 
+         quantile = as.factor(quantile)) |> 
+  ggplot(aes(z1, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  ylim(-6, 6) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_ksm_biv_expresp_3.png", width = 6, height = 4)
+
+# plot trivariate relationships bkmr small
+ksm_triv <- read_csv("sim/bkmr_sm/triv_expresp.csv")
+ksm_triv <- ksm_triv |> 
+  mutate(variable1 = case_when(
+    z1_name == "Hg" ~ "Hg by Ni + Tl", 
+    z1_name == "Ni" ~ "Ni by Hg + Tl", 
+    z1_name == "Tl" ~ "Tl by Hg + Ni"), 
+  quantile = as.factor(z23_q)) 
+
+ksm_triv |> 
+  ggplot(aes(z1_val, est, color = quantile)) +
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) + 
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2+3\nquantile") +
+  theme(strip.text.x = element_text(size = 7))
+ggsave("index/figures/ch4_ksm_triv_expresp.png", width = 6, height = 4)
+
+# one vs. other significant data
+ksm_intb <- read_csv("sim/bkmr_sm/int_bivar.csv")
+
+ksm_intb <- ksm_intb |> 
+  mutate(cond = paste0(z1, "+", z2)) |> 
+  rowwise() |> 
+  mutate(signif = ifelse(
+    between(0, est - 1.96*sd, est + 1.96*sd), FALSE, TRUE
+  ))
+
+# one vs. two others significant data
+ksm_intt <- read_csv("sim/bkmr_sm/int_trivar.csv")
+
+ksm_intt <- ksm_intt |> 
+  mutate(cond = paste0(variable, " by ", fixedat1, "+", fixedat2)) |> 
+  rowwise() |> 
+  mutate(signif = ifelse( #bonferroni correction: critical value 2.39398
+    between(0, est - 2.39398*sd, est + 2.39398*sd), FALSE, TRUE
+  ))
+
+# bivar and trivar together
+int_combs <- bind_rows(
+  select(ksm_intb, cond, trial, case, signif), 
+  select(ksm_intt, cond, trial, case, signif)
+)
+
+# larger size bkmr --------------------------------------------------------
+
+# plot pips bkmr large
+klg_pips <- read_csv("sim/bkmr_lg/pips.csv")
+
+klg_pip_sig <- klg_pips |> 
+  mutate(sign = get_sign(case, variable))
+klg_pip_sen <- klg_pips |> 
+  mutate(imp = PIP >= 0.5) |> 
+  group_by(case, variable) |> 
+  summarize(sensitivity = weights::rd(sum(imp)/n(), 2), 
+            upper = quantile(PIP, 0.75))
+
+# point and lineplot
+klg_pip_sig |> 
+  filter(case != 1) |> 
+  ggplot(aes(x = variable)) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "grey30") +
+  geom_label(data = filter(klg_pip_sen, case != 1), 
+             mapping = aes(x = variable, y = upper+0.1, label = sensitivity), 
+             size = 2, label.size = NA, label.padding = unit(.05, "lines")) +
+  geom_pointrange(aes(y = PIP, color = sign), 
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  facet_wrap(~case,
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(y = "PIP value distribution", 
+       color = "Truly\nsignificant", 
+       x = "Chemical")
+ggsave("index/figures/ch4_klg_univ_pips.png", width = 7.5, height = 5)
+
+# plot bivariate relationships bkmr large
+klg_biv <- read_csv("sim/bkmr_lg/biv_expresp.csv")
+
+# plot Hg and Ni
+klg_biv |> 
+  filter(case %in% 2:5) |> 
+  mutate(variable1 = ifelse(variable1 == "Hg", "Hg by Ni", "Ni by Hg"), 
+         quantile = as.factor(quantile)) |> 
+  ggplot(aes(z1, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  ylim(-6, 6) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_klg_biv_expresp_1.png", width = 6, height = 4)
+
+# plot Cd and As
+klg_biv |> 
+  filter(case %in% 6:9) |> 
+  mutate(variable1 = ifelse(variable1 == "Cd", "Cd by As", "As by Cd"), 
+         quantile = as.factor(quantile)) |> 
+  ggplot(aes(z1, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  ylim(-4, 4) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_klg_biv_expresp_2.png", width = 6, height = 4)
+
+# plot Ni and Co
+klg_biv |> 
+  filter(case %in% 10:13) |> 
+  mutate(variable1 = ifelse(variable1 == "Ni", "Ni by Co", "Co by Ni"), 
+         quantile = as.factor(quantile)) |> 
+  ggplot(aes(z1, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  ylim(-6, 6) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_klg_biv_expresp_3.png", width = 6, height = 4)
+
+# plot trivariate relationships bkmr large
+klg_triv <- read_csv("sim/bkmr_lg/triv_expresp.csv")
+klg_triv <- klg_triv |> 
+  mutate(variable1 = case_when(
+    z1_name == "Hg" ~ "Hg by Ni + Tl", 
+    z1_name == "Ni" ~ "Ni by Hg + Tl", 
+    z1_name == "Tl" ~ "Tl by Hg + Ni"), 
+    quantile = as.factor(z23_q)) 
+
+klg_triv |> 
+  ggplot(aes(z1_val, est, color = quantile)) +
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) + 
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2+3\nquantile") +
+  theme(strip.text.x = element_text(size = 7))
+ggsave("index/figures/ch4_klg_triv_expresp.png", width = 6, height = 4)
+
+# one vs. other significant data
+klg_intb <- read_csv("sim/bkmr_lg/int_bivar.csv")
+
+klg_intb <- klg_intb |> 
+  mutate(cond = paste0(z1, "+", z2)) |> 
+  rowwise() |> 
+  mutate(signif = ifelse(
+    between(0, est - 1.96*sd, est + 1.96*sd), FALSE, TRUE
+  ))
+
+# one vs. two others significant data
+klg_intt <- read_csv("sim/bkmr_lg/int_trivar.csv")
+
+klg_intt <- klg_intt |> 
+  mutate(cond = paste0(variable, " by ", fixedat1, "+", fixedat2)) |> 
+  rowwise() |> 
+  mutate(signif = ifelse( #bonferroni correction: critical value 2.39398
+    between(0, est - 2.39398*sd, est + 2.39398*sd), FALSE, TRUE
+  ))
+
+# bivar and trivar together
+int_combl <- bind_rows(
+  select(klg_intb, cond, trial, case, signif),
+  select(klg_intt, cond, trial, case, signif)
+)
+
+# bkmr combine sensitivity ------------------------------------------------
+
+# univariate pips
+bkmr_pips <- bind_rows(
+  mutate(ksm_pips, size = "Small"), 
+  mutate(klg_pips, size = "Large")
+) |> 
+  group_by(size, case, variable) |> 
+  summarize(sensitivity = sum(PIP >= 0.5)/n()) |> 
+  mutate(sign = get_sign(case, variable))
+write_csv(bkmr_pips, "index/data/bkmr_pip_sens.csv")
+
+# interactions
+bkmr_comb <- bind_rows(
+  mutate(int_combs, size = "Small"), 
+  mutate(int_combl, size = "Large")
+)
+
+bkmr_sens <- bkmr_comb |> 
+  group_by(size, case, cond) |> 
+  summarize(sensitivity = sum(signif)/n())
+write_csv(bkmr_sens, "index/data/bkmr_int_sens.csv")
+```
+
+This code formats results from BSR models in scenarios with interactions between chemcials. 
+
+```{r}
+# smaller size bsr --------------------------------------------------------
+
+# plot pip's bsr small
+ssm_pips <- read_csv("sim/bsr_sm/pips.csv")
+
+ssm_pip_sig <- ssm_pips |> 
+  mutate(sign = get_sign(case, variable))
+ssm_pip_sen <- ssm_pips |> 
+  mutate(imp = PIP >= 0.5) |> 
+  group_by(case, variable) |> 
+  summarize(sensitivity = weights::rd(sum(imp)/n(), 2, 
+                                      max = 2), 
+            upper = quantile(PIP, 0.75))
+
+# point and lineplot
+ssm_pip_sig |> 
+  filter(case != 1) |> 
+  ggplot(aes(x = variable)) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "grey30") +
+  geom_label(data = filter(ssm_pip_sen, case != 1), 
+             mapping = aes(x = variable, y = upper+0.1, label = sensitivity), 
+             size = 2, label.size = NA, label.padding = unit(0.05, "lines")) +
+  geom_pointrange(aes(y = PIP, color = sign), 
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  facet_wrap(~case,
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  # scale_y_continuous(sec.axis = sec_axis(trans = ~., name = "Sensitivity")) +
+  scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+        # legend.position = c(0.95, 0.05)) +
+  labs(y = "PIP value distribution", 
+       color = "Truly\nsignificant", 
+       x = "Chemical")
+ggsave("index/figures/ch4_ssm_univ_pips.png", width = 7.5, height = 5)
+
+# plot bivariate pip's small
+ssm_pipb <- read_csv("sim/bsr_sm/pip_biv.csv")
+
+ssm_pipb |> 
+  # filter(case == 2) |> 
+  mutate(sign = get_sign_bsr(case, Var1) & get_sign_bsr(case, Var2), 
+         inter = paste0(Var1, "_", Var2)) |> 
+  ggplot(aes(x = inter)) + 
+  geom_pointrange(aes(y = PIP, color = sign),
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z, 0.25)},
+                  fun.max = function(z) {quantile(z, 0.75)}, 
+                  fun = median, 
+                  size  = 0.05) +
+  scale_color_manual(values = c("#92D0E4", "darkorange2")) +
+  facet_wrap(~case, 
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(), 
+        legend.position = c(0.9, 0.1)) +
+  labs(y = "PIP value distribution", 
+       color = "Truly significant", 
+       x = NULL)
+ggsave("index/figures/ch4_ssm_biv_pips.png", width = 7.5, height = 5)
+
+# plot trivariate pip's small
+ssm_pipt <- read_csv("sim/bsr_sm/pip_triv.csv")
+
+ssm_pipt |> 
+  ggplot(aes(x = "")) +
+  geom_pointrange(aes(y = PIP),
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z, 0.25)},
+                  fun.max = function(z) {quantile(z, 0.75)}, 
+                  fun = median, 
+                  size  = 0.05) +
+  facet_wrap(~case, 
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(), 
+        legend.position = c(0.9, 0.1)) +
+  labs(y = "PIP value distribution", 
+       color = "Truly significant", 
+       x = NULL)
+
+# plot bivariate relationships bkmr small
+ssm_biv <- read_csv("sim/bsr_sm/biv_expresp.csv")
+
+# plot Hg and Ni
+ssm_biv |> 
+  filter(case %in% 2:5) |> 
+  mutate(variable1 = ifelse(j1 == "Hg", "Hg by Ni", "Ni by Hg"), 
+         quantile = as.factor(j2quant)) |> 
+  ggplot(aes(j1val, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  ylim(-3, 9) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_ssm_biv_expresp_1.png", width = 6, height = 4)
+
+# plot Cd and As
+ssm_biv |> 
+  filter(case %in% 6:9) |> 
+  mutate(variable1 = ifelse(j1 == "Cd", "Cd by As", "As by Cd"), 
+         quantile = as.factor(j2quant)) |> 
+  ggplot(aes(j1val, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  ylim(-2, 6) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_ssm_biv_expresp_2.png", width = 6, height = 4)
+
+# plot Ni and Co
+ssm_biv |> 
+  filter(case %in% 10:13) |> 
+  mutate(variable1 = ifelse(j1 == "Ni", "Ni by Co", "Co by Ni"), 
+         quantile = as.factor(j2quant)) |> 
+  ggplot(aes(j1val, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  # ylim(-6, 6) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_ssm_biv_expresp_3.png", width = 6, height = 4)
+
+# plot trivariate relationships bsr small
+ssm_triv <- read_csv("sim/bsr_sm/triv_expresp.csv")
+ssm_triv <- ssm_triv |> 
+  mutate(variable1 = case_when(
+    j1 == "Hg" ~ "Hg by Ni + Tl", 
+    j1 == "Ni" ~ "Ni by Hg + Tl", 
+    j1 == "Tl" ~ "Tl by Hg + Ni"), 
+    quantile = as.factor(j23quant)) 
+
+ssm_triv |> 
+  ggplot(aes(j1val, est, color = quantile)) +
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) + 
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2+3\nquantile") +
+  theme(strip.text.x = element_text(size = 7))
+ggsave("index/figures/ch4_ssm_triv_expresp.png", width = 6, height = 4)
 
 
-## Code for Appendix \@ref(appa):
+# larger size bsr ---------------------------------------------------------
 
-Here, we create the supplemental output that is included in Appendix \@ref(appa). 
+# plot pip's bsr large
+slg_pips <- read_csv("sim/bsr_lg/pips.csv")
+
+slg_pip_sig <- slg_pips |> 
+  mutate(sign = get_sign(case, variable))
+slg_pip_sen <- slg_pips |> 
+  mutate(imp = PIP >= 0.5) |> 
+  group_by(case, variable) |> 
+  summarize(sensitivity = weights::rd(sum(imp)/n(), 2, max = 0), 
+            upper = quantile(PIP, 0.75))
+
+# point and lineplot
+slg_pip_sig |> 
+  filter(case != 1) |> 
+  ggplot(aes(x = variable)) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "grey30") +
+  geom_label(data = filter(slg_pip_sen, case != 1), 
+             mapping = aes(x = variable, y = upper+0.1, label = sensitivity), 
+             size = 2, label.size = NA, label.padding = unit(0.05, "lines")) +
+  geom_pointrange(aes(y = PIP, color = sign), 
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z,0.25)},
+                  fun.max = function(z) {quantile(z,0.75)},
+                  fun = median, 
+                  size = 0.2) +
+  facet_wrap(~case,
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  scale_color_manual(values = c("deepskyblue3", "darkorange2")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(y = "PIP value distribution", 
+       color = "Truly\nsignificant", 
+       x = "Chemical")
+ggsave("index/figures/ch4_slg_univ_pips.png", width = 7.5, height = 5)
+
+# plot bivariate pip's large
+slg_pipb <- read_csv("sim/bsr_lg/pip_biv.csv")
+
+slg_pipb |> 
+  # filter(case == 2) |> 
+  mutate(sign = get_sign_bsr(case, Var1) & get_sign_bsr(case, Var2), 
+         inter = paste0(Var1, "_", Var2)) |> 
+  ggplot(aes(x = inter)) + 
+  geom_pointrange(aes(y = PIP, color = sign),
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z, 0.25)},
+                  fun.max = function(z) {quantile(z, 0.75)}, 
+                  fun = median, 
+                  size  = 0.05) +
+  scale_color_manual(values = c("#92D0E4", "darkorange2")) +
+  facet_wrap(~case, 
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(), 
+        legend.position = c(0.9, 0.1)) +
+  labs(y = "PIP value distribution", 
+       color = "Truly significant", 
+       x = NULL)
+ggsave("index/figures/ch4_slg_biv_pips.png", width = 7.5, height = 5)
+
+# plot trivariate pip's large
+slg_pipt <- read_csv("sim/bsr_lg/pip_triv.csv")
+
+slg_pipt |> 
+  ggplot(aes(x = "")) +
+  geom_pointrange(aes(y = PIP),
+                  stat = "summary",
+                  fun.min = function(z) {quantile(z, 0.25)},
+                  fun.max = function(z) {quantile(z, 0.75)}, 
+                  fun = median, 
+                  size  = 0.05) +
+  facet_wrap(~case, 
+             labeller = as_labeller(appendera, 
+                                    default = label_parsed)) +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(), 
+        legend.position = c(0.9, 0.1)) +
+  labs(y = "PIP value distribution", 
+       color = "Truly significant", 
+       x = NULL)
+
+# plot bivariate relationships bkmr large
+slg_biv <- read_csv("sim/bsr_lg/biv_expresp.csv")
+
+# plot Hg and Ni
+slg_biv |> 
+  filter(case %in% 2:5) |> 
+  mutate(variable1 = ifelse(j1 == "Hg", "Hg by Ni", "Ni by Hg"), 
+         quantile = as.factor(j2quant)) |> 
+  ggplot(aes(j1val, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  ylim(-3, 9) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_slg_biv_expresp_1.png", width = 6, height = 4)
+
+# plot Cd and As
+slg_biv |> 
+  filter(case %in% 6:9) |> 
+  mutate(variable1 = ifelse(j1 == "Cd", "Cd by As", "As by Cd"), 
+         quantile = as.factor(j2quant)) |> 
+  ggplot(aes(j1val, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  ylim(-2, 6) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_slg_biv_expresp_2.png", width = 6, height = 4)
+
+# plot Ni and Co
+slg_biv |> 
+  filter(case %in% 10:13) |> 
+  mutate(variable1 = ifelse(j1 == "Ni", "Ni by Co", "Co by Ni"), 
+         quantile = as.factor(j2quant)) |> 
+  ggplot(aes(j1val, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  # ylim(-6, 6) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+ggsave("index/figures/ch4_slg_biv_expresp_3.png", width = 6, height = 4)
+
+# plot trivariate relationships bsr large
+slg_triv <- read_csv("sim/bsr_lg/triv_expresp.csv")
+slg_triv <- slg_triv |> 
+  mutate(variable1 = case_when(
+    j1 == "Hg" ~ "Hg by Ni + Tl", 
+    j1 == "Ni" ~ "Ni by Hg + Tl", 
+    j1 == "Tl" ~ "Tl by Hg + Ni"), 
+    quantile = as.factor(j23quant)) 
+
+slg_triv |> 
+  ggplot(aes(j1val, est, color = quantile)) +
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) + 
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2+3\nquantile") +
+  theme(strip.text = element_text(size = 7)) 
+ggsave("index/figures/ch4_slg_triv_expresp.png", width = 6, height = 4)
+
+
+# bsr combine sens --------------------------------------------------------
+
+# univariate pips
+bsr_pips <- bind_rows(
+  mutate(ssm_pips, size = "Small"), 
+  mutate(slg_pips, size = "Large")
+) |> 
+  group_by(size, case, variable) |> 
+  summarize(sensitivity = sum(PIP >= 0.5)/n()) |> 
+  mutate(sign = get_sign(case, variable))
+write_csv(bsr_pips, "index/data/bsr_pip_sens.csv")
+
+# interactions
+cnames <- c("As", "Cd", "Co", "Hg", "Ni", "Tl", "Pb", "Mo", "Sb", "Sn")
+
+bsr_comb <- bind_rows(
+  mutate(ssm_pipb, size = "Small"), 
+  mutate(slg_pipb, size = "Large")
+) |> 
+  mutate(sign = get_sign_bsr(case, Var1) & get_sign_bsr(case, Var2), 
+         v1 = cnames[Var1], v2 = cnames[Var2], 
+         inter = paste0(v1, "-", v2)) |> 
+  mutate(inter2 = ifelse(sign, inter, "none")) |> 
+  group_by(size, case, inter2, sign) |> 
+  summarize(sensitivity = sum(PIP >= 0.5)/n())
+write_csv(bsr_comb, "index/data/bsr_int_sens.csv")
+```
+
+This code creates tables with univariate sensitivity and false discovery rates in scenarios with interactions between chemicals. 
+
+```{r}
+naive_sens <- read_csv("data/naive_sens.csv")
+oracle_sens <- read_csv("data/oracle_sens.csv")
+bkmr_sens <- read_csv("data/bkmr_pip_sens.csv")
+bsr_sens <- read_csv("data/bsr_pip_sens.csv")
+
+comb_sens <- bind_rows(
+  rename(naive_sens, variable = var),
+  filter(select(oracle_sens,-var), variable != "Int"),
+  mutate(bkmr_sens, mod = "BKMR"),
+  mutate(bsr_sens, mod = "BSR")
+) |>
+  filter(case != 1) |>
+  mutate(
+    variable = gsub("[^[:alpha:]]", "", variable),
+    mod = factor(mod, levels = c("Naive MLR", "Oracle MLR", "BKMR", "BSR")) ,
+    sign = ifelse(mod == "Oracle MLR", TRUE, sign),
+    new_sign = factor(ifelse(
+      variable %in% c("Hg", "Ni", "Sb", "Sn"),
+      "Sen",
+      "FDR"
+    ), levels = c("Sen", "FDR")), 
+    cond = case_when(
+      case %in% 2:5 ~ "Hg-Ni",
+      case %in% 6:9 ~ "Cd-As",
+      case %in% 10:13 ~ "Ni-Co", 
+      .default = "Hg-Ni-Tl"
+    ),
+    cond = factor(cond, levels = c("Hg-Ni", "Cd-As", "Ni-Co", "Hg-Ni-Tl")), 
+    inter_type = ifelse(case %% 4 %in% 1:2, "Mult.", "Poly."),
+    effect_size = factor(
+      ifelse(case %% 2 == 1, "Higher", "Lower"),
+      levels = c("Lower", "Higher")
+    )
+  ) |>
+  group_by(cond, inter_type, effect_size, mod, size, new_sign) |> 
+  summarize(detection = mean(sensitivity)) |> 
+  arrange(new_sign, desc(size)) |> 
+  pivot_wider(names_from = c(mod, size, new_sign), values_from = detection, 
+              names_sep = " ") |> 
+  ungroup()
+
+comb_sens_ord <- table(comb_sens$cond)
+
+# sensitivities
+comb_sens |> 
+  select(-cond) |> 
+  select(1:10) |> 
+  kbl(booktabs = TRUE, digits = 2, #align = "lcc",
+      caption = "Overall sensitivity for univariate chemicals in all scenarios with interactions between chemicals. Multiplicative and polynomial are abbreviated mult. and poly., respectively.", 
+      col.names = c("Type", "Effect size", 
+                    rep(c("Naive", "Oracle", "BKMR", "BSR"), 2))
+      ) |> 
+  add_header_above(header = c(" " = 2, "Small (n=252)" = 4, "Large (n=1000)" = 4), bold = TRUE) |>
+  pack_rows(index = comb_sens_ord) 
+
+# false discovery rates
+comb_sens |> 
+  select(-cond) |>
+  select(c(1, 2, 11:16)) |> 
+  kbl(booktabs = TRUE, digits = 2, #align = "lcc",
+      caption = "Overall false discovery rate for univariate chemicals in all scenarios with interactions between chemicals.", 
+      col.names = c("Type", "Effect size", 
+                    rep(c("Naive", "BKMR", "BSR"), 2))
+      ) |> 
+  add_header_above(header = c(" " = 2, "Small" = 3, "Large" = 3)) |>
+  # add_header_above(header = c(" " = 2, "Sensitivity" = 8, "False discovery rate" = 6)) |> 
+  pack_rows(index = comb_sens_ord) 
+```
+
+This code creates a figure with the full estimated exposure-response relationship output for Hg and Ni only, which is included in the main results section
+
+```{r}
+# HgNi only ---------------------------------------------------------------
+
+# bivariate surfaces
+
+# bkmr small
+hgni3 <- ksm_biv |> 
+  filter(case %in% 2:5) |> 
+  mutate(variable1 = ifelse(variable1 == "Hg", "Hg by Ni", "Ni by Hg"), 
+         quantile = as.factor(quantile)) |> 
+  ggplot(aes(z1, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  theme(strip.text = element_text(size = 8)) + 
+  ylim(-6, 6) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+
+# bkmr large
+hgni4 <- klg_biv |> 
+  filter(case %in% 2:5) |> 
+  mutate(variable1 = ifelse(variable1 == "Hg", "Hg by Ni", "Ni by Hg"), 
+         quantile = as.factor(quantile)) |> 
+  ggplot(aes(z1, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  theme(strip.text = element_text(size = 8)) + 
+  ylim(-6, 6) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+
+# bsr small
+hgni5 <- ssm_biv |> 
+  filter(case %in% 2:5) |> 
+  mutate(variable1 = ifelse(j1 == "Hg", "Hg by Ni", "Ni by Hg"), 
+         quantile = as.factor(j2quant)) |> 
+  ggplot(aes(j1val, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  theme(strip.text = element_text(size = 8)) + 
+  ylim(-3, 9) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+
+# bsr large
+hgni6 <- slg_biv |> 
+  filter(case %in% 2:5) |> 
+  mutate(variable1 = ifelse(j1 == "Hg", "Hg by Ni", "Ni by Hg"), 
+         quantile = as.factor(j2quant)) |> 
+  ggplot(aes(j1val, est, color = quantile)) + 
+  geom_line(aes(group = interaction(trial, quantile)), alpha = 0.2) +
+  ggh4x::facet_grid2(variable1~case, scales = "free", independent = "x", 
+                     labeller = labeller(
+                       case = as_labeller(appendera, default = label_parsed))) +
+  scale_color_manual(values = c("deepskyblue3", "palegreen3", "darkorange"), 
+                     guide = guide_legend(override.aes = list(alpha = 1), 
+                                          reverse = TRUE)) +
+  theme(strip.text = element_text(size = 8)) + 
+  ylim(-3, 9) +
+  labs(x = "Chem 1 value",  
+       y = "Estimated response", 
+       color = "Chem 2\nquantile")
+
+hgnitwo <- cowplot::plot_grid(
+  hgni3 + theme(legend.position = "none"),
+  hgni4 + theme(legend.position = "none"),
+  hgni5 + theme(legend.position = "none"),
+  hgni6 + theme(legend.position = "none"),
+  labels = "auto", nrow = 2
+)
+hgnitwo
+
+hgnilegend2 <- cowplot::get_legend(hgni3 + theme(legend.position = "bottom"))
+
+# stitch together
+cowplot::plot_grid(hgnitwo, hgnilegend2, nrow = 2, rel_heights = c(5, 0.4))
+ggsave("index/figures/ch4_hgni_biv.png", width = 9, height = 6)
+```
+
+This code creates a table of sensitivities for two-way interactions between chemicals. 
+
+```{r}
+oracle_comb <- read_csv("data/oracle_sens.csv")
+bkmr_comb <- read_csv("data/bkmr_int_sens.csv")
+bsr_comb <- read_csv("data/bsr_int_sens.csv")
+
+comb_int <- bind_rows(
+  oracle_comb |> filter(variable == "Int") |> 
+    select(-variable, cond = var), 
+  bkmr_comb |> mutate(mod = "BKMR"), 
+  bsr_comb |> mutate(mod = "BSR") |> filter(sign) |> rename(cond = inter2) |> select(-sign)
+) |>
+  filter(case %in% 2:13) |> 
+  mutate(cond = gsub(":", "-", cond), 
+         cond = gsub("\\+", "-", cond),
+         cond = case_when(
+           cond == "I(Hg * ((Ni - 1)^2))" ~ "Hg-Ni", 
+           cond == "I(Cd * ((As - 1)^2))" ~ "Cd-As", 
+           cond == "I(Ni * ((Co - 1)^2))" ~ "Ni-Co", 
+           cond == "As-Cd" ~ "Cd-As", 
+           cond == "Co-Ni" ~ "Ni-Co", 
+           .default = cond
+         ), 
+         cond = factor(cond, levels = c("Hg-Ni", "Cd-As", "Ni-Co")), 
+         inter_type = ifelse(case %in% c(2, 3, 6, 7, 10, 11), "Multiplicative", "Polynomial"), 
+         effect_size = factor(ifelse(case %% 2 == 1, "Higher", "Lower"), 
+                              levels = c("Lower", "Higher"))) |> 
+  select(-case) |>
+  arrange(desc(size)) |> 
+  pivot_wider(names_from = c(mod, size), values_from = sensitivity, 
+              names_sep = " ") |> 
+  arrange(cond, inter_type, effect_size)
+
+# create table
+comb_int_ord <- table(comb_int$cond)
+comb_int |> 
+  select(-cond) |> 
+  kbl(booktabs = TRUE, escape = FALSE, 
+      align = "llcccccc", 
+      caption = "Sensitivity to interactions in all scenarios with two-way interactions between exposures.", 
+      col.names = c("Interaction type", "Effect size", rep(c("Oracle", "BKMR", "BSR"), 2))) |> 
+  add_header_above(header = c(" " = 2, "Small (n=252)" = 3, "Large (n=1000)" = 3), bold = TRUE) |>
+  pack_rows(index = comb_int_ord) |> 
+  collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace")
+```
+
+This code creates a flow chart of detection of univariate and interaction signals for scenarios with larger size datasets and higher effect size, multiplicative interactions between Cd and As and Ni and Co. 
+
+```{r}
+library(ggalluvial)
+
+# Cd-As
+
+# extract from bkmr
+bkmr_comb1 <- bkmr_comb |> 
+  filter(cond == "As+Cd", case == 7) |> 
+  select(case, size, trial, sign = signif, variable = cond)
+ksm_pip_cdas <- ksm_pip_sig |>
+  filter(case == 7, variable %in% c("As", "Cd")) |> 
+  mutate(size = "Small") |> 
+  select(case, size, trial, PIP, variable) 
+klg_pip_cdas <- klg_pip_sig |> 
+  filter(case == 7, variable %in% c("As", "Cd")) |> 
+  mutate(size = "Large") |> 
+  select(case, size, trial, PIP, variable) 
+
+# combine
+bkmr_cdas <- bind_rows(bkmr_comb1, ksm_pip_cdas, klg_pip_cdas) |> 
+  mutate(mod = "BKMR") 
+
+# extract from bsr
+bsr_comb1 <- bind_rows(
+  mutate(ssm_pipb, size = "Small"), 
+  mutate(slg_pipb, size = "Large")
+) |> 
+  mutate(sign = get_sign_bsr(case, Var1) & get_sign_bsr(case, Var2), 
+         v1 = cnames[Var1], v2 = cnames[Var2], 
+         inter = paste0(v1, "-", v2)) |> 
+  mutate(inter2 = ifelse(sign, inter, "none")) 
+ssm_pip_cdas <- ssm_pip_sig |> 
+  filter(case == 7, variable %in% c("As", "Cd")) |> 
+  mutate(mod = "BSR", size = "Small") |> 
+  select(case, size, trial, PIP, variable)
+slg_pip_cdas <- slg_pip_sig |> 
+  filter(case == 7, variable %in% c("As", "Cd")) |> 
+  mutate(mod = "BSR", size = "Large") |> 
+  select(case, size, trial, PIP, variable)
+
+# combine
+bsr_cdas <- bsr_comb1 |> 
+  filter(inter2 == "As-Cd", case == 7) |> 
+  select(case, size, trial, PIP, variable = inter2) |> 
+  bind_rows(ssm_pip_cdas, slg_pip_cdas) |> 
+  mutate(mod = "BSR")
+
+# bind Cd As together
+all_cdas <- bind_rows(bkmr_cdas, bsr_cdas) |> 
+  mutate(sign = ifelse(is.na(PIP), sign, PIP >= 0.5), 
+         variable = gsub("\\+", "-", variable)) |> 
+  select(-PIP) |> 
+  pivot_wider(names_from = variable, values_from = sign) |> 
+  mutate(univ = case_when(
+    As & Cd ~ "As & Cd", 
+    As | Cd~ "As only/\nCd only", 
+    .default = "Neither"
+  )) |> 
+  rename(interaction = 5) |> 
+  mutate(univ = factor(univ, levels = c("As & Cd", "As only/\nCd only", "Neither")), 
+         interaction = factor(interaction, levels = c(TRUE, FALSE)))
+
+# alluvial plot for cd as
+large_cdas <- all_cdas |> 
+  filter(size == "Large") |> 
+  group_by(mod, univ, interaction) |> 
+  count()
+cdasp <- large_cdas |> 
+  rename(Univariate = univ, Interaction = interaction)  |> 
+  ggplot(aes(axis1 = Univariate, axis2 = Interaction, y = n)) +
+  ggalluvial::geom_alluvium(aes(fill = mod), alpha = 0.4) +
+  ggalluvial::geom_stratum(color = "gray50") +
+  geom_text(stat = "stratum", aes(label = after_stat(stratum)), 
+            lineheight = 0.75) +
+  scale_x_discrete(limits = c("Univariate", "Interaction"), expand = c(0.2, 0.05)) +
+  scale_fill_manual(values = c("deepskyblue3", "darkorange")) +
+  labs(fill = "Model")
+
+# Ni-Co
+
+# extract from bkmr
+bkmr_comb2 <- bkmr_comb |> 
+  filter(cond == "Co+Ni", case == 11) |> 
+  select(case, size, trial, sign = signif, variable = cond)
+ksm_pip_nico <- ksm_pip_sig |>
+  filter(case == 11, variable %in% c("Ni", "Co")) |> 
+  mutate(size = "Small") |> 
+  select(case, size, trial, PIP, variable) 
+klg_pip_nico <- klg_pip_sig |> 
+  filter(case == 11, variable %in% c("Ni", "Co")) |> 
+  mutate(size = "Large") |> 
+  select(case, size, trial, PIP, variable) 
+
+bkmr_nico <- bind_rows(bkmr_comb2, ksm_pip_nico, klg_pip_nico) |> 
+  mutate(mod = "BKMR") 
+
+# extract from bsr
+bsr_comb2 <- bind_rows(
+  mutate(ssm_pipb, size = "Small"), 
+  mutate(slg_pipb, size = "Large")
+) |> 
+  mutate(sign = get_sign_bsr(case, Var1) & get_sign_bsr(case, Var2), 
+         v1 = cnames[Var1], v2 = cnames[Var2], 
+         inter = paste0(v1, "-", v2)) |> 
+  mutate(inter2 = ifelse(sign, inter, "none")) 
+ssm_pip_nico <- ssm_pip_sig |> 
+  filter(case == 11, variable %in% c("Ni", "Co")) |> 
+  mutate(mod = "BSR", size = "Small") |> 
+  select(case, size, trial, PIP, variable)
+slg_pip_nico <- slg_pip_sig |> 
+  filter(case == 11, variable %in% c("Ni", "Co")) |> 
+  mutate(mod = "BSR", size = "Large") |> 
+  select(case, size, trial, PIP, variable)
+
+bsr_nico <- bsr_comb2 |> 
+  filter(inter2 == "Co-Ni", case == 11) |> 
+  select(case, size, trial, PIP, variable = inter2) |> 
+  bind_rows(ssm_pip_nico, slg_pip_nico) |> 
+  mutate(mod = "BSR")
+
+# bind together
+all_nico <- bind_rows(bkmr_nico, bsr_nico) |> 
+  mutate(sign = ifelse(is.na(PIP), sign, PIP >= 0.5), 
+         variable = gsub("\\+", "-", variable)) |> 
+  select(-PIP) |> 
+  pivot_wider(names_from = variable, values_from = sign) |> 
+  mutate(univ = case_when(
+    Ni & Co ~ "Ni & Co", 
+    Ni ~ "Ni only", 
+    Co ~ "Co only",
+    .default = "Neither"
+  )) |> 
+  rename(interaction = 5) |> 
+  mutate(univ = factor(univ, levels = c("Ni & Co", "Ni only", "Co only", "Neither")), 
+         interaction = factor(interaction, levels = c(TRUE, FALSE)))
+
+# alluvial plot for Ni Co
+large_nico <- all_nico |> 
+  filter(size == "Large") |> 
+  group_by(mod, univ, interaction) |> 
+  count()
+nicop <- large_nico |> 
+  rename(Univariate = univ, Interaction = interaction)  |> 
+  ggplot(aes(axis1 = Univariate, axis2 = Interaction, y = n)) +
+  ggalluvial::geom_alluvium(aes(fill = mod), alpha = 0.4) +
+  ggalluvial::geom_stratum(color = "gray50") +
+  geom_text(stat = "stratum", aes(label = after_stat(stratum)), 
+            lineheight = 0.75) +
+  scale_x_discrete(limits = c("Univariate", "Interaction"), expand = c(0.2, 0.05)) +
+  scale_fill_manual(values = c("deepskyblue3", "darkorange")) +
+  labs(fill = "Model")
+
+# combine nico and cdas together
+cowplot::plot_grid(cdasp + theme(legend.position = "none"),
+                   nicop, rel_widths = c(4.5, 6), labels = "auto")
+ggsave("index/figures/ch4_flowchartboth.png", width = 8, height = 4)
+```
+
+This code creates a table of false discovery rates for two-way interactions between chemicals. 
+
+```{r}
+# bkmr false discovery rates
+ksmfdr<- read_csv("sim/bkmr_sm/int_bivarfull.csv")
+klgfdr <- read_csv("sim/bkmr_lg/int_bivarfull.csv")
+
+bkmr_comb_fdr <- bind_rows(
+  mutate(ksmfdr, size = "Small"), 
+  mutate(klgfdr, size = "Large")
+) |> 
+  rowwise() |> 
+  mutate(inter1 = paste0(z1, "-", z2), 
+         sign = ifelse(
+           (inter1 == "Hg-Ni" & case %in% 2:5) | 
+             (inter1 == "As-Cd" & case %in% 6:9) | 
+             (inter1 == "Co-Ni" & case %in% 10:13), TRUE, FALSE
+         ), 
+         signif = ifelse(
+           between(0, est - 1.96*sd, est + 1.96*sd), FALSE, TRUE
+         ), 
+         inter2 = ifelse(sign, inter1, "none")) |> 
+  group_by(size, case, inter2, sign) |> 
+  summarize(sensitivity = sum(signif)/n())
+
+# bsr false discovery rates
+bsr_comb_fdr <- read_csv("index/data/bsr_int_sens.csv")
+
+# combine
+fdr_comb <- bind_rows(
+  mutate(bkmr_comb_fdr, mod = "BKMR"), 
+  mutate(bsr_comb_fdr, mod = "BSR")
+) |> 
+  relocate(mod)
+write_csv(fdr_comb, "index/data/comb_int_fdr.csv")
+
+# read data back in
+fdr_comb <- read_csv("data/comb_int_fdr.csv")
+
+fdr_comb2 <- fdr_comb |>
+  filter(inter2 == "none", case %in% 2:13) |>
+  mutate(
+    cond = case_when(
+      case %in% 2:5 ~ "Hg-Ni",
+      case %in% 6:9 ~ "Cd-As",
+      case %in% 10:13 ~ "Ni-Co"
+    ),
+    cond = factor(cond, levels = c("Hg-Ni", "Cd-As", "Ni-Co")), 
+    inter_type = ifelse(case %in% c(2, 3, 6, 7, 10, 11), "Multiplicative", "Polynomial"),
+    effect_size = factor(
+      ifelse(case %% 2 == 1, "Higher", "Lower"),
+      levels = c("Lower", "Higher")
+    )
+  ) |> 
+  select(-inter2, -sign, -case) |>  
+  pivot_wider(names_from = c(mod, size), values_from = sensitivity) |> 
+  arrange(cond, inter_type, effect_size) |> 
+  relocate(cond, inter_type, effect_size, BKMR_Small, BSR_Small, BKMR_Large, BSR_Large)
+
+# create table
+fdr_ord <- table(fdr_comb2$cond)
+fdr_comb2 |> 
+  select(-cond) |> 
+  kbl(booktabs = TRUE, escape = FALSE, 
+      align = "llcccc", digits = 4, 
+      caption = "False discovery rate of interactions in all scenarios with two-way interactions between exposures.", 
+      col.names = c("Interaction type", "Effect size", rep(c("BKMR", "BSR"), 2))) |> 
+  add_header_above(header = c(" " = 2, "Small (n=252)" = 2, "Large (n=1000)" = 2), bold = TRUE) |>
+  pack_rows(index = fdr_ord) |> 
+  collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace")
+```
+
+This code creates a table of sensitivities for three-way interactions. 
+
+```{r}
+# get trivariate sensitivity from oracle, bkmr, bsr
+oracle_senst <- bind_rows(
+  filter(mutate(osm_comb, size = "Small"), case %in% 14:17), 
+  filter(mutate(olg_comb, size = "Large"), case %in% 14:17)
+) |> 
+  filter(variable == "Int") |> 
+  group_by(case, size) |> 
+  summarize(sensitivity = sum(p < 0.05)/n()) |> 
+  mutate(mod = "Oracle") |> 
+  relocate(mod)
+bkmr_senst <- bkmr_comb |> 
+  filter(case %in% 14:17) |> 
+  pivot_wider(names_from = cond, values_from = signif) |>
+  mutate(signif = unname(pick(4) | pick(5) | pick(6))) |>
+  rename(signif = 7) |>
+  group_by(case, size) |>
+  summarize(sensitivity = sum(signif)/n()) |>
+  mutate(mod = "BKMR") |> 
+  relocate(mod)
+bsr_senst <- bind_rows(
+  mutate(ssm_pipt, size = "Small"), 
+  mutate(slg_pipt, size = "Large")
+) |> 
+  group_by(case, size) |> 
+  summarize(sensitivity = sum(PIP >= 0.5)/n()) |> 
+  mutate(mod = "BSR") |> 
+  relocate(mod)
+
+# bind together
+all_senst <- bind_rows(oracle_senst, bkmr_senst, bsr_senst) |> 
+  mutate(inter_type = ifelse(case %in% c(14, 15), "Multiplicative", "Polynomial"), 
+         effect_size = ifelse(case %in% c(14, 16), "Lower", "Higher"))
+write_csv(all_senst, "sim/tables/triv_sens.csv")
+
+# read back in
+triv <- read_csv("data/triv_sens.csv")
+
+# create table
+triv |> 
+  select(-case) |> 
+  pivot_wider(names_from = c(mod, size), values_from = sensitivity) |> 
+  relocate(1, 2, 4, 6, 8, 3, 5, 7) |> 
+  kbl(booktabs = TRUE, 
+      caption = "Sensitivity to trivariate interactions between Hg, Ni, and Tl.", 
+      col.names = c("Interaction type", "Effect size", rep(c("Oracle", "BKMR", "BSR"), 2))) |> 
+  add_header_above(header = c(" " = 2, "Small (n=252)" = 3, "Large (n=1000)" = 3), bold = TRUE) |>
+  collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace")
+```
+
+This code formats results for scenarios with an interaction between race and Hg. 
+
+```{r}
+# naive -------------------------------------------------------------------
+
+nsmre_pval <- read_csv("sim/_mlr/pvalsmre.csv")
+nlgre_pval <- read_csv("sim/_mlr/pvallgre.csv")
+
+# p-values small
+nsmre_pvalc <- nsmre_pval |> 
+  filter(var %in% c("As", "Cd", "Co", "Hg", "Ni", 
+                    "Tl", "Pb", "Mo", "Sb", "Sn")) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = getsign_re(var), 
+         mod = "Naive MLR")
+
+# p-values large
+nlgre_pvalc <- nlgre_pval |> 
+  filter(var %in% c("As", "Cd", "Co", "Hg", "Ni", 
+                    "Tl", "Pb", "Mo", "Sb", "Sn")) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = getsign_re(var), 
+         mod = "Naive MLR")
+
+# save sensitivity as table
+naive_allre <- bind_rows(
+  mutate(nsmre_pvalc, size = "Small", mod = "Naive MLR"),
+  mutate(nlgre_pvalc, size = "Large", mod = "Naive MLR")
+) |> 
+  group_by(mod, case, size, var, sign) |> 
+  summarize(sensitivity = sum(p < 0.05)/n())
+write_csv(naive_allre, "index/data/naive_re_sens.csv")
+
+
+# oracle ------------------------------------------------------------------
+
+# interaction terms
+keepnames <- c('(Intercept)', 'Hg', 'Sb', 'I(1/(1 + exp(-4 * Ni)))', 'Ni', 
+               'I(Sb^2)', 'I(1/(1 + exp(-4 * Sn)))', 'age', 'bmi', 
+               'race2', 'race3', 'race4', 'race5', 'smoke1', 'Cd', 'As', 'Co')
+
+# small
+osmre_pval <- read_csv("sim/_oracle/pvalsmre.csv")
+
+# univariate p-values
+osmre_pvalc <- osmre_pval |> 
+  mutate(var = case_when(
+    grepl("Ni", var) ~ "Ni*", 
+    grepl("Sn", var) ~ "Sn*", 
+    grepl("I\\(Sb", var) ~ "Sb^2", 
+    .default = var
+  )) |> 
+  filter(var %in% c("Hg", "Ni*", "Tl", "Pb", "Mo", "Sn*", "Sb^2")) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = TRUE)
+
+osmre_pvali <- osmre_pval |> 
+  filter(!(var %in% keepnames)) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100))
+
+# combine univariate and interactions
+osmre_comb <- bind_rows(
+  mutate(osmre_pvali, variable = "Int"), 
+  mutate(osmre_pvalc, variable = var)
+)
+
+# large
+olgre_pval <- read_csv("sim/_oracle/pvallgre.csv")
+
+# univariate p-values
+olgre_pvalc <- olgre_pval |> 
+  mutate(var = case_when(
+    grepl("Ni", var) ~ "Ni*", 
+    grepl("Sn", var) ~ "Sn*", 
+    grepl("I\\(Sb", var) ~ "Sb^2", 
+    .default = var
+  )) |> 
+  filter(var %in% c("Hg", "Ni*", "Tl", "Pb", "Mo", "Sn*", "Sb^2")) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100), 
+         sign = TRUE)
+
+olgre_pvali <- olgre_pval |> 
+  filter(!(var %in% keepnames)) |> 
+  mutate(trial = case, 
+         case = ceiling(case/100))
+
+# combine univariate and interactions
+olgre_comb <- bind_rows(
+  mutate(olgre_pvali, variable = "Int"), 
+  mutate(olgre_pvalc, variable = var)
+)
+
+# combine both oracle outputs
+oracle_re <- bind_rows(
+  mutate(osmre_comb, size = "Small"), 
+  mutate(olgre_comb, size = "Large")
+) |> 
+  select(size, case, trial, variable, p) |> 
+  arrange(case, trial, desc(size))
+
+write_csv(oracle_re, "index/data/oracle_re_sens.csv")
+
+# bkmr --------------------------------------------------------------------
+
+library(intervals)
+# critical value of 2.57583 for bonferroni corrected 95% CI
+
+# function for checking overlap of confidence intervals
+check_overlap <- function(data) {
+  num_na <- sum(is.na(data$lower))
+  sign <- data$sign 
+  unsign <- !(data$sign)
+  sign_intervals <- Intervals(na.omit(data[sign, c("lower", "upper")]))
+  unsign_intervals <- Intervals(na.omit(data[unsign, c("lower", "upper")]))
+  return(data.frame(
+    num_na = num_na,
+    sig_overlaps = length(interval_overlap(sign_intervals, unsign_intervals)[[1]]), 
+    insig_overlaps = (length(unlist(interval_overlap(unsign_intervals, unsign_intervals))) == 
+                        (length(unsign_intervals)/2)^2)
+  ))
+}
+
+# detection of interactions 
+
+# small
+ksmre_ints <- read_csv("sim/re/ksmre_ints.csv")
+
+# uncollapsed
+ksmre_det1 <- ksmre_ints |> 
+  filter(race != 6) |> 
+  mutate(lower = est - 2.57583*sd, 
+         upper = est + 2.57583*sd, 
+         sign = (case <= 2 & race == 2) | (case >= 3 & race == 5)) |> 
+  group_by(case, trial) |> 
+  group_modify(~ check_overlap(.))
+
+# check number of models where at least one was unable to be fitted
+table(ksmre_det1$num_na != 0)
+
+# use collapsed
+ksmre_det2 <- ksmre_ints |> 
+  filter(race %in% c(4, 5, 6)) |> 
+  mutate(lower = est - 2.57583*sd, 
+         upper = est + 2.57583*sd, 
+         sign = (case <= 2 & race == 6) | (case >= 3 & race == 5)) |> 
+  group_by(case, trial) |> 
+  group_modify(~ check_overlap(.))
+
+# large
+klgre_ints <- read_csv("sim/re/klgre_ints.csv")
+
+klgre_det <- klgre_ints |> 
+  mutate(lower = est - 2.57583*sd, 
+         upper = est + 2.57583*sd, 
+         sign = (case <= 2 & race == 2) | (case >= 3 & race == 5)) |> 
+  group_by(case, trial) |> 
+  group_modify(~ check_overlap(.))
+
+# save the trials that produced significant results
+klgre_det |> 
+  filter(sig_overlaps != 4) |> 
+  write_csv("sim/re/trials_klg_sig.csv")
+
+# get sensitivity
+ksmre_sens1 <- ksmre_det1 |> 
+  group_by(case) |> 
+  summarize(sens = sum((sig_overlaps/(4-num_na)) != 1 & insig_overlaps)/n()) |> 
+  mutate(size = "Small uncollapsed")
+ksmre_sens2 <- ksmre_det2 |> 
+  group_by(case) |> 
+  summarize(sens = sum((sig_overlaps/(2-num_na)) != 1 & insig_overlaps)/n()) |> 
+  mutate(size = "Small collapsed")
+# no trials that had a significant non-overlap AlSO had non-significant non-overlap
+klgre_sens <- klgre_det |> 
+  group_by(case) |> 
+  summarize(sens = sum(sig_overlaps != 4 & insig_overlaps)/n()) |> 
+  mutate(size = "Large")
+
+# combine sensitivities together
+bkmrre_senscomb <- bind_rows(ksmre_sens1, ksmre_sens2, klgre_sens) 
+write_csv(bkmrre_senscomb, "index/data/bkmr_re_sens.csv")
+
+# pip's
+ksmre_pips <- read_csv("sim/re/ksmre_pips.csv")
+klgre_pips <- read_csv("sim/re/klgre_pips.csv")
+
+# summarize pip's
+ksmre_pips2 <- ksmre_pips |> 
+  filter(is.na(variable) | variable == "Hg") |> 
+  group_by(case, race) |> 
+  summarize(num_na = sum(is.na(variable))/100, 
+            hg_detect = sum(PIP >= 0.5, na.rm = T)/100)
+
+klgre_pips2 <- klgre_pips |> 
+  filter(is.na(variable) | variable == "Hg") |> 
+  group_by(case, race) |> 
+  summarize(num_na = sum(is.na(variable))/n(), 
+            hg_detect = sum(PIP >= 0.5, na.rm = T)/n())
+
+bkmrre_pipscomb <- bind_rows(
+  mutate(ksmre_pips2, size = "Small"), 
+  mutate(klgre_pips2, size = "Large")
+)  |> 
+  mutate(which_race = which_race(race), 
+         size_race = size_race(race))
+write_csv(bkmrre_pipscomb, "index/data/bkmr_re_pips.csv")
+
+
+# bsr ---------------------------------------------------------------------
+
+# pip's
+
+# pip's
+ssmre_pips <- read_csv("sim/re/ssmre_pips.csv")
+slgre_pips <- read_csv("sim/re/slgre_pips.csv")
+
+# summarize pip's
+ssmre_pips2 <- ssmre_pips |> 
+  filter(is.na(variable) | variable == "Hg") |> 
+  group_by(case, race) |> 
+  summarize(num_na = sum(is.na(variable))/100, 
+            hg_detect = sum(PIP >= 0.5, na.rm = T)/100)
+
+slgre_pips2 <- slgre_pips |> 
+  filter(is.na(variable) | variable == "Hg") |> 
+  group_by(case, race) |> 
+  summarize(num_na = sum(is.na(variable))/n(), 
+            hg_detect = sum(PIP >= 0.5, na.rm = T)/n())
+
+bsrre_pipscomb <- bind_rows(
+  mutate(ssmre_pips2, size = "Small"), 
+  mutate(slgre_pips2, size = "Large")
+)  |> 
+  mutate(which_race = which_race(race), 
+         size_race = size_race(race))
+write_csv(bsrre_pipscomb, "index/data/bsr_re_pips.csv")
+```
+
+This code creates a table of sensitivities for interactions between race and Hg. 
+
+```{r}
+# table
+bkmr_re_sens <- read_csv("data/bkmr_re_sens.csv") |> 
+  rename(sensitivity = sens)
+oracle_re_int <- read_csv("data/oracle_re_sens.csv") |> 
+  filter(variable == "Int") |> 
+  group_by(size, case) |> 
+  summarize(sensitivity = sum(p<0.05)/n()) |> 
+  mutate(size = ifelse(size == "Small", "Small uncollapsed", size))
+
+re_ints <- bind_rows(
+  mutate(bkmr_re_sens, mod = "BKMR"), 
+  mutate(oracle_re_int, mod = "Oracle MLR")
+) |> 
+  arrange(desc(size), desc(mod)) |> 
+  pivot_wider(names_from = c(mod, size), values_from = sensitivity) |> 
+  mutate(effect_size = ifelse(case %in% c(1, 3), "Lower", "Higher"), 
+         case = ifelse(case %in% c(1, 2), 
+                       paste0("Original n=27", footnote_marker_symbol(2)), 
+                       paste0("Oirignal n=100", footnote_marker_symbol(3)))
+         ) |> 
+  relocate(case, effect_size)
+
+re_ints |> kbl(booktabs = TRUE, escape = FALSE, 
+      align = "llccccc", 
+      caption = "Sensitivity to interactions between the categorical race variable and Hg.", 
+      col.names = c("Interaction in", "Effect size", 
+                    "Oracle", "BKMR", "BKMR",
+                    "Oracle", "BKMR")
+      ) |> 
+  add_header_above(header = c(" " = 2, "Uncollapsed" = 2, 
+                              "Collapsed*" = 1, 
+                              " " = 2)) |> 
+  add_header_above(header = c(" " = 2, "Small (n=252)" = 3, "Large (n=1000)" = 2), 
+                   bold = TRUE) |>
+  collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace") |> 
+  # column_spec(7, width = "6em") |>
+  add_footnote(c("\"Collapsed\" refers to scenarios where the smallest three race categories are collapsed into one stratified model.", "Non-Hispanic black", "Hispanic born outside US"), notation = "symbol", threeparttable = TRUE)
+```
+
+This code plots the estimated exposure-response relationship in scenarios with an interaction between race and Hg.
+
+```{r}
+# exposure response relationship ------------------------------------------
+
+#### BKMR #####
+
+# small
+ksmre_expresp <- read_csv("sim/re/ksmre_expresp.csv")
+# large
+klgre_expresp <- read_csv("sim/re/klgre_expresp.csv")
+# combine
+bkmr_re_expresp <- bind_rows(
+  mutate(ksmre_expresp, size = "Small"), 
+  mutate(klgre_expresp, size = "Large")
+) |> 
+  filter(race != 6) 
+
+# first two cases
+kre12 <- bkmr_re_expresp |> 
+  filter(case <= 2) |> 
+  mutate(which_race = which_race(race), 
+         size_race = size_race(race), 
+         size = factor(size, levels = c("Small", "Large"))) 
+
+k12 <- kre12 |>
+  mutate(
+    race2 = case_when(race == 2 ~ 5,
+                      race == 5 ~ 2,
+                      .default = race),
+    race2 = factor(
+      race2,
+      levels = c(1, 2, 3, 4, 5),
+      labels = c(1, 5, 3, 4, 2)
+    ), 
+    case = factor(ifelse(case == 1, "Lower", "Higher"), 
+                  levels = c("Lower", "Higher"))
+  ) |> 
+  ggplot(aes(z1, est, color = race2)) +
+  geom_line(aes(group = interaction(trial, race2)), alpha = 0.15) +
+  ylim(-8, 8) + 
+  facet_grid(size ~ case) +
+  scale_color_manual(values = rev(c("#F8766D", "#A3A500", "#00BF7D", "#00B0F6", "#E76BF3")), 
+                     breaks = c(1, 2, 3, 4, 5)) +
+  guides(color = guide_legend(override.aes = list(alpha = 1))) +
+  labs(x = "Hg", y = "Estimate", subtitle = "BKMR, interaction in Non-Hispanic black")
+
+# second two cases
+kre34 <- bkmr_re_expresp |> 
+  filter(case > 2) |> 
+  mutate(which_race = which_race(race), 
+         size_race = size_race(race), 
+         size = factor(size, levels = c("Small", "Large"))) 
+
+k34 <- kre34 |>
+  mutate(
+    race2 = factor(
+      race,
+      levels = c(1, 2, 3, 4, 5),
+    ), 
+    case = factor(ifelse(case == 3, "Lower", "Higher"), 
+                  levels = c("Lower", "Higher"))
+  ) |> 
+  ggplot(aes(z1, est, color = race2)) +
+  geom_line(aes(group = interaction(trial, race2)), alpha = 0.15) +
+  ylim(-8, 8) + 
+  facet_grid(size ~ case) +
+  scale_color_manual(values = rev(c("#F8766D", "#A3A500", "#00BF7D", "#00B0F6", "#E76BF3")), 
+                     breaks = c(1, 2, 3, 4, 5)) +
+  guides(color = guide_legend(override.aes = list(alpha = 1))) +
+  labs(x = "Hg", y = "Estimate", subtitle = "BKMR, interaction in Hispanic born outside US")
+
+
+##### BSR ######
+
+# small
+ssmre_expresp <- read_csv("sim/re/ssmre_expresp.csv")
+# large
+slgre_expresp <- read_csv("sim/re/slgre_expresp.csv")
+# combine
+bsr_re_expresp <- bind_rows(
+  mutate(ssmre_expresp, size = "Small"), 
+  mutate(slgre_expresp, size = "Large")
+) |> 
+  filter(race != 6) 
+
+# first two cases
+sre12 <- bsr_re_expresp |> 
+  filter(case <= 2) |> 
+  mutate(which_race = which_race(race), 
+         size_race = size_race(race), 
+         size = factor(size, levels = c("Small", "Large"))) 
+
+s12 <- sre12 |>
+  mutate(
+    race2 = case_when(race == 2 ~ 5,
+                      race == 5 ~ 2,
+                      .default = race),
+    race2 = factor(
+      race2,
+      levels = c(1, 2, 3, 4, 5),
+      labels = c(1, 5, 3, 4, 2)
+    ), 
+    case = factor(ifelse(case == 1, "Lower", "Higher"), 
+                  levels = c("Lower", "Higher"))
+  ) |> 
+  ggplot(aes(j1val, est, color = race2)) +
+  geom_line(aes(group = interaction(trial, race2)), alpha = 0.15) +
+  ylim(-6, 12) +
+  facet_grid(size ~ case) +
+  scale_color_manual(values = rev(c("#F8766D", "#A3A500", "#00BF7D", "#00B0F6", "#E76BF3")), 
+                     breaks = c(1, 2, 3, 4, 5)) +
+  guides(color = guide_legend(override.aes = list(alpha = 1))) +
+  labs(x = "Hg", y = "Estimate", subtitle = "BSR, interaction in Non-Hispanic black")
+
+# second two cases
+sre34 <- bsr_re_expresp |> 
+  filter(case > 2) |> 
+  mutate(which_race = which_race(race), 
+         size_race = size_race(race), 
+         size = factor(size, levels = c("Small", "Large"))) 
+
+s34 <- sre34 |>
+  mutate(
+    race2 = factor(
+      race,
+      levels = c(1, 2, 3, 4, 5),
+      labels = c("Non-Hisp. white", "Non-Hisp. other", "Non-Hisp. black", 
+                 "Hispanic born in US", "Hispanic born outside US")
+    ), 
+    case = factor(ifelse(case == 3, "Lower", "Higher"), 
+                  levels = c("Lower", "Higher"))
+  ) |> 
+  ggplot(aes(j1val, est, color = race2)) +
+  geom_line(aes(group = interaction(trial, race2)), alpha = 0.15) +
+  ylim(-6, 12) +
+  facet_grid(size ~ case) +
+  scale_color_manual(values = rev(c("#F8766D", "#A3A500", "#00BF7D", "#00B0F6", "#E76BF3"))) +
+  guides(color = guide_legend(override.aes = list(alpha = 1))) +
+  labs(x = "Hg", y = "Estimate", color = "Race", 
+       subtitle = "BSR, interaction in Hispanic born outside US") +
+  theme(legend.position = "bottom")
+
+re_expresp <- cowplot::plot_grid(
+  k12 + theme(legend.position = "none"),
+  s12 + theme(legend.position = "none"), 
+  k34 + theme(legend.position = "none"),
+  s34 + theme(legend.position = "none"),
+  nrow = 2
+)
+
+reerlegend <- cowplot::get_legend(s34)
+cowplot::plot_grid(re_expresp, reerlegend, rel_heights = c(5, 0.35), ncol = 1)
+ggsave("index/figures/ch4_re_expresp.png", width = 7.75, height = 6)
+```
+
+This code creates a table of sensitivities for the univariate Hg term in scenarios where it interacts with race. 
+
+```{r}
+# read in data
+naive_re_sens <- read_csv("data/naive_re_sens.csv") |> 
+  filter(var == "Hg") |> 
+  select(-sign, -var)
+oracle_re_sens <- read_csv("data/oracle_re_sens.csv") |> 
+  filter(variable == "Hg") |> 
+  group_by(size, case) |> 
+  summarize(sensitivity = sum(p<0.05)/n())
+bkmr_re_pips <- read_csv("data/bkmr_re_pips.csv") |> 
+  rename(sensitivity = hg_detect) |> 
+  select(-num_na)
+bsr_re_pips <- read_csv("data/bsr_re_pips.csv") |> 
+  filter(size != "Large" | race != 6) |> 
+  rename(sensitivity = hg_detect) |> 
+  select(-num_na)
+
+# combine together
+univ_re_comb <- bind_rows(
+  naive_re_sens, 
+  mutate(oracle_re_sens, mod = "Oracle MLR"), 
+  mutate(bkmr_re_pips, mod = "BKMR"), 
+  mutate(bsr_re_pips, mod = "BSR")
+)
+
+# pivot wider
+univ_re_wide <- univ_re_comb |> 
+  arrange(desc(size)) |> 
+  pivot_wider(names_from = case, values_from = sensitivity) |> 
+  mutate(
+    which_race = gsub("Hispanic", "Hisp.", which_race), 
+    race = ifelse(is.na(which_race), NA, 
+                  paste0(which_race, " (n=", size_race, ")"))
+  ) |> 
+  select(-which_race, -size_race) |> 
+  relocate(size)
+
+# print
+univre_ord <- table(univ_re_wide$size)[c(2, 1)]
+options(knitr.kable.NA = '-')
+
+univ_re_wide |> 
+  select(-size) |> 
+  kbl(booktabs = TRUE, escape = FALSE, 
+      align = "llcccc", 
+      caption = "Sensitivity for the univariate Hg term in all scenarios with an interaction between the categorical race covariate and Hg. Sensitivities for BKMR and BSR models are stratified by race.", 
+      col.names = c("Model", "Race", rep(c("Lower", "Higher"), 2))
+      ) |> 
+  add_header_above(header = c(" " = 2, "Small race cat." = 2, "Large race cat." = 2), bold = TRUE) |>
+  pack_rows(index = univre_ord) |> 
+  collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace")
+```
+
+
+## Code for Appendix \@ref(suppmethods)
+
+Finally, we create the supplemental methods output that is included in Appendix \@ref(suppmethods).
+
+<!-- in Appendix \@ref(appa). We start with code for the supplemental methods output  -->
 
 First, we visualize relationships between significant univariate exposures and the response. 
 
@@ -5576,8 +7847,5 @@ merge_and_save <- function(file_list, output_file) {
 
 merge_and_save(file_list, output_file)
 ```
-
-
-
 
 

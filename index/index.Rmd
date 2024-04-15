@@ -1,5 +1,6 @@
 ---
 title: 'Flexible Bayesian Regression Models for Quantifying Complex Interactions in Exposure Mixture Studies'
+# Quantifying Interactions in Exposure Mixture Studies Using Flexible Bayesian Regression Model
 author: 'Elizabeth Zhang'
 date: 'April 19, 2024'
 institution: 'Amherst College'

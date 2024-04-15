@@ -18,7 +18,7 @@ This thesis summarizes the current capabilities of modern Bayesian statistical m
 
 Future work...
 
-- analyses would be improved if three-way fdr's were included and BSR run-times recorded
+- analyses would be improved if three-way fdr's were included and BSR run-times recorded, fdr's for race exp
 - going forward, change design of simulations study should try three-way interactions and multicollinearity on cases where the chemicals themselves are significant
 - figure out method of formal inference for BSR
 - identify difficulty of detecting interactions between race and exposure
