@@ -214,7 +214,7 @@ Finally, I want to express my gratitude for my family for their love and support
   framerule = 1.5mm, rulecolor = \color{black!15}
   }
 
-\title{Flexible Bayesian Regression Models for Quantifying Complex Interactions in Exposure Mixture Studies}
+\title{Flexible Bayesian Regression Models for the Characterization of Interactions in Exposure Mixture Studies}
 \author{Elizabeth Zhang}
 \date{April 19, 2024}
 \division{}
@@ -314,7 +314,7 @@ In an age where anthropogenic actions have radically reshaped the earth, humanis
 
 In this section, we briefly introduce ideas from science and technology studies, which track habits of thought that have fundamentally shaped the ways in which we think about and study toxicity. Our goal, here, is to contextualize exposure mixture studies --- the motivation for this thesis --- within larger regimes of knowledge production. We aim to recognize the limitations in current norms of understanding toxicity, in order to progress toward a study of health that better reflects the complex realities of communities who bear the burdens of toxic exposure.
 
-Modern scientific thinking encourages the onlooker to see objects in the world as distinct entities. For instance, when we talk about chemicals, we tend to talk about them as disconnected molecules: lead, mercury, per- and polyfluoroalkyl substances, etc. Clouds of pollution are conceived through their individual components, each of which becomes separated from its surroundings through the lenses of our imaginations (\protect\hyperlink{ref-myers_rendering_2015}{Myers, 2015}). It is easy to accept this ontology as inevitable --- how else should one view chemicals? Yet, its origins can actually be located in the history of chemistry. The Industrial Revolution turned chemistry into a hugely profitable field, leading practitioners to become keenly interested in how structural representations of chemicals could be most useful for industrial and corporate technoscientific disciplines (\protect\hyperlink{ref-bensaude-vincent_history_1996}{Bensaude-Vincent \& Stengers, 1996}). Reducing chemical mixtures amidst complex environments down into discrete molecules made the quantification of their effects simpler --- certain side effects or relations could be masked or hidden in technical reports. Such reports were then used by industrial lobbyists as evidence for reducing or withholding environmental regulations (\protect\hyperlink{ref-murphy_alterlife_2017}{Murphy, 2017}).
+Modern scientific thinking encourages the onlooker to see objects in the world as distinct entities. For instance, when we talk about chemicals, we tend to talk about them as disconnected molecules: lead, mercury, per- and polyfluoroalkyl substances, etc. Clouds of pollution are conceived through their individual components, each of which becomes separated from its surroundings through the lenses of our imaginations (\protect\hyperlink{ref-myers_rendering_2015}{Myers, 2015}). It is easy to accept this ontology as inevitable, but its origins can actually be located in the history of chemistry. The Industrial Revolution first turned chemistry into a profitable field, leading practitioners to become keenly interested in how structural representations of chemicals could be most useful for industrial and corporate technoscientific disciplines (\protect\hyperlink{ref-bensaude-vincent_history_1996}{Bensaude-Vincent \& Stengers, 1996}). Reducing chemical mixtures amidst complex environments down into discrete molecules made the quantification of their effects simpler --- certain side effects or relations could be masked or hidden in technical reports. Such reports were then used by industrial lobbyists as evidence for reducing or withholding environmental regulations (\protect\hyperlink{ref-murphy_alterlife_2017}{Murphy, 2017}).
 
 These lines of thinking have filtered out of industry and into scientific studies of environmental health, which have historically been permeated by a focus on studying single chemicals. The end goal has often been to obtain mechanistic explanations of their modes of toxicity. By isolating attention to a single chemical entity within a purely biological framework, one can simplify the problem; but, in so doing, one also captures only a narrow sliver of the complex social and physical realities of exposure (\protect\hyperlink{ref-murphy_uncertain_2004}{Murphy, 2004}). This is not to dismiss such studies or their contributions when, in fact, they are necessary for understanding the mechanisms of exposure. Rather, we hope to acknowledge that there exist additional possibilities for the study of exposures when we shift perspective away from isolated molecules and into chemical relations.
 
@@ -346,6 +346,8 @@ We start by recognizing that an object cannot exist without also taking on relat
 \item
   remedy: relationality leads into concept of alterlife, modern life is inseparable from alteration due to chemical exposure
 \end{itemize}
+Define chemical relations.
+
 Within the context of exposure studies, we link this concept to practices in social epidemiology, which posit that one's health is embodied within structural and social conditions (\protect\hyperlink{ref-krieger_theories_2001}{Krieger, 2001}, \protect\hyperlink{ref-krieger_epidemiology_2011}{2011}).
 
 It is important to explore radical modes of living that make our increasingly toxic world more habitable (\protect\hyperlink{ref-nguyen_breathless_2020}{Nguyen, 2020}; \protect\hyperlink{ref-shapiro_attuning_2015}{Shapiro, 2015}). This task does not fall purely to science --- other forms of knowledge are crucial for navigating the chemical hazards of our everyday life. The responsibility of science, though, is to become aware of how such hazards are lived and experienced, in order to better inform our understanding of exposure. We argue that the methods for exposure mixture studies examined in this thesis take us one step closer to this goal. In particular, exposure mixtures account for the realities of chemicals that co-occur with other chemicals. Moreover, testing for interactions between chemicals acknowledges that the relationality of these molecules with each other might affect their modes of action. Finally, we consider potential interactions between sociodemographic covariates and chemical exposures, a previously understudied form of interaction in exposure mixture studies. In so doing, we recognize that the effects of chemical exposure can be modulated by complex and unequal social conditions.
@@ -1637,9 +1639,9 @@ Finally, we show why the order of chemicals in the confidence intervals we use t
 \begin{multline}
 [\widehat{Y}(X1_{0.75},X2_{0.75})-\widehat{Y}(X1_{0.25},X2_{0.75})] - [\widehat{Y}(X1_{0.75},X2_{0.25})-\widehat{Y}(X1_{0.25},X2_{0.25})] \\
 = \widehat{Y}(X1_{0.75},X2_{0.75})-\widehat{Y}(X1_{0.25},X2_{0.75}) - \widehat{Y}(X1_{0.75},X2_{0.25})+\widehat{Y}(X1_{0.25},X2_{0.25}) \\
-= [\widehat{Y}(X1_{0.75},X2_{0.75})-\widehat{Y}(X1_{0.75},X2_{0.25})] - [\widehat{Y}(X1_{0.25},X2_{0.75})-\widehat{Y}(X1_{0.25},X2_{0.25})] \\
 = \widehat{Y}(X1_{0.75},X2_{0.75})- \widehat{Y}(X1_{0.75},X2_{0.25})
--\widehat{Y}(X1_{0.25},X2_{0.75}) +\widehat{Y}(X1_{0.25},X2_{0.25}).
+-\widehat{Y}(X1_{0.25},X2_{0.75}) +\widehat{Y}(X1_{0.25},X2_{0.25}) \\
+= [\widehat{Y}(X1_{0.75},X2_{0.75})-\widehat{Y}(X1_{0.75},X2_{0.25})] - [\widehat{Y}(X1_{0.25},X2_{0.75})-\widehat{Y}(X1_{0.25},X2_{0.25})].
   \label{eq:confinteq}
 \end{multline}
 \hypertarget{suppresults}{%
@@ -1937,14 +1939,14 @@ Model & Race & Lower & Higher & Lower & Higher\\
 This second appendix includes all of the R chunks of code that were hidden throughout the document.
 
 \hypertarget{code-for-chapter-refbayes}{%
-\section{Code for Chapter \ref{bayes}:}\label{code-for-chapter-refbayes}}
+\section{Code for Chapter \ref{bayes}}\label{code-for-chapter-refbayes}}
 
 The code for this section generates a toy example, used to demonstrate the kernel machine regression and spline regression techniques.
 
 \scriptsize
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\#load packages}
+\CommentTok{\# load packages}
 \FunctionTok{library}\NormalTok{(tidyverse)}
 \FunctionTok{library}\NormalTok{(stats)}
 \FunctionTok{library}\NormalTok{(splines)}
@@ -2172,12 +2174,12 @@ The code for this section generates a toy example, used to demonstrate the kerne
 \normalsize
 
 \hypertarget{code-for-chapter-refmethods}{%
-\section{Code for Chapter \ref{methods}:}\label{code-for-chapter-refmethods}}
+\section{Code for Chapter \ref{methods}}\label{code-for-chapter-refmethods}}
 
 The code for this section prepares the data from the MADRES study, generates simulated data, and fits multiple linear regressions, BKMR, and BSR on the simulated data.
 
-\hypertarget{code-for-chapter-refmadres}{%
-\subsection{Code for Chapter \ref{madres}:}\label{code-for-chapter-refmadres}}
+\hypertarget{cleaning-madres-data}{%
+\subsection{Cleaning MADRES data}\label{cleaning-madres-data}}
 
 First, we clean the data from the MADRES study. Note that this code requires two publicly available datasets, available from the HHEAR Data Repository, as outlined in Chapter \ref{madres}.
 
@@ -2307,10 +2309,10 @@ First, we clean the data from the MADRES study. Note that this code requires two
 \end{Shaded}
 \normalsize
 
-\hypertarget{code-for-chapter-refcopula}{%
-\subsection{Code for Chapter \ref{copula}:}\label{code-for-chapter-refcopula}}
+\hypertarget{simulating-predictor-data}{%
+\subsection{Simulating predictor data}\label{simulating-predictor-data}}
 
-Next, we use copulas to simulate predictor data. We use the \texttt{copula} and \texttt{rslurm} packages in this section. This code was run on FrostByte, the Amherst high-performance computing cluster (HPC) RStudio server.
+Next, we use copulas to simulate predictor data, as described in Chapter \ref{copula}. We use the \texttt{copula} and \texttt{rslurm} packages in this section. This code was run on FrostByte, the Amherst high-performance computing cluster (HPC) RStudio server.
 
 \scriptsize
 \begin{Shaded}
@@ -2825,10 +2827,10 @@ Here, we visualize the observed and simulated predictor data.
 \end{Shaded}
 \normalsize
 
-\hypertarget{code-for-chapter-refsimresp}{%
-\subsection{Code for Chapter \ref{simresp}:}\label{code-for-chapter-refsimresp}}
+\hypertarget{simulating-response-data}{%
+\subsection{Simulating response data}\label{simulating-response-data}}
 
-Next, we simulate the response data. We use the \texttt{rslurm} package in this section. This code was run on the Amherst HPC RStudio server.
+Next, we simulate the response data, as described in Chapter @ref(simresp. We use the \texttt{rslurm} package in this section. This code was run on the Amherst HPC RStudio server.
 
 \scriptsize
 \begin{Shaded}
@@ -3412,10 +3414,10 @@ Next, we simulate the response data. We use the \texttt{rslurm} package in this 
 \end{Shaded}
 \normalsize
 
-\hypertarget{code-for-chapter-refmodels}{%
-\subsection{Code for Chapter \ref{models}:}\label{code-for-chapter-refmodels}}
+\hypertarget{fitting-models}{%
+\subsection{Fitting models}\label{fitting-models}}
 
-Here, we fit the models to our simulated data. We use the \texttt{rslurm}, \texttt{bkmr}, and \texttt{NLinteraction} packages in this section. This code was run on the Amherst HPC RStudio server.
+Here, we fit the models to our simulated data, as described in Chapter \ref{models}. We use the \texttt{rslurm}, \texttt{bkmr}, and \texttt{NLinteraction} packages in this section. This code was run on the Amherst HPC RStudio server.
 
 \scriptsize
 \begin{Shaded}
@@ -4608,8 +4610,8 @@ Next, we fit stratified models with an interaction between the categorical race 
 \end{Shaded}
 \normalsize
 
-\hypertarget{code-for-chapter-refresults}{%
-\section{Code for Chapter \ref{results}:}\label{code-for-chapter-refresults}}
+\hypertarget{code-for-chapter-refresults-and-appendix-refsuppresults}{%
+\section{Code for Chapter \ref{results} and Appendix \ref{suppresults}}\label{code-for-chapter-refresults-and-appendix-refsuppresults}}
 
 This section includes code for extracting and presenting results in Chapter \ref{results} and the supplemental results, Appendix \ref{suppresults}.
 
@@ -9129,7 +9131,7 @@ This code creates a table of sensitivities for the univariate Hg term in scenari
 \normalsize
 
 \hypertarget{code-for-appendix-refsuppmethods}{%
-\section{Code for Appendix \ref{suppmethods}:}\label{code-for-appendix-refsuppmethods}}
+\section{Code for Appendix \ref{suppmethods}}\label{code-for-appendix-refsuppmethods}}
 
 Finally, we create the supplemental methods output that is included in Appendix \ref{suppmethods}.
 
