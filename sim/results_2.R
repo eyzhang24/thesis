@@ -1615,7 +1615,8 @@ cdasp <- large_cdas |>
   ggalluvial::geom_stratum(color = "gray50") +
   geom_text(stat = "stratum", aes(label = after_stat(stratum)), 
             lineheight = 0.75) +
-  scale_x_discrete(limits = c("Univariate", "Interaction"), expand = c(0.2, 0.05)) +
+  scale_x_discrete(limits = c("Univariate", "Interaction"), expand = c(0.2, 0.05), 
+                   labels = c("Detection of\nUnivariate", "Detection of\nInteraction")) +
   scale_fill_manual(values = c("deepskyblue3", "darkorange")) +
   labs(fill = "Model")
 cdasp
@@ -1697,7 +1698,8 @@ nicop <- large_nico |>
   ggalluvial::geom_stratum(color = "gray50") +
   geom_text(stat = "stratum", aes(label = after_stat(stratum)), 
             lineheight = 0.75) +
-  scale_x_discrete(limits = c("Univariate", "Interaction"), expand = c(0.2, 0.05)) +
+  scale_x_discrete(limits = c("Univariate", "Interaction"), expand = c(0.2, 0.05), 
+                   labels = c("Detection of\nUnivariate", "Detection of\nInteraction")) +
   scale_fill_manual(values = c("deepskyblue3", "darkorange")) +
   labs(fill = "Model")
 nicop

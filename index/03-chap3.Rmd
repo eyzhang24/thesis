@@ -45,7 +45,7 @@ Now, from a public health perspective, we might be interested in how exposure mi
 In many cases, we might assess a covariate related to health inequity, such as socioeconomic status. We provide a cautionary comment, here, that an interaction term should not be the *sole* measure used to measure a health disparity [@ward_how_2019]. In this case, we should first consider the independent, additive association between the covariate and levels of exposure or rates of a health outcome, in order to contextualize the meaning of a potential interaction term. 
 
 
-## Bayesian kernel machine regression (BKMR) {#bkmr}
+## Bayesian Kernel Machine Regression (BKMR) {#bkmr}
 
 In this section, we introduce the theory of BKMR. First, we define the notation that we will be using for kernel machine regression:
 
@@ -260,7 +260,7 @@ A major computational limitation of BKMR is that at each iteration of the MCMC a
 
 <!-- provides a promising extension to BKMR that resolves the issue with hierarchical variable selection, so we might consider it in our simulations  -->
 
-## Bayesian semiparametric regression (BSR) {#bsr}
+## Bayesian Semiparametric Regression (BSR) {#bsr}
 
 In this section, we introduce the theory of BSR. First, we define the notation that we will be using for spline regression (much of it designed to be consistent with our BKMR presentation):
 
