@@ -1,0 +1,52 @@
+---
+title: "misc_equations"
+author: "Elizabeth Zhang"
+date: "`r Sys.Date()`"
+output: pdf_document
+header-includes:
+  - \usepackage{amsmath}
+---
+
+```{r}
+library(tidyverse)
+library(kableExtra)
+library(knitr)
+```
+
+
+$$
+Y = x_1 + x_2
+$$
+
+$$
+Y = x_1 + x_2 + 0.5(x_1*x_2)
+$$
+
+
+
+```{r}
+equations <- data.frame(
+  type = c("Multiplicative", "Polynomial", 
+           "Smaller category", "Larger category"), 
+  small = c("0.35Hg$*$Ni", "0.13Hg$*($Ni$-1)^2$", 
+            "0.5Hg$*\\text{race}_{\\text{black}}$", 
+            "0.5Hg$*\\text{race}_{\\text{hisp.non}}$"), 
+  large = c("0.7Hg$*$Ni", "0.26Hg$*($Ni$-1)^2$",  
+            "Hg$*\\text{race}_{\\text{black}}$", 
+            "Hg$*\\text{race}_{\\text{hisp.non}}$")
+)
+labels <- c(
+  "Chemical by chemical" = 2, 
+  "Chemical by race" = 2
+)
+
+equations |> 
+  kbl(booktabs = TRUE, escape = FALSE, 
+      col.names = c("", "Lower", "Higher"), 
+      align = "lcc",
+      caption = "Specification of interaction terms in simulations.") |> 
+  column_spec(1, width = "10em") |> 
+  add_header_above(header = c(" " = 1, "Effect size" = 2)) |>
+  pack_rows(index = labels) 
+```
+

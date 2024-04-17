@@ -183,7 +183,7 @@ fig98 <- create_plot(x1, x2, y98, "x1", "x2")  |>
   layout(scene = list(camera = list(eye = list(x = -1, y = 2, z = .1))))
 fig98
 save_image(fig98, "misc_code/p98.png", 
-           width = 720, height = 480, scale = 3)
+           width = 600, height = 480, scale = 3)
 
 # multiplicative interaction, smaller effect size
 y99 <- with(data, x1 + x2 + 0.5*x1*x2) 
@@ -191,6 +191,6 @@ fig99 <- create_plot(x1, x2, y99, "x1", "x2") |>
   layout(scene = list(camera = list(eye = list(x = -1, y = 2, z = 0.1))))
 fig99
 save_image(fig99, "misc_code/p99.png", 
-           width = 720, height = 480, scale = 3)
+           width = 600, height = 480, scale = 3)
 
 
