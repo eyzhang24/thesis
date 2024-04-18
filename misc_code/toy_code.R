@@ -55,7 +55,8 @@ p2 <- ggplot(normcurv, aes(x, Weight, color = Weight)) +
   geom_line() +
   scale_y_continuous(breaks = c(0, 0.2, 0.4)) +
   scale_color_gradient(low = "lightblue", high = "black") +
-  theme(legend.position = "none") 
+  theme(legend.position = "none", 
+        plot.margin = unit(c(5.5, 5.5, 5.5, 10), "points")) 
 
 # stitch plots together
 q2 <- cowplot::plot_grid(p1, p2, ncol = 1, rel_heights = c(0.7, 0.3))
@@ -96,13 +97,20 @@ dfrho <- df |>
   left_join(as.data.frame(kmr_toy_1), by = "x") |> 
   rename("rho = 0.02" = y) |> 
   select(-Yhat) |> 
-  pivot_longer(cols = c("rho = 50", "rho = 0.02"), values_to = "Yhat")
+  pivot_longer(cols = c("rho = 50", "rho = 0.02"), values_to = "Yhat") 
+
+# labeller for rho in facet
+rho_labeller <- function(name) {
+  return(ifelse(grepl("50", name), 
+                latex2exp::TeX("$\\rho=50$"), 
+                latex2exp::TeX("$\\rho=0.02$")))
+}
 
 # plot kernel regression with two values of rho
 qrho <- ggplot(dfrho) +
   geom_point(aes(x, Y)) +
   geom_line(aes(x, Yhat), color = "deepskyblue3") +
-  facet_wrap(~name)
+  facet_wrap(~name, labeller = as_labeller(rho_labeller, default = label_parsed))
 qrho
 
 # save plot

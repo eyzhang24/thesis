@@ -126,11 +126,18 @@ dfrho <- df |>
   select(-Yhat) |> 
   pivot_longer(cols = c("rho = 50", "rho = 0.02"), values_to = "Yhat")
 
+# labeller for rho in facet
+rho_labeller <- function(name) {
+  return(ifelse(grepl("50", name), 
+                latex2exp::TeX("$\\rho=50$"), 
+                latex2exp::TeX("$\\rho=0.02$")))
+}
+
 # plot kernel regression with two values of rho
 qrho <- ggplot(dfrho) +
   geom_point(aes(x, Y)) +
   geom_line(aes(x, Yhat), color = "deepskyblue3") +
-  facet_wrap(~name)
+  facet_wrap(~name, labeller = as_labeller(rho_labeller, default = label_parsed))
 qrho
 
 # save plot
@@ -815,7 +822,7 @@ ggsave("index/figures/ch4_corr_sim+orig.png", width = 10, height = 5)
 
 ### Simulating response data
 
-Next, we simulate the response data, as described in Chapter \@ref(simresp. We use the `rslurm` package in this section. This code was run on the Amherst HPC RStudio server. 
+Next, we simulate the response data, as described in Chapter \@ref(simresp). We use the `rslurm` package in this section. This code was run on the Amherst HPC RStudio server. 
 
 ```{r}
 # load packages
@@ -5590,7 +5597,7 @@ bkmr_sens <- bkmr_comb |>
 write_csv(bkmr_sens, "index/data/bkmr_int_sens.csv")
 ```
 
-This code formats results from BSR models in scenarios with interactions between chemcials. 
+This code formats results from BSR models in scenarios with interactions between chemicals. 
 
 ```{r}
 # smaller size bsr --------------------------------------------------------
