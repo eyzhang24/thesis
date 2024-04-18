@@ -2,6 +2,8 @@ library(bkmr)
 library(NLinteraction)
 
 # bkmr fits
+# note that these are too large to push to git
+# so we need to go to the hpc to retrieve them
 bkmr_sm_am2_203 <- readRDS("testing/bkmr_sm_am2_203.RDS")
 bkmr_lg_am2_284 <- readRDS("testing/bkmr_lg_am2_284.RDS")
 
