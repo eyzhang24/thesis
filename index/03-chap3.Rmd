@@ -160,7 +160,7 @@ Consider the following case where we want to model the relationship between a si
 
 Figure \@ref(fig:toy1) illustrates the shape of our simulated non-linear data and the fit proposed by a simple linear regression. We can observe that the linear regression fails to capture the true non-linear relationship. In this case, this would lead to an underestimation of the true association between $x$ and $Y$. Now, we will try to capture this relationship using kernel machine regression.
 
-```{r toy2, fig.cap="A query point of 12.5 and the weights of neighboring observations based on a Gaussian kernel", out.width = '75%', echo = FALSE}
+```{r toy2, fig.cap="A query point of 12.5 and the weights of neighboring observations based on a Gaussian kernel.", out.width = '75%', echo = FALSE}
 include_graphics(path = "figures/ch3_toy2.png")
 ```
 

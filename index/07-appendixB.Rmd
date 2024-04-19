@@ -6716,7 +6716,7 @@ write_csv(bsrre_pipscomb, "index/data/bsr_re_pips.csv")
 
 This code creates a table of sensitivities for interactions between race and Hg. 
 
-```{r}
+```{r, linewidth = 100}
 # table
 bkmr_re_sens <- read_csv("data/bkmr_re_sens.csv") |> 
   rename(sensitivity = sens)
@@ -6753,7 +6753,9 @@ re_ints |> kbl(booktabs = TRUE, escape = FALSE,
                    bold = TRUE) |>
   collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace") |> 
   # column_spec(7, width = "6em") |>
-  add_footnote(c("\"Collapsed\" refers to scenarios where the smallest three race categories are collapsed into one stratified model.", "Non-Hispanic black", "Hispanic born outside US"), notation = "symbol", threeparttable = TRUE)
+  add_footnote(c(paste0("\"Collapsed\" refers to scenarios where the smallest three race categories", 
+                        "are collapsed into one stratified model."), 
+                 "Non-Hispanic black", "Hispanic born outside US"), notation = "symbol", threeparttable = TRUE)
 ```
 
 This code plots the estimated exposure-response relationship in scenarios with an interaction between race and Hg.
@@ -6914,7 +6916,7 @@ ggsave("index/figures/ch4_re_expresp.png", width = 7.75, height = 6)
 
 This code creates a table of sensitivities for the univariate Hg term in scenarios where it interacts with race. 
 
-```{r}
+```{r , linewidth = 100}
 # read in data
 naive_re_sens <- read_csv("data/naive_re_sens.csv") |> 
   filter(var == "Hg") |> 
@@ -6959,7 +6961,9 @@ univ_re_wide |>
   select(-size) |> 
   kbl(booktabs = TRUE, escape = FALSE, 
       align = "llcccc", 
-      caption = "Sensitivity for the univariate Hg term in all scenarios with an interaction between the categorical race covariate and Hg. Sensitivities for BKMR and BSR models are stratified by race.", 
+      caption = paste0("Sensitivity for the univariate Hg term in all scenarios with an interaction", "
+                       between the categorical race covariate and Hg. Sensitivities for BKMR and BSR", "
+                       models are stratified by race."), 
       col.names = c("Model", "Race", rep(c("Lower", "Higher"), 2))
       ) |> 
   add_header_above(header = c(" " = 2, "Small race cat." = 2, "Large race cat." = 2), bold = TRUE) |>

@@ -2,6 +2,7 @@
 title: "misc_equations"
 author: "Elizabeth Zhang"
 date: "`r Sys.Date()`"
+geometry: margin=1.5in
 output: pdf_document
 header-includes:
   - \usepackage{amsmath}
@@ -13,6 +14,24 @@ library(kableExtra)
 library(knitr)
 ```
 
+Kernel machine regression defines the regression relationship using a flexible function $h: \mathbb{R}^M \rightarrow \mathbb{R}$, where
+
+$$
+Y_i = h(\textbf{x}_i) + \textbf{z}_i^\top \boldsymbol{\beta}_{\textbf{z}} + \varepsilon_i,
+$$
+
+\noindent Here, $Y_i$ is the outcome at a given point, $\textbf{x}_i=[x_1,\dots,x_M]^\top$ is a vector of $M$ chemicals,  $\textbf{z}_i$ and $\boldsymbol{\beta}_{\textbf{z}}$ are vectors of covariates and their weights, respectively, and $\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$. 
+
+\newpage
+
+$h(\cdot)$ is obtained using the kernel $k: \mathbb{R}^M\times \mathbb{R}^M \rightarrow \mathbb{R}$, defined as 
+
+$$
+k(\textbf{x}, \textbf{x}') = \textrm{exp}\bigg\{
+-\frac{||\textbf{x}-\textbf{x}'||^2}{\rho} \bigg\},
+$$
+
+\noindent where $x$ are the predictor values of a second subject, and $\rho$ is a tuning parameter. 
 
 $$
 Y = x_1 + x_2
@@ -22,7 +41,9 @@ $$
 Y = x_1 + x_2 + 0.5(x_1*x_2)
 $$
 
-
+$$
+\widehat Y = \widehat{\beta}_0 + \widehat{\beta}_1x_1 + \widehat{\beta}_2x_2 + \widehat{\beta}_{12}x_1x_2
+$$
 
 ```{r}
 equations <- data.frame(

@@ -192,5 +192,40 @@ fig99 <- create_plot(x1, x2, y99, "x1", "x2") |>
 fig99
 save_image(fig99, "misc_code/p99.png", 
            width = 600, height = 480, scale = 3)
+# multiplicative interaction, larger effect size
+ybm2 <- with(data, 0.7*x1*x2) 
+figbm2 <- plot_ly(x = ~x1, y = ~x2, z = ~ybm2, intensity = ~ybm2) |> 
+  add_trace(type = "mesh3d") |> 
+  layout(scene = list(
+    xaxis = list(rangemode = "normal",
+                 showgrid = FALSE,
+                 showline = TRUE, 
+                 mirror = TRUE, 
+                 showticklabels = FALSE,
+                 # visible = FALSE,
+                 # ticks = "outside", 
+                 title = ""), 
+    yaxis = list(rangemode = "normal", 
+                 showgrid = FALSE,
+                 showline = TRUE, 
+                 mirror = TRUE, 
+                 showticklabels = FALSE,
+                 # visible = FALSE,
+                 # ticks = "outside", 
+                 title = ""), 
+    zaxis = list(rangemode = "normal", 
+                 showgrid = FALSE,
+                 showline = TRUE, 
+                 mirror = TRUE, 
+                 showticklabels = FALSE,
+                 # visible = FALSE,
+                 # ticks = "outside", 
+                 title = ""), 
+    aspectmode = "cube"
+  )) |> 
+  hide_colorbar()
+figbm2
+save_image(figbm2, "misc_code/bm2.png", 
+           width = 720, height = 480, scale = 3)
 
 
