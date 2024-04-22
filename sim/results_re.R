@@ -369,7 +369,7 @@ k34 <- kre34 |>
   labs(x = "Hg", y = "Estimate", subtitle = "BKMR, interaction in Hispanic born outside US")
 
 
-##### BSR ######
+#### BSR #####
 
 # small
 ssmre_expresp <- read_csv("sim/re/ssmre_expresp.csv")

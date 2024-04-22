@@ -13,6 +13,9 @@ library(tidyverse)
 library(kableExtra)
 library(knitr)
 ```
+\newpage
+
+# kmr
 
 Kernel machine regression defines the regression relationship using a flexible function $h: \mathbb{R}^M \rightarrow \mathbb{R}$, where
 
@@ -22,16 +25,106 @@ $$
 
 \noindent Here, $Y_i$ is the outcome at a given point, $\textbf{x}_i=[x_1,\dots,x_M]^\top$ is a vector of $M$ chemicals,  $\textbf{z}_i$ and $\boldsymbol{\beta}_{\textbf{z}}$ are vectors of covariates and their weights, respectively, and $\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$. 
 
-\newpage
-
-$h(\cdot)$ is obtained using the kernel $k: \mathbb{R}^M\times \mathbb{R}^M \rightarrow \mathbb{R}$, defined as 
+$h(\cdot)$ is obtained using the Gaussian kernel $k: \mathbb{R}^M\times \mathbb{R}^M \rightarrow \mathbb{R}$, defined as 
 
 $$
 k(\textbf{x}, \textbf{x}') = \textrm{exp}\bigg\{
--\frac{||\textbf{x}-\textbf{x}'||^2}{\rho} \bigg\},
+-\frac{\sum_{m=1}^M(x_m-x_m')^2}{\rho} \bigg\},
 $$
 
 \noindent where $x$ are the predictor values of a second subject, and $\rho$ is a tuning parameter. 
+
+\newpage
+
+# bkmr priors
+
+We define a weight, $r_m$, on each exposure by augmenting the kernel function as
+
+$$
+k(\textbf{x}, \textbf{x}'|\textbf{r}) = \text{exp}\bigg\{ -\sum_{m=1}^Mr_m(x_m-x_m')^2 \bigg\},
+$$
+
+where $r_m=1/{\rho_m}$ is the inverse of the tuning parameter $\rho_m$ for each $\textbf{x}_m$.
+
+To allow $r_m$ to equal 0 with non-zero probability, we first define an indicator variable determining whether or not a predictor is included in the model, which is denoted and distributed as
+
+$$
+\delta_m \sim \text{Bernoulli}(\pi),
+$$
+
+\noindent where $\pi$ is the prior probability of inclusion. Now, we can assume a "slab-and-spike" prior on $r_m$, distributed as
+
+$$
+r_m|\delta_m \sim \delta_mf(r_m) + (1-\delta_m)P_0, 
+$$
+
+\noindent where $f(\cdot)$ is some pdf with support $\mathbb{R}^+$, and $P_0$ denotes the density with point mass at 0.
+
+We define the following prior on $r_m$:
+
+\begin{gather*}
+\delta_m \sim \text{Bernoulli}(\pi),\text{ and}\\
+r_m|\delta_m \sim \delta_mf(r_m) + (1-\delta_m)P_0, 
+\end{gather*}
+
+where $\pi$ is the prior probability of inclusion, $f(\cdot)$ is some pdf with support $\mathbb{R}^+$, and $P_0$ denotes the density with point mass at 0.
+
+The posterior means of $\delta_m$ represent posterior inclusion probabilities (PIPs) of $\textbf{x}_m$, which can be used as measures of the relative importance of each exposure.
+
+Posterior means of $\delta_m$ $\Rightarrow$ posterior inclusion probabilities (PIPs) of $\textbf{x}_m$.
+
+\newpage
+
+# spline
+
+BSR uses spline regression to define the regression relationship as
+
+$$
+Y_i = f(\textbf{x}_i) + \textbf{z}_i^\top \boldsymbol{\beta}_{\textbf{z}} +\varepsilon_i,
+$$
+
+\noindent where $f$ is defined by a set of basis functions on the exposures, $\textbf{x}_i$, $\textbf{z}_i$ and $\boldsymbol{\beta}_{\textbf{z}}$ are the covariates and their associated weights, and $\varepsilon_i$ is a random variable where $\boldsymbol\varepsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$.
+
+BSR uses a natural spline regression. A general definition of the $K$ basis functions for a natural spline with interior knots $\xi_j$, $j=1,\dots,K$ over $K+1$ disjoint intervals is given by:
+
+\begin{gather*}
+b_1(X)=1, \hspace{0.25in} b_2(X)=X, \hspace{0.25in} b_{k+2}(X)=d_k(X)-d_{K-1}(X), \\
+d_k(X)=\frac{(X-\xi_k)^3_+ - (X-\xi_K)^3_+}{\xi_K-\xi_k}.
+\end{gather*}
+
+\noindent Here, the regression model is defined as $f(X) = \sum_{j=1}^K\beta_jb_j(X)$.
+
+\newpage
+
+# bsr priors
+
+BSR assumes the following general model formulation: 
+
+\begin{gather*}
+f(\textbf{x}_i)= \sum_{h=1}^Hf^{(h)}(\textbf{x}_i), \\
+f^{(h)}(\textbf{x}_i)= \sum_{m_1=1}^M\widetilde{x}_{im_1}\boldsymbol\beta_{m_1}^{(h)} + 
+\sum_{m_1=2}^M\sum_{m_2<m_1}\widetilde{x}_{im_1m_2}\boldsymbol\beta_{m_1m_2}^{(h)} + \dots,
+\end{gather*}
+
+\noindent where $\widetilde{X}_m=[b_{m1}(X_m),\dots,b_{md}(X_m)]$ represents a $d$-dimensional basis function expansion for the $m$th term, and $f^{(h)}(\textbf{x}_i)$ includes a summation of all $M$-way interactions. 
+
+We define the following prior on $\boldsymbol\beta_S^{(h)}$:
+
+\begin{align*}
+P(\zeta_{mh}=1) &= \tau_h^{\zeta_{mh}}(1-\tau_h)^{1-\zeta_{mh}} 
+I(A_h\not\subset A_{h'}\forall h'\neq h \textrm{ or } A_h=\{\}),\\
+&\textrm{where } A_h=\{m:\zeta_h=1\},\textrm{ and} 
+\end{align*}
+
+\begin{align*}
+P(\boldsymbol\beta_S^{(h)}|\boldsymbol\zeta) &= \bigg(1-\prod_{m\in S}\zeta_{mh}\bigg)P_{\textbf{0}} +
+\bigg(\prod_{m\in S}\zeta_{mh}\bigg) \psi_1(\boldsymbol\beta_S^{(h)}), \\
+&\textrm{where } S \textrm{ is some subset of } {1, 2, \dots, m},
+\end{align*}
+
+\noindent where $\zeta_{mh}$ have prior probability of inclusion $\tau_h$, $I()$ is an indicator to help with identifiability issues, $P_{\textbf{0}}$ denotes the density with point mass at $\textbf0$, and $\psi_1()$ is a multivariate normal distribution with mean $\textbf0$ and covariance $\boldsymbol\Sigma_{\boldsymbol\beta}$, a diagonal matrix with $\sigma^2\sigma_{\boldsymbol\beta}^2$ on the diagonals. 
+
+# equations for interactions
 
 $$
 Y = x_1 + x_2
@@ -42,13 +135,19 @@ Y = x_1 + x_2 + 0.5(x_1*x_2)
 $$
 
 $$
+Y = x_1 + x_2 + 0.2(x_1*(x_2-1)^2)
+$$
+
+$$
 \widehat Y = \widehat{\beta}_0 + \widehat{\beta}_1x_1 + \widehat{\beta}_2x_2 + \widehat{\beta}_{12}x_1x_2
 $$
+
+# specification of interaction terms
 
 ```{r}
 equations <- data.frame(
   type = c("Multiplicative", "Polynomial", 
-           "Smaller category", "Larger category"), 
+           "Smaller (n=27/252)", "Larger (n=109/252)"), 
   small = c("0.35Hg$*$Ni", "0.13Hg$*($Ni$-1)^2$", 
             "0.5Hg$*\\text{race}_{\\text{black}}$", 
             "0.5Hg$*\\text{race}_{\\text{hisp.non}}$"), 
@@ -70,4 +169,98 @@ equations |>
   add_header_above(header = c(" " = 1, "Effect size" = 2)) |>
   pack_rows(index = labels) 
 ```
+
+# race by ethnicity sensitivity
+
+```{r}
+# table
+bkmr_re_sens <- read_csv("/Users/elizabethzhang/thesis/thesis/index/data/bkmr_re_sens.csv") |> 
+  rename(sensitivity = sens)
+oracle_re_int <- read_csv("/Users/elizabethzhang/thesis/thesis/index/data/oracle_re_sens.csv") |> 
+  filter(variable == "Int") |> 
+  group_by(size, case) |> 
+  summarize(sensitivity = sum(p<0.05)/n()) |> 
+  mutate(size = ifelse(size == "Small", "Small uncollapsed", size))
+
+re_ints <- bind_rows(
+  mutate(bkmr_re_sens, mod = "BKMR"), 
+  mutate(oracle_re_int, mod = "Oracle MLR")
+) |> 
+  arrange(desc(size), desc(mod)) |> 
+  pivot_wider(names_from = c(mod, size), values_from = sensitivity) |> 
+  mutate(effect_size = ifelse(case %in% c(1, 3), "Lower", "Higher"), 
+         case = ifelse(case %in% c(1, 2), 
+                       paste0("Original n=27", footnote_marker_symbol(1)), 
+                       paste0("Original n=109", footnote_marker_symbol(2)))
+         ) |> 
+  relocate(case, effect_size) |> 
+  select(-5)
+
+re_ints |> 
+  kbl(booktabs = TRUE, escape = FALSE, 
+      align = "llcccc", 
+      caption = "Sensitivity to interactions between the categorical race variable and Hg.", 
+      col.names = c("Interaction in", "Effect size", 
+                    "Oracle", "BKMR", 
+                    "Oracle", "BKMR")
+      ) |> 
+  add_header_above(header = c(" " = 2, "Small (n=252)" = 2, "Large (n=1000)" = 2), 
+                   bold = TRUE) |>
+  collapse_rows(columns = 1, valign = "middle", latex_hline = "linespace") |> 
+  # column_spec(7, width = "6em") |>
+  add_footnote(c("Non-Hispanic black", "Hispanic born outside US"), notation = "symbol", threeparttable = TRUE)
+```
+
+
+
+# emissions factors for ng by cogen in 2023
+
+```{r}
+# read in data 
+df <- read_csv("cleaned_02-24.csv")
+
+# get natural gas monthly amounts
+ng <- df |> 
+  select(month, year, cogen = 4, boilers = 5) |> 
+  filter(year != 2024) |> 
+  rowwise() |> 
+  mutate(total_cf = (cogen + boilers)*100, 
+         date = as.Date(paste(year, str_pad(month, 2, pad = "0"), "01", sep = "-")))
+
+
+comps <- readxl::read_xlsx("naturalgas_emissions.xlsx", sheet = 1)
+metals <- readxl::read_xlsx("naturalgas_emissions.xlsx", sheet = 2)
+
+all_poll <- bind_rows(
+  mutate(comps, type = "Compounds"), 
+  mutate(metals[,2:4], type = "Metals")
+)
+
+ng2023 <- ng |> 
+  group_by(year) |> 
+  summarize(total_cf = sum(total_cf)) |> 
+  filter(year == 2023) |> 
+  select(-year) |> 
+  as.numeric()
+
+all_poll2023 <- all_poll |> 
+  janitor::clean_names() |> 
+  mutate(emission_factor_lb_106_scf = 
+           as.numeric(str_replace_all(emission_factor_lb_106_scf, 
+                                      "[,<]", "")), 
+         emissions_lb = emission_factor_lb_106_scf * ng2023 / 106)
+
+metals2023 <- all_poll2023 |> 
+  filter(type == "Metals")
+
+metals2023 |> 
+  select(1, 2, 5, 3) |> 
+  mutate(emissions_lb = format(round(emissions_lb, 2), big.mark = ",")) |> 
+  kbl(booktabs = TRUE, align = "lccc", escape = FALSE,
+      col.names = c("Metal", 
+                    linebreak("Factor\n(lb/106scf)", align = "c"), 
+                    linebreak("Emissions\n(lb)", align = "c"), "Grade"))
+
+```
+
 

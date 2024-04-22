@@ -128,6 +128,14 @@ spline_toy_line <- lm(Y ~ bs(x, knots = kn, degree = 1), data = df)
 p_line <- predict(spline_toy_line, se = T)
 df$Yhats_line <- p_line$fit
 
+# plot for presentation
+ggplot(df) + 
+  geom_point(aes(x, Y)) +
+  geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), 
+                linetype = "dashed", color = "darkorange") +
+  geom_vline(xintercept = kn, linetype = "dotted")
+ggsave("misc_code/knots.png", width = 5, height = 3)
+
 q4 <- ggplot(df) +
   geom_point(aes(x, Y)) +
   geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), 

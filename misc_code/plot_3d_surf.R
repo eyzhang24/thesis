@@ -192,6 +192,15 @@ fig99 <- create_plot(x1, x2, y99, "x1", "x2") |>
 fig99
 save_image(fig99, "misc_code/p99.png", 
            width = 600, height = 480, scale = 3)
+
+# polynom interaction, smaller effect size
+y97 <- with(data, x1 + x2 + 0.2*x1*((x2-1)^2)) 
+fig97 <- create_plot(x1, x2, y97, "x1", "x2") |> 
+  layout(scene = list(camera = list(eye = list(x = -1, y = 2, z = 0.1))))
+fig97
+save_image(fig97, "misc_code/p97.png", 
+           width = 600, height = 480, scale = 3)
+
 # multiplicative interaction, larger effect size
 ybm2 <- with(data, 0.7*x1*x2) 
 figbm2 <- plot_ly(x = ~x1, y = ~x2, z = ~ybm2, intensity = ~ybm2) |> 
@@ -227,5 +236,6 @@ figbm2 <- plot_ly(x = ~x1, y = ~x2, z = ~ybm2, intensity = ~ybm2) |>
 figbm2
 save_image(figbm2, "misc_code/bm2.png", 
            width = 720, height = 480, scale = 3)
+
 
 
