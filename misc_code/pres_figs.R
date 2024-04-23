@@ -303,3 +303,48 @@ cat(chemlist, sep = ", ")
 cat(pairlist, sep = ", ")
 cat(triolist, sep = ", ")
 sink()
+
+
+# toy code ----------------------------------------------------------------
+
+# generate data from distribution
+set.seed(0) # reproducibility
+x <- seq(0, 25, length.out = 51)
+Y <- exp(x/10) + 2*sin(x/2) + rnorm(51, mean = 0, sd = 0.5)
+df <- data.frame(x, Y)
+
+for(mean.val in seq(0, 25, by = 1.25)) {
+  # get normal distribution of weights around query points
+  df$Weight <- dnorm(df$x, mean = mean.val, sd = 1)
+  
+  # plot points colored by their weights
+  p1 <- ggplot(df, aes(x, Y)) +
+    geom_point(aes(color = Weight)) +
+    geom_function(fun = function(x) exp(x/10) + 2*sin(x/2), 
+                  linetype = "dashed", color = "darkorange") + 
+    geom_vline(xintercept = mean.val, linetype = "dotted") +
+    theme(legend.position = "none") +
+    scale_color_gradient(low = "lightblue", high = "black")
+  
+  # plot a curve of weights
+  normcurv <- data.frame(x = seq(0, 25, length.out = 251)) 
+  normcurv$Weight <- dnorm(normcurv$x, mean = mean.val, sd = 1)
+  p2 <- ggplot(normcurv, aes(x, Weight, color = Weight)) +
+    geom_line() +
+    scale_y_continuous(breaks = c(0, 0.2, 0.4)) +
+    scale_color_gradient(low = "lightblue", high = "black") +
+    theme(legend.position = "none", 
+          plot.margin = unit(c(5.5, 5.5, 5.5, 10), "points")) 
+  
+  # stitch plots together
+  q2 <- cowplot::plot_grid(p1, p2, ncol = 1, rel_heights = c(0.7, 0.3))
+  
+  ggsave(paste0("misc_code/kernel/plot", 
+                str_pad(sprintf("%.2f", mean.val), 5, pad = "0"), ".png"), 
+         plot = q2, width = 5, height = 4)
+}
+
+
+
+# save plot
+
