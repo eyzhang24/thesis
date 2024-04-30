@@ -18,25 +18,25 @@ We are interested in using Bayesian regression techniques to characterize the na
 
 First, we define additivity and non-additivity in the traditional statistical paradigm [@siemiatycki_biological_1981]. Suppose we have two variables $x_1$ and $x_2$, and we want to consider their effect on some outcome of interest. If specifying [effect due to $x_1$ and $x_2$] = [effect due to $x_1$] + [effect due to $x_2$] can adequately capture this relationship, then we say that $x_1$ and $x_2$ each have an **additive effect** on the outcome and that there is no interaction between them. On the other hand, if there is variability in the outcome that can be captured by an additional term equal to some function of $x_1$ and $x_2$, we say that there is a **non-additive interaction** between $x_1$ and $x_2$. In this case, [effect due to $x_1$ and $x_2$] = [effect due to $x_1$] + [effect due to $x_2$] + [effect due to $f(x_1, x_2)$], where $f$ is a non-zero function.
 
-For our sake, when we refer to "interaction," we mean any non-additive interaction. We consider such non-additive interactions to be complex, meaning that they are difficult to detect. To see why, let us consider running a linear regression for $Y$ on $x_1$ and $x_2$. The theoretical model would be defined as
+For our sake, when we refer to "interaction," we mean any non-additive interaction. We consider such non-additive interactions to be complex, meaning that they are difficult to detect. To see why, let us consider defining a linear regression for $Y$ on $x_1$ and $x_2$ with the following theoretical model:
 
 $$
 Y = \beta_0+\beta_1x_1+\beta_2x_2 + \beta_{12}f(x_1, x_2) + \varepsilon,
 $$
 
-\noindent where the $\beta$'s represent the effect sizes, and $\varepsilon$ has a normal distribution with mean 0 and variance equal to the residual variance. We can see that the form of the interaction must be explicitly specified in the formulation of the model. Most commonly, a multiplicative interaction is assessed, where $f(x_1, x_2) = x_1*x_2$. However, a non-additive interaction can take on many different forms, the true nature of which is difficult to determine analytically. 
+\noindent where the $\beta$'s represent the effect sizes, and $\varepsilon$ is the error term. We can see that the form of the interaction must be explicitly specified in the formulation of the model. Most commonly, a product term is used, where $f(x_1, x_2) = x_1*x_2$. However, a non-additive interaction can take on many different forms, the true nature of which is difficult to determine analytically. 
 
 We used a two-predictor case above, but interactions can also exist between more variables (i.e., two-way by $f(x_1, x_2)$, three-way by $f(x_1, x_2, x_3)$, etc.). So, if we wanted to assess all possible interactions, the number to consider quickly becomes intractable in high-dimensional settings. For instance, consider modelling 10 predictors in the above linear regression setting. In order to be assessed, each interaction must be explicitly specified as a new term in the model. Even if we only considered one form for each interaction, including all possible two-way interactions would involve adding $\binom{10}{2} = 45$ additional terms to the model, and all possible three-way interactions would add $\binom{10}{3} = 120$ additional terms.
 
-It is important also to acknowledge, here, that there is a limit to how many variables can be included in an interaction before it becomes incomprehensible to most humans. For instance, @halford_how_2005 suggest that there is a steep decline in interpretability from three- to four-way interactions, and that five-way interactions are only interpreted correctly at chance level. Hence, for practical purposes, we will limit our exploration to two- and three-way interactions. 
+It is important also to acknowledge, here, that there is a limit to how many variables can be included in an interaction before it becomes incomprehensible to most humans. For instance, @halford_how_2005 suggest that there is a steep decline in interpretability from three- to four-way interactions, and that the interpretation of five-way interactions is consistent with guessing at random. Hence, for practical purposes, we will limit our exploration to two- and three-way interactions. 
 
 ### Mechanistic and public health relevance
 
 Thus far, we have discussed interactions within a statistical paradigm. However, in addition to being an interesting estimation challenge, non-additive interactions are also relevant in exposure mixture studies from both a mechanistic and public health point of view. 
 
-From a mechanistic perspective, a non-additive statistical interaction between two chemical exposures suggests that these compounds may be functionally interacting with each other. Theoretical models propose that such interactions can be classified as either synergistic or antagonistic [@heys_risk_2016; @plackett_quantal_1952]. In a synergistic interaction, the joint effects of a mixture exceed the independent effects of each component. This usually occurs if a chemical induces an enzyme involved with the activation of a second chemical or if a chemical inhibits an enzyme that would have otherwise degraded a second chemical. For example, it has been shown that organophosphates slow the degradation of pyrethoids by inhibiting detoxifying enzymes — these two classes of chemicals are often found together in commercial insecticide mixtures [@hernandez_toxic_2013].
+From a mechanistic perspective, a non-additive statistical interaction between two chemical exposures can suggest that these compounds may be functionally interacting with each other. Theoretical models propose that such interactions can be classified as either synergistic or antagonistic [@heys_risk_2016; @plackett_quantal_1952]. In a synergistic interaction, the joint effects of a mixture exceed the independent effects of each component. This can occur if a chemical induces an enzyme involved with the activation of a second chemical or if a chemical inhibits an enzyme that would have otherwise degraded a second chemical. For example, it has been shown that organophosphates slow the degradation of pyrethoids by inhibiting detoxifying enzymes — these two classes of chemicals are often found together in commercial insecticide mixtures [@hernandez_toxic_2013].
 
-On the other hand, in an antagonistic interaction, the joint effects of a mixture are less than their independent effects. This can occur either through competition at the target site of an enzyme or through direct chemical reactions with each other. In general, synergistic interactions are more concerning in risk assessments, as they lead to underestimation of the true toxicity of a mixture. 
+On the other hand, in an antagonistic interaction, the joint effects of a mixture are less than their independent effects. This can occur either through competition at the target site of an enzyme or through direct chemical reactions with each other. In general, synergistic interactions are more concerning in risk assessments, as they lead to underestimation of the true toxicity of a mixture for certain groups in the study population. 
 
 It should be noted, though, that while statistical interactions may provide some insight into how exposure mixtures are related to health, they cannot confirm their underlying biology [@vanderweele_tutorial_2014]. If the goal is to assess a meaningful biological interaction, then the discovery of a statistical interaction should be followed up by a functional study. 
 
@@ -47,7 +47,7 @@ In many cases, we might assess a covariate related to health inequity, such as s
 
 ## Bayesian Kernel Machine Regression (BKMR) {#bkmr}
 
-In this section, we introduce the theory of BKMR. First, we define the notation that we will be using for kernel machine regression:
+In this section, we introduce the theory of BKMR, a flexible regression approach to modeling associations between a set of multiple exposures and some outcome. First, we define the notation that we will be using for kernel machine regression:
 
 <!-- -   observations are from $i = 1, \dots ,n$ -->
 
@@ -61,7 +61,7 @@ In this section, we introduce the theory of BKMR. First, we define the notation 
 -   $\textbf{K}$ is the $n \times n$ kernel matrix, with $(i, j)$th element $k(\textbf{x}_i, \textbf{x}_j)$
 -   $\rho$ is the parameter which controls smoothness, associated with the kernel function
 -   $\tau$ is the parameter multiplied by the kernel matrix to relate $\textbf{K}$ to $h$
--   $\boldsymbol{\beta}_{\textbf{z}}$ is a vector of the weights on the covariates, and
+-   $\boldsymbol{\beta}_{\textbf{z}}$ is a vector of the coefficients on the covariates, and
 -   $\boldsymbol\varepsilon_i \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$ are the residuals of the response.
 
 And, we define the notation that we will be using specific to BKMR: 
@@ -83,7 +83,7 @@ $$
 Y_i = \textbf{x}_i^\top \boldsymbol{\beta}_{\textbf{x}} + \textbf{z}_i^\top \boldsymbol{\beta}_{\textbf{z}} + \varepsilon_i,
 $$
 
-\noindent where $Y_i$ measures a health outcome at a given point, $\textbf{x}_i = [x_{i1},\dots,x_{iM}]$ is a vector of M exposures, $\textbf{z}_i$ is a vector of covariates, $\boldsymbol{\beta}_{\textbf{x}}$ and $\boldsymbol{\beta}_{\textbf{z}}$ are vectors of weights for the exposures and covariates, respectively, and $\varepsilon_i$ is a random variable where $\boldsymbol\varepsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$. We can see that this function assumes that there is a linear relationship between the exposure and the response, and that the combined effects of multiple exposures are additive.
+\noindent where $Y_i$ measures a health outcome at a given point, $\textbf{x}_i = [x_{i1},\dots,x_{iM}]$ is a vector of M exposures, $\textbf{z}_i$ is a vector of covariates, $\boldsymbol{\beta}_{\textbf{x}}$ and $\boldsymbol{\beta}_{\textbf{z}}$ are vectors of coefficients for the exposures and covariates, respectively, and $\varepsilon_i$ is a random variable where $\boldsymbol\varepsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$. We can see that this function assumes that there is a linear relationship between the exposure and the response, and that the combined effects of multiple exposures are additive.
 
 Kernel machine regression defines this relationship using a flexible function $h: \mathbb{R}^M \rightarrow \mathbb{R}$, where
 
@@ -102,7 +102,7 @@ $$
 
 \noindent where $||\textbf{x}-\textbf{x}'||^2 = \sum_{m=1}^M{(x_{m}-x_{m}')^2}$ for a set of exposure values $\textbf{x}$ and the exposure values of another subject $\textbf{x}'$, and $\rho$ is a tuning parameter that controls the relationship of the correlation between two points with their distance. Greater values of $\rho$ will enforce more dependence between points and make the resulting function smoother. $h$ is related to $k$ by a multiplicative constant $\tau$, a tuning parameter which controls the vertical scale of $h$.
 
-Now that we have defined $h$ and $k$, we can think about how to characterize the relationship between our response and exposures. Kernel machine regression is a nonparametric technique because it does not specify a functional form for this relationship. Hence, we will think about estimating the response at a particular query point. Operationally, @muller_weighted_1987 demonstrated that kernel machine regression uses a weighted average of all the observations in the dataset to estimate the response, defined as
+Now that we have defined $h$ and $k$, we can think about how to characterize the relationship between our response and exposures. Kernel machine regression is considered a nonparametric technique because it does not specify a functional form for this relationship. Hence, we will think about estimating the response at a particular query point. Operationally, @muller_weighted_1987 demonstrated that kernel machine regression uses a weighted average of all the observations in the dataset to estimate the response, defined as
 
 $$
 \bar{Y} = \frac{\sum_{i=1}^nw_iY_i}{\sum_{i=1}^nw_i},
@@ -182,7 +182,7 @@ Figure \@ref(fig:toyrho) demonstrates the effect of relatively smaller and large
 
 ### Variable selection
 
-Now that we have defined kernel machine regression, we can extend it to the Bayesian paradigm. @bobb_bayesian_2015 showed that the Bayesian approach can outperform frequentist kernel machine regression because simultaneous variable selection and estimation can better capture the exposure-response relationship. In this section, we discuss the two methods for Bayesian variable selection in BKMR: hierarchical variable selection and component-wise variable selection [@bobb_bayesian_2015].
+Now that we have defined kernel machine regression, we can extend it to the Bayesian paradigm. @bobb_bayesian_2015 showed that the Bayesian approach can outperform frequentist kernel machine regression because simultaneous variable selection and estimation can better capture the exposure-response relationship. In this section, we discuss the two methods for Bayesian variable selection in BKMR: hierarchical variable selection and component-wise variable selection [@bobb_bayesian_2015]. Note that variable selection in BKMR is probabilistic; BKMR models contain a subset of selected predictors at each MCMC iteration, which ultimately yield a model-averaged BKMR fit. 
 
 In order to perform variable selection, we define a parameter that puts a weight on each exposure. Each weight controls the degree to which its associated exposure contributes to the model. In component-wise selection, we do this by augmenting the kernel function as
 
@@ -234,7 +234,7 @@ We have seen that the smoothness of a kernel machine regression responds strongl
 
 <!-- *these choices may make more sense, as rho has an exponential relationship? confused about this* -->
 
-Moreover, BKMR assumes that the prior probability of including a predictor ($\delta_m$) or group of predictors ($\omega_g$) in the model is distributed $\pi \sim \text{Beta}(a_\pi, b_\pi)$. The default hyperparameters are $a_\pi=b_\pi=1$, which represent a flat, uninformative prior between 0 and 1. When the hierarchical selection approach is applied, equal values for $\boldsymbol\pi_{\mathcal{S}_g}$, the probabilities of inclusion for each component in group $\mathcal{S}_g$, are assumed.
+Moreover, BKMR assumes that the prior probability of including a predictor ($\delta_m$) or group of predictors ($\omega_g$) in the model is distributed $\pi \sim \text{Beta}(a_\pi, b_\pi)$. The default hyperparameters are $a_\pi=b_\pi=1$, which represent a flat prior between 0 and 1. When the hierarchical selection approach is applied, equal values for $\boldsymbol\pi_{\mathcal{S}_g}$, the probabilities of inclusion for each component in group $\mathcal{S}_g$, are assumed.
 
 Finally, BKMR assumes that the inverse of the variance of the residuals is distributed $\sigma^{-2} \sim \text{Gamma}(a_\sigma, b_\sigma)$, with default values of $a_\sigma=b_\sigma=0.001$, and that the vertical scale of $h$ is parameterized by $\lambda \equiv \tau\sigma^{-2} \sim \text{Gamma}(a_\lambda, b_\lambda)$, with default values of $a_\lambda$ and $b_\lambda$ such that the mean and variance of $\lambda$ are both equal to 10.
 
@@ -242,7 +242,7 @@ Finally, BKMR assumes that the inverse of the variance of the residuals is distr
 
 Briefly, we discuss the algorithm used to find the solution in the BKMR package [@bobb_bayesian_2015; @bobb_statistical_2018], with commentary on its implications for the model fitting process.
 
-BKMR uses a Markov chain Monte Carlo (MCMC) algorithm with a mix of Gibbs and Metropolis-Hastings samplers to estimate the posterior distributions of the parameters. In particular, a Gibbs step is used to update the distribution of $\sigma^2$, while a Metropolis-Hastings step is used to update the distribution of $\lambda$. For component-wise and hierarchical variable selection, $(\textbf{r}, \boldsymbol\delta, \boldsymbol\omega)$ are sampled jointly using a Metropolis-Hastings sampling scheme.
+BKMR uses a Markov chain Monte Carlo (MCMC) algorithm with a mix of Gibbs and Metropolis-Hastings samplers to estimate the posterior distributions of the parameters. In particular, a Gibbs step is used to update the distribution of $\sigma^2$ as well as parameters corresponding to fixed effect coefficients for covariates, while a Metropolis-Hastings step is used to update the distribution of $\lambda$. For component-wise and hierarchical variable selection, $(\textbf{r}, \boldsymbol\delta, \boldsymbol\omega)$ are sampled jointly using a Metropolis-Hastings sampling scheme.
 
 While each distribution generated by the Gibbs step is always accepted, the distributions for $\lambda$ and $r_m$ generated by the Metropolis-Hastings steps are accepted based on an acceptance rate [@wagaman_probability_2021]. The standard deviation of the proposal distribution controls the acceptance rate and as such acts as a tuning parameter [@bobb_example_2017]. In general, increasing the standard deviation leads to lower acceptance rates. Acceptance rates that are too low lead to slower convergence, but rates that are too high can cause convergence to a non-optimal distribution.
 
@@ -269,7 +269,7 @@ In this section, we introduce the theory of BSR. First, we define the notation t
 - $\textbf{z}_i$ is a vector of covariates for a single observation in the matrix $\textbf{Z}$, which contains a set of covariates, with $i = 1, \dots, n$
 - $Y_i$ is an observation of $\textbf{Y}$, measuring the health outcome in this case
 - $f(\cdot)$ relates $\textbf{x}_i$ to $Y_i$ by a set of basis functions, $b_j(X)$
-- $\beta_j$ is a weight on the $j$th basis function
+- $\beta_j$ is a coefficient on the $j$th basis function
 - $P$ is the order of the basis expansion
 - $K$ is a set of $\xi_k$, $k=1,\dots,K$, interior knots defining $K+1$ disjoint intervals, and
 - $\boldsymbol\varepsilon_i \overset{\textrm{iid}}\sim N(0,\sigma^2)$ are the residuals of the response.
@@ -295,9 +295,9 @@ $$
 Y_i = f(\textbf{x}_i) + \textbf{z}_i^\top \boldsymbol{\beta}_{\textbf{z}} +\varepsilon_i,
 $$
 
-\noindent where $f$ is defined by a set of basis functions on the exposures, $\textbf{x}_i$, $\textbf{z}_i$ and $\boldsymbol{\beta}_{\textbf{z}}$ are the covariates and their associated weights, and $\varepsilon_i$ is a random variable where $\boldsymbol\varepsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$. BSR uses natural spline bases [@antonelli_estimating_2020]. In order to understand how these are constructed, we start with a broad definition of basis expansions, before exploring linear, cubic, and then natural spline bases. 
+\noindent where $f$ is defined by a set of basis functions on the exposures, $\textbf{x}_i$, $\textbf{z}_i$ and $\boldsymbol{\beta}_{\textbf{z}}$ are the covariates and their associated coefficients, and $\varepsilon_i$ is a random variable where $\boldsymbol\varepsilon \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$. BSR uses natural spline bases [@antonelli_estimating_2020]. In order to understand how these are constructed, we start with a broad definition of basis expansions, before exploring linear, cubic, and then natural spline bases. 
 
-We determine the basis expansion by considering a piece-wise function of $X_m$ with some order $P$ and some set of $K$ knots defining $K+1$ disjoint intervals. BSR places knots at uniformly sized quantiles within the boundaries of $X_m$. The most commonly used orders are $P=1,2,\textrm{and } 4$, the constant, linear, and cubic splines, respectively. To begin, let us consider a continuous piece-wise linear spline basis (i.e., $P=2$) of a one-dimensional $X$ with two interior knots. In this case, we use the following four basis functions:
+We determine the basis expansion by considering a piece-wise function of $X_m$ with some order $P$ and some set of $K$ knots defining $K+1$ disjoint intervals. The software for BSR places knots at uniformly sized quantiles within the boundaries of $X_m$. The most commonly used orders are $P=1,2,\textrm{and } 4$, the constant, linear, and cubic splines, respectively. To begin, let us consider a continuous piece-wise linear spline basis (i.e., $P=2$) of a one-dimensional $X$ with two interior knots. In this case, we use the following four basis functions:
 
 \nointerlineskip
 \[
@@ -315,7 +315,7 @@ b_4(X)=X^3, \hspace{0.25in} b_5(X)=(X-\xi_1)^3_+, \hspace{0.25in} b_6(X)=(X-\xi_
 
 \noindent Now, the regression model is defined as $f(X)= \sum_{j=1}^6\beta_jb_j(X)$ and requires estimating $K+P=6$ parameters. It can be shown that $f'(\xi_i^-)= f'(\xi_i^+)$ and $f''(\xi_i^-)= f''(\xi_i^+)$ for $i=1,2$ [@hastie_elements_2009]. 
 
-However, the behavior of polynomials near the boundaries of $X$, where there is less information, can be erratic. Natural cubic splines, also referred to as just natural splines, address this by imposing an additional restriction of linearity at the boundaries of $X$. Paradoxically, this also leads to a simpler model with four fewer parameters to estimate. A general definition of the $K$ basis functions for a natural spline with interior knots $\xi_j$, $j=1,\dots,K$, is given by:
+However, the behavior of polynomials near the boundaries of $X$, where there is less information, can be erratic. Natural cubic splines, also referred to as just natural splines, address this by imposing an additional restriction of linearity at the boundaries of $X$. This also leads to a simpler model with four fewer parameters to estimate. A general definition of the $K$ basis functions for a natural spline with interior knots $\xi_j$, $j=1,\dots,K$, is given by:
 
 <!-- $$ -->
 <!-- N_1(X)=1, \hspace{0.25in} N_2(X)=X, \hspace{0.25in} N_{k+2}(X)=d_k(X)-d_{K-1}(X),  -->
@@ -370,7 +370,7 @@ f(X_1) = \widetilde{X}_1\boldsymbol{\beta}_1, \hspace{0.25in} f(X_2) = \widetild
 f(X_1,X_2) = \widetilde{X}_1\boldsymbol{\beta}_1 + \widetilde{X}_2\boldsymbol{\beta}_2 + \widetilde{X}_{12}\boldsymbol{\beta}_{12},
 \end{gather*}
 
-\noindent where $\widetilde{X}_m=[b_{m1}(X_m),\dots,b_{md}(X_m)]$ represents a $d$-dimensional basis function expansion for $m=1,2$, and $\widetilde{X}_{12}= [b_{11}(X_1)b_{21}(X_2), b_{11}(X_1)b_{22}(X_2), \dots, b_{1d}(X_1)b_{2d}(X_2)]$ represents a $d^2$-dimensional basis expansion of the interaction between $X_1$ and $X_2$. $d$ is an influential tuning parameter. BSR by default assumes that all exposures have the same number of degrees of freedom and uses the Watanabe-Akaike (WAIC) model selection criterion to select $d$, which approximates leave one out cross validation. Note that we must explicitly model the effect of the interaction term by assuming a multiplicative interaction between the basis functions of the predictors. 
+\noindent where $\widetilde{X}_m=[b_{m1}(X_m),\dots,b_{md}(X_m)]$ represents a $d$-dimensional basis function expansion for $m=1,2$, and $\widetilde{X}_{12}= [b_{11}(X_1)b_{21}(X_2), b_{11}(X_1)b_{22}(X_2), \dots, b_{1d}(X_1)b_{2d}(X_2)]$ represents a $d^2$-dimensional basis expansion of the interaction between $X_1$ and $X_2$. $d$ is an influential tuning parameter. BSR by default assumes that all exposures have the same number of degrees of freedom and uses the Watanabe-Akaike (WAIC) model selection criterion to select $d$, which approximates leave one out cross validation. Note that we must explicitly model the effect of the interaction term by adding a product term between the basis functions of the predictors. 
 
 Extending to the multi-dimensional setting, BSR assumes the following general model formulation: 
 
@@ -380,7 +380,7 @@ f^{(h)}(\textbf{x}_i)= \sum_{m_1=1}^M\widetilde{x}_{im_1}\boldsymbol\beta_{m_1}^
 \sum_{m_1=2}^M\sum_{m_2<m_1}\widetilde{x}_{im_1m_2}\boldsymbol\beta_{m_1m_2}^{(h)} + \dots,
 \end{gather*}
 
-\noindent where $f^{(h)}(\textbf{x}_i)$ includes a summation of all $M$-way interactions. The inclusion of all $M$-way interactions makes the model far too overparameterized. Moreover, $f(\textbf{x}_i)$ is a sum of $k$ different functions $f^{(h)}(\textbf{x}_i)$ where a value for $H$ is selected in order to capture all exposure effects in the model. Each of the $H$ functions has the same functional form, and so the regression coefficients for a function $f^{(h)}(\textbf{x}_i)$ are only identifiable up to a constant — this means that there are multiple sets of coefficients that could be estimated from the same data. 
+\noindent where $f^{(h)}(\textbf{x}_i)$ includes a summation of all $M$-way interactions. The inclusion of all $M$-way interactions makes the model far too overparameterized. Moreover, $f(\textbf{x}_i)$ is a sum of $H$ different functions $f^{(h)}(\textbf{x}_i)$ where a value for $H$ is selected in order to capture all exposure effects in the model. Each of the $H$ functions has the same functional form, and so the regression coefficients for a function $f^{(h)}(\textbf{x}_i)$ are only identifiable up to a constant — this means that there are multiple sets of coefficients that could be estimated from the same data. 
 
 ### Sparsity inducing priors
 
@@ -433,7 +433,7 @@ In Chapter \@ref(motivation), we highlighted the challenges of analytically test
 
 ### BKMR
 
-Since the flexible $h$ function in kernel machine regression allows us to forgo any assumptions about the nature of the relationship between the health outome and exposures, BKMR can potentially capture complex interactions between exposures The challenge with using BKMR to do this, however, is that there is no formal framework for conducting inference on the presence of interactions.
+Since the flexible $h$ function in kernel machine regression allows us to forgo many assumptions about the nature of the relationship between the health outome and exposures, BKMR can potentially capture complex interactions between exposures The challenge with using BKMR to do this, however, is that there is no formal framework for conducting inference on the presence of interactions.
 
 Currently, the most common approach for detecting interactions is through a qualitative assessment of visual diagnostic plots [@bobb_introduction_2017]. Two- or three-way interactions can be assessed by plotting the estimated exposure-response relation for one/two exposures at various quantiles of another exposure, while setting all other exposures at fixed quantile values. For instance, if we are interested in the interaction between $X_1$ and $X_2$, we can plot the estimated regression line against $X_1$ at the 0.1, 0.5, and 0.9 quantiles of $X_2$ and vice versa. In the three-way case of $X_1$, $X_2$, and $X_3$, we can plot the estimated regression surface against $X_1$ and $X_2$ at the 0.1, 0.5, and 0.9 quantiles of $X_3$. If the shape of the estimation changes meaningfully, then there might be evidence of an interaction. 
 
@@ -451,10 +451,10 @@ The visualization options available in BKMR are also possible in BSR. In particu
 
 We have explained how the inferential framework of BSR improves upon the BKMR approach for the detection of complex interactions. We also briefly compare general features of their model formulations. 
 
-While BKMR is a fully nonparametric approach, BSR is a semiparametric approach because it makes distributional assumptions about the data (i.e., that the relationship can be adequately captured by a $d$-dimensional natural spline basis expansion). As BKMR uses the kernel technique, its implementation can become computationally intensive for datasets with large $n$, as it scales with $n^2$, while BSR is able to scale with $n$ [@antonelli_estimating_2020]. 
+Since BSR assumes that the exposure-response relationship can be adequately captured by a $d$-dimensional natural spline basis expansion, BSR is more parameterized than BKMR. As BKMR uses the kernel technique to achieve a solution, its implementation can become computationally intensive for datasets with large $n$ because it scales with $n^2$, while BSR is able to scale with $n$ [@antonelli_estimating_2020]. 
 
-BSR is highly sensitive to the choice of $d$, the degrees of freedom. While it employs a WAIC approach to selecting the best $d$, this parameter introduces an additional tuning step in the analysis. Both approaches can be highly sensitive to the specification of certain priors. BSR offers an empirical Bayes strategy to estimate $\sigma^2_{\boldsymbol\beta}$, the variance of a exposure's prior probability of inclusion. On the other hand, the choice of prior on the influential smoothing parameter, $\rho$, in BKMR is up to the user. 
+BSR is highly sensitive to the choice of $d$, the degrees of freedom. While it employs a WAIC approach to selecting the best $d$, this parameter introduces an additional tuning step in the analysis. Both approaches can be highly sensitive to the specification of certain priors. BSR offers an empirical Bayes strategy to estimate $\sigma^2_{\boldsymbol\beta}$, the variance of an exposure's coefficient. On the other hand, the choice of prior on the influential smoothing parameter, $\rho$, in BKMR is up to the user. 
 
-We also note that BKMR offers a hierarchical variable selection approach to dealing with collinearity between exposures. While this is an additional decision that must be specified by the user, it offers a formal approach for dealing with collinear exposures. BSR does not explicitly account for collinearity in its model formulation, which can lead to erroneous interpretations of variable importance if unaccounted for. 
+We also note that BKMR offers a hierarchical variable selection approach to dealing with near-collinearity between exposures. While this is an additional decision that must be specified by the user, it offers a formal approach for dealing with collinear exposures. BSR does not explicitly account for near-collinearity in its model formulation, which can lead to highly variable interpretations of variable importance if unaccounted for. 
 
 <!-- Notes: complex vs. non-additive interaction, clarify in first section; decide what to do with covariates!! -->

@@ -1,6 +1,54 @@
 # Corrections {-}
 
-A list of corrections after submission to department.
+When originally submitted, this honors thesis contained some errors which have been corrected in the current version. Here is a list of the errors that were corrected, organized by chapter. 
 
-Corrections may be made to the body of the thesis, but every such correction will be acknowledged in a list under the heading “Corrections,” along with the statement “When originally submitted, this honors thesis contained some errors which have been corrected in the current version. Here is a list of the errors that were corrected.” This list will be given on a sheet or sheets to be appended to the thesis. Corrections to spelling, grammar, or typography may be acknowledged by a general statement such as “30 spellings were corrected in various places in the thesis, and the notation for definite integral was changed in approximately 10 places.” However, any correction that affects the meaning of a sentence or paragraph should be described in careful detail. The files samplethesis.tex and samplethesis.pdf show what the "Corrections" section should look like. Questions about what should appear in the “Corrections” should be directed to the Chair.
+\noindent Chapter \@ref(intro): Introduction
 
+- Page 2: "The National Academies of Science" and its associated abbreviation, "NAS," were changed to "The National Academies of Science, Engineering, and Medicine" and "NASEM," respectively.
+- Page 2: The term "collinearity" was replaced with "near-collinearity" in two locations.
+- Page 2: The phrase "single effects" was changed to "independent effects."
+
+\noindent Chapter \@ref(bayes): Bayesian regression methods
+
+- Page 10: The phrases "To see why, let us consider running a linear regression for $Y$ on $x_1$ and $x_2$. The theoretical model would be defined as" were changed to "To see why, let us consider defining a linear regression for $Y$ on $x_1$ and $x_2$ with the following theoretical model:"
+- Page 10: The phrase "and $\varepsilon$ has a normal distribution with mean 0 and variance equal to the residual variance" was changed to "and $\varepsilon$ is the error term."
+- Page 10: The phrase "multiplicative interaction is assessed" was changed to "product term is used."
+- Page 10: The phrase "five-way interactions are only interpreted correctly at chance level" was changed to "the interpretation of five-way interactions is consistent with guessing at random."
+- Page 11: The phrase "between two chemical exposures suggests" was changed to "between two chemical exposures can suggest."
+- Page 11: The phrase "This usually occurs if a chemical induces" was changed to "This can occur if a chemical induces."
+- Page 11: The phrase "underestimation of the true toxicity of a mixture" was changed to "underestimation of the true toxicity of a mixture for certain groups in the study population."
+- Page 12: The clause "a flexible regression approach to modeling associations between a set of multiple exposures and some outcome" was added after the phrase "we introduce the theory of BKMR."
+- Page 15: The phrase "Kernel machine regression is a nonparametric technique" was changed to "kernel machine regression is considered a nonparametric technique."
+- Page 20: The following sentence was added to the end of the first paragraph in section 3.2.4: "Note that variable selection in BKMR is probabilistic; BKMR models contain a subset of selected predictors at each MCMC iteration, which ultimately yield a model-averaged BKMR fit."
+- Page 23: The phrase "which represent a flat, uninformative prior" was changed to "which represent a flat prior."
+- Page 24: The phrase "as well as parameters corresponding to fixed effect coefficients for covariates" was added after the phrase "a Gibbs step is used to update the distribution of $\sigma^2$."
+- The term "weights" was changed to "coefficients" in four locations on pages 13, 14, 24, and 25 to refer to the $\beta$ terms in BKMR and BSR.
+- Page 27: The phrase "BSR places knots at uniformly sized quantiles" was changed to "The software for BSR places knots at uniformly sized quantiles"
+- Page 28: The adjective "paradoxically" was removed from "Paradoxically, this also leads to a simpler model."
+- Page 32: The phrase "assuming a multiplicative interaction" was changed to "adding a product term."
+- Page 32: The phrase "$f(\textbf{x}_i)$ is a sum of $k$ different functions" was changed to "$f(\textbf{x}_i)$ is a sum of $H$ different functions."
+- Page 36: The phrase "allows us to forgo any assumptions" was changed to "allows us to forgo many assumptions."
+- Page 38: The paragraph "While BKMR is a fully nonparametric approach, BSR is a semiparametric approach because it makes distributional assumptions about the data (i.e., that the relationship can be adequately captured by a $d$-dimensional natural spline basis expansion). As BKMR uses the kernel technique..." was replaced with "Since BSR assumes that the exposure-response relationship can be adequately captured by a $d$-dimensional natural spline basis expansion, BSR is more parameterized than BKMR. As BKMR uses the kernel technique to achieve a solution..."
+- Page 38: The phrase "the variance of a exposure's prior probability of inclusion" was replaced with "the variance of an exposure's coefficient."
+- Page 38: The term "collinearity" was replaced with "near-collinearity" in two locations. 
+- Page 38: The phrase "erroneous interpretations" was replaced with "highly variable interpretations."
+
+\noindent Chapter \@ref(sims): Simulations
+
+- Page 44: The phrase "Sklar's theorem states that, if $H(x_1, \dots x_n)$ is a joint CDF of the marginal CDFs $F_1(x_1), \dots, F_n(x_n)$" was changed to "Sklar's theorem states that, if $H(x_1, \dots x_n)$ is a joint CDF, and $F_1(x_1), \dots, F_n(x_n)$ are the marginal CDFs."
+- Page 49: The phrase "between exposures that are moderately collinear" was changed to "between exposures that are moderately correlated."
+- Page 52: The phrase "moderate multicollinearity in the observed and simulated data" was changed to "moderate correlation in the observed and simulated data."
+- Page 54: The phrase "was significantly greater than zero" was changed to "did not include the null value of zero."
+- Page 55: The phrase "(i.e., the target group is significantly different than the remaining groups, and the remaining groups are not significantly different from each other)" was added to clarify the phrase "if (1) there was at least one non-overlap between the target group's confidence interval and all other confidence intervals, and (2) all other confidence intervals overlapped."
+- Page 57: The phrase "a U-shaped curve" was replaced with "an inverse U-shaped curve."
+- Page 57: The phrase "or choosing a higher PIP threshold than 0.5" was added after the phrase "choosing a prior that assigns higher probability to smaller values of $r_m$."
+- Page 58: The sentence "Note that we use \"univariate\" to refer to the additive effects of a chemical" was changed to "Note that we use \"univariate\" to refer to the marginal, or main, effects of a chemical, either in the theoretical model specifications in the simulation setup, or when the chemical is assessed as a univariate term in the results."
+- Page 59: The phrase "with a higher effect polynomial interaction" was changed to "with a higher effect size polynomial interaction."
+- Page 62: The phrase "a more formal framework for conducting inference" was changed to "a more formal framework for conducting inference on interactions."
+- Page 63: The phrase "did not occur by chance" was changed to "did not occur generally by chance."
+- Page 66: The clause "though we expect they would be low given the low detection rates of the non-null interactions" was added after "due to time constraints, we did not obtain false discovery rates for these interactions."
+- Page 74: The phrase "larger effect sizes" was changed to "higher effect sizes."
+- Page 75: The phrase "this is evidence for oversampling the minority group, as it is often this group" was changed to "this is evidence in favor of oversampling minoritized groups, as it is often these groups."
+- Page 75: The phrase "under-powered" was changed to "not sufficiently sensitive."
+
+Additionally, titles for all references originally in title case were re-formatted to sentence case. 
