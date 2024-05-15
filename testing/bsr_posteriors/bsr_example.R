@@ -7,6 +7,8 @@ library(NLinteraction)
 # read in a bsr model
 # fit on n=252 data w/ 10 chems, 8 covariates
 # higher effect, mult. interxn between Hg (index 4) and Ni (index 5)
+if(basename(getwd()) != "thesis") setwd(path.expand("~/repo/thesis")) # added by AK
+
 bsrmod <- readRDS("testing/bsr_posteriors/bsr_sm_am2_201df3.RDS")
 
 # in order to get predictions, we need the original data
@@ -278,3 +280,129 @@ bivarsurf_bsr <- function(NLmod, X, C, j1, j2, gridLength = 50,
 bivarex <- bivarsurf_bsr(NLmod = bsrmod, X = X, C = C, 
                          j1 = 4, j2 = 5, gridLength = 50, 
                          quantile_j2 = c(0.1, 0.5, 0.9), quantile_rest = 0.5)
+
+
+
+#### quick example by AK
+# RE: statement in the thesis
+# "We were not able to find a method in the literature for combining variances from
+#   estimated responses at two different sets of predictor values in the spline regression
+#   framework."
+
+# example: 
+
+# fit
+bsrmod <- readRDS("testing/bsr_posteriors/bsr_sm_am2_201df3.RDS")
+# original data
+df <- readRDS("testing/bsr_posteriors/data_sm_am2_201.RDS")
+
+NLmod <- bsrmod
+
+
+X <- df |> 
+  dplyr::select(As:Sn) |> 
+  as.matrix.data.frame()
+C <- df |>
+  cbind(
+    data.frame(model.matrix(~ race-1, data = 
+                              dplyr::mutate(df, race = as.factor(race))))
+  ) |> 
+  dplyr::select(race2:race5, smoke:bmi) |> 
+  as.matrix.data.frame()
+Y <- df$y
+
+
+get_joint_effect_estimate <- function(NLmod, X, C, ref_quantile=0.5, index_quantiles=setdiff(seq(0.1,.9,.1), .5)){
+  #' NLmod = bsr model
+  #' X = matrix or dataframe of chemical values used to fit model
+  #' C = matrix or dataframe of covariate values used to fit model
+
+  
+  # define parameters
+  n  <-  dim(X)[1]
+  ns <- NLmod$ns
+  k <- NLmod$k
+  p <- dim(X)[2]
+  Xstar <- array(NA, dim = c(n, p, ns + 1))
+  Xstar[, , 1] <- 1
+  for (j in 1:p) {
+    Xstar[, j, 2:(ns + 1)] <- scale(splines::ns(X[, j], df = ns))
+  }
+  
+  # define posteriors
+  zetaPost <- NLmod$posterior$zeta
+  betaList <- NLmod$posterior$beta
+  betaCPost <- NLmod$posterior$betaC
+  totalScans <- dim(NLmod$posterior$betaC)[2]
+  nChains <- dim(NLmod$posterior$betaC)[1]
+  
+  # create design of covariates (arithmetic mean, for simplicity)
+  pc <- dim(C)[2]
+  NewDesignC <- matrix(NA, length(index_quantiles)+1, pc + 1)
+  NewDesignC[, 1] <- 1
+  for (jc in 1:pc) {
+    NewDesignC[, jc + 1] <- mean(C[, jc])
+  }
+  
+  # create design of chemicals
+  allquantiles  = c(ref_quantile, index_quantiles)
+  n <- dim(X)[1]
+
+  NewDesignMat <- apply(X,2, quantile, allquantiles)
+  
+  NewDesign <- array(NA, dim = c(length(index_quantiles)+1, p, ns + 1))
+  NewDesign[, , 1] <- 1
+  for (j in 1:p) {
+    temp_ns_object <- splines::ns(X[, j], df = ns)
+    temp_sds <- apply(temp_ns_object, 2, sd)
+    temp_means <- apply(temp_ns_object, 2, mean)
+    NewDesign[, j, 2:(ns + 1)] <- t((t(                            
+      predict(temp_ns_object,
+              NewDesignMat[, j])
+    ) - temp_means) / temp_sds)
+  }
+  
+  
+  
+
+  
+  # generate predictions
+  predictions <- NLinteraction:::PredictionsMixture(
+    XstarOld = Xstar,
+    XstarNew = NewDesign,
+    designC = NewDesignC,
+    totalScans = totalScans,
+    nChains = nChains,
+    zetaPost = zetaPost,
+    betaList = betaList,
+    betaCPost = betaCPost,
+    k = k,
+    ns = ns
+  )
+  
+  # nchains X total scans/iterations X # test data points
+  refpreds = as.numeric(predictions$PredictedPost[,,1])
+  idxpreds = lapply(1:length(index_quantiles), function(x) as.numeric(predictions$PredictedPost[,,x+1]))
+  pred_difference = lapply(1:length(index_quantiles), function(x) idxpreds[[x]]-refpreds)
+  
+  
+  
+  
+  return(data.frame(
+    #j1val = NewDesignMat[, j1], 
+    quantile = c(ref_quantile, index_quantiles), 
+    est = c(0, as.numeric(lapply(pred_difference, mean))), 
+    lower =  c(0, as.numeric(lapply(pred_difference, quantile, 0.025))), 
+    upper =  c(0, as.numeric(lapply(pred_difference, quantile, 0.975))))
+    )
+}
+
+
+
+predest = get_joint_effect_estimate(NLmod, X, C, ref_quantile=0.5, index_quantiles=setdiff(seq(0.05,.9,.05), .5))
+
+library(ggplot2)
+ggplot(data=predest, aes(x=quantile, y=est)) + 
+  geom_line() + 
+  geom_ribbon(aes(ymin=lower, ymax=upper)) + 
+  labs(y="Mean difference", x="Joint quantile of all exposures")
