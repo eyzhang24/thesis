@@ -18,11 +18,12 @@ comb_log <- comb |>
          BMXBMI:LBXBAPCT, #bio
          RIDAGEYR:DMDEDUC2, #demo, gender is binary, re and educ multi
          TELOMEAN) |> 
-  #gender to 0's and 1's
+  #gender to 0's and 1's: 0 male, 1 female
+  #should really be called sex
   mutate(RIAGENDR = RIAGENDR - 1)
 
-# spearman rho
-
+# save a copy
+write_csv(comb_log, "nhanes_data/log_processed_data.RDS")
 
 # create pseudo observations
 u <- pobs(comb_log[, 2:29])
@@ -76,31 +77,87 @@ write_rds(cfit_t, "nhanes_sim/tcop.RDS")
 
 # sim predictor data ------------------------------------------------------
 
-cfit_t <- read_rds("madres_data/tcop1.RDS")
+# read back in
+cfit_t <- read_rds("nhanes_sim/tcop.RDS")
+comb_log <- read_csv("nhanes_data/log_processed_data.RDS")
+
+# create smaller version of dataset, with only columns for simulation
+comb_log_clip <- comb_log |> 
+  select(LBX074LA:RIAGENDR)
 
 # get rho and degrees of freedom
-rho <- coef(cfit_t)[1:105]
-df <- coef(cfit_t)[106]
+rho <- coef(cfit_t)[1:378]
+df <- coef(cfit_t)[379]
 
 # create function for simulation
-simulate_data <- function(data, sampsize, rho, df = 1) {
-  #' data = original observed data
-  #' sampsize = size of simulated dataset
-  #' rho = rho values from t-copula
-  #' df = degrees of freedom from t-copula
+simulate_data <- function(data, n, rho, df, prop_sex, prop_race, prop_edu) {
+  #'data = original observed data
+  #'n = sample size
+  #'rho = rho values from t-copula
+  #'df = degrees of freedom from t-copula
+  #'prop_sex = proportion female from observed dataset
+  #'prop_race = table with race/eth values
+  #'prop_edu = table with education level values
   
-  # simulate pseudo-observations from copula
-  samp <- rCopula(sampsize, 
-                  tCopula(rho, dim = ncol(data), dispstr = "un", df = df))
-  # transform pseudo-observations to observed marginal distributions
+  #simulate pseudo-observations from copula
+  samp <- rCopula(n, tCopula(rho, dim = ncol(data), dispstr = "un", df = df))
+  #transform pseudo-observations to observed marginal distributions
   sampt <- 1:ncol(data) |> 
     purrr::map_dfc(
       \(x) {
-        df <- data.frame(quantile(data[[x]], probs = samp[,x]), 
-                         row.names = NULL)
+        if(names(data)[x] == "RIAGENDR") {
+          df <- data.frame(ifelse(samp[,x] < prop_sex, 0, 1), 
+                           row.names = NULL)
+        } else {
+          df <- data.frame(quantile(data[[x]], probs = samp[,x]), 
+                           row.names = NULL)
+        }
         names(df) <- names(data)[x]
         return(df)
       }
-    )
+    ) |> 
+    mutate(RIDRETH1 = sample(x = names(prop_race), prob = prop_race,
+                             size = n, replace = T), 
+           DMDEDUC2 = sample(x = names(prop_edu), prob = prop_edu,
+                             size = n, replace = T)) 
   return(sampt)
 }
+
+# reproducibility
+set.seed(0)
+
+# create 2100 size 250 datasets
+out <- 1:2100 |> 
+  purrr::map(\(x) {
+    mutate(simulate_data(comb_log_clip, 
+                         n = 250, 
+                         rho = rho, df = df, 
+                         prop_sex = 1-mean(comb_log_clip$RIAGENDR), 
+                         prop_race = table(comb_log$RIDRETH1), 
+                         prop_edu = table(comb_log$DMDEDUC2)), 
+           RIDRETH1 = as.numeric(RIDRETH1), 
+           DMDEDUC2 = as.numeric(DMDEDUC2), 
+           sim = x) 
+  })
+
+write_rds(out, "nhanes_sim/sim_preds_sm.RDS")
+
+# reproducibility
+set.seed(0)
+
+# create 2100 size 1000 datasets
+out2 <- 1:2100 |> 
+  purrr::map(\(x) {
+    mutate(simulate_data(comb_log_clip, 
+                         n = 1000, 
+                         rho = rho, df = df, 
+                         prop_sex = 1-mean(comb_log_clip$RIAGENDR), 
+                         prop_race = table(comb_log$RIDRETH1), 
+                         prop_edu = table(comb_log$DMDEDUC2)), 
+           RIDRETH1 = as.numeric(RIDRETH1), 
+           DMDEDUC2 = as.numeric(DMDEDUC2), 
+           sim = x) 
+  })
+
+write_rds(out2, "nhanes_sim/sim_preds_lg.RDS")
+
