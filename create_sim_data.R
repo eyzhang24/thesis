@@ -161,3 +161,12 @@ out2 <- 1:2100 |>
 
 write_rds(out2, "nhanes_sim/sim_preds_lg.RDS")
 
+
+# sim response data -------------------------------------------------------
+
+source("nhanes/response_fxns.R")
+
+# check p-values ----------------------------------------------------------
+
+
+
