@@ -280,6 +280,67 @@ out2_resp1 <- out2 |>
 # only export first 1700
 write_rds(out2_resp1[1:1700], "nhanes_sim/sim_resp_lg_a.RDS")
 
+## race/ethnicity ---------------------------------------------------------
+
+# read output back in, size 252
+out1 <- read_rds("nhanes_sim/sim_preds_sm.RDS")
+
+set.seed(0)
+out1_resp1_re <- out1 |> 
+  purrr::map(\(x) {
+    # get dataset number 
+    no <- x$sim[1] 
+    x <- x |> 
+      mutate(across(LBX074LA:RIDAGEYR, ~c(scale(.)))) 
+    df <- case_when(
+      no <= 1700 ~ x, #note 1 - 1700 are chemxchem
+      no <= 1800 ~ em1(x), 
+      no <= 1900 ~ em2(x), 
+      no <= 2000 ~ ep1(x), 
+      no <= 2100 ~ ep2(x), 
+      .default = x 
+    ) 
+  }) |> 
+  purrr::set_names(nm = c(
+    rep("unset", 1700), 
+    rep("em1", 100), 
+    rep("em2", 100), 
+    rep("ep1", 100), 
+    rep("ep2", 100)
+  )) 
+  
+write_rds(out1_resp1_re[1701:2100], "nhanes_sim/sim_resp_sm_re.RDS")
+
+# read output back in, size 1000
+out2 <- read_rds("nhanes_sim/sim_preds_lg.RDS")
+
+set.seed(0)
+out2_resp1_re <- out2 |> 
+  purrr::map(\(x) {
+    # get dataset number 
+    no <- x$sim[1] 
+    x <- x |> 
+      mutate(across(LBX074LA:RIDAGEYR, ~c(scale(.)))) 
+    df <- case_when(
+      no <= 1700 ~ x, #note 1 - 1700 are chemxchem
+      no <= 1800 ~ em1(x), 
+      no <= 1900 ~ em2(x), 
+      no <= 2000 ~ ep1(x), 
+      no <= 2100 ~ ep2(x), 
+      .default = x 
+    ) 
+  }) |> 
+  purrr::set_names(nm = c(
+    rep("unset", 1700), 
+    rep("em1", 100), 
+    rep("em2", 100), 
+    rep("ep1", 100), 
+    rep("ep2", 100)
+  )) 
+
+# get output
+out2_resp1_re <- out2_resp1_re[1701:2100]
+write_rds(out2_resp1_re, "nhanes_sim/sim_resp_lg_re.RDS")
 
 # fit oracle/mlr ----------------------------------------------------------
 

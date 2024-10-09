@@ -273,3 +273,72 @@ dp2 <- function(df) {
                      RIDRETH1 == 5 ~ 1) +
            rnorm(nrow(df), 0, 7))
 }
+
+# interxn in smaller group, smaller effect size
+em1 <- function(df) {
+  mutate(df, y = 
+           LBXD05LA + LBX074LA + 
+           3/(1+exp(-4*LBX194LA)) + 
+           1.5/(1+exp(-4*LBXPCBLA)) - 
+           0.75*(LBXF04LA^2) + 0.5*LBXF04LA + 
+           0.25*LBXD05LA*((LBX194LA-1)^2)*LBXPCBLA +
+           RIDAGEYR + 0.5*LBXLYPCT + 0.5*LBXMOPCT + 
+           case_when(RIDRETH1 == 1 ~ 1.5, 
+                     RIDRETH1 == 2 ~ 1, 
+                     RIDRETH1 == 3 ~ 1, 
+                     RIDRETH1 == 4 ~ 1.5 + 0.5*LBXD05LA, # 1.5x in group 4
+                     RIDRETH1 == 5 ~ 1) +
+           rnorm(nrow(df), 0, 7))
+}
+
+# interxn in smaller group, larger effect size
+em2 <- function(df) {
+  mutate(df, y = 
+           LBXD05LA + LBX074LA + 
+           3/(1+exp(-4*LBX194LA)) + 
+           1.5/(1+exp(-4*LBXPCBLA)) - 
+           0.75*(LBXF04LA^2) + 0.5*LBXF04LA + 
+           0.25*LBXD05LA*((LBX194LA-1)^2)*LBXPCBLA +
+           RIDAGEYR + 0.5*LBXLYPCT + 0.5*LBXMOPCT + 
+           case_when(RIDRETH1 == 1 ~ 1.5, 
+                     RIDRETH1 == 2 ~ 1, 
+                     RIDRETH1 == 3 ~ 1, 
+                     RIDRETH1 == 4 ~ 1.5 + LBXD05LA, # double in group 4
+                     RIDRETH1 == 5 ~ 1) +
+           rnorm(nrow(df), 0, 7))
+}
+
+# interxn in larger group, smaller effect size
+ep1 <- function(df) {
+  mutate(df, y = 
+           LBXD05LA + LBX074LA + 
+           3/(1+exp(-4*LBX194LA)) + 
+           1.5/(1+exp(-4*LBXPCBLA)) - 
+           0.75*(LBXF04LA^2) + 0.5*LBXF04LA + 
+           0.25*LBXD05LA*((LBX194LA-1)^2)*LBXPCBLA +
+           RIDAGEYR + 0.5*LBXLYPCT + 0.5*LBXMOPCT + 
+           case_when(RIDRETH1 == 1 ~ 1.5, 
+                     RIDRETH1 == 2 ~ 1, 
+                     RIDRETH1 == 3 ~ 1 + 0.5*LBXD05LA, # 1.5x in group 3
+                     RIDRETH1 == 4 ~ 1.5, 
+                     RIDRETH1 == 5 ~ 1) +
+           rnorm(nrow(df), 0, 7))
+
+}
+
+# interxn in larger group, larger effect size
+ep2 <- function(df) {
+  mutate(df, y = 
+           LBXD05LA + LBX074LA + 
+           3/(1+exp(-4*LBX194LA)) + 
+           1.5/(1+exp(-4*LBXPCBLA)) - 
+           0.75*(LBXF04LA^2) + 0.5*LBXF04LA + 
+           0.25*LBXD05LA*((LBX194LA-1)^2)*LBXPCBLA +
+           RIDAGEYR + 0.5*LBXLYPCT + 0.5*LBXMOPCT + 
+           case_when(RIDRETH1 == 1 ~ 1.5, 
+                     RIDRETH1 == 2 ~ 1,
+                     RIDRETH1 == 3 ~ 1 + LBXD05LA, # double in group 3
+                     RIDRETH1 == 4 ~ 1.5, 
+                     RIDRETH1 == 5 ~ 1) +
+           rnorm(nrow(df), 0, 7))
+}
