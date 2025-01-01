@@ -32,15 +32,15 @@ Y <- df$y
 
 # bsrmod <- readRDS("testing/bsr_posteriors/bsr_lgf_am2_201df3.RDS")
 # df <- readRDS("testing/bsr_posteriors/data_lg_am2_201.RDS")
-# X <- df |> 
-#   dplyr::select(As:Sn) |> 
+# X <- df |>
+#   dplyr::select(As:Sn) |>
 #   as.matrix.data.frame()
 # C <- df |>
 #   cbind(
-#     data.frame(model.matrix(~ race-1, data = 
+#     data.frame(model.matrix(~ race-1, data =
 #                               dplyr::mutate(df, race = as.factor(race))))
-#   ) |> 
-#   dplyr::select(race2:race5, smoke:bmi) |> 
+#   ) |>
+#   dplyr::select(race2:race5, smoke:bmi) |>
 #   as.matrix.data.frame()
 # Y <- df$y
 
@@ -50,11 +50,11 @@ Y <- df$y
 # bsrmod <- listmod[[5]] # choose race category 5
 # dffull <- readRDS("testing/bsr_posteriors/data_lg_ep2_301.RDS")
 # df <- dffull[dffull$race == 5, ] # choose race category 5
-# X <- df |> 
-#   dplyr::select(As:Sn) |> 
+# X <- df |>
+#   dplyr::select(As:Sn) |>
 #   as.matrix.data.frame()
 # C <- df |>
-#   dplyr::select(smoke:bmi) |> 
+#   dplyr::select(smoke:bmi) |>
 #   as.matrix.data.frame()
 # Y <- df$y
 
@@ -292,7 +292,8 @@ bivarex <- bivarsurf_bsr(NLmod = bsrmod, X = X, C = C,
 # examples below: 
 #  1) estimating joint effect of all exposures 
 #  2) estimating independent effect of a single exposure at a fixed quantile of all other exposures
-#  3) estimating "stratified" effect of one exposure at different quantiles of another exposure and a fixed quantile of all other exposures
+#  3) estimating "stratified" effect of one exposure at different quantiles of 
+#     another exposure and a fixed quantile of all other exposures
 
 
 # fit
@@ -316,7 +317,8 @@ C <- df |>
 Y <- df$y
 
 
-get_joint_effect_estimate <- function(NLmod, X, C, ref_quantile=0.5, index_quantiles=setdiff(seq(0.1,.9,.1), .5)){
+get_joint_effect_estimate <- function(
+    NLmod, X, C, ref_quantile=0.5, index_quantiles=setdiff(seq(0.1,.9,.1), .5)){
   #' NLmod = bsr model
   #' X = matrix or dataframe of chemical values used to fit model
   #' C = matrix or dataframe of covariate values used to fit model
@@ -411,7 +413,9 @@ ggplot(data=predest, aes(x=quantile, y=est)) +
 
 
 
-get_independent_effect_estimate <- function(NLmod, X, C, j1, quantile_rest=0.5, ref_quantile=0.5, index_quantiles=setdiff(seq(0.1,.9,.1), .5)){
+get_independent_effect_estimate <- function(
+    NLmod, X, C, j1, quantile_rest=0.5, ref_quantile=0.5, 
+    index_quantiles=setdiff(seq(0.1,.9,.1), .5)){
   #' NLmod = bsr model
   #' X = matrix or dataframe of chemical values used to fit model
   #' C = matrix or dataframe of covariate values used to fit model
@@ -498,7 +502,8 @@ get_independent_effect_estimate <- function(NLmod, X, C, j1, quantile_rest=0.5, 
 }
 
 
-predest_independent = get_independent_effect_estimate(bsrmod, X, C, j1=4, ref_quantile=0.5, index_quantiles=setdiff(seq(0.05,.9,.05), .5))
+predest_independent = get_independent_effect_estimate(
+  bsrmod, X, C, j1=4, ref_quantile=0.5, index_quantiles=setdiff(seq(0.05,.9,.05), .5))
 
 # this will look similar to some BKMR plots, and effect estimates are held in the data frame
 library(ggplot2)
@@ -509,14 +514,17 @@ ggplot(data=predest_independent, aes(x=quantile, y=est)) +
 
 
 
-get_commonreferent_effect_estimate <- function(NLmod, X, C, j1, j2, quantile_j2 = c(0.5, 0.1, 0.9), quantile_rest=0.5, ref_quantile=0.5, index_quantiles=setdiff(seq(0.1,.9,.1), .5)){
+get_commonreferent_effect_estimate <- function(
+    NLmod, X, C, j1, j2, quantile_j2 = c(0.5, 0.1, 0.9), quantile_rest=0.5, 
+    ref_quantile=0.5, index_quantiles=setdiff(seq(0.1,.9,.1), .5)){
   # common referent estimates for an interaction
   #' NLmod = bsr model
   #' X = matrix or dataframe of chemical values used to fit model
   #' C = matrix or dataframe of covariate values used to fit model
   #' j1 = index of  chemical of interest
   #' j2 = index of  chemical of at levels of which interactions are assessed
-  #' quantile_j2  = levels of j2 over which interaction is considered, the first value will form a common referent, so order is important
+  #' quantile_j2  = levels of j2 over which interaction is considered, 
+  #'      the first value will form a common referent, so order is important
   #' quantile_rest = quantile to fix other chemicals at
   #' ref_quantile = quantile to fix chemical of interest as reference
   #' index_quantiles = quantile to fix chemical of interest for comparisons (in calculations of mean difference)
@@ -606,7 +614,9 @@ get_commonreferent_effect_estimate <- function(NLmod, X, C, j1, j2, quantile_j2 
 }
 
 
-predest_independent_commonint = get_commonreferent_effect_estimate(bsrmod, X, C, j1=4, j2=5, quantile_j2=c(0.1, 0.5, 0.9), ref_quantile=0.5, index_quantiles=setdiff(seq(0.05,.9,.05), .5))
+predest_independent_commonint = get_commonreferent_effect_estimate(
+  bsrmod, X, C, j1=4, j2=5, quantile_j2=c(0.1, 0.5, 0.9), ref_quantile=0.5, 
+  index_quantiles=setdiff(seq(0.05,.9,.05), .5))
 
 library(ggplot2)
 ggplot(data=predest_independent_commonint, aes(x=quantile, y=est, colour=factor(quantile_j2), fill=factor(quantile_j2))) + 
@@ -618,7 +628,10 @@ ggplot(data=predest_independent_commonint, aes(x=quantile, y=est, colour=factor(
 
 
 
-get_stratified_effect_estimate <- function(NLmod, X, C, j1, j2, quantile_j2 = c(0.5, 0.1, 0.9), quantile_rest=0.5, ref_quantile=0.5, index_quantiles=setdiff(seq(0.1,.9,.1), .5)){
+get_stratified_effect_estimate <- function(
+    NLmod, X, C, j1, j2, quantile_j2 = c(0.5, 0.1, 0.9), 
+    quantile_rest=0.5, ref_quantile=0.5, 
+    index_quantiles=setdiff(seq(0.1,.9,.1), .5)){
   # stratified effect estimates for an interaction (different referent for each level of j2)
   #' NLmod = bsr model
   #' X = matrix or dataframe of chemical values used to fit model
@@ -719,7 +732,15 @@ get_stratified_effect_estimate <- function(NLmod, X, C, j1, j2, quantile_j2 = c(
 }
 
 
-predest_independent_stratified = get_stratified_effect_estimate(bsrmod, X, C, j1=4, j2=5, quantile_j2=c(0.1, 0.5, 0.9), ref_quantile=0.5, index_quantiles=setdiff(seq(0.05,.9,.05), .5))
+predest_independent_stratified = get_stratified_effect_estimate(
+  bsrmod, X, C, j1=4, j2=5, quantile_j2=c(0.1, 0.5, 0.9), 
+  ref_quantile=0.5, index_quantiles=setdiff(seq(0.05,.9,.05), .5))
+
+predest_independent_stratified2 = get_stratified_effect_estimate(
+  bsrmod, X, C, j1 = 4, j2 = 5, quantile_j2 = c(0.25, 0.75), 
+  ref_quantile = 0.25, index_quantiles = 0.75
+)
+# need to figure out a way to get difference b/t .75-.25_.25 and .75-.25_.75
 
 bsrmod$InteractionPIP[4,5] # little evidence of interaction
 
@@ -731,5 +752,110 @@ ggplot(data=predest_independent_stratified, aes(x=quantile, y=est, colour=factor
   scale_color_discrete(name=paste("Quantile of", colnames(X)[5]))+
   scale_fill_discrete(name=paste("Quantile of", colnames(X)[5])) + theme_bw()
 
+# est interaction
+get_inter_estimate <- function(
+    NLmod, X, C, j1, j2, 
+    quantile_j2 = c(0.25, 0.75), 
+    quantile_rest=0.5, ref_quantile=0.25, 
+    index_quantile=0.75){
+  # stratified effect estimates for an interaction (different referent for each level of j2)
+  #' NLmod = bsr model
+  #' X = matrix or dataframe of chemical values used to fit model
+  #' C = matrix or dataframe of covariate values used to fit model
+  #' j1 = index of  chemical of interest
+  #' j2 = index of  chemical of at levels of which interactions are assessed
+  #' quantile_j2  = levels of j2 over which interaction is considered
+  #' quantile_rest = quantile to fix other chemicals at
+  #' ref_quantile = quantile to fix chemical of interest as reference
+  #' index_quantiles = quantile to fix chemical of interest for comparisons (in calculations of mean difference)
+  
+  
+  # define parameters
+  n  <-  dim(X)[1]
+  ns <- NLmod$ns
+  k <- NLmod$k
+  p <- dim(X)[2]
+  Xstar <- array(NA, dim = c(n, p, ns + 1))
+  Xstar[, , 1] <- 1
+  for (j in 1:p) {
+    Xstar[, j, 2:(ns + 1)] <- scale(splines::ns(X[, j], df = ns))
+  }
+  
+  # define posteriors
+  zetaPost <- NLmod$posterior$zeta
+  betaList <- NLmod$posterior$beta
+  betaCPost <- NLmod$posterior$betaC
+  totalScans <- dim(NLmod$posterior$betaC)[2]
+  nChains <- dim(NLmod$posterior$betaC)[1]
+  
+  # create design of covariates (arithmetic mean, for simplicity)
+  pc <- dim(C)[2]
+  NewDesignC <- matrix(NA, (length(index_quantile)+1)*length(quantile_j2), pc + 1)
+  NewDesignC[, 1] <- 1
+  for (jc in 1:pc) {
+    NewDesignC[, jc + 1] <- mean(C[, jc])
+  }
+  
+  # create design of chemicals
+  allquantiles  = c(ref_quantile, index_quantile)
+  n <- dim(X)[1]
+  
+  NewDesignMat <- apply(X,2, function(x) rep(quantile(x, quantile_rest), length(allquantiles)*length(quantile_j2)))
+  indexq = quantile(X[,j1], allquantiles)
+  interq = quantile(X[,j2], quantile_j2)
+  NewDesignMat[,j1] <- rep(indexq, length(quantile_j2))
+  NewDesignMat[,j2] <- rep(interq, each=length(allquantiles))
+  rownames(NewDesignMat) <- rep(names(indexq), length(quantile_j2))
+  
+  NewDesign <- array(NA, dim = c((length(index_quantile)+1)*length(quantile_j2), p, ns + 1))
+  NewDesign[, , 1] <- 1
+  for (j in 1:p) {
+    temp_ns_object <- splines::ns(X[, j], df = ns)
+    temp_sds <- apply(temp_ns_object, 2, sd)
+    temp_means <- apply(temp_ns_object, 2, mean)
+    NewDesign[, j, 2:(ns + 1)] <- t((t(                            
+      predict(temp_ns_object,
+              NewDesignMat[, j])
+    ) - temp_means) / temp_sds)
+  }
+  
+  
+  # generate predictions
+  predictions <- NLinteraction:::PredictionsMixture(
+    XstarOld = Xstar,
+    XstarNew = NewDesign,
+    designC = NewDesignC,
+    totalScans = totalScans,
+    nChains = nChains,
+    zetaPost = zetaPost,
+    betaList = betaList,
+    betaCPost = betaCPost,
+    k = k,
+    ns = ns
+  )
+  
+  # nchains X total scans/iterations X # test data points
+  
+  refidx = seq(1,length(allquantiles)*length(quantile_j2), length(allquantiles))
+  allidx = 1:(length(allquantiles)*length(quantile_j2))
+  indexidx = setdiff(allidx, refidx)
+  pred_difference_list = predictions$PredictedPost*NA # lazy way to create list of NAs of right size
+  for(kidx in 1:dim(pred_difference_list)[3]){
+    whichref = refidx[max(which(refidx<=kidx))]
+    # cat(paste(kidx, whichref, "\n"))
+    pred_difference_list[,,kidx] = predictions$PredictedPost[,,kidx] - predictions$PredictedPost[,,whichref]
+  }
+  pred_difference = lapply(1:dim(pred_difference_list)[3], function(x) as.numeric(pred_difference_list[,,x]))
+  
+  ests <- pred_difference[[indexidx[2]]]-pred_difference[[indexidx[1]]]
+  
+  return(
+    data.frame(
+      est = mean(ests), 
+      lower =  as.numeric(quantile(ests, 0.025)), 
+      upper =  as.numeric(quantile(ests, 0.975)), 
+      se = sqrt(var(ests)/length(ests)))
+  )
+}
 
-
+get_inter_estimate(bsrmod, X, C, 4, 5)
