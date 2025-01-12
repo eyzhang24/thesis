@@ -620,7 +620,7 @@ predest_independent_commonint = get_commonreferent_effect_estimate(
 
 library(ggplot2)
 ggplot(data=predest_independent_commonint, aes(x=quantile, y=est, colour=factor(quantile_j2), fill=factor(quantile_j2))) + 
-  #geom_ribbon(aes(ymin=lower, ymax=upper), alpha=0.5) + # makes it super messy
+  geom_ribbon(aes(ymin=lower, ymax=upper), alpha=0.5) + # makes it super messy
   geom_line() + 
   labs(y="Mean difference", x=paste("Quantile of", colnames(X)[4])) +
   scale_color_discrete(name=paste("Quantile of", colnames(X)[5]))+
@@ -727,25 +727,25 @@ get_stratified_effect_estimate <- function(
       quantile_j2 = rep(quantile_j2, each=length(allquantiles)), 
       est = as.numeric(lapply(pred_difference, mean)), 
       lower =  as.numeric(lapply(pred_difference, quantile, 0.025)), 
-      upper =  as.numeric(lapply(pred_difference, quantile, 0.975)))
+      upper =  as.numeric(lapply(pred_difference, quantile, 0.975)), 
+      var = as.numeric(lapply(pred_difference, var)), 
+      n = as.numeric(lapply(pred_difference, length)))
   )
 }
 
 
 predest_independent_stratified = get_stratified_effect_estimate(
-  bsrmod, X, C, j1=4, j2=5, quantile_j2=c(0.1, 0.5, 0.9), 
+  bsrmod, X, C, j1=5, j2=4, quantile_j2=c(.25, .75), 
   ref_quantile=0.5, index_quantiles=setdiff(seq(0.05,.9,.05), .5))
-
-predest_independent_stratified2 = get_stratified_effect_estimate(
-  bsrmod, X, C, j1 = 4, j2 = 5, quantile_j2 = c(0.25, 0.75), 
-  ref_quantile = 0.25, index_quantiles = 0.75
-)
-# need to figure out a way to get difference b/t .75-.25_.25 and .75-.25_.75
 
 bsrmod$InteractionPIP[4,5] # little evidence of interaction
 
 library(ggplot2)
-ggplot(data=predest_independent_stratified, aes(x=quantile, y=est, colour=factor(quantile_j2), fill=factor(quantile_j2))) + 
+predest_independent_stratified |> 
+  # mutate(se = sqrt(var/n), 
+  #        upper = est + 1.96*se, 
+  #        lower = est  - 1.96*se) |> 
+  ggplot(aes(x=quantile, y=est, colour=factor(quantile_j2), fill=factor(quantile_j2))) + 
   geom_ribbon(aes(ymin=lower, ymax=upper), alpha=0.15,linetype=2) + # makes it super messy
   geom_line() + 
   labs(y="Mean difference", x=paste("Quantile of", colnames(X)[4])) +
@@ -854,8 +854,10 @@ get_inter_estimate <- function(
       est = mean(ests), 
       lower =  as.numeric(quantile(ests, 0.025)), 
       upper =  as.numeric(quantile(ests, 0.975)), 
-      se = sqrt(var(ests)/length(ests)))
+      se = sqrt(var(ests)/length(ests))
+      )
   )
 }
 
 get_inter_estimate(bsrmod, X, C, 4, 5)
+get_inter_estimate(bsrmod, X, C, 5, 4)
