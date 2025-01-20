@@ -568,14 +568,14 @@ ggsave("nhanes_figs/ch4_corr_sim+orig.png", width = 12, height = 6)
 ############
 #for mlr models
 equations1 <-  c(TeX("No inter", output = "character"), 
-                 TeX("0.3Hg$*$Ni"), TeX("0.1Hg$*($Ni$-1)^2$"), 
-                TeX("0.3Cd$*$As"), TeX("0.1Cd$*($As$-1)^2$"), 
-                TeX("0.3Hg$*$Co"), TeX("0.1Hg$*($Co$-1)^2$"), 
-                TeX("0.3Hg$*$Ni$*$Tl"), TeX("0.1Hg$*($Ni$-1)^2*$Tl"), 
-                TeX("0.6Hg$*$Ni"), TeX("0.2Hg$*($Ni$-1)^2$"), 
-                TeX("0.6Cd$*$As"), TeX("0.2Cd$*($As$-1)^2$"), 
-                TeX("0.6Hg$*$Co"), TeX("0.2Hg$*($Co$-1)^2$"), 
-                TeX("0.6Hg$*$Ni$*$Tl"), TeX("0.2Hg$*($Ni$-1)^2*$Tl"))
+                 TeX("0.475$X_{D05}*X_{194}$"), TeX("0.24$X_{D05}*(X_{194}-1)^2$"), 
+                TeX("0.5$X_{F08}*X_{F03}$"), TeX("0.17$X_{F08}*(X_{F03}-1)^2$"), 
+                TeX("0.36$X_{074}*X_{194}$"), TeX("0.25$X_{074}*(X_{094}-1)^2$"), 
+                TeX("0.3$X_{D05}*X_{PCB}*X_{194}$"), TeX("0.125$X_{D05}*(X_{PCB}-1)^2*X_{194}$"), 
+                TeX("0.9$X_{D05}*X_{194}$"), TeX("0.48$X_{D05}*(X_{194}-1)^2$"), 
+                TeX("$X_{F08}*X_{F03}$"), TeX("0.34$X_{F08}*(X_{F03}-1)^2$"), 
+                TeX("0.6$X_{074}*X_{194}$"), TeX("0.5$X_{074}*(X_{194}-1)^2$"), 
+                TeX("0.72$X_{D05}*X_{PCB}*X_{194}$"), TeX("0.25$X_{D05}*(X_{PCB}-1)^2*X_{194}$"))
 names1 <- c("_base",
   "am1", "ap1", "bm1", "bp1", "cm1", "cp1", "dm1", "dp1",
   "am2", "ap2", "bm2", "bp2", "cm2", "cp2", "dm2", "dp2")
@@ -584,14 +584,14 @@ appender1 <- function(string) {
 }
 
 #for oracle models
-equations <-  c(TeX("0.3Hg$*$Ni"), TeX("0.1Hg$*($Ni$-1)^2$"), 
-                TeX("0.3Cd$*$As"), TeX("0.1Cd$*($As$-1)^2$"), 
-                TeX("0.3Hg$*$Co"), TeX("0.1Hg$*($Co$-1)^2$"), 
-                TeX("0.3Hg$*$Ni$*$Tl"), TeX("0.1Hg$*($Ni$-1)^2*$Tl"), 
-                TeX("0.6Hg$*$Ni"), TeX("0.2Hg$*($Ni$-1)^2$"), 
-                TeX("0.6Cd$*$As"), TeX("0.2Cd$*($As$-1)^2$"), 
-                TeX("0.6Hg$*$Co"), TeX("0.2Hg$*($Co$-1)^2$"), 
-                TeX("0.6Hg$*$Ni$*$Tl"), TeX("0.2Hg$*($Ni$-1)^2*$Tl"))
+equations <-  c(TeX("0.475$X_{D05}*X_{194}$"), TeX("0.24$X_{D05}*(X_{194}-1)^2$"), 
+                TeX("0.5$X_{F08}*X_{F03}$"), TeX("0.17$X_{F08}*(X_{F03}-1)^2$"), 
+                TeX("0.36$X_{074}*X_{194}$"), TeX("0.25$X_{074}*(X_{094}-1)^2$"), 
+                TeX("0.3$X_{D05}*X_{PCB}*X_{194}$"), TeX("0.125$X_{D05}*(X_{PCB}-1)^2*X_{194}$"), 
+                TeX("0.9$X_{D05}*X_{194}$"), TeX("0.48$X_{D05}*(X_{194}-1)^2$"), 
+                TeX("$X_{F08}*X_{F03}$"), TeX("0.34$X_{F08}*(X_{F03}-1)^2$"), 
+                TeX("0.6$X_{074}*X_{194}$"), TeX("0.5$X_{074}*(X_{194}-1)^2$"), 
+                TeX("0.72$X_{D05}*X_{PCB}*X_{194}$"), TeX("0.25$X_{D05}*(X_{PCB}-1)^2*X_{194}$"))
 names <- c(
   "am1", "ap1", "bm1", "bp1", "cm1", "cp1", "dm1", "dp1",
   "am2", "ap2", "bm2", "bp2", "cm2", "cp2", "dm2", "dp2")
@@ -606,7 +606,7 @@ appender <- function(string) {
 ##############
 
 #mlr model output small
-mlrmods <- read_rds("sim/mlr/mlr_mods_sm.RDS")
+mlrmods <- read_rds("nhanes_sim/_mlr/mlr_mods_sm.RDS")
 rsquared1 <- mlrmods |> 
   purrr::map_df(\(x) {
     data.frame(
