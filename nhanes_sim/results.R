@@ -721,7 +721,7 @@ ksm_ints |>
                                     default = label_parsed)) +
   labs(y = "Sensitivity", 
        x = "Chemical, with all others fixed")
-ggsave("nhanes_fig/ch4_ksm_int_rest.png", width = 7.5, height = 5)
+ggsave("nhanes_figs/ch4_ksm_int_rest.png", width = 7.5, height = 5)
 
 # one vs. other significant visualization
 ksm_intb <- read_csv("nhanes_sim/bkmr_sm/int_bivar.csv")
@@ -772,7 +772,7 @@ ksm_intt |>
                                     default = label_parsed)) +
   labs(y = "Sensitivity", 
        x = NULL)
-ggsave("nhanes_fig/ch4_ksm_int_triv.png", width = 6, height = 4)
+ggsave("nhanes_figs/ch4_ksm_int_triv.png", width = 6, height = 4)
 
 # bivar and trivar together
 int_combs <- bind_rows(
