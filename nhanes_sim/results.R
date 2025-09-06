@@ -295,7 +295,7 @@ nsm_pvalc |>
   facet_wrap(~case, 
              labeller = labeller(
                case = as_labeller(appendera, default = label_parsed))) 
-ggsave("nhanes_figs/ch4_nsm_univ_pval.png", width = 7.5, height = 5)
+ggsave("nhanes_figs/ch4_nsm_univ_pval.png", width = 8.5, height = 6)
 
 # p-values large
 # nlg_pval <- read_csv("sim/_mlr/pvallg.csv")
@@ -330,7 +330,7 @@ nlg_pvalc |>
   facet_wrap(~case, 
              labeller = labeller(
                case = as_labeller(appendera, default = label_parsed))) 
-ggsave("nhanes_figs/ch4_nlg_univ_pval.png", width = 7.5, height = 5)
+ggsave("nhanes_figs/ch4_nlg_univ_pval.png", width = 8.5, height = 6)
 
 # save sensitivity as table
 naive_all <- bind_rows(
@@ -441,8 +441,9 @@ osm_comb |>
        x = "Term") +
   facet_wrap(~case, 
              labeller = labeller(
-               case = as_labeller(appendera, default = label_parsed))) 
-ggsave("nhanes_figs/ch4_osm_pval.png", width = 7.5, height = 5)
+               case = as_labeller(appendera, default = label_parsed))) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+ggsave("nhanes_figs/ch4_osm_pval.png", width = 8.5, height = 6)
 
 # p-values large
 olg_pval <- read_csv("sim/_oracle/pvallg.csv")
@@ -548,8 +549,9 @@ olg_comb |>
        x = "Term") +
   facet_wrap(~case, 
              labeller = labeller(
-               case = as_labeller(appendera, default = label_parsed))) 
-ggsave("nhanes_figs/ch4_olg_pval.png", width = 7.5, height = 5)
+               case = as_labeller(appendera, default = label_parsed))) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+ggsave("nhanes_figs/ch4_olg_pval.png", width = 8.5, height = 6)
 
 # save sensitivity as table
 oracle_all <- bind_rows(
@@ -613,7 +615,7 @@ ksm_pip_sig |>
   labs(y = "PIP value distribution", 
        color = "Truly\nsignificant", 
        x = "Chemical")
-ggsave("nhanes_figs/ch4_ksm_univ_pips.png", width = 7.5, height = 5)
+ggsave("nhanes_figs/ch4_ksm_univ_pips.png", width = 8.5, height = 6)
 
 # plot bivariate relationships bkmr small
 ksm_biv <- read_csv("nhanes_sim/bkmr_sm/biv_expresp.csv")
@@ -796,6 +798,10 @@ ggsave("nhanes_figs/ch4_ksm_int_bitri.png", width = 7.5, height = 5)
 
 # save sensitivity as table
 
+# fdr's for bivariate and trivariate
+ksm_bifdrs <- read_csv("nhanes_sim/bkmr_sm/int_bivar_full.csv")
+ksm_trifdrs <- read_rds("nhanes_sim/bkmr_sm/tri_fdrs.RDS")
+
 
 # larger size bkmr --------------------------------------------------------
 
@@ -835,7 +841,7 @@ klg_pip_sig |>
   labs(y = "PIP value distribution", 
        color = "Truly\nsignificant", 
        x = "Chemical")
-ggsave("nhanes_figs/ch4_klg_univ_pips.png", width = 7.5, height = 5)
+ggsave("nhanes_figs/ch4_klg_univ_pips.png", width = 8.5, height = 6)
 
 # plot univariate relationships bkmr large
 
@@ -1020,6 +1026,8 @@ int_combl |>
   labs(y = "Sensitivity", 
        x = NULL)
 ggsave("nhanes_figs/ch4_klg_int_bitri.png", width = 7.5, height = 5)
+
+
 
 
 # bkmr combine sensitivity ------------------------------------------------

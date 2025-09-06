@@ -7,3 +7,12 @@ papers/.DS_Store
 thesis.Rproj
 madres_data/bk_test.RDS
 madres_data/bk_test2.RDS
+nhanes_sim/mods/mlr_mods_lg.RDS
+nhanes_sim/mods/chem_mods_lg.RDS
+nhanes_sim/mods/mlr_mods_sm.RDS
+nhanes_sim/mods/oracle_mods_lg.RDS
+nhanes_sim/mods/oracle_mods_sm.RDS
+nhanes_sim/sim_preds_lg.RDS
+nhanes_sim/sim_preds_sm.RDS
+nhanes_sim/sim_resp_lg_a.RDS
+nhanes_sim/sim_resp_sm_a.RDS
